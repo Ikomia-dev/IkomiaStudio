@@ -1,0 +1,78 @@
+#include "CImageExportDlg.h"
+#include "Main/AppTools.hpp"
+
+CImageExportDlg::CImageExportDlg(QWidget *parent, Qt::WindowFlags f)
+    : CDialog(tr("Export image"), parent, DEFAULT|EFFECT_ENABLED, f)
+{
+    initLayout();
+    initConnections();
+}
+
+QString CImageExportDlg::getFileName() const
+{
+    return m_pEditPath->text();
+}
+
+bool CImageExportDlg::isGraphicsExported() const
+{
+    return m_pCheckBurnGraphics->isChecked();
+}
+
+void CImageExportDlg::initLayout()
+{
+    m_pCheckBurnGraphics = new QCheckBox(tr("Export active graphics layers"));
+    auto pLabelPath = new QLabel(tr("Path"));
+    m_pEditPath = new QLineEdit;
+    m_pBrowseBtn = new QPushButton("...");
+    m_pBrowseBtn->setToolTip(tr("Select target folder"));
+
+    auto pGridLayout = new QGridLayout;
+    pGridLayout->addWidget(m_pCheckBurnGraphics, 0, 0, 1, 3);
+    pGridLayout->addWidget(pLabelPath, 1, 0);
+    pGridLayout->addWidget(m_pEditPath, 1, 1);
+    pGridLayout->addWidget(m_pBrowseBtn, 1, 2);
+
+    m_pOkBtn = new QPushButton(tr("OK"));
+    m_pOkBtn->setDefault(true);
+    m_pCancelBtn = new QPushButton(tr("Cancel"));
+
+    QHBoxLayout* pBtnLayout = new QHBoxLayout;
+    pBtnLayout->addWidget(m_pOkBtn);
+    pBtnLayout->addWidget(m_pCancelBtn);
+
+    auto pLayout = getContentLayout();
+    pLayout->addSpacing(5);
+    pLayout->addLayout(pGridLayout);
+    pLayout->addLayout(pBtnLayout);
+}
+
+void CImageExportDlg::initConnections()
+{
+    connect(m_pBrowseBtn, &QPushButton::clicked, this, &CImageExportDlg::onBrowse);
+    connect(m_pOkBtn, &QPushButton::clicked, this, &CImageExportDlg::onValidate);
+    connect(m_pCancelBtn, &QPushButton::clicked, this, &CImageExportDlg::reject);
+}
+
+void CImageExportDlg::onBrowse()
+{
+    QSettings IkomiaSettings;
+
+    auto fileName = Utils::File::saveFile(this, tr("Export screenshot"), IkomiaSettings.value(_DefaultDirImgExport).toString(), tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2)"), QStringList({"jpg", "jpeg", "tif", "tiff", "png", "bmp", "jp2"}), ".png");
+    if(fileName.isEmpty())
+        return;
+
+    IkomiaSettings.setValue(_DefaultDirImgExport, QFileInfo(fileName).path());
+    m_pEditPath->setText(fileName);
+}
+
+void CImageExportDlg::onValidate()
+{
+    if(m_pEditPath->text().isEmpty())
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Please enter a valid path"));
+        msgBox.exec();
+        return;
+    }
+    QDialog::accept();
+}

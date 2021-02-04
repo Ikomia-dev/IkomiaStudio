@@ -1,0 +1,113 @@
+#ifndef CMAINMODEL_H
+#define CMAINMODEL_H
+
+#include <QObject>
+#include "Main/AppDefine.hpp"
+#include "Project/CProjectManager.h"
+#include "Plugin/CPluginManager.h"
+#include "Process/CProcessManager.h"
+#include "Protocol/CProtocolManager.h"
+#include "Render/CRenderManager.h"
+#include "ProgressBar/CProgressBarManager.h"
+#include "Graphics/CGraphicsManager.h"
+#include "Results/CResultManager.h"
+#include "Model/Data/Video/CVideoManager.h"
+#include "User/CUserManager.h"
+#include "Model/Data/CMainDataManager.h"
+#include "Store/CStoreManager.h"
+#include "Settings/CSettingsManager.h"
+#include "Model/CDbManager.h"
+
+/**
+ * @brief
+ *
+ */
+class CMainModel : public QObject
+{
+    Q_OBJECT
+
+    public:
+
+        /**
+         * @brief
+         *
+         */
+        CMainModel();
+        ~CMainModel();
+
+        //Getters
+        CProjectManager*        getProjectManager();
+        CProcessManager*        getProcessManager();
+        CProtocolManager*       getProtocolManager();
+        CRenderManager*         getRenderManager();
+        CProgressBarManager*    getProgressManager();
+        CGraphicsManager*       getGraphicsManager();
+        CResultManager*         getResultManager();
+        CUserManager*           getUserManager();
+        CMainDataManager*       getDataManager();
+        CStoreManager*          getStoreManager();
+        CSettingsManager*       getSettingsManager();
+        CPluginManager*         getPluginManager();
+
+        void                    init();
+
+        void                    notifyViewShow();
+
+    signals:
+
+        void                    doSetSplashMessage(const QString &message, int alignment, const QColor &color);
+
+    public slots:
+
+        void                    onOpenImage(const QModelIndex& index);
+        void                    onSetCurrentUser(const CUser& user);
+
+    private:
+
+        void                    initConnections();
+        void                    initLogFile();
+        void                    initDb();
+        void                    initNetworkManager();
+        void                    initProjectManager();
+        void                    initProcessManager();
+        void                    initProtocolManager();
+        void                    initGraphicsManager();
+        void                    initResultsManager();
+        void                    initRenderManager();
+        void                    initDataManager();
+        void                    initUserManager();
+        void                    initStoreManager();
+        void                    initSettingsManager();
+        void                    initPluginManager();
+        void                    initPython();
+        void                    initMatomo();
+
+        void                    writeLogMsg(int type, const QString &msg, const QString &categoryName);
+
+        void                    checkUserInstall();
+
+        void                    installPythonRequirements();
+
+        void                    startLocalMLflowServer();
+
+    private:
+
+        CDbManager              m_dbMgr;
+        CProjectManager         m_projectMgr;
+        CProcessManager         m_processMgr;
+        CProtocolManager        m_protocolMgr;
+        CRenderManager          m_renderMgr;
+        CProgressBarManager     m_progressMgr;
+        CGraphicsManager        m_graphicsMgr;
+        CResultManager          m_resultsMgr;
+        CUserManager            m_userMgr;
+        CMainDataManager        m_dataMgr;
+        CStoreManager           m_storeMgr;
+        CSettingsManager        m_settingsMgr;
+        CPluginManager          m_pluginMgr;
+        QNetworkAccessManager   m_networkMgr;
+        std::string             m_logFilePath;
+        QProcess*               m_mlflowProcess = nullptr;
+};
+
+#endif // CMAINMODEL_H

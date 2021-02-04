@@ -1,0 +1,230 @@
+#include "CMainDataManager.h"
+#include "Main/LogCategory.h"
+#include "Model/Project/CProjectUtils.hpp"
+#include "Model/Protocol/CProtocolManager.h"
+
+CMainDataManager::CMainDataManager()
+{
+}
+
+CMainDataManager::~CMainDataManager()
+{
+}
+
+CImgManager* CMainDataManager::getImgMgr()
+{
+    return &m_imgMgr;
+}
+
+CVideoManager* CMainDataManager::getVideoMgr()
+{
+    return &m_videoMgr;
+}
+
+QString CMainDataManager::getDataPath(const QModelIndex &wrapIndex)
+{
+    if(!wrapIndex.isValid())
+        return nullptr;
+
+    DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapIndex);
+    if(indices.size() == 0)
+    {
+        qCCritical(logProject).noquote() << tr("Invalid image index");
+        return nullptr;
+    }
+
+    auto pDataset = CProjectUtils::getDataset<CMat>(wrapIndex);
+    if(!pDataset)
+    {
+        qCCritical(logProject).noquote() << tr("Invalid dataset");
+        return nullptr;
+    }
+
+    auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
+    auto pDataInfo = pDataset->getDataInfo()[currentImgIndex];
+    if(pDataInfo == nullptr)
+        return QString();
+    else
+        return QString::fromStdString(pDataInfo->getFileName());
+}
+
+CDataInfoPtr CMainDataManager::getDataInfoPtr(const QModelIndex& wrapIndex)
+{
+    QString fileName = getDataPath(wrapIndex);
+    if(fileName.isEmpty())
+        return nullptr;
+
+    ProjectTreeItem* itemPtr = static_cast<ProjectTreeItem*>(wrapIndex.internalPointer());
+    if(itemPtr->getTypeId() == static_cast<size_t>(TreeItemType::IMAGE))
+    {
+        CImageIO io(fileName.toStdString());
+        return io.dataInfo();
+    }
+    else if(itemPtr->getTypeId() == static_cast<size_t>(TreeItemType::VIDEO))
+    {
+        CVideoIO io(fileName.toStdString());
+        return io.dataInfo();
+    }
+    return nullptr;
+}
+
+int CMainDataManager::getSelectedDisplayCategory() const
+{
+    return m_selectedDisplayCategory;
+}
+
+int CMainDataManager::getSelectedDisplayIndex() const
+{
+    return m_selectedDisplayIndex;
+}
+
+void CMainDataManager::setManagers(CProjectManager *pProjectMgr, CProtocolManager *pProtocolMgr, CGraphicsManager *pGraphicsMgr,
+                                   CResultManager* pResultMgr, CRenderManager *pRenderMgr, CProgressBarManager *pProgressMgr)
+{
+    m_pProjectMgr = pProjectMgr;
+    m_pProtocolMgr = pProtocolMgr;
+
+    m_imgMgr.setManagers(pProjectMgr, pGraphicsMgr, pResultMgr, pRenderMgr, pProgressMgr);
+    m_videoMgr.setManagers(pProjectMgr, pProtocolMgr, pGraphicsMgr, pResultMgr, pProgressMgr);
+}
+
+void CMainDataManager::setProgressSignalHandler(CProgressSignalHandler* pHandler)
+{
+    m_imgMgr.setProgressSignalHandler(pHandler);
+    m_videoMgr.setProgressSignalHandler(pHandler);
+}
+
+void CMainDataManager::closeData(const QModelIndex& index)
+{
+    m_videoMgr.closeData(index);
+}
+
+void CMainDataManager::displaySimpleImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, size_t inputIndex, bool bNewSequence)
+{
+    m_imgMgr.displaySimpleImage(pScene, index, wrapIndex, inputIndex, bNewSequence);
+}
+
+void CMainDataManager::displayVolumeImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence)
+{
+    m_imgMgr.displayVolumeImage(pScene, index, wrapIndex, bNewSequence);
+}
+
+void CMainDataManager::displayVideoImage(const QModelIndex& index, size_t inputIndex, bool bNewSequence)
+{
+    m_videoMgr.displayVideoImage(index, inputIndex, bNewSequence);
+}
+
+void CMainDataManager::displayImageSequence(const QModelIndex& index, size_t inputIndex, bool bNewSequence)
+{
+    assert(m_pProjectMgr);
+    m_videoMgr.displayImageSequence(m_pProjectMgr->getCurrentVideoItemIndex(), index.row(), inputIndex, bNewSequence);
+}
+
+void CMainDataManager::beforeProjectClose(int projectIndex, bool bWithCurrentImage)
+{
+    m_videoMgr.beforeProjectClose(projectIndex, bWithCurrentImage);
+}
+
+void CMainDataManager::reloadCurrent()
+{
+    assert(m_pProjectMgr);
+    QModelIndex currentIndex = m_pProjectMgr->getCurrentDataItemIndex();
+    if(currentIndex.isValid() == false)
+        return;
+
+    QModelIndex currentWrapIndex = m_pProjectMgr->wrapIndex(currentIndex);
+    ProjectTreeItem* itemPtr = static_cast<ProjectTreeItem*>(currentWrapIndex.internalPointer());
+
+    if(itemPtr->getTypeId() == TreeItemType::IMAGE)
+    {
+        //Get the corresponding image item
+        auto imgItemPtr = CProjectUtils::getImageItem(currentWrapIndex);
+        assert(imgItemPtr);
+        auto pDataset = CProjectUtils::getDataset<CMat>(currentWrapIndex);
+
+        if(pDataset->hasDimension(DataDimension::VOLUME)) // 3D image
+            displayVolumeImage(imgItemPtr->getScene(), currentIndex, currentWrapIndex, true);
+        else if(pDataset->hasDimension(DataDimension::TIME)) // Video image sequence
+            displayImageSequence(currentIndex, 0, true);
+        else if(pDataset->hasDimension(DataDimension::IMAGE)) // Simple image
+            displaySimpleImage(imgItemPtr->getScene(), currentIndex, currentWrapIndex, 0, true);
+    }
+    else if(itemPtr->getTypeId() == TreeItemType::VIDEO ||
+            itemPtr->getTypeId() == TreeItemType::LIVE_STREAM)
+    {
+        displayVideoImage(currentIndex, 0, true);
+    }
+}
+
+void CMainDataManager::onSetSelectedDisplay(DisplayCategory category, int index)
+{
+    assert(m_pProtocolMgr);
+
+    if(category == m_selectedDisplayCategory && index == m_selectedDisplayIndex)
+        return;
+
+    m_selectedDisplayCategory = category;
+    m_selectedDisplayIndex = index;
+}
+
+void CMainDataManager::onSaveCurrentVideoFrame(const QModelIndex &modelIndex, int index)
+{
+    assert(m_pProtocolMgr);
+
+    if(m_pProtocolMgr->isProtocolExists())
+        m_pProtocolMgr->saveCurrentInputImage((size_t)index);
+    else
+        m_videoMgr.saveCurrentFrame(modelIndex);
+}
+
+void CMainDataManager::onExportCurrentImage(int index, const QString &path, bool bWithGraphics)
+{
+    assert(m_pProjectMgr && m_pProtocolMgr);
+
+    if(m_pProtocolMgr->isProtocolExists())
+        m_pProtocolMgr->exportCurrentInputImage(index, path, bWithGraphics);
+    else
+    {
+        QModelIndex currentIndex = m_pProjectMgr->getCurrentDataItemIndex();
+        m_imgMgr.exportImage(currentIndex, path, bWithGraphics);
+    }
+}
+
+void CMainDataManager::onExportCurrentVideoFrame(const QModelIndex& index, int inputIndex, const QString &path, bool bWithGraphics)
+{
+    assert(m_pProtocolMgr);
+
+    if(m_pProtocolMgr->isProtocolExists())
+        m_pProtocolMgr->exportCurrentInputImage(inputIndex, path, bWithGraphics);
+    else
+        m_videoMgr.exportCurrentFrame(index, path, bWithGraphics);
+}
+
+void CMainDataManager::onEnableInfo(bool bEnable)
+{
+    assert(m_pProtocolMgr);
+
+    if(m_pProtocolMgr->isProtocolExists())
+        m_pProtocolMgr->updateDataInfo();
+    else
+        m_imgMgr.enableInfoUpdate(bEnable);
+
+    m_videoMgr.enableInfoUpdate(m_pProjectMgr->getCurrentDataItemIndex(), bEnable);
+}
+
+void CMainDataManager::onPlayVideo(int index)
+{
+    assert(m_pProtocolMgr);
+    assert(m_pProjectMgr);
+
+    if(m_pProtocolMgr->isProtocolExists())
+        m_pProtocolMgr->playVideoInput(index);
+    else
+        m_videoMgr.play(m_pProjectMgr->getCurrentVideoItemIndex(), index);
+}
+
+void CMainDataManager::onStopVideo(const QModelIndex& index)
+{    
+    m_videoMgr.stopPlay(index);
+    m_pProjectMgr->onVideoStopped();
+}
