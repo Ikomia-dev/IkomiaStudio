@@ -449,11 +449,6 @@ win32:CONFIG(release, debug|release): OPENCV_VERSION = $${OPENCV_VERSION}
 win32:CONFIG(debug, debug|release): OPENCV_VERSION = $${OPENCV_VERSION}d
 LIBS += $$link_opencv()
 
-######
-#FFTW
-######
-win32: LIBS += -llibfftw3-3 -llibfftw3f-3
-
 #####################
 #Dynamic link to VTK
 #####################
@@ -470,12 +465,6 @@ macx: LIBS += -framework OpenCL
 #OpenGL
 ########
 win32: LIBS += -lOpenGL32
-
-######
-#FFTW
-######
-win32: LIBS += -llibfftw3-3 -llibfftw3f-3
-else: LIBS += -lfftw3 -lfftw3f -lfftw3_threads
 
 ######
 #Curl
