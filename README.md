@@ -31,3 +31,4 @@ Coming soon...
 - [API documentation](https://ikomia-dev.github.io/python-api-documentation/): documentation of our Python API that will guide you through the creation of your own plugin to use and share your algorithm in the Ikomia environment.
 - [API source code](https://github.com/Ikomia-dev/IkomiaApi)
 - [Tutorials](https://blog.ikomia.com/): consult our blog to find tutorials and useful information around Ikomia platform.
+- [Plugin examples](https://github.com/Ikomia-dev): browse plugin repositories to help you implement your own.
