@@ -149,7 +149,7 @@ void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolV
             auto outputPtr = pTask->getOutput(i);
             auto pOutputViewProp = pTask->getOutputViewProperty(i);
 
-            if(outputPtr->isDataAvailable())
+            if(outputPtr->isDataAvailable() && outputPtr->isDisplayable())
             {
                 switch(outputPtr->getDataType())
                 {
