@@ -501,6 +501,7 @@ void CMainModel::startLocalMLflowServer()
             case QProcess::UnknownError:
                 msg = tr("MLflow server encountered an unknown error...");
                 break;
+            default: break;
         }
 
         qInfo().noquote() << msg;

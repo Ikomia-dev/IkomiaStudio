@@ -353,6 +353,8 @@ QPixmap CProtocolIOArea::getThumbnailIcon(const std::shared_ptr<CProtocolTaskIO>
         case IODataType::OUTPUT_GRAPHICS:
         case IODataType::WIDGET:
         case IODataType::DESCRIPTORS:
+        case IODataType::DNN_DATASET:
+        case IODataType::ARRAY:
             return QPixmap(":/Images/help.png").scaled(m_thumbnailSize);
     }
     return QPixmap();

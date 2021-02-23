@@ -104,6 +104,10 @@ namespace Ikomia
                     case IODataType::DNN_DATASET:
                         color = QColor(255,255,255);
                         break;
+
+                    case IODataType::ARRAY:
+                        color = QColor(45,180,255);
+                        break;
                 }
                 return color;
             }
@@ -136,6 +140,7 @@ namespace Ikomia
                     case IODataType::OUTPUT_GRAPHICS:
                     case IODataType::FOLDER:
                     case IODataType::DNN_DATASET:
+                    case IODataType::ARRAY:
                         bClickable = false;
                         break;
 
