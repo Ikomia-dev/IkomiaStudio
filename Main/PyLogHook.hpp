@@ -1,6 +1,6 @@
 //MIT License
 //
-//Copyright(c) 2017 Matthias Möller
+//Copyright(c) 2017 Matthias Mï¿½ller
 //https://github.com/TinyTinni/PyLogHook
 //
 //Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -68,9 +68,7 @@ namespace tyti {
 
                 if (out == NULL || out == Py_None)
                 {
-                    std::string register_read_write = std::string("import sys\n\
-sys.") + pipename + std::string(" = type(\"\",(object,),{\"write\":lambda self, txt: None})()\n");
-
+                    std::string register_read_write = std::string("import sys\n\sys.") + pipename + std::string(" = type(\"\",(object,),{\"write\":lambda self, txt: None, \"flush\":lambda self: None})()\n");
                     PyRun_SimpleString(register_read_write.c_str());
                     out = PySys_GetObject(pipename);
                 }
