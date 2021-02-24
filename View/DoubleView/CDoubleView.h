@@ -83,7 +83,7 @@ class CDoubleView : public QWidget
         void            onDisplayResultImage(int index, QImage image, const QString& imageName, CViewPropertyIO *pViewProperty);
         void            onDisplayResultMeasuresTable(const QString taskName, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty);
         void            onDisplayResultFeaturesTable(const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty);
-        void            onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot);
+        void            onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         void            onDisplayMultiImage(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void            onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int> &syncToIndices, CViewPropertyIO *pViewProperty);
 
@@ -123,6 +123,8 @@ class CDoubleView : public QWidget
         void            initConnections();
 
         CVideoDisplay*  createVideoDisplay(CViewPropertyIO* pViewProperty, size_t id);
+
+        void            applyViewModeProperty(CViewPropertyIO* pViewProp);
 
     private:
 

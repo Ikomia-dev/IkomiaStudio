@@ -70,6 +70,28 @@ void CDoubleView::initConnections()
     connect(m_pDataViewer, &CDataViewer::doDisplayListView, m_pResultsViewer, &CResultsViewer::hide);
 }
 
+void CDoubleView::applyViewModeProperty(CViewPropertyIO *pViewProp)
+{
+    if(pViewProp == nullptr)
+        return;
+
+    switch(pViewProp->getViewMode())
+    {
+        case CViewPropertyIO::ViewMode::INPUT_OUTPUT:
+            m_pDataViewer->show();
+            m_pResultsViewer->show();
+            break;
+        case CViewPropertyIO::ViewMode::INPUT_ONLY:
+            m_pDataViewer->show();
+            m_pResultsViewer->hide();
+            break;
+        case CViewPropertyIO::ViewMode::OUTPUT_ONLY:
+            m_pDataViewer->hide();
+            m_pResultsViewer->show();
+            break;
+    }
+}
+
 CDataViewer *CDoubleView::getDataViewer() const
 {
     return m_pDataViewer;
@@ -208,11 +230,13 @@ void CDoubleView::onDisplayResultImage(int index, QImage image, const QString &i
     auto pDisplay = m_pResultsViewer->displayImage(index, image, imageName);
     // Synchronize with main view
     m_pDataViewer->syncImageView(pDisplay);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onAddResultWidget(size_t index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty)
 {
     m_pResultsViewer->addWidgetDisplay(index, pWidget, bDeleteOnClose, pViewProperty);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int>& syncToIndices, CViewPropertyIO* pViewProperty)
@@ -222,26 +246,31 @@ void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& i
     auto pDisplay = m_pResultsViewer->displayVideo(index, image, imageName);
     // Sync video views
     m_pDataViewer->syncVideoView(pDisplay, syncToIndices);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onDisplayResultMeasuresTable(const QString taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty)
 {
     m_pResultsViewer->displayTable(taskName, pModel, pViewProperty);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onDisplayResultFeaturesTable(const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayTable(taskName, pModel, pViewProperty);
+    applyViewModeProperty(pViewProperty);
 }
 
-void CDoubleView::onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot)
+void CDoubleView::onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayPlot(taskName, pPlot);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onDisplayMultiImage(CMultiImageModel *pModel, const QString &taskName, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayMultiImage(pModel, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
 }
 
 void CDoubleView::onUpdateIndex(const QModelIndex& index)

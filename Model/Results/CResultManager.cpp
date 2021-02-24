@@ -142,12 +142,14 @@ void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolV
         size_t videoIndex = 0;
         size_t volumeIndex = 0;
         size_t widgetIndex = 0;
+        auto globalViewMode = getViewMode(pTask);
 
         //Handle each output
         for(size_t i=0; i<outputCount; ++i)
         {
             auto outputPtr = pTask->getOutput(i);
             auto pOutputViewProp = pTask->getOutputViewProperty(i);
+            pOutputViewProp->setViewMode(globalViewMode);
 
             if(outputPtr->isDataAvailable() && outputPtr->isDisplayable())
             {
@@ -687,6 +689,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::FOLDER_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::FILE_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::DNN_DATASET: viewType = DisplayType::EMPTY_DISPLAY; break;
+        case IODataType::ARRAY: viewType = DisplayType::EMPTY_DISPLAY; break;
     }
     return viewType;
 }
@@ -708,6 +711,14 @@ std::set<IODataType> CResultManager::getImageBasedDataTypes() const
         IODataType::LIVE_STREAM_LABEL,
     };
     return dataTypes;
+}
+
+CViewPropertyIO::ViewMode CResultManager::getViewMode(const ProtocolTaskPtr &taskPtr) const
+{
+    if(taskPtr->isSelfInput())
+        return CViewPropertyIO::ViewMode::OUTPUT_ONLY;
+    else
+        return CViewPropertyIO::ViewMode::INPUT_OUTPUT;
 }
 
 bool CResultManager::isResultFromCurrentImage(const QModelIndex &index) const

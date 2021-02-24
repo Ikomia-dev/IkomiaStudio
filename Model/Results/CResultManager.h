@@ -140,7 +140,8 @@ class CResultManager : public QObject
         ResultItemPtr       getResultItem(const QModelIndex& index) const;
         OutputDisplays      getOutputDisplays(const ProtocolTaskPtr& pTask) const;
         DisplayType         getResultViewType(IODataType type) const;
-        std::set<IODataType> getImageBasedDataTypes() const;
+        std::set<IODataType>        getImageBasedDataTypes() const;
+        CViewPropertyIO::ViewMode   getViewMode(const ProtocolTaskPtr& taskPtr) const;
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;
