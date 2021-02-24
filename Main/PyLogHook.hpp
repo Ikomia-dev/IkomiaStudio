@@ -68,7 +68,7 @@ namespace tyti {
 
                 if (out == NULL || out == Py_None)
                 {
-                    std::string register_read_write = std::string("import sys\n\sys.") + pipename + std::string(" = type(\"\",(object,),{\"write\":lambda self, txt: None, \"flush\":lambda self: None})()\n");
+                    std::string register_read_write = std::string("import sys\nsys.") + pipename + std::string(" = type(\"\",(object,),{\"write\":lambda self, txt: None, \"flush\":lambda self: None})()\n");
                     PyRun_SimpleString(register_read_write.c_str());
                     out = PySys_GetObject(pipename);
                 }
