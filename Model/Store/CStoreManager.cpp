@@ -463,24 +463,15 @@ void CStoreManager::onPluginExtractionDone(const QStringList& files, const QStri
         else
             validDstDir = checkCppPluginDirectory(dstDir, QString::fromStdString(procInfo.m_name));
 
-        if(procInfo.m_language == CProcessInfo::PYTHON)
-            installPythonPluginDependencies(validDstDir);
-
-        //Insert or update plugin to file database
-        m_dbMgr.insertPlugin(m_currentPluginServerId, procInfo, pluginUser);
-
-        //Reload process library
-        m_pProcessMgr->reloadAll();
-        createLocalPluginModel();
-        qCInfo(logStore).noquote() << tr("Plugin was successfully installed");
+        //Asynchronous call -> install plugin dependencies
+        installPythonPluginDependencies(validDstDir, procInfo, pluginUser);
     }
     catch(std::exception& e)
     {
         qCCritical(logStore).noquote().noquote() << QString::fromStdString(e.what());
+        //Clean
+        clearContext();
     }
-
-    //Clean
-    clearContext();
 }
 
 void CStoreManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
@@ -971,7 +962,7 @@ void CStoreManager::extractZipFile(const QString& src, const QString& dstDir)
 {
     m_pProgressMgr->launchInfiniteProgress(tr("Plugin extraction..."), false);
 
-    QFutureWatcher<QStringList>* pWatcher = new QFutureWatcher<QStringList>;
+    QFutureWatcher<QStringList>* pWatcher = new QFutureWatcher<QStringList>(this);
     connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, src, dstDir]
     {
         //Delete archive file
@@ -1141,24 +1132,41 @@ void CStoreManager::downloadPluginPackage(const QString &packageUrl)
     connect(pReply, &QNetworkReply::finished, this, &CStoreManager::onDownloadPackageDone);
 }
 
-void CStoreManager::installPythonPluginDependencies(const QString &directory)
+void CStoreManager::installPythonPluginDependencies(const QString &directory, const CProcessInfo& info, const CUser& user)
 {
-    QSet<QString> requirements;
-    QDir dir(directory);
-    QRegularExpression re("[rR]equirements[0-9]*.txt");
+    m_pProgressMgr->launchInfiniteProgress(tr("Plugin dependencies installation..."), false);
 
-    foreach (QString fileName, dir.entryList(QDir::Files|QDir::NoSymLinks))
+    QFutureWatcher<void>* pWatcher = new QFutureWatcher<void>(this);
+    connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, info, user]
     {
-        if(fileName.contains(re))
-            requirements.insert(fileName);
-    }
+        m_pProgressMgr->endInfiniteProgress();
+        finalizePluginInstall(info, user);
+    });
 
-    for(auto&& name : requirements)
+    //Install dependencies into separate thread
+    auto future = QtConcurrent::run([directory, info]
     {
-        QString requirementFile = directory + "/" + name;
-        qCInfo(logStore()).noquote() << "Plugin dependencies installation from " + requirementFile;
-        Utils::Python::installRequirements(requirementFile);
-    }
+        if(info.m_language == CProcessInfo::CPP)
+            return;
+
+        QSet<QString> requirements;
+        QDir dir(directory);
+        QRegularExpression re("[rR]equirements[0-9]*.txt");
+
+        foreach (QString fileName, dir.entryList(QDir::Files|QDir::NoSymLinks))
+        {
+            if(fileName.contains(re))
+                requirements.insert(fileName);
+        }
+
+        for(auto&& name : requirements)
+        {
+            QString requirementFile = directory + "/" + name;
+            qCInfo(logStore()).noquote() << "Plugin dependencies installation from " + requirementFile;
+            Utils::Python::installRequirements(requirementFile);
+        }
+    });
+    pWatcher->setFuture(future);
 }
 
 void CStoreManager::deletePlugin()
@@ -1201,6 +1209,20 @@ void CStoreManager::clearContext()
     m_currentPluginPackageFile.clear();
     m_currentPluginServerId = -1;
     m_bBusy = false;
+}
+
+void CStoreManager::finalizePluginInstall(const CProcessInfo& info, const CUser& user)
+{
+    //Insert or update plugin to file database
+    m_dbMgr.insertPlugin(m_currentPluginServerId, info, user);
+    //Reload process library
+    m_pProgressMgr->launchInfiniteProgress(tr("Reloading plugins..."), false);
+    m_pProcessMgr->reloadAll();
+    createLocalPluginModel();
+    qCInfo(logStore).noquote() << tr("Plugin was successfully installed");
+    //Clean
+    clearContext();
+    m_pProgressMgr->endInfiniteProgress();
 }
 
 #include "moc_CStoreManager.cpp"

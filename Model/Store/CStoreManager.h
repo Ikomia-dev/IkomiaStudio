@@ -114,12 +114,14 @@ class CStoreManager : public QObject
 
         void            downloadPluginPackage(const QString& packageUrl);
 
-        void            installPythonPluginDependencies(const QString& directory);
+        void            installPythonPluginDependencies(const QString& directory, const CProcessInfo &info, const CUser &user);
 
         void            deletePlugin();
         void            deleteTranferFile();
 
         void            clearContext();
+
+        void            finalizePluginInstall(const CProcessInfo &info, const CUser &user);
 
     private:
 
