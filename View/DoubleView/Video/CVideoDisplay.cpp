@@ -120,7 +120,7 @@ void CVideoDisplay::initConnections()
     //Video specific signals
     connect(m_pPlayBtn, &QPushButton::clicked, this, &CVideoDisplay::onPlayVideo);
     connect(m_pStopBtn, &QPushButton::clicked, this, &CVideoDisplay::onStopVideo);
-    connect(m_pSliderPos, &QSlider::sliderMoved, this, &CVideoDisplay::onUpdateVideoPos);
+    connect(m_pSliderPos, &QSlider::valueChanged, this, &CVideoDisplay::onUpdateVideoPos);
     connect(m_pRecordBtn, &QPushButton::clicked, this, &CVideoDisplay::onRecordVideo);
 
     if(m_flags & RESULTS_BTN)
@@ -250,7 +250,7 @@ void CVideoDisplay::onSetSliderPos(int pos)
     else
     {
         m_currentPos = pos;
-        m_pSliderPos->setValue(pos);
+        setSliderPos(pos);
         int maxPos = m_pSliderPos->maximum();
         m_bLastFrame = (maxPos > 0 && pos == maxPos);
         // For synchronization
@@ -303,7 +303,7 @@ bool CVideoDisplay::hasStreamOptions() const
 void CVideoDisplay::onSetSliderPosSync(int pos)
 {
     m_currentPos = pos;
-    m_pSliderPos->setValue(pos);
+    setSliderPos(pos);
 }
 
 void CVideoDisplay::onUpdateVideoPos(int pos)
@@ -356,7 +356,7 @@ void CVideoDisplay::onSyncStopVideo()
     emit doStopPlayer();
     m_bIsPaused = true;
     m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
-    m_pSliderPos->setValue(0);
+    setSliderPos(0);
 }
 
 void CVideoDisplay::onPlayVideo()
@@ -459,8 +459,14 @@ void CVideoDisplay::stopVideo()
     emit doStopVideo();
     m_bIsPaused = true;
     m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
-    m_pSliderPos->setValue(0);
-    emit doUpdateVideoPos(0);
+    setSliderPos(0);
     // For synchronization
     emit doSyncStop();
+}
+
+void CVideoDisplay::setSliderPos(int pos)
+{
+    bool bState = m_pSliderPos->blockSignals(true);
+    m_pSliderPos->setValue(pos);
+    m_pSliderPos->blockSignals(bState);
 }

@@ -140,7 +140,7 @@ class CProjectManager : public QObject
         void                onDeleteItem(const QModelIndex &index);
 
         void                onDisplayData(const QModelIndex &index);
-        void                onDisplayVideoImage(const QModelIndex &modelIndex, int index, QImage image, QString imgName);
+        void                onDisplayVideoImage(const QModelIndex &modelIndex, int index, QImage image, QString name);
 
         void                onCurrentImgChangedInZ(int index);
 

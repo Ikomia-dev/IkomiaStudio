@@ -136,7 +136,8 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
         else if(pDataset->hasDimension(DataDimension::TIME))
         {
             // Time image sequence
-            CMat videoImage = m_pDataMgr->getVideoMgr()->getSequenceImage(index, wrapInd);
+            auto videoImage = m_pDataMgr->getVideoMgr()->getCurrentImage(index);
+            //CMat videoImage = m_pDataMgr->getVideoMgr()->getSequenceImage(index, wrapInd);
             if(!videoImage.data)
                 throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid video frame.").toStdString(), __func__, __FILE__, __LINE__);
 

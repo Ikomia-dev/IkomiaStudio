@@ -532,7 +532,7 @@ void CProjectManager::onDisplayData(const QModelIndex &index)
     }
 }
 
-void CProjectManager::onDisplayVideoImage(const QModelIndex& modelIndex, int index, QImage image, QString imgName)
+void CProjectManager::onDisplayVideoImage(const QModelIndex& modelIndex, int index, QImage image, QString name)
 {
     if(!modelIndex.isValid())
     {
@@ -553,7 +553,12 @@ void CProjectManager::onDisplayVideoImage(const QModelIndex& modelIndex, int ind
     {
         // If image sequence, get image item and display new image in image item scene (one different scene per image)
         auto imgItemPtr = CProjectUtils::getItem<CImageItem>(wrapInd, TreeItemType::IMAGE);
-        assert(imgItemPtr);
+        if(!imgItemPtr)
+        {
+            qCCritical(logProject) << QString("Invalid model index for time sequence at position %1 for image %2").arg(index).arg(name);
+            return;
+        }
+
         pScene = imgItemPtr->getScene();
 
         // Update image index to next index in case of playing image sequence
@@ -564,14 +569,22 @@ void CProjectManager::onDisplayVideoImage(const QModelIndex& modelIndex, int ind
     {
         // If real video, get video item and display new image in video item scene (one unique scene for all images)
         auto videoItemPtr = CProjectUtils::getItem<CVideoItem>(wrapInd, TreeItemType::VIDEO);
-        assert(videoItemPtr);
+        if(!videoItemPtr)
+        {
+            qCCritical(logProject) << QString("Invalid model index for video %1").arg(name);
+            return;
+        }
         pScene = videoItemPtr->getScene();
     }
     else if(type == TreeItemType::LIVE_STREAM)
     {
         // If real video, get video item and display new image in video item scene (one unique scene for all images)
         auto streamItemPtr = CProjectUtils::getItem<CLiveStreamItem>(wrapInd, TreeItemType::LIVE_STREAM);
-        assert(streamItemPtr);
+        if(!streamItemPtr)
+        {
+            qCCritical(logProject) << QString("Invalid model index for camera %1").arg(name);
+            return;
+        }
         pScene = streamItemPtr->getScene();
     }
 
@@ -580,7 +593,7 @@ void CProjectManager::onDisplayVideoImage(const QModelIndex& modelIndex, int ind
     m_pGraphicsMgr->loadAllGraphics(modelIndex);
 
     // Notify view to display image.
-    emit doDisplayVideo(modelIndex, index, pScene, image, imgName, m_bVideoChanged, nullptr);
+    emit doDisplayVideo(modelIndex, index, pScene, image, name, m_bVideoChanged, nullptr);
 
     m_bVideoChanged = false;
 }
@@ -633,26 +646,24 @@ void CProjectManager::onUpdateVideoPos(const QModelIndex &modelIndex, int index,
     if(pVideoMgr->getCurrentPos(modelIndex) == pos)
         return;
 
+    // Get current item in model
     auto wrapInd = wrapIndex(modelIndex);
-    if(modelIndex == m_currentDataItemIndex)
-    {
-        // Get current item in model
-        auto pItem = static_cast<ProjectTreeItem*>(wrapInd.internalPointer());
-        if(!pItem)
-            return;
+    auto pItem = static_cast<ProjectTreeItem*>(wrapInd.internalPointer());
 
-        auto type = pItem->getTypeId();
-        if(type == TreeItemType::IMAGE) // If image sequence
-        {
-            // Get parent index
-            auto parentIndex = m_currentDataItemIndex.parent();
-            // Set current index according to pos if image sequence
-            m_currentDataItemIndex = parentIndex.model()->index(pos, 0, parentIndex);
-            // Update wrap index
-            wrapInd = wrapIndex(m_currentDataItemIndex);
-            // Notify view to update index in treeview in case of image sequence
-            emit doUpdateSelectedIndex(m_currentDataItemIndex);
-        }
+    if(!pItem)
+        return;
+
+    auto type = pItem->getTypeId();
+    if(type == TreeItemType::IMAGE) // If image sequence
+    {
+        // Get parent index
+        auto parentIndex = m_currentDataItemIndex.parent();
+        // Set current index according to pos if image sequence
+        m_currentDataItemIndex = parentIndex.model()->index(pos, 0, parentIndex);
+        // Update wrap index
+        wrapInd = wrapIndex(m_currentDataItemIndex);
+        // Notify view to update index in treeview in case of image sequence
+        emit doUpdateSelectedIndex(m_currentDataItemIndex);
     }
 
     // Notify video manager to update video position
@@ -1449,7 +1460,7 @@ bool CProjectManager::isTimeDataItem(const QModelIndex &index) const
     auto pItem = static_cast<ProjectTreeItem*>(wrapInd.internalPointer());
     TreeItemType type = static_cast<TreeItemType>(pItem->getTypeId());
 
-    if(type == TreeItemType::VIDEO || TreeItemType::LIVE_STREAM)
+    if(type == TreeItemType::VIDEO || type == TreeItemType::LIVE_STREAM)
         return true;
     else if(type == TreeItemType::IMAGE || type == TreeItemType::DATASET)
     {

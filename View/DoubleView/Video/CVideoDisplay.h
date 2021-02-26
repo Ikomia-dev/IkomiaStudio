@@ -136,6 +136,8 @@ class CVideoDisplay : public CDataDisplay
         void            pauseVideo();
         void            stopVideo();
 
+        void            setSliderPos(int pos);
+
     private:
 
         CImageDisplay*  m_pImgDisplay = nullptr;
