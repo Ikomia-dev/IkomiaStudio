@@ -160,10 +160,12 @@ CImageDisplay* CVideoDisplay::getImageDisplay() const
     return m_pImgDisplay;
 }
 
-void CVideoDisplay::setStreamOptions(bool bEnable)
+void CVideoDisplay::setSourceType(const CDataVideoBuffer::Type& type)
 {
     int index;
-    m_bIsStream = bEnable;
+    m_sourceType = type;
+    m_bIsStream = (type == CDataVideoBuffer::OPENNI_STREAM || type == CDataVideoBuffer::ID_STREAM ||
+                   type == CDataVideoBuffer::IP_STREAM || type == CDataVideoBuffer::PATH_STREAM);
 
     if(m_bIsStream)
     {
@@ -408,14 +410,19 @@ void CVideoDisplay::onSaveVideo()
 
 void CVideoDisplay::onExportVideo()
 {
+    QString filePath;
     QSettings IkomiaSettings;
 
-    auto fileName = Utils::File::saveFile(this, tr("Save Video"), IkomiaSettings.value(_DefaultDirVideoExport).toString(), tr("avi Files (*.avi)"), QStringList("avi"), ".avi");
-    if(fileName.isEmpty())
+    if(m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
+        filePath = QFileDialog::getExistingDirectory(this, tr("Save image sequence"), IkomiaSettings.value(_DefaultDirVideoExport).toString());
+    else
+        filePath = Utils::File::saveFile(this, tr("Save Video"), IkomiaSettings.value(_DefaultDirVideoExport).toString(), tr("avi Files (*.avi)"), QStringList("avi"), ".avi");
+
+    if(filePath.isEmpty())
         return;
 
-    IkomiaSettings.setValue(_DefaultDirVideoExport, QFileInfo(fileName).path());
-    emit doExportVideo(fileName);
+    IkomiaSettings.setValue(_DefaultDirVideoExport, QFileInfo(filePath).path());
+    emit doExportVideo(filePath);
 }
 
 void CVideoDisplay::onLoadNextFrame()

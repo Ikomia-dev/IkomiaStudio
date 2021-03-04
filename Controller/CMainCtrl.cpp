@@ -348,7 +348,7 @@ void CMainCtrl::initResultsConnections()
     connect(m_pModel->getResultManager(), &CResultManager::doApplyViewProperty, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onApplyViewProperty); 
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayOverlay, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onDisplayOverlay);
     connect(m_pModel->getResultManager(), &CResultManager::doClearOverlay, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onClearOverlay);
-    connect(m_pModel->getResultManager(), &CResultManager::doSetVideoStream, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetStreamOptions);
+    connect(m_pModel->getResultManager(), &CResultManager::doSetVideoSourceType, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoSourceType);
     connect(m_pModel->getResultManager(), &CResultManager::doSetVideoFPS, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoFPS);
     connect(m_pModel->getResultManager(), &CResultManager::doSetVideoLength, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoLength);
     connect(m_pModel->getResultManager(), &CResultManager::doSetVideoPos, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoPos);
@@ -378,7 +378,7 @@ void CMainCtrl::initVideoConnections()
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetFPS, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetVideoFPS);
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetTotalTime, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetVideoTotalTime);
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetCurrentTime, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetVideoCurrentTime);
-    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetStreamOptions, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetStreamOptions);
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetSourceType, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetVideoSourceType);
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doStopRecording, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onStopRecordingVideo);
 
     // Video Manager -> result viewer
@@ -387,7 +387,7 @@ void CMainCtrl::initVideoConnections()
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetFPS, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoFPS);
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetTotalTime, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoTotalTime);
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetCurrentTime, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoCurrentTime);
-    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetStreamOptions, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetStreamOptions);
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doSetSourceType, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onSetVideoSourceType);
 
     // Video Manager -> doubleview
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);

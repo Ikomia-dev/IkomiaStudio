@@ -217,6 +217,11 @@ void CProtocolManager::forceBatchMode(bool bEnable)
         m_pProtocol->forceBatchMode(bEnable);
 }
 
+void CProtocolManager::enableAutoLoadBatchResults(bool bEnable)
+{
+    m_bAutoLoadBatchResult = bEnable;
+}
+
 void CProtocolManager::beforeProjectClose(bool bWithCurrentImage)
 {
     if(bWithCurrentImage == true)
@@ -903,7 +908,10 @@ void CProtocolManager::onRunProtocolFinished()
     auto currentModelIndex = m_pProjectMgr->getCurrentDataItemIndex();
 
     if(m_pProtocol->isBatchMode())
-        m_pProjectMgr->onLoadFolder(QString::fromStdString(m_pProtocol->getOutputFolder()), currentModelIndex);
+    {
+        if(m_bAutoLoadBatchResult)
+            m_pProjectMgr->onLoadFolder(QString::fromStdString(m_pProtocol->getOutputFolder()), currentModelIndex);
+    }
     else if(pTask && m_pResultsMgr)
     {
         if(m_inputViewMode == ProtocolInputViewMode::CURRENT)
@@ -916,7 +924,6 @@ void CProtocolManager::onRunProtocolFinished()
         updateDataInfo();
         m_pResultsMgr->manageOutputs(pTask, taskId, currentModelIndex);
     }
-    //qCInfo(logProtocol) << tr("Workflow finished successfully.");
     emit doFinishedProtocol();
 }
 

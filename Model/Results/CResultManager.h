@@ -100,8 +100,7 @@ class CResultManager : public QObject
 
         void                doAddRecordVideo(const QString& path);
 
-        //void                doInitVideoInfo(const QModelIndex& modelIndex, int index);
-        void                doSetVideoStream(int index, bool bIsStream);
+        void                doSetVideoSourceType(int index, CDataVideoBuffer::Type type);
         void                doSetVideoFPS(int index, int fps);
         void                doSetVideoLength(int index, int frameCount);
         void                doSetVideoPos(int index, int pos);
@@ -110,7 +109,7 @@ class CResultManager : public QObject
 
         void                doStopRecording(size_t id);
 
-        void                doVideoSaveIsFinished(const std::string& path);
+        void                doVideoSaveIsFinished(QStringList& paths, CDataVideoBuffer::Type sourceType);
 
     public slots:
 
@@ -127,7 +126,7 @@ class CResultManager : public QObject
 
     private slots:
 
-        void                onVideoSaveIsFinished(const std::string& path);
+        void                onVideoSaveIsFinished(QStringList &paths, CDataVideoBuffer::Type sourceType);
 
     private:
 

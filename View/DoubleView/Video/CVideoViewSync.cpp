@@ -168,7 +168,7 @@ void CVideoViewSync::syncFps(CVideoDisplay *pSrcDisplay, double fps)
     }
 }
 
-void CVideoViewSync::syncStreamOptions(CVideoDisplay *pSrcDisplay, bool bIsStream)
+void CVideoViewSync::syncSourceType(CVideoDisplay *pSrcDisplay, CDataVideoBuffer::Type srcType)
 {
     for(auto it=m_connections.begin(); it!=m_connections.end(); ++it)
     {
@@ -176,9 +176,9 @@ void CVideoViewSync::syncStreamOptions(CVideoDisplay *pSrcDisplay, bool bIsStrea
         auto pDisplay2 = it->second;
 
         if(pDisplay1 == pSrcDisplay)
-            pDisplay2->setStreamOptions(bIsStream);
+            pDisplay2->setSourceType(srcType);
         else if(pDisplay2 == pSrcDisplay)
-            pDisplay1->setStreamOptions(bIsStream);
+            pDisplay1->setSourceType(srcType);
     }
 }
 

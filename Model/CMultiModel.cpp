@@ -182,7 +182,8 @@ QModelIndex CMultiModel::index( int row, int col, const QModelIndex & parent /*=
 	if ( parent.isValid() )
 	{
         TreeItem* pTreeItem = static_cast<TreeItem*>(parent.internalPointer());
-        if ( pTreeItem && row < pTreeItem->m_children.size())
+        //Call to rowCount() mandatory here to ensure children lazy evaluation
+        if ( pTreeItem && row < rowCount(parent))
             index = createIndex( row, col, pTreeItem->m_children[ row ] );
 	}
 	else

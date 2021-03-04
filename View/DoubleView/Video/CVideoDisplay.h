@@ -23,6 +23,7 @@
 
 #include "../CDataDisplay.h"
 #include "../Image/CImageDisplay.h"
+#include "CDataVideoBuffer.h"
 
 class CVideoDisplay : public CDataDisplay
 {
@@ -52,7 +53,7 @@ class CVideoDisplay : public CDataDisplay
 
         CImageDisplay*  getImageDisplay() const;
 
-        void            setStreamOptions(bool bEnable);
+        void            setSourceType(const CDataVideoBuffer::Type& type);
         void            setImage(CImageScene *pScene, QImage image, QString name, bool bZoomFit);
         virtual void    setViewSpaceShared(bool bShared) override;
         virtual void    setSelected(bool bSelect) override;
@@ -140,26 +141,27 @@ class CVideoDisplay : public CDataDisplay
 
     private:
 
-        CImageDisplay*  m_pImgDisplay = nullptr;
-        QSlider*        m_pSliderPos = nullptr;
-        QTimer*         m_pTimer = nullptr;
-        QLabel*         m_pCurrentTime = nullptr;
-        QLabel*         m_pTotalTime = nullptr;
-        QPushButton*    m_pPlayBtn = nullptr;
-        QPushButton*    m_pStopBtn = nullptr;
-        QPushButton*    m_pRecordBtn = nullptr;
-        QPushButton*    m_pSaveBtn = nullptr;
-        QPushButton*    m_pExportBtn = nullptr;
-        QPushButton*    m_pMaximizeBtn = nullptr;
-        bool            m_bIsPaused = true;
-        bool            m_bIsRecording = false;
-        bool            m_bIsStream = false;
-        bool            m_bLastFrame = false;
-        double          m_fps = 0;
-        int             m_currentTime = 0;
-        int             m_totalTime = 0;
-        int             m_length = 0;
-        int             m_currentPos = 0;
+        CImageDisplay*          m_pImgDisplay = nullptr;
+        QSlider*                m_pSliderPos = nullptr;
+        QTimer*                 m_pTimer = nullptr;
+        QLabel*                 m_pCurrentTime = nullptr;
+        QLabel*                 m_pTotalTime = nullptr;
+        QPushButton*            m_pPlayBtn = nullptr;
+        QPushButton*            m_pStopBtn = nullptr;
+        QPushButton*            m_pRecordBtn = nullptr;
+        QPushButton*            m_pSaveBtn = nullptr;
+        QPushButton*            m_pExportBtn = nullptr;
+        QPushButton*            m_pMaximizeBtn = nullptr;
+        bool                    m_bIsPaused = true;
+        bool                    m_bIsRecording = false;
+        bool                    m_bIsStream = false;
+        bool                    m_bLastFrame = false;
+        double                  m_fps = 0;
+        CDataVideoBuffer::Type  m_sourceType = CDataVideoBuffer::NONE;
+        int                     m_currentTime = 0;
+        int                     m_totalTime = 0;
+        int                     m_length = 0;
+        int                     m_currentPos = 0;
 };
 
 #endif // CVIDEODISPLAY_H

@@ -127,6 +127,11 @@ std::string CVideoPlayer::getRecordPath() const
     return m_recordPath;
 }
 
+CDataVideoBuffer::Type CVideoPlayer::getSourceType() const
+{
+    return m_mgrPtr->getSourceType();
+}
+
 bool CVideoPlayer::isStream() const
 {
     return m_bStream;
@@ -412,7 +417,7 @@ void CVideoManager::initInfo(const QModelIndex& modelIndex, int index)
     if(pInfo == nullptr)
         return;
 
-    emit doSetStreamOptions(index, pPlayer->isStream());
+    emit doSetSourceType(index, pPlayer->getSourceType());
     // Set fps rate in video display view
     emit doSetFPS(index, pInfo->m_fps);
     // Set number of frames in display view (for scroll bar)
@@ -793,6 +798,15 @@ CDataVideoInfoPtr CVideoManager::getVideoInfo(const QModelIndex &index)
         return nullptr;
     else
         return pPlayer->getManager()->getDataVideoInfoPtr();
+}
+
+CDataVideoBuffer::Type CVideoManager::getSourceType(const QModelIndex &index)
+{
+    auto pPlayer = getPlayer(index);
+    if(!pPlayer)
+        return CDataVideoBuffer::NONE;
+    else
+        return pPlayer->getSourceType();
 }
 
 //#include "moc_CVideoManager.cpp"

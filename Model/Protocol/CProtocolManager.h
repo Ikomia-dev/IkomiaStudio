@@ -79,6 +79,8 @@ class CProtocolManager : public QObject
 
         void                        forceBatchMode(bool bEnable);
 
+        void                        enableAutoLoadBatchResults(bool bEnable);
+
         void                        beforeProjectClose(bool bWithCurrentImage);
         void                        beforeDataDeleted(const QModelIndex& index);
         void                        beforeDataDeleted(const std::vector<QModelIndex>& indexes);
@@ -293,6 +295,7 @@ class CProtocolManager : public QObject
         VectorPairString            m_execTimeInfo;
         ProtocolInputViewMode       m_inputViewMode = ProtocolInputViewMode::ORIGIN;
         int                         m_currentFPS = 0;
+        bool                        m_bAutoLoadBatchResult = true;
 };
 
 #endif // CPROTOCOLMANAGER_H

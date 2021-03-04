@@ -241,6 +241,12 @@ void CProtocolInputViewManager::manageVideoInput(int index, const ProtocolTaskIO
 
     //Get source model index
     QModelIndex modelIndex = getSrcModelIndex(index);
+    auto wrapInd = m_pProjectMgr->wrapIndex(modelIndex);
+    auto pItem = static_cast<ProjectTreeItem*>(wrapInd.internalPointer());
+
+    if(pItem->getTypeId() == TreeItemType::DATASET)
+        modelIndex = m_pProjectMgr->getDatasetDataIndex(modelIndex, 0);
+
     // Emit signal to display input
     emit doDisplayVideo(modelIndex, index, nullptr, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), false, pViewProp);
     //Emit signal to initialize video info (fps...)

@@ -57,6 +57,7 @@ class CVideoPlayer : public QObject
         CMat                getImage(int pos);
         CMat                getSequenceImage(const QModelIndex& wrapIndex);
         std::string         getRecordPath() const;
+        CDataVideoBuffer::Type  getSourceType() const;
 
         bool                isStream() const;
         bool                isPlaying() const;
@@ -120,6 +121,7 @@ class CVideoManager : public QObject
         CMat                getSequenceImage(const QModelIndex& datasetIndex, const QModelIndex &imgWrapIndex);
         CMat                getCurrentImage(const QModelIndex& index);
         CDataVideoInfoPtr   getVideoInfo(const QModelIndex& index);
+        CDataVideoBuffer::Type  getSourceType(const QModelIndex& index);
 
         void                play(const QModelIndex& modelIndex, size_t inputIndex);
 
@@ -162,7 +164,7 @@ class CVideoManager : public QObject
         void                doSetVideoLength(int index, int length);
         void                doSetTotalTime(int index, int totalTime);
         void                doSetCurrentTime(int index, int currentTime);
-        void                doSetStreamOptions(int index, bool bIsStream);
+        void                doSetSourceType(int index, CDataVideoBuffer::Type type);
 
         void                doDisplayVideoImage(const QModelIndex& index, int inputIndex, QImage image, QString imgName);
         void                doDisplayVideoInfo(const VectorPairString& infoMap);

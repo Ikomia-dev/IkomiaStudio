@@ -44,7 +44,7 @@ class CVideoViewSync : public QObject
         void    syncTotalTime(CVideoDisplay* pSrcDisplay, int time);
         void    syncCurrentTime(CVideoDisplay* pSrcDisplay, int time);
         void    syncFps(CVideoDisplay* pSrcDisplay, double fps);
-        void    syncStreamOptions(CVideoDisplay* pSrcDisplay, bool bIsStream);
+        void    syncSourceType(CVideoDisplay* pSrcDisplay, CDataVideoBuffer::Type srcType);
 
     private:
 

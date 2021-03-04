@@ -926,14 +926,14 @@ void CDataViewer::onSetVideoCurrentTime(int index, int currentTime)
     }
 }
 
-void CDataViewer::onSetStreamOptions(int index, bool bIsStream)
+void CDataViewer::onSetVideoSourceType(int index, CDataVideoBuffer::Type srcType)
 {
     auto views = m_pDataDisplay->getDataViews();
     if(index < views.size() && views[index]->getTypeId() == DisplayType::VIDEO_DISPLAY)
     {
         auto pDisplay = static_cast<CVideoDisplay*>(views[index]);
-        pDisplay->setStreamOptions(bIsStream);
-        m_pVideoViewSync->syncStreamOptions(pDisplay, bIsStream);
+        pDisplay->setSourceType(srcType);
+        m_pVideoViewSync->syncSourceType(pDisplay, srcType);
     }
 }
 

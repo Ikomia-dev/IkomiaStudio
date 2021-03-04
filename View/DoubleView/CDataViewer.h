@@ -159,7 +159,7 @@ class CDataViewer : public QWidget
         void                    onSetVideoFPS(int index, double fps);
         void                    onSetVideoTotalTime(int index, int totalTime);
         void                    onSetVideoCurrentTime(int index, int currentTime);
-        void                    onSetStreamOptions(int index, bool bIsStream);
+        void                    onSetVideoSourceType(int index, CDataVideoBuffer::Type srcType);
 
         void                    onStopVideo();
         void                    onStopRecordingVideo(const QModelIndex &modelIndex);

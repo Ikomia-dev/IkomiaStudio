@@ -32,6 +32,7 @@
 #include <QTabWidget>
 #include "View/DoubleView/CDataDisplay.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
+#include "CDataVideoBuffer.h"
 
 class CResultTableDisplay;
 class CImageViewSync;
@@ -121,7 +122,7 @@ class CResultsViewer : public QWidget
         void                    onSetVideoFPS(int index, double fps);
         void                    onSetVideoTotalTime(int index, int totalTime);
         void                    onSetVideoCurrentTime(int index, int currentTime);
-        void                    onSetStreamOptions(int index, bool bIsStream);
+        void                    onSetVideoSourceType(int index, CDataVideoBuffer::Type srcType);
         void                    onStopRecordingVideo(int index);
 
     private slots:

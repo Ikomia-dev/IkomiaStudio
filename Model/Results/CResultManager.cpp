@@ -358,10 +358,9 @@ void CResultManager::onRecordResultVideo(size_t index, bool bRecord)
         qCCritical(logResults).noquote() << QString::fromStdString(e.what());
         emit doStopRecording(index);
     }
-
 }
 
-void CResultManager::onVideoSaveIsFinished(const std::string& path)
+void CResultManager::onVideoSaveIsFinished(QStringList &paths, CDataVideoBuffer::Type sourceType)
 {
     //Récupération du chemin de l'image source
     QModelIndex imgIndex = m_pProtocolMgr->getCurrentVideoInputModelIndex();
@@ -375,9 +374,13 @@ void CResultManager::onVideoSaveIsFinished(const std::string& path)
     auto currentDatasetIndex = m_pProjectMgr->getDatasetIndex(imgIndex);
 
     //Ajout de l'image résultat
-    QStringList files;
-    files.push_back(QString::fromStdString(path));
-    m_pProjectMgr->addVideos(currentDatasetIndex, files);
+    if(sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
+    {
+        DatasetLoadPolicy policy(Relationship::MANY_TO_ONE, DataDimension::TIME);
+        m_pProjectMgr->addImages(currentDatasetIndex.parent(), paths, policy);
+    }
+    else
+        m_pProjectMgr->addVideos(currentDatasetIndex.parent(), paths);
 }
 
 void CResultManager::removeResult(const QModelIndex &index)
@@ -997,11 +1000,12 @@ void CResultManager::manageVideoOutput(const ProtocolTaskIOPtr& pOutput, const s
     emit doDisplayVideo(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), videoInputIndices, pViewProp);
     //Get source video info
     auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pProtocolMgr->getCurrentVideoInputModelIndex());
-    bool bIsStream = m_pDataMgr->getVideoMgr()->isStream(m_pProtocolMgr->getCurrentVideoInputModelIndex());
+    auto srcType = m_pDataMgr->getVideoMgr()->getSourceType(m_pProtocolMgr->getCurrentVideoInputModelIndex());
+
     //Emit signals to initialize video info (fps...)
     if(videoInfoPtr)
     {
-        emit doSetVideoStream(index, bIsStream);
+        emit doSetVideoSourceType(index, srcType);
         emit doSetVideoFPS(index, videoInfoPtr->m_fps);
         emit doSetVideoLength(index, videoInfoPtr->m_frameCount);
         emit doSetVideoPos(index, videoInfoPtr->m_currentPos);
@@ -1141,6 +1145,7 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path)
         {
             // Reset process on whole video to go back on live processing
             m_pProtocolMgr->forceBatchMode(false);
+            m_pProtocolMgr->enableAutoLoadBatchResults(true);
             // Move file to appropriate place
             saveOutputVideo(id, path);
         }
@@ -1158,6 +1163,7 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path)
 
     // Set processing on whole video
     m_pProtocolMgr->forceBatchMode(true);
+    m_pProtocolMgr->enableAutoLoadBatchResults(false);
     // Run protocol to current active task
     m_pProtocolMgr->runProtocolToActiveTask();
 }
@@ -1219,17 +1225,35 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
     if(!pTask)
         throw CException(CoreExCode::NULL_POINTER, "Invalid current task", __func__, __FILE__, __LINE__);
 
+    QStringList paths;
     auto output = pTask->getOutput(id);
     auto dataType = output->getDataType();
 
     if(dataType == IODataType::VIDEO || dataType == IODataType::VIDEO_BINARY || dataType == IODataType::VIDEO_LABEL)
     {
+        // Move to user-defined path
         auto pVideoIO = std::static_pointer_cast<CVideoProcessIO>(output);
+        auto infoPtr = std::static_pointer_cast<CDataVideoInfo>(pVideoIO->getDataInfo());
         auto resultPath = pVideoIO->getVideoPath();
-        Utils::File::moveFile(resultPath, path);
+
+        if(infoPtr->m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
+        {
+            for(int i=0; i<infoPtr->m_frameCount; ++i)
+            {
+                auto pathFrom = Utils::File::getPathFromPattern(resultPath, i);
+                auto imgPath = path + "/" + Utils::File::getFileName(pathFrom);
+                Utils::File::moveFile(pathFrom, imgPath);
+                paths.push_back(QString::fromStdString(imgPath));
+            }
+        }
+        else
+        {
+            Utils::File::moveFile(resultPath, path);
+            paths.push_back(QString::fromStdString(path));
+        }
+        emit doVideoSaveIsFinished(paths, static_cast<CDataVideoBuffer::Type>(infoPtr->m_sourceType));
     }
 
-    emit doVideoSaveIsFinished(path);
     //Create Protocol <-> Image association
     //mapProtocolToImage();
 }
