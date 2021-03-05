@@ -31,7 +31,7 @@ class CDatasetItem : public CItem
 
         CDatasetItem(const std::string& name, IODataType dataType) : CItem(name)
         {
-            m_pDataset = std::make_shared<CDataset<T>>(dataType);
+            m_pDataset = std::make_shared<CDataset<T>>(dataType, name);
         }
         CDatasetItem(const CDatasetItem& other) : CItem(other)
         {

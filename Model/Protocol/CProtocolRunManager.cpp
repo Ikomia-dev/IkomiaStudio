@@ -109,6 +109,7 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
     if(!index.isValid())
         throw CException(CoreExCode::INVALID_USAGE, tr("Workflow inputs error : invalid item type.").toStdString(), __func__, __FILE__, __LINE__);
 
+    std::string inputName;
     ProtocolTaskIOPtr inputPtr = nullptr;
     std::string itemPath = m_pProjectMgr->getItemPath(index);
     auto wrapInd = m_pProjectMgr->wrapIndex(index);
@@ -128,6 +129,7 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
             if(!image.data)
                 throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid volume.").toStdString(), __func__, __FILE__, __LINE__);
 
+            inputName = pDataset->getInfo().getName();
             DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapInd);
             auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
             inputPtr = std::make_shared<CImageProcessIO>(IODataType::VOLUME, image);
@@ -140,7 +142,9 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
             if(!videoImage.data)
                 throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid video frame.").toStdString(), __func__, __FILE__, __LINE__);
 
+            inputName = pDataset->getInfo().getName();
             inputPtr = std::make_shared<CVideoProcessIO>(IODataType::VIDEO, videoImage);
+            inputPtr->setName(pDataset->getInfo().getName());
             std::static_pointer_cast<CVideoProcessIO>(inputPtr)->setVideoPath(m_pProjectMgr->getItemPath(index));
         }
         else
@@ -150,6 +154,7 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
             if(!image.data)
                 throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid image.").toStdString(), __func__, __FILE__, __LINE__);
 
+            inputName = pItem->getName();
             inputPtr = std::make_shared<CImageProcessIO>(image);
         }
     }
@@ -160,7 +165,9 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
         if(!image.data)
             throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid video.").toStdString(), __func__, __FILE__, __LINE__);
 
+        inputName = pItem->getName();
         inputPtr = std::make_shared<CVideoProcessIO>(IODataType::VIDEO, image);
+
         if(bNewSequence)
             std::static_pointer_cast<CVideoProcessIO>(inputPtr)->setVideoPath(m_pProjectMgr->getItemPath(index));
     }
@@ -171,6 +178,7 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
         if(!image.data)
             throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid camera stream.").toStdString(), __func__, __FILE__, __LINE__);
 
+        inputName = pItem->getName();
         inputPtr = std::make_shared<CVideoProcessIO>(IODataType::LIVE_STREAM, image);
     }
     else
@@ -178,7 +186,9 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
 
     if(inputPtr)
     {
+        inputPtr->setName(inputName);
         CDataInfoPtr infoPtr = inputPtr->getDataInfo();
+
         if(infoPtr)
             infoPtr->setFileName(itemPath);
     }
@@ -537,11 +547,15 @@ size_t CProtocolRunManager::getBatchCount() const
                 auto pDataset = CProjectUtils::getDataset<CMat>(wrapInd);
 
                 if(pDataset->hasDimension(DataDimension::VOLUME) || pDataset->hasDimension(DataDimension::TIME))
+                {
                     m_pInputs->at(i).setSize(j, 1);
+                    inputCount++;
+                }
                 else
+                {
                     m_pInputs->at(i).setSize(j, pDataset->size());
-
-                inputCount += pDataset->size();
+                    inputCount += pDataset->size();
+                }
             }
         }
         else if(m_pInputs->at(i).getType() == TreeItemType::FOLDER)
