@@ -1236,7 +1236,7 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
         auto infoPtr = std::static_pointer_cast<CDataVideoInfo>(pVideoIO->getDataInfo());
         auto resultPath = pVideoIO->getVideoPath();
 
-        if(infoPtr->m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
+        if(infoPtr && infoPtr->m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
         {
             for(int i=0; i<infoPtr->m_frameCount; ++i)
             {

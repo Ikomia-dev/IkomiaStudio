@@ -169,7 +169,10 @@ ProtocolTaskIOPtr CProtocolRunManager::createIOFromDataItem(const QModelIndex &i
         inputPtr = std::make_shared<CVideoProcessIO>(IODataType::VIDEO, image);
 
         if(bNewSequence)
-            std::static_pointer_cast<CVideoProcessIO>(inputPtr)->setVideoPath(m_pProjectMgr->getItemPath(index));
+        {
+            auto inputVideoPtr = std::static_pointer_cast<CVideoProcessIO>(inputPtr);
+            inputVideoPtr->setVideoPath(m_pProjectMgr->getItemPath(index));
+        }
     }
     else if(type == TreeItemType::LIVE_STREAM)
     {
@@ -465,7 +468,7 @@ void CProtocolRunManager::batchErrorHandling(const std::exception &e)
         msg = QString(e.what());
     }
     qCCritical(logProtocol).noquote() << msg;
-    onProtocolFinished();
+    m_bStop = true;
 }
 
 void CProtocolRunManager::onSetElapsedTime(double time)
@@ -500,12 +503,11 @@ void CProtocolRunManager::setBatchInput(int index)
 {
     for(size_t i=0; i<m_pInputs->size(); ++i)
     {
-        auto type = m_pInputs->at(i).getType();
-        if(m_pInputs->at(i).getMode() == ProtocolInputMode::CURRENT_DATA && (type == TreeItemType::IMAGE || type == TreeItemType::VIDEO))
-            continue;
-
-        auto inputPtr = createTaskIO(i, index, true);
-        m_protocolPtr->setInput(inputPtr, i, true);
+        if(index < (int)m_pInputs->at(i).getModelIndicesCount())
+        {
+            auto inputPtr = createTaskIO(i, index, true);
+            m_protocolPtr->setInput(inputPtr, i, true);
+        }
     }
 }
 
