@@ -37,6 +37,7 @@ class CProtocolInput
         std::vector<DataDimension>  getDataFilters() const;
         size_t                      getContainerIndex(size_t dataIndex) const;
         size_t                      getDataIndexInContainer(size_t containerIndex, size_t dataIndex);
+        size_t                      getSize(size_t pos) const;
 
         bool                        isValid() const;
 

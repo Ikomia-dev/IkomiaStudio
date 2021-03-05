@@ -65,18 +65,33 @@ size_t CProtocolInput::getContainerIndex(size_t dataIndex) const
         if(dataIndex < count)
             return i;
     }
-    return 0;
+
+    if(m_mode == CURRENT_DATA)
+        return 0;
+
+    return SIZE_MAX;
 }
 
 size_t CProtocolInput::getDataIndexInContainer(size_t containerIndex, size_t dataIndex)
 {
-    if(containerIndex >= m_sizes.size())
+    if(m_sizes.size() == 0 && m_mode == CURRENT_DATA)
         return 0;
+
+    if(containerIndex >= m_sizes.size())
+        return SIZE_MAX;
 
     for(size_t i=0; i<containerIndex; ++i)
         dataIndex -= m_sizes[i];
 
     return dataIndex;
+}
+
+size_t CProtocolInput::getSize(size_t pos) const
+{
+    if(pos < m_sizes.size())
+        return m_sizes[pos];
+    else
+        return 0;
 }
 
 bool CProtocolInput::isValid() const

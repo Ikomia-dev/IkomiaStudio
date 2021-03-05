@@ -1530,6 +1530,11 @@ void CProtocolManager::setProtocolInput(size_t inputIndex, bool bNewSequence)
     }
     //Set first workflow input data
     auto taskIOPtr = m_runMgr.createTaskIO(inputIndex, 0, bNewSequence);
+    if(!taskIOPtr)
+    {
+        qCritical(logProtocol()).noquote() << tr("Workflow input cannot be set: invalid item.");
+        return;
+    }
     m_pProtocol->setInput(taskIOPtr, inputIndex, bNewSequence);
     // Notify protocol view
     emit doInputChanged(inputIndex);

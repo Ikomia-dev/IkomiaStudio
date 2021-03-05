@@ -73,29 +73,55 @@ ProtocolTaskIOPtr CProtocolRunManager::createTaskIO(size_t inputIndex, size_t da
     if(type == TreeItemType::FOLDER)
     {
         size_t folderIndex = m_pInputs->at(inputIndex).getContainerIndex(dataIndex);
-        QModelIndex itemIndex = m_pInputs->at(inputIndex).getModelIndex(folderIndex);
-        auto types = getOriginTargetDataTypes(inputIndex);
+        if(folderIndex == SIZE_MAX)
+            return nullptr;
 
+        QModelIndex itemIndex = m_pInputs->at(inputIndex).getModelIndex(folderIndex);
+        if(!itemIndex.isValid())
+            return nullptr;
+
+        auto types = getOriginTargetDataTypes(inputIndex);
         if(types.empty() || types.find(IODataType::FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
             return std::make_shared<CFolderInput>(m_pProjectMgr->getItemPath(itemIndex));
         else
         {
             size_t realDataIndex = m_pInputs->at(inputIndex).getDataIndexInContainer(folderIndex, dataIndex);
+            if(realDataIndex == SIZE_MAX)
+                return nullptr;
+
             QModelIndex dataModelIndex = m_pProjectMgr->getFolderDataIndex(itemIndex, realDataIndex);
+            if(!dataModelIndex.isValid())
+                return nullptr;
+
             return createIOFromDataItem(dataModelIndex, bNewSequence);
         }
     }
     else if(type == TreeItemType::DATASET)
     {
         size_t datasetIndex = m_pInputs->at(inputIndex).getContainerIndex(dataIndex);
+        if(datasetIndex == SIZE_MAX)
+            return nullptr;
+
         size_t realDataIndex = m_pInputs->at(inputIndex).getDataIndexInContainer(datasetIndex, dataIndex);
+        if(datasetIndex == SIZE_MAX)
+            return nullptr;
+
         QModelIndex datasetModelIndex = m_pInputs->at(inputIndex).getModelIndex(datasetIndex);
+        if(!datasetModelIndex.isValid())
+            return nullptr;
+
         QModelIndex dataModelIndex = m_pProjectMgr->getDatasetDataIndex(datasetModelIndex, realDataIndex);
+        if(!dataModelIndex.isValid())
+            return nullptr;
+
         return createIOFromDataItem(dataModelIndex, bNewSequence);
     }
     else if(type == TreeItemType::IMAGE || type == TreeItemType::VIDEO || type == TreeItemType::LIVE_STREAM)
     {
         QModelIndex itemIndex = m_pInputs->at(inputIndex).getModelIndex(dataIndex);
+        if(!itemIndex.isValid())
+            return nullptr;
+
         return createIOFromDataItem(itemIndex, bNewSequence);
     }
     else
@@ -503,11 +529,9 @@ void CProtocolRunManager::setBatchInput(int index)
 {
     for(size_t i=0; i<m_pInputs->size(); ++i)
     {
-        if(index < (int)m_pInputs->at(i).getModelIndicesCount())
-        {
-            auto inputPtr = createTaskIO(i, index, true);
+        auto inputPtr = createTaskIO(i, index, true);
+        if(inputPtr)
             m_protocolPtr->setInput(inputPtr, i, true);
-        }
     }
 }
 
