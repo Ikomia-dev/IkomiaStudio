@@ -103,7 +103,7 @@ ProtocolTaskIOPtr CProtocolRunManager::createTaskIO(size_t inputIndex, size_t da
             return nullptr;
 
         size_t realDataIndex = m_pInputs->at(inputIndex).getDataIndexInContainer(datasetIndex, dataIndex);
-        if(datasetIndex == SIZE_MAX)
+        if(realDataIndex == SIZE_MAX)
             return nullptr;
 
         QModelIndex datasetModelIndex = m_pInputs->at(inputIndex).getModelIndex(datasetIndex);

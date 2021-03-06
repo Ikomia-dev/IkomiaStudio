@@ -58,6 +58,10 @@ std::vector<DataDimension> CProtocolInput::getDataFilters() const
 
 size_t CProtocolInput::getContainerIndex(size_t dataIndex) const
 {
+    //Return first container if sizes are not already computed
+    if(m_sizes.size() == 0)
+        return 0;
+
     size_t count = 0;
     for(size_t i=0; i<m_sizes.size(); ++i)
     {
@@ -74,7 +78,8 @@ size_t CProtocolInput::getContainerIndex(size_t dataIndex) const
 
 size_t CProtocolInput::getDataIndexInContainer(size_t containerIndex, size_t dataIndex)
 {
-    if(m_sizes.size() == 0 && m_mode == CURRENT_DATA)
+    //Return first data if sizes are not already computed
+    if(m_sizes.size() == 0)
         return 0;
 
     if(containerIndex >= m_sizes.size())
