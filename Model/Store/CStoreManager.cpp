@@ -1149,7 +1149,7 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
         if(info.m_language == CProcessInfo::CPP)
             return;
 
-        QSet<QString> requirements;
+        std::set<QString> requirements;
         QDir dir(directory);
         QRegularExpression re("[rR]equirements[0-9]*.txt");
 
