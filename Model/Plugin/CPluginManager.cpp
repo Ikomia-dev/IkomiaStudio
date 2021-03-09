@@ -99,12 +99,22 @@ ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
             processFactoryPtr->getInfo().setOS(Utils::OS::getCurrent());
 
             auto version = QString::fromStdString(processFactoryPtr->getInfo().getIkomiaVersion());
-            if(Utils::IkomiaApp::isDeprecated(version))
+            auto state = Utils::Plugin::getCppState(version);
+
+            if(state == PluginState::DEPRECATED)
             {
                 QString str = tr("Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.")
                         .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
                         .arg(version)
                         .arg(Utils::IkomiaApp::getCurrentVersionNumber());
+                qCCritical(logPlugin).noquote() << str;
+                return nullptr;
+            }
+            else if(state == PluginState::UPDATED)
+            {
+                QString str = tr("Plugin %1 is not compatible: you must update Ikomia Studio to version %2.")
+                        .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                        .arg(version);
                 qCCritical(logPlugin).noquote() << str;
                 return nullptr;
             }
@@ -167,7 +177,9 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                     processFactoryPtr->getInfo().setOS(CProcessInfo::ALL);
 
                     auto version = QString::fromStdString(processFactoryPtr->getInfo().getIkomiaVersion());
-                    if(Utils::IkomiaApp::isDeprecated(version))
+                    auto state = Utils::Plugin::getPythonState(version);
+
+                    if(state == PluginState::DEPRECATED)
                     {
                         QString str = tr("Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.")
                                 .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
@@ -175,6 +187,13 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                                 .arg(Utils::IkomiaApp::getCurrentVersionNumber());
                         qCCritical(logPlugin).noquote() << str;
                         return nullptr;
+                    }
+                    else if(state == PluginState::UPDATED)
+                    {
+                        QString str = tr("Plugin %1 is based on Ikomia %2 while the current version is %3. You should consider updating Ikomia Studio.")
+                                .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                                .arg(version);
+                        qCWarning(logPlugin).noquote() << str;
                     }
 
                     auto widgetFactoryPtr = plugin->getWidgetFactory();

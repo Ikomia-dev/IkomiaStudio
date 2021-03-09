@@ -68,6 +68,54 @@ QString CProcessDocFrame::getMarkdownTemplate() const
                    "_keywords_");
 }
 
+QString CProcessDocFrame::getStatus(const CProcessInfo &info) const
+{
+    QString status;
+    QString ikomiaVersion = QString::fromStdString(info.m_ikomiaVersion);
+
+    if(info.m_language == CProcessInfo::CPP)
+    {
+        PluginState state = Utils::Plugin::getCppState(ikomiaVersion);
+        if(state == PluginState::DEPRECATED)
+        {
+            status = tr("<span style=\"color:#9a0000\">deprecated</span>(based on Ikomia version %1 while the current is %2)")
+                    .arg(ikomiaVersion)
+                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
+        }
+        else if(state == PluginState::UPDATED)
+        {
+            status = tr("<span style=\"color:#9a0000\">Ikomia Studio update required</span>(based on Ikomia version %1 while the current is %2)")
+                    .arg(ikomiaVersion)
+                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
+        }
+        else
+        {
+            status = tr("<span style=\"color:#008f00\">OK</span> (based on Ikomia version %1)").arg(ikomiaVersion);
+        }
+    }
+    else
+    {
+        PluginState state = Utils::Plugin::getPythonState(ikomiaVersion);
+        if(state == PluginState::DEPRECATED)
+        {
+            status = tr("<span style=\"color:#9a0000\">deprecated</span>(based on Ikomia version %1 while the current is %2)")
+                    .arg(ikomiaVersion)
+                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
+        }
+        else if(state == PluginState::UPDATED)
+        {
+            status = tr("<span style=\"color:#de7207\">Ikomia Studio update adviced</span>(based on Ikomia version %1 while the current is %2)")
+                    .arg(ikomiaVersion)
+                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
+        }
+        else
+        {
+            status = tr("<span style=\"color:#008f00\">OK</span> (based on Ikomia version %1)").arg(ikomiaVersion);
+        }
+    }
+    return status;
+}
+
 QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
 {
     auto templateContent = getMarkdownTemplate();
@@ -104,20 +152,8 @@ QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
     newContent = newContent.replace("_created_", QString::fromStdString(info.m_createdDate));
 
     //Status: deprecated or not
-    QString status;
-    QString ikomiaVersion = QString::fromStdString(info.m_ikomiaVersion);
+    auto status = getStatus(info);
     newContent = newContent.replace("_statusLabel_", tr("Status"));
-
-    if(Utils::IkomiaApp::isDeprecated(ikomiaVersion))
-    {
-        status = tr("<span style=\"color:#9a0000\">deprecated</span>(based on Ikomia version %1 while the current is %2)")
-                .arg(ikomiaVersion)
-                .arg(Utils::IkomiaApp::getCurrentVersionNumber());
-    }
-    else
-    {
-        status = tr("<span style=\"color:#008f00\">OK</span> (based on Ikomia version %1)").arg(ikomiaVersion);
-    }
     newContent = newContent.replace("_status_", status);
 
     //Description

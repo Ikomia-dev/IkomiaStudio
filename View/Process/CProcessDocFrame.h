@@ -37,6 +37,7 @@ class CProcessDocFrame : public QFrame
         void    initLayout();
 
         QString getMarkdownTemplate() const;
+        QString getStatus(const CProcessInfo &info) const;
 
         QString generateMarkdown(const CProcessInfo& info) const;
 

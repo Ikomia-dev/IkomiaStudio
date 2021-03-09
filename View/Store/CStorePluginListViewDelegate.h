@@ -22,6 +22,7 @@
 #define CSTOREPLUGINLISTVIEWDELEGATE_H
 
 #include "View/Common/CListViewDelegate.h"
+#include "UtilsDefine.hpp"
 
 class CStoreQueryModel;
 
@@ -60,6 +61,8 @@ class CStorePluginListViewDelegate: public CListViewDelegate
     private:
 
         virtual QPolygon    getRibbonRect(const QStyleOptionViewItem& option) const;
+        PluginState         getProcessState(const QModelIndex& index) const;
+        QString             getStatusMessage(const QModelIndex& index) const;
 
         virtual void        paintText(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual void        paintLanguageIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
@@ -69,8 +72,6 @@ class CStorePluginListViewDelegate: public CListViewDelegate
         virtual QRect       paintShortDescription(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
         virtual QRect       paintContributor(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
         virtual void        paintCertification(QPainter* painter, const QStyleOptionViewItem& option, const CStoreQueryModel* pModel, const QModelIndex& index) const;
-
-        bool                isDeprecated(const QModelIndex& index) const;
 
     private:
 

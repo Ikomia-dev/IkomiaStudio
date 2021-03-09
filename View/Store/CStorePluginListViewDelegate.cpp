@@ -72,19 +72,34 @@ QString CStorePluginListViewDelegate::getActionIconPath(int action) const
 
 bool CStorePluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, int index) const
 {
+    assert(itemIndex.isValid());
     bool bEnable = true;
+
     switch(index)
     {
-        case 0: bEnable = true; break;
-        case 1: bEnable = !isDeprecated(itemIndex); break;
+        case 0:
+            bEnable = true;
+            break;
+
+        case 1:
+        {
+            auto pModel = static_cast<const CStoreQueryModel*>(itemIndex.model());
+            int language = pModel->record(itemIndex.row()).value("language").toInt();
+            auto state = getProcessState(itemIndex);
+
+            if(language == CProcessInfo::CPP)
+                bEnable = (state == PluginState::VALID);
+            else
+                bEnable = (state == PluginState::VALID || state == PluginState::UPDATED);
+            break;
+        }
     }
     return bEnable;
 }
 
 void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &index)
 {
-    const CStoreQueryModel* pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
+    assert(index.isValid());
 
     switch(action)
     {
@@ -95,14 +110,26 @@ void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &
             emit doShowInfo(index); break;
 
         case INSTALL:
-            if(!isDeprecated(index))
+        {
+            auto pModel = static_cast<const CStoreQueryModel*>(index.model());
+            int language = pModel->record(index.row()).value("language").toInt();
+            auto state = getProcessState(index);
+
+            if( (language == CProcessInfo::CPP && state == PluginState::VALID) ||
+                (language == CProcessInfo::PYTHON && (state == PluginState::VALID || state == PluginState::UPDATED)))
+            {
                 emit doInstallPlugin(index);
+            }
             break;
+        }
 
         case PUBLISH:
-            if(!isDeprecated(index))
+        {
+            auto state = getProcessState(index);
+            if(state == PluginState::VALID)
                 emit doPublishPlugin(index);
             break;
+        }
     }
 }
 
@@ -131,6 +158,49 @@ QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem&
     QPolygon poly;
     poly << rcCertification.topLeft() << rcCertification.topRight() << rcCertification.bottomRight();
     return poly;
+}
+
+PluginState CStorePluginListViewDelegate::getProcessState(const QModelIndex &index) const
+{
+    assert(index.isValid());
+    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
+    assert(pModel);
+    int language = pModel->record(index.row()).value("language").toInt();
+    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
+
+    if(language == CProcessInfo::CPP)
+        return Utils::Plugin::getCppState(ikomiaVersion);
+    else
+        return Utils::Plugin::getPythonState(ikomiaVersion);
+}
+
+QString CStorePluginListViewDelegate::getStatusMessage(const QModelIndex &index) const
+{
+    // Check version compatibility with App & API
+    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
+    assert(pModel);
+
+    QString msg;
+    int language = pModel->record(index.row()).value("language").toInt();
+    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
+
+    if(language == CProcessInfo::CPP)
+    {
+        auto state = Utils::Plugin::getCppState(ikomiaVersion);
+        if(state == PluginState::DEPRECATED)
+            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
+        else if(state == PluginState::UPDATED)
+            msg = QString("<br><b><i><font color=#9a0000>Ikomia Studio update required</font></i></b>");
+    }
+    else
+    {
+        auto state = Utils::Plugin::getPythonState(ikomiaVersion);
+        if(state == PluginState::DEPRECATED)
+            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
+        else if(state == PluginState::UPDATED)
+            msg = QString("<br><b><i><font color=#de7207>Ikomia Studio update adviced</font></i></b>");
+    }
+    return msg;
 }
 
 void CStorePluginListViewDelegate::paintText(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -322,8 +392,7 @@ QRect CStorePluginListViewDelegate::paintShortDescription(QPainter* painter, int
         shortDescription = pModel->record(index.row()).value("description").toString();
 
     QString displayShortDescription = Utils::String::getElidedString(shortDescription, font, width, 4);
-    if(isDeprecated(index))
-        displayShortDescription += QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
+    displayShortDescription += getStatusMessage(index);
 
     auto shortDescriptionSize = paintStaticText(painter, left, top + m_contentMargins.top()*4, width, displayShortDescription, font, color);
     QRect rcShortDescription(left, top, width, shortDescriptionSize.height());
@@ -359,16 +428,6 @@ void CStorePluginListViewDelegate::paintCertification(QPainter* painter, const Q
         // Draw ribbon corner at the top right corner
         painter->drawPixmap(rcCertification, certiIcon.scaled(m_ribbonSize, m_ribbonSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-}
-
-bool CStorePluginListViewDelegate::isDeprecated(const QModelIndex &index) const
-{
-    // Check version compatibility with App & API
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
-
-    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
-    return Utils::IkomiaApp::isDeprecated(ikomiaVersion);
 }
 
 #include "moc_CStorePluginListViewDelegate.cpp"
