@@ -1109,6 +1109,7 @@ void CProtocolRunManager::runBatch()
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
+        m_protocolPtr->updateStartTime();
 
         for(size_t i=0; i<m_batchCount && !m_bStop; ++i)
         {
@@ -1159,6 +1160,7 @@ void CProtocolRunManager::runFromBatch()
         m_totalElapsedTime = 0;
         auto id = m_protocolPtr->getActiveTaskId();
         auto taskPtr = m_protocolPtr->getTask(id);
+        m_protocolPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {
@@ -1215,6 +1217,7 @@ void CProtocolRunManager::runToBatch()
         m_totalElapsedTime = 0;
         auto id = m_protocolPtr->getActiveTaskId();
         auto taskPtr = m_protocolPtr->getTask(id);
+        m_protocolPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {

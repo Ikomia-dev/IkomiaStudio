@@ -74,8 +74,11 @@ void CSettingsManager::initProtocolOption()
     m_protocolSaveFolder = Utils::IkomiaApp::getAppFolder() + "/Workflows/";
     QJsonObject json = getSettings("protocol");
     if(!json.empty())
+    {
         m_protocolSaveFolder = json["saveFolder"].toString().toStdString();
-
+        if(m_protocolSaveFolder.back() != '/')
+            m_protocolSaveFolder += "/";
+    }
     emit doSetProtocolSaveFolder(QString::fromStdString(m_protocolSaveFolder));
 }
 
@@ -195,6 +198,9 @@ void CSettingsManager::onEnableTutorialHelper(bool bEnable)
 void CSettingsManager::onSetProtocolSaveFolder(const QString &path)
 {
     m_protocolSaveFolder = path.toStdString();
+    if(m_protocolSaveFolder.back() != '/')
+        m_protocolSaveFolder += "/";
+
     QJsonObject json;
     json["saveFolder"] = path;
     setSettings("protocol", json);

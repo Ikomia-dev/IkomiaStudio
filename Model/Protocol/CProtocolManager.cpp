@@ -332,7 +332,7 @@ void CProtocolManager::createProtocol(const std::string &name, const std::string
         m_pProtocol = std::make_unique<CProtocol>(name);
         m_pProtocol->setKeywords(keywords);
         m_pProtocol->setDescription(description);
-        m_pProtocol->setOutputFolder(m_pSettingsMgr->getProtocolSaveFolder() + "/" + name + "/");
+        m_pProtocol->setOutputFolder(m_pSettingsMgr->getProtocolSaveFolder() + name + "/");
         initProtocol();
     }
     catch(std::exception& e)
