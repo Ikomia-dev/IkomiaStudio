@@ -391,6 +391,7 @@ void CMainCtrl::initVideoConnections()
 
     // Video Manager -> doubleview
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doStopVideoPlayerView, m_pView->getDoubleView(), &CDoubleView::onStopVideoPlayer);
 
     // VideoManager -> ProjectPane
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doUpdateImgSequenceIndex, m_pView->getProjectPane(), &CProjectPane::onTreeViewClicked);

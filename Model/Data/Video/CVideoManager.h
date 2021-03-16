@@ -80,6 +80,7 @@ class CVideoPlayer : public QObject
     signals:
 
         void                doImageIsLoaded(const QModelIndex& modelIndex, const CMat& image, int index, bool bNewSequence);
+        void                doPlayError(const QModelIndex& modelIndex, const QString& error);
 
     private:
 
@@ -179,6 +180,7 @@ class CVideoManager : public QObject
 
         void                doStopProtocolThread();
         void                doStopRecording(const QModelIndex& index);
+        void                doStopVideoPlayerView(const QModelIndex& index);
 
     private:
 

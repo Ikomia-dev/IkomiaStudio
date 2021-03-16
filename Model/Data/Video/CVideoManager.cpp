@@ -160,25 +160,37 @@ void CVideoPlayer::play(const QModelIndex& modelIndex, int index)
             std::unique_lock<std::mutex> lock(m_playMutex);
             while(!m_bStop)
             {
-                // Wait for new image
-                m_threadCond.wait(lock);
+                try
+                {
+                    // Wait for new image
+                    m_threadCond.wait(lock);
 
-                // Manage if we stop acquisition
-                if(m_bStop)
+                    // Manage if we stop acquisition
+                    if(m_bStop)
+                        break;
+
+                    // Read new image
+                    // If read failed we exit the thread
+                    // and send signal to report error (the play loop of the view has to be stopped)
+                    auto image = getImage();
+                    if(image.empty())
+                    {
+                        emit doPlayError(modelIndex, "Video player error: invalid frame buffer.");
+                        break;
+                    }
+
+                    // Manage if we stop acquisition
+                    if(m_bStop)
+                        break;
+
+                    // Notify that image changed
+                    emit doImageIsLoaded(modelIndex, image, index, false);
+                }
+                catch(std::exception& e)
+                {
+                    emit doPlayError(modelIndex, QString::fromStdString(e.what()));
                     break;
-
-                // Read new image
-                // If read failed we exit the thread but the play loop is still running
-                auto image = getImage();
-                if(image.empty())
-                    break;
-
-                // Manage if we stop acquisition
-                if(m_bStop)
-                    break;
-
-                // Notify that image changed
-                emit doImageIsLoaded(modelIndex, image, index, false);
+                }
             }
         });
         m_readWatcher.setFuture(future);
@@ -199,10 +211,14 @@ void CVideoPlayer::startRecord(const std::string &path)
 void CVideoPlayer::stop()
 {
     m_bStop = true;
+
     // Notify threads that the user stopped
     m_threadCond.notify_all();
+
     // Ensure read is stop
-    m_readWatcher.waitForFinished();
+    if(m_readWatcher.isRunning())
+        m_readWatcher.waitForFinished();
+
     m_mgrPtr->stopReadVideo();
 }
 
@@ -476,6 +492,11 @@ CVideoPlayer* CVideoManager::getPlayer(const QModelIndex &modelIndex)
 
         auto pPlayer = new CVideoPlayer(wrapInd);
         connect(pPlayer, &CVideoPlayer::doImageIsLoaded, this, &CVideoManager::onImageIsLoaded);
+        connect(pPlayer, &CVideoPlayer::doPlayError, [&](const QModelIndex& index, const QString& msg)
+        {
+            qCCritical(logVideo).noquote() << msg;
+            emit doStopVideoPlayerView(index);
+        });
         auto ret = m_players.insert(std::make_pair(QPersistentModelIndex(modelIndex), pPlayer));
         return ret.first->second;
     }

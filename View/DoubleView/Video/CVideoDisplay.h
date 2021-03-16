@@ -66,16 +66,18 @@ class CVideoDisplay : public CDataDisplay
         bool            eventFilter(QObject* obj, QEvent* event) override;
         virtual void    applyViewProperty() override;
 
+        void            stopPlayer();
+
     signals:
 
         void            doPlayVideo();
 
         void            doStopVideo();
-        void            doStopPlayer();
+        void            doStopTimer();
 
         void            doUpdateVideoPos(int pos);
 
-        void            doStartPlayer(int msec);
+        void            doStartTimer(int msec);
 
         void            doSaveVideo();
         void            doSaveCurrentFrame();
@@ -112,9 +114,6 @@ class CVideoDisplay : public CDataDisplay
 
         void            onUpdateVideoPos(int pos);
 
-        void            onStartPlayer(int msec);
-        void            onStopPlayer();
-
         void            onSyncPlayVideo();
         void            onSyncSetPlayVideo(bool bPlay);
         void            onSyncStopVideo();
@@ -128,6 +127,9 @@ class CVideoDisplay : public CDataDisplay
         void            onExportVideo();
 
     private slots:
+
+        void            onStartTimer(int msec);
+        void            onStopTimer();
 
         void            onLoadNextFrame();
 

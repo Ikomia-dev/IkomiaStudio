@@ -66,6 +66,16 @@ void CVideoDisplay::applyViewProperty()
     }
 }
 
+void CVideoDisplay::stopPlayer()
+{
+    emit doStopTimer();
+    m_bIsPaused = true;
+    m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
+    setSliderPos(0);
+    // For synchronization
+    emit doSyncStop();
+}
+
 void CVideoDisplay::initLayout()
 {
     setObjectName("CVideoDisplay");
@@ -141,8 +151,8 @@ void CVideoDisplay::initPlayer()
     m_pTimer = new QTimer(this);
     m_pTimer->setTimerType(Qt::PreciseTimer);
     connect(m_pTimer, &QTimer::timeout, this, &CVideoDisplay::onLoadNextFrame);
-    connect(this, &CVideoDisplay::doStartPlayer, this, &CVideoDisplay::onStartPlayer);
-    connect(this, &CVideoDisplay::doStopPlayer, this, &CVideoDisplay::onStopPlayer);
+    connect(this, &CVideoDisplay::doStartTimer, this, &CVideoDisplay::onStartTimer);
+    connect(this, &CVideoDisplay::doStopTimer, this, &CVideoDisplay::onStopTimer);
 }
 
 void CVideoDisplay::emitVideoInfo()
@@ -313,13 +323,13 @@ void CVideoDisplay::onUpdateVideoPos(int pos)
     emit doUpdateVideoPos(pos);
 }
 
-void CVideoDisplay::onStartPlayer(int msec)
+void CVideoDisplay::onStartTimer(int msec)
 {
     emit doNotifyVideoStart();
     m_pTimer->start(msec);
 }
 
-void CVideoDisplay::onStopPlayer()
+void CVideoDisplay::onStopTimer()
 {
     m_pTimer->stop();
 }
@@ -337,13 +347,13 @@ void CVideoDisplay::onSyncPlayVideo()
             return;
         }
         else
-            emit doStartPlayer((int)(1000/m_fps));
+            emit doStartTimer((int)(1000/m_fps));
     }
     else
     {
         m_bIsPaused = true;
         m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
-        emit doStopPlayer();
+        emit doStopTimer();
     }
 }
 
@@ -355,7 +365,7 @@ void CVideoDisplay::onSyncSetPlayVideo(bool bPlay)
 
 void CVideoDisplay::onSyncStopVideo()
 {
-    emit doStopPlayer();
+    emit doStopTimer();
     m_bIsPaused = true;
     m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
     setSliderPos(0);
@@ -444,7 +454,7 @@ void CVideoDisplay::playVideo()
         return;
     }
     else
-        emit doStartPlayer((int)(1000/m_fps));
+        emit doStartTimer((int)(1000/m_fps));
 
     // For synchronization
     emit doSyncPlay();
@@ -454,7 +464,7 @@ void CVideoDisplay::pauseVideo()
 {
     m_bIsPaused = true;
     m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));
-    emit doStopPlayer();
+    emit doStopTimer();
 
     // For synchronization
     emit doSyncPlay();
@@ -462,7 +472,7 @@ void CVideoDisplay::pauseVideo()
 
 void CVideoDisplay::stopVideo()
 {
-    emit doStopPlayer();
+    emit doStopTimer();
     emit doStopVideo();
     m_bIsPaused = true;
     m_pPlayBtn->setIcon(QIcon(":/Images/play.png"));

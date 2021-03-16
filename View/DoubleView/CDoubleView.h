@@ -111,6 +111,7 @@ class CDoubleView : public QWidget
         void            onBeforeResultDisplayRemoved(CDataDisplay* pDisplay);
 
         void            onStopVideo();
+        void            onStopVideoPlayer(const QModelIndex& index);
 
     private slots:
 

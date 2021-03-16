@@ -953,6 +953,15 @@ void CDataViewer::onStopRecordingVideo(const QModelIndex& modelIndex)
         videoDisplays[index]->onRecordVideo();
 }
 
+void CDataViewer::onStopVideoPlayer(const QModelIndex &modelIndex)
+{
+    auto videoDisplays = getVideoDisplays();
+    int index = m_modelIndexToDisplayIndex[modelIndex];
+
+    if(index < videoDisplays.size())
+        videoDisplays[index]->stopPlayer();
+}
+
 void CDataViewer::onApplyViewProperty()
 {
     auto views = m_pDataDisplay->getDataViews();

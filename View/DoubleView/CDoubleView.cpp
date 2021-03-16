@@ -354,6 +354,11 @@ void CDoubleView::onStopVideo()
     m_pDataViewer->onStopVideo();
 }
 
+void CDoubleView::onStopVideoPlayer(const QModelIndex &index)
+{
+    m_pDataViewer->onStopVideoPlayer(index);
+}
+
 void CDoubleView::onShowHideDataViewer()
 {
     if(m_pDataViewer->isHidden())

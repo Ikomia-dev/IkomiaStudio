@@ -119,23 +119,51 @@ void CMainDataManager::closeData(const QModelIndex& index)
 
 void CMainDataManager::displaySimpleImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, size_t inputIndex, bool bNewSequence)
 {
-    m_imgMgr.displaySimpleImage(pScene, index, wrapIndex, inputIndex, bNewSequence);
+    try
+    {
+        m_imgMgr.displaySimpleImage(pScene, index, wrapIndex, inputIndex, bNewSequence);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CMainDataManager::displayVolumeImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence)
 {
-    m_imgMgr.displayVolumeImage(pScene, index, wrapIndex, bNewSequence);
+    try
+    {
+        m_imgMgr.displayVolumeImage(pScene, index, wrapIndex, bNewSequence);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CMainDataManager::displayVideoImage(const QModelIndex& index, size_t inputIndex, bool bNewSequence)
 {
-    m_videoMgr.displayVideoImage(index, inputIndex, bNewSequence);
+    try
+    {
+        m_videoMgr.displayVideoImage(index, inputIndex, bNewSequence);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logVideoDataManager).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CMainDataManager::displayImageSequence(const QModelIndex& index, size_t inputIndex, bool bNewSequence)
 {
     assert(m_pProjectMgr);
-    m_videoMgr.displayImageSequence(m_pProjectMgr->getCurrentVideoItemIndex(), index.row(), inputIndex, bNewSequence);
+    try
+    {
+        m_videoMgr.displayImageSequence(m_pProjectMgr->getCurrentVideoItemIndex(), index.row(), inputIndex, bNewSequence);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CMainDataManager::beforeProjectClose(int projectIndex, bool bWithCurrentImage)
@@ -242,7 +270,14 @@ void CMainDataManager::onPlayVideo(int index)
 }
 
 void CMainDataManager::onStopVideo(const QModelIndex& index)
-{    
-    m_videoMgr.stopPlay(index);
-    m_pProjectMgr->onVideoStopped();
+{
+    try
+    {
+        m_videoMgr.stopPlay(index);
+        m_pProjectMgr->onVideoStopped();
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logVideoDataManager).noquote() << QString::fromStdString(e.what());
+    }
 }

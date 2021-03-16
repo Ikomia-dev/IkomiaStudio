@@ -163,6 +163,7 @@ class CDataViewer : public QWidget
 
         void                    onStopVideo();
         void                    onStopRecordingVideo(const QModelIndex &modelIndex);
+        void                    onStopVideoPlayer(const QModelIndex &modelIndex);
 
         void                    onApplyViewProperty();
 
