@@ -716,12 +716,18 @@ std::set<IODataType> CResultManager::getImageBasedDataTypes() const
     return dataTypes;
 }
 
-CViewPropertyIO::ViewMode CResultManager::getViewMode(const ProtocolTaskPtr &taskPtr) const
+CViewPropertyIO::ViewMode CResultManager::getViewMode(const ProtocolTaskPtr &taskPtr)
 {
+    CViewPropertyIO::ViewMode mode;
     if(taskPtr->isSelfInput())
-        return CViewPropertyIO::ViewMode::OUTPUT_ONLY;
+        mode = CViewPropertyIO::ViewMode::OUTPUT_ONLY;
+    else if(m_currentViewMode == CViewPropertyIO::ViewMode::OUTPUT_ONLY)
+        mode = CViewPropertyIO::ViewMode::INPUT_OUTPUT;
     else
-        return CViewPropertyIO::ViewMode::INPUT_OUTPUT;
+        mode = CViewPropertyIO::ViewMode::GUI_DRIVEN;
+
+    m_currentViewMode = mode;
+    return mode;
 }
 
 bool CResultManager::isResultFromCurrentImage(const QModelIndex &index) const

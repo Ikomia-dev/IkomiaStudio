@@ -140,7 +140,7 @@ class CResultManager : public QObject
         OutputDisplays      getOutputDisplays(const ProtocolTaskPtr& pTask) const;
         DisplayType         getResultViewType(IODataType type) const;
         std::set<IODataType>        getImageBasedDataTypes() const;
-        CViewPropertyIO::ViewMode   getViewMode(const ProtocolTaskPtr& taskPtr) const;
+        CViewPropertyIO::ViewMode   getViewMode(const ProtocolTaskPtr& taskPtr);
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;
@@ -204,6 +204,7 @@ class CResultManager : public QObject
         ProtocolTaskPtr         m_pCurrentTask = nullptr;
         std::string             m_currentVideoRecord = "";
         std::map<size_t,bool>   m_recordVideoMap;
+        CViewPropertyIO::ViewMode   m_currentViewMode = CViewPropertyIO::ViewMode::GUI_DRIVEN;
         //Result database ids per project to be removed
         std::unordered_map<int, std::vector<int>>   m_removedResults;
 };

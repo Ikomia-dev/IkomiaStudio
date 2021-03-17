@@ -77,6 +77,8 @@ void CDoubleView::applyViewModeProperty(CViewPropertyIO *pViewProp)
 
     switch(pViewProp->getViewMode())
     {
+        case CViewPropertyIO::ViewMode::GUI_DRIVEN:
+            break;
         case CViewPropertyIO::ViewMode::INPUT_OUTPUT:
             m_pDataViewer->show();
             m_pResultsViewer->show();
