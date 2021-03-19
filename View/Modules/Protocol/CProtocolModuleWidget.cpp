@@ -619,6 +619,9 @@ void CProtocolModuleWidget::fillIOProperties(const ProtocolTaskPtr &taskPtr)
     for(size_t i=0; i<taskPtr->getInputCount(); ++i)
     {
         auto inputPtr = taskPtr->getInput(i);
+        if(!inputPtr)
+            continue;
+
         auto inputName = QString("#%1 - ").arg(i+1) + Utils::Protocol::getIODataName(inputPtr->getDataType());
         QtVariantProperty* pInputProp = m_pVariantManager->addProperty(QVariant::String, inputName);
         pInputProp->setValue(QString::fromStdString(inputPtr->getDescription()));
@@ -634,8 +637,10 @@ void CProtocolModuleWidget::fillIOProperties(const ProtocolTaskPtr &taskPtr)
     for(size_t i=0; i<taskPtr->getOutputCount(); ++i)
     {
         auto outputPtr = taskPtr->getOutput(i);
-        auto outputName = QString("#%1 - ").arg(i+1) + Utils::Protocol::getIODataName(outputPtr->getDataType());
+        if(!outputPtr)
+            continue;
 
+        auto outputName = QString("#%1 - ").arg(i+1) + Utils::Protocol::getIODataName(outputPtr->getDataType());
         QtProperty* pOutputGroup = m_pVariantManager->addProperty(QtVariantPropertyManager::groupTypeId(), outputName);
         pOutputsGroup->addSubProperty(pOutputGroup);
 
