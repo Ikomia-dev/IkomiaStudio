@@ -90,6 +90,7 @@ class CProgressCircle : public QWidget
         void    onProgress();
         void    onAbort();
         void    onSetTotalSteps(size_t maxSteps);
+        void    onAddSubTotalSteps(int count);
         void    onFinishInfinite();
 
         void    setValue(int value);

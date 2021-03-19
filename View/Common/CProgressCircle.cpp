@@ -49,6 +49,7 @@ CProgressCircle::CProgressCircle(CProgressSignalHandler* pSignal, bool bMainThre
     if(m_pSignal)
     {
         connect(m_pSignal, &CProgressSignalHandler::doSetTotalSteps, this, &CProgressCircle::onSetTotalSteps);
+        connect(m_pSignal, &CProgressSignalHandler::doAddSubTotalSteps, this, &CProgressCircle::onAddSubTotalSteps);
         connect(m_pSignal, &CProgressSignalHandler::doProgress, this, &CProgressCircle::onProgress);
         connect(m_pSignal, &CProgressSignalHandler::doSetValue, this, &CProgressCircle::setValue);
         connect(m_pSignal, &CProgressSignalHandler::doSetMessage, this, &CProgressCircle::onSetMessage);
@@ -149,6 +150,7 @@ void CProgressCircle::finish(bool bSuccess)
     if(m_pSignal)
     {
         disconnect(m_pSignal, &CProgressSignalHandler::doSetTotalSteps, this, &CProgressCircle::onSetTotalSteps);
+        disconnect(m_pSignal, &CProgressSignalHandler::doAddSubTotalSteps, this, &CProgressCircle::onAddSubTotalSteps);
         disconnect(m_pSignal, &CProgressSignalHandler::doProgress, this, &CProgressCircle::onProgress);
         disconnect(m_pSignal, &CProgressSignalHandler::doSetValue, this, &CProgressCircle::setValue);
         disconnect(m_pSignal, &CProgressSignalHandler::doSetMessage, this, &CProgressCircle::onSetMessage);
@@ -225,6 +227,12 @@ void CProgressCircle::onSetTotalSteps(size_t maxSteps)
 {
     setMaximum((int)maxSteps);
     start();
+}
+
+void CProgressCircle::onAddSubTotalSteps(int count)
+{
+    int newMax = mMaximum + count;
+    setMaximum(newMax);
 }
 
 void CProgressCircle::onFinishInfinite()
