@@ -34,7 +34,7 @@ void CMultiImageDisplay::initLayout()
 {
     m_pListView = new CImageListView(this);
 
-    m_pImageDisplay = new CImageDisplay(this);
+    m_pImageDisplay = new CImageDisplay(this, "", TITLE | CImageDisplay::ZOOM_BUTTONS | MAXIMIZE_BUTTON);
     m_pImageDisplay->enableImageMoveByKey(false);
 
     m_pStackedWidget = new QStackedWidget;
