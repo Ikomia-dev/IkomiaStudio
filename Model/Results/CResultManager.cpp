@@ -688,7 +688,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::LIVE_STREAM_LABEL: viewType = DisplayType::VIDEO_DISPLAY; break;
         case IODataType::WIDGET: viewType = DisplayType::WIDGET_DISPLAY; break;
         case IODataType::DESCRIPTORS: viewType = DisplayType::EMPTY_DISPLAY; break;
-        case IODataType::FOLDER: viewType = DisplayType::EMPTY_DISPLAY; break;
+        case IODataType::PROJECT_FOLDER: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::FOLDER_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::FILE_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::DNN_DATASET: viewType = DisplayType::EMPTY_DISPLAY; break;

@@ -89,7 +89,7 @@ namespace Ikomia
                         color = QColor(105, 255, 85);
                         break;
 
-                    case IODataType::FOLDER:
+                    case IODataType::PROJECT_FOLDER:
                         color = QColor(255,0,170);
                         break;
 
@@ -138,7 +138,7 @@ namespace Ikomia
                     case IODataType::WIDGET:
                     case IODataType::DESCRIPTORS:
                     case IODataType::OUTPUT_GRAPHICS:
-                    case IODataType::FOLDER:
+                    case IODataType::PROJECT_FOLDER:
                     case IODataType::DNN_DATASET:
                     case IODataType::ARRAY:
                         bClickable = false;
@@ -169,7 +169,7 @@ namespace Ikomia
 
                 if(binVersion.isEmpty())
                 {
-                    binVersion = "3.8";
+                    binVersion = "3.9";
                     ikomiaSettings.setValue(PYTHON_BIN_VERSION, binVersion);
                 }
                 return binVersion.toStdString();
@@ -182,7 +182,7 @@ namespace Ikomia
 
                 if(libVersion.isEmpty())
                 {
-                    libVersion = "3.8";
+                    libVersion = "3.9";
                     ikomiaSettings.setValue(PYTHON_LIB_VERSION, libVersion);
                 }
                 return libVersion.toStdString();

@@ -315,7 +315,7 @@ bool CProtocolManager::isBatchInput(size_t index) const
     else if(type == TreeItemType::FOLDER)
     {
         auto types = m_runMgr.getOriginTargetDataTypes(index);
-        if(types.empty() || types.find(IODataType::FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
+        if(types.empty() || types.find(IODataType::PROJECT_FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
             return false;
         else
             return true;

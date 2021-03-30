@@ -339,7 +339,7 @@ QPixmap CProtocolIOArea::getThumbnailIcon(const std::shared_ptr<CProtocolTaskIO>
         case IODataType::LIVE_STREAM_BINARY:
             return QPixmap(":/Images/cam.png").scaled(m_thumbnailSize);
 
-        case IODataType::FOLDER:
+        case IODataType::PROJECT_FOLDER:
         case IODataType::FOLDER_PATH:
             return QPixmap(":/Images/folder.png").scaled(m_thumbnailSize);
 

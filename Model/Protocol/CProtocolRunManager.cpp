@@ -21,7 +21,7 @@
 #include "Model/Project/CProjectManager.h"
 #include "Model/Data/CMainDataManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
-#include "IO/CFolderInput.h"
+#include "IO/CPathIO.h"
 
 CProtocolRunManager::CProtocolRunManager(CProtocolInputs *pInputs)
 {
@@ -81,8 +81,8 @@ ProtocolTaskIOPtr CProtocolRunManager::createTaskIO(size_t inputIndex, size_t da
             return nullptr;
 
         auto types = getOriginTargetDataTypes(inputIndex);
-        if(types.empty() || types.find(IODataType::FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
-            return std::make_shared<CFolderInput>(m_pProjectMgr->getItemPath(itemIndex));
+        if(types.empty() || types.find(IODataType::PROJECT_FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
+            return std::make_shared<CPathIO>(IODataType::PROJECT_FOLDER, m_pProjectMgr->getItemPath(itemIndex));
         else
         {
             size_t realDataIndex = m_pInputs->at(inputIndex).getDataIndexInContainer(folderIndex, dataIndex);
