@@ -157,7 +157,8 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         ProtocolTaskPtr         createObject(const std::string& processName, const ProtocolTaskParamPtr &pParam);
         ProtocolTaskWidgetPtr   createWidget(const std::string& processName, const ProtocolTaskParamPtr &pParam);
 
-        void                    reloadAll();
+        bool                    reloadAll();
+        bool                    reloadPlugin(const QString& pluginName, int language);
 
     signals:
 
@@ -171,7 +172,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
     public slots:
 
         void                    onReloadAllPlugins();
-        void                    onReloadPlugin(const QString pluginName, int language);
+        void                    onReloadPlugin(const QString &pluginName, int language);
         void                    onSearchProcess(const QString& text);
         void                    onSetCurrentProcessModel(ID id);
         void                    onUpdateTableModel(const QModelIndex& index);

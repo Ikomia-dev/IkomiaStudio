@@ -236,34 +236,37 @@ void CProcessManager::resetModel()
     setModel(m_processList[m_processId].get());
 }
 
-void CProcessManager::reloadAll()
+bool CProcessManager::reloadAll()
 {
     assert(m_pPluginMgr);
     assert(m_pProtocolMgr);
 
-    resetModel();
-    m_pPluginMgr->loadProcessPlugins();
-    createModel();
-    notifyModelUpdate();
-    notifyTableModelUpdate();
-    m_pPluginMgr->notifyPluginsLoaded();
-    m_pProtocolMgr->onAllProcessReloaded();
-    emit doOnAllProcessReloaded();
-}
-
-void CProcessManager::onReloadAllPlugins()
-{
-    reloadAll();
-}
-
-void CProcessManager::onReloadPlugin(const QString pluginName, int language)
-{
-    bool bExist = m_pPluginMgr->isProcessExists(pluginName);
-
     try
     {
+        resetModel();
+        m_pPluginMgr->loadProcessPlugins();
+        createModel();
+        notifyModelUpdate();
+        notifyTableModelUpdate();
+        m_pPluginMgr->notifyPluginsLoaded();
+        m_pProtocolMgr->onAllProcessReloaded();
+        emit doOnAllProcessReloaded();
+        return true;
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logProcess).noquote() << e.what();
+        return false;
+    }
+}
+
+bool CProcessManager::reloadPlugin(const QString &pluginName, int language)
+{
+    try
+    {
+        bool bExist = m_pPluginMgr->isProcessExists(pluginName);
         if(bExist == false)
-            reloadAll();
+            return reloadAll();
         else
         {
             ProcessFactoryPtr factoryPtr = m_pPluginMgr->loadProcessPlugin(pluginName, language);
@@ -277,13 +280,25 @@ void CProcessManager::onReloadPlugin(const QString pluginName, int language)
                 m_pPluginMgr->notifyPluginsLoaded();
                 m_pProtocolMgr->onProcessReloaded(pluginName);
                 emit doOnProcessReloaded(pluginName);
+                return true;
             }
         }
     }
     catch(std::exception& e)
     {
         qCCritical(logProcess).noquote() << e.what();
+        return false;
     }
+}
+
+void CProcessManager::onReloadAllPlugins()
+{
+    reloadAll();
+}
+
+void CProcessManager::onReloadPlugin(const QString& pluginName, int language)
+{
+    reloadPlugin(pluginName, language);
 }
 
 void CProcessManager::onSearchProcess(const QString& text)

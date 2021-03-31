@@ -728,7 +728,7 @@ QString CStoreManager::checkPythonPluginDirectory(const QString &directory)
     QString dirName = QString::fromStdString(Utils::File::getFileNameWithoutExtension(directory.toStdString()));
     QString goodDirName = dirName;
     QString newDirectory = directory;
-    QRegularExpression re("([a-zA-Z0-9]+)_process");
+    QRegularExpression re("([a-zA-Z0-9\-\._#@=]+)_process");
 
     foreach (QString fileName, pluginDir.entryList(QDir::Files))
     {
@@ -1219,10 +1219,17 @@ void CStoreManager::finalizePluginInstall(const CProcessInfo& info, const CUser&
     //Insert or update plugin to file database
     m_dbMgr.insertPlugin(m_currentPluginServerId, info, user);
     //Reload process library
-    m_pProgressMgr->launchInfiniteProgress(tr("Reloading plugins..."), false);
-    m_pProcessMgr->reloadAll();
-    createLocalPluginModel();
-    qCInfo(logStore).noquote() << tr("Plugin was successfully installed");
+    m_pProgressMgr->launchInfiniteProgress(tr("Reloading plugin..."), false);
+
+    bool bLoaded = m_pProcessMgr->reloadPlugin(QString::fromStdString(info.m_name), info.m_language);
+    if(bLoaded)
+    {
+        createLocalPluginModel();
+        qCInfo(logStore).noquote() << tr("Plugin was successfully installed");
+    }
+    else
+        qCWarning(logStore).noquote() << tr("Plugin was successfully installed but failed to load. Try to restart Ikomia Studio.");
+
     //Clean
     clearContext();
     m_pProgressMgr->endInfiniteProgress();
