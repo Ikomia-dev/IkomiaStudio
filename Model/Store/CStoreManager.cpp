@@ -728,13 +728,16 @@ QString CStoreManager::checkPythonPluginDirectory(const QString &directory)
     QString dirName = QString::fromStdString(Utils::File::getFileNameWithoutExtension(directory.toStdString()));
     QString goodDirName = dirName;
     QString newDirectory = directory;
+    QRegularExpression re("([a-zA-Z0-9]+)_process");
 
     foreach (QString fileName, pluginDir.entryList(QDir::Files))
     {
         QString fileNameNoExt = QString::fromStdString(Utils::File::getFileNameWithoutExtension(fileName.toStdString()));
-        if(dirName.contains(fileNameNoExt) == true)
+        QRegularExpressionMatch match = re.match(fileNameNoExt);
+
+        if(match.hasMatch())
         {
-            goodDirName = fileNameNoExt;
+            goodDirName = match.captured(1);
             break;
         }
     }
