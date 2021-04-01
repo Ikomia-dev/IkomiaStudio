@@ -241,6 +241,10 @@ void CMainModel::initPython()
     emit doSetSplashMessage(tr("Configure Python environment..."), Qt::AlignCenter, qApp->palette().highlight().color());
     QCoreApplication::processEvents();
     QString pythonPath = Utils::IkomiaApp::getQAppFolder() + "/Python";
+    std::string pythonExe;
+    std::string pythonLib;
+    std::string pythonDynload;
+    std::string pythonSitePackages;
 
     // Set program if existing
     QDir pythonDir(pythonPath);
@@ -249,22 +253,22 @@ void CMainModel::initPython()
         //Define embedded Python paths
 #if defined(Q_OS_MACOS)
         QString delimiter = ":";
-        std::string pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        std::string pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        std::string pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        std::string pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
+        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
+        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
+        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
 #elif defined(Q_OS_LINUX)
         QString delimiter = ":";
-        std::string pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        std::string pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        std::string pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        std::string pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
+        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
+        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
+        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
 #elif defined(Q_OS_WIN64)
         QString delimiter = ";";
-        std::string pythonExe = "/python.exe";
-        std::string pythonLib = "/lib;";
-        std::string pythonDynload = "/DLLs;";
-        std::string pythonSitePackages = "/lib/site-packages;";
+        pythonExe = "/python.exe";
+        pythonLib = "/lib;";
+        pythonDynload = "/DLLs;";
+        pythonSitePackages = "/lib/site-packages;";
 #endif
         //Embedded Python executable
         auto filepath = pythonPath.toStdString() + pythonExe;
@@ -299,24 +303,24 @@ void CMainModel::initPython()
         qWarning().noquote() << "Embedded Python not found:" << pythonPath;
 
 #if defined(Q_OS_MACOS)
-        std::string pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        std::string pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        std::string pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        std::string pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
+        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
+        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
+        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
         std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
 #elif defined(Q_OS_LINUX)
-        std::string pythonExe = "/usr/bin/python" + Utils::Python::getDevBinVersion();
-        std::string pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
-        std::string pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
-        std::string pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
+        pythonExe = "/usr/bin/python" + Utils::Python::getDevBinVersion();
+        pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
+        pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
+        pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
         std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
 #elif defined(Q_OS_WIN64)
         std::string programFilesPath = getenv("PROGRAMFILES");
         std::string pythonFolder = programFilesPath + "/Python" + Utils::Python::getDevBinVersion();
-        std::string pythonExe = pythonFolder + "/python.exe";
-        std::string pythonLib = ";" + pythonFolder + "/Lib;";
-        std::string pythonDynload = pythonFolder + "/DLLs;";
-        std::string pythonSitePackages = pythonFolder + "/Lib/site-packages;";
+        pythonExe = pythonFolder + "/python.exe";
+        pythonLib = ";" + pythonFolder + "/Lib;";
+        pythonDynload = pythonFolder + "/DLLs;";
+        pythonSitePackages = pythonFolder + "/Lib/site-packages;";
         std::string ikomiaApi = "C:/Developpement/IkomiaApi/Build/Lib/Python;";
 #endif
         auto s = pythonExe.size();
@@ -337,12 +341,18 @@ void CMainModel::initPython()
 
     // Set multiprocessing executable to launch python interpreter
     // for subprocess instead of Ikomia App...
-    std::string pythonExe = pythonPath.toStdString() + "/python.exe";
-    boost::python::object main_module = boost::python::import("__main__");
-    boost::python::object main_namespace = main_module.attr("__dict__");
-    boost::python::object multiprocessing = boost::python::import("multiprocessing");
-    multiprocessing.attr("set_executable")(pythonExe);
-    main_namespace["multiprocessing"] = multiprocessing;
+    try
+    {
+        boost::python::object main_module = boost::python::import("__main__");
+        boost::python::object main_namespace = main_module.attr("__dict__");
+        boost::python::object multiprocessing = boost::python::import("multiprocessing");
+        multiprocessing.attr("set_executable")(pythonExe);
+        main_namespace["multiprocessing"] = multiprocessing;
+    }
+    catch(boost::python::error_already_set&)
+    {
+        qCritical() << QString::fromStdString(Utils::Python::handlePythonException());
+    }
 
     //Threading
     if(PyEval_ThreadsInitialized() == 0)
