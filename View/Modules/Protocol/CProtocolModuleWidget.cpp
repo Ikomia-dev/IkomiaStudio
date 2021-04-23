@@ -41,6 +41,12 @@ CProtocolModuleWidget::CProtocolModuleWidget(QWidget *parent) : QWidget(parent)
     initLayout();
 }
 
+CProtocolModuleWidget::~CProtocolModuleWidget()
+{
+    CPyEnsureGIL gil;
+    m_widgetPtr.reset();
+}
+
 void CProtocolModuleWidget::setCurrentUser(const CUser &user)
 {
     if(m_pProcessDocDlg)
@@ -583,6 +589,7 @@ void CProtocolModuleWidget::remove(QLayout* pLayout)
 
 void CProtocolModuleWidget::clearParamLayout()
 {
+    CPyEnsureGIL gil;
     m_widgetPtr.reset();
 
     while(!m_pParamLayout->isEmpty())

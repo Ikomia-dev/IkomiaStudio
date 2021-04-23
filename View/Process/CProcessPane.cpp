@@ -26,6 +26,12 @@ CProcessPane::CProcessPane(QWidget *parent) : QWidget(parent)
     initConnections();
 }
 
+CProcessPane::~CProcessPane()
+{
+    CPyEnsureGIL gil;
+    m_widgets.clear();
+}
+
 void CProcessPane::setCurrentUser(const CUser &user)
 {
     if(m_pParamsWidget)

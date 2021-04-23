@@ -38,6 +38,7 @@ class CProtocolModuleWidget : public QWidget
     public:
 
         CProtocolModuleWidget(QWidget* parent = nullptr);
+        ~CProtocolModuleWidget();
 
         void            setCurrentUser(const CUser& user);
 

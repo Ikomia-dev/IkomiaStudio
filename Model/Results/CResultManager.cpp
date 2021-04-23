@@ -332,6 +332,7 @@ void CResultManager::notifyDisplaySelected(int index)
 
 void CResultManager::onProtocolClosed()
 {
+    CPyEnsureGIL gil;
     m_pCurrentTask = nullptr;
     m_bProtocolInProgress = false;
     clearPreviousOutputs();
@@ -1094,6 +1095,7 @@ void CResultManager::manageDatasetOutput(const ProtocolTaskIOPtr &pOutput, const
 
     for(size_t i=0; i<paths.size(); ++i)
     {
+        CPyEnsureGIL gil;
         auto graphics = pOut->getAnnotationGraphics(paths[i]);
         auto maskPath = pOut->getMaskPath(paths[i]);
         m_pMultiImgModel->addImage(QString::fromStdString(paths[i]), QString::fromStdString(maskPath), graphics);

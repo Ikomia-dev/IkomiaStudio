@@ -33,6 +33,7 @@ class CProcessPane : public QWidget
     public:
 
         CProcessPane(QWidget* parent = nullptr);
+        ~CProcessPane();
 
         void                setCurrentUser(const CUser& user);
         void                update();
