@@ -704,6 +704,8 @@ void CResultsViewer::initConnections(CDataDisplay* pData)
         initTableConnections(static_cast<CResultTableDisplay*>(pData));
     else if(pData->getTypeId() == DisplayType::VIDEO_DISPLAY)
         initVideoConnections(static_cast<CVideoDisplay*>(pData));
+    else if(pData->getTypeId() == DisplayType::MULTI_IMAGE_DISPLAY)
+        initMultiImageConnections(static_cast<CMultiImageDisplay*>(pData));
 }
 
 void CResultsViewer::initImageConnections(CImageDisplay *pDisplay)
@@ -758,6 +760,14 @@ void CResultsViewer::initTableConnections(CResultTableDisplay *pDisplay)
 {
     connect(pDisplay, &CResultTableDisplay::doSave, [&]{ emit doSaveCurrentTableData(); });
     connect(pDisplay, &CResultTableDisplay::doExport, [&](const QString& path){ emit doExportCurrentTableData(path); });
+}
+
+void CResultsViewer::initMultiImageConnections(CMultiImageDisplay *pDisplay)
+{
+    connect(pDisplay, &CMultiImageDisplay::doExportImage, [&](const QString& path, CMat& img, CGraphicsLayer* pLayer)
+    {
+        emit doExportDatasetImage(path, img, pLayer);
+    });
 }
 
 CDataDisplay *CResultsViewer::getDataView(DisplayType type, int index) const

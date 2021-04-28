@@ -127,6 +127,7 @@ void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolV
 
     if(m_pCurrentTask != pTask || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
     {
+        CPyEnsureGIL gil;
         clearPreviousOutputs();
         m_pCurrentTask = pTask;
         m_currentInputIndex = itemIndex;
@@ -530,6 +531,15 @@ void CResultManager::onExportCurrentTableData(const QString &path)
     {
         qCCritical(logResults).noquote() << QString::fromStdString(e.what());
     }
+}
+
+void CResultManager::onExportDatasetImage(const QString &path, CMat &img, CGraphicsLayer *pLayer)
+{
+    if(pLayer)
+        m_pGraphicsMgr->burnLayerToImage(pLayer, img);
+
+    CImageIO io(path.toStdString());
+    io.write(img);
 }
 
 void CResultManager::displayResult(const QModelIndex &index)

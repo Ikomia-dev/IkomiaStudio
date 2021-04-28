@@ -119,6 +119,7 @@ class CResultManager : public QObject
         void                onExportCurrentVideo(size_t id, const QString& path);
         void                onSaveCurrentTableData();
         void                onExportCurrentTableData(const QString& path);
+        void                onExportDatasetImage(const QString& path, CMat &img, CGraphicsLayer* pLayer);
 
         void                onProtocolClosed();
 

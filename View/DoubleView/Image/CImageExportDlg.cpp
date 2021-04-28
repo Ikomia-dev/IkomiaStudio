@@ -38,7 +38,7 @@ bool CImageExportDlg::isGraphicsExported() const
 
 void CImageExportDlg::initLayout()
 {
-    m_pCheckBurnGraphics = new QCheckBox(tr("Export active graphics layers"));
+    m_pCheckBurnGraphics = new QCheckBox(tr("Embed graphics layers"));
     auto pLabelPath = new QLabel(tr("Path"));
     m_pEditPath = new QLineEdit;
     m_pBrowseBtn = new QPushButton("...");

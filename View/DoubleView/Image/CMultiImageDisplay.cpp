@@ -35,7 +35,7 @@ void CMultiImageDisplay::initLayout()
 {
     m_pListView = new CImageListView(this);
 
-    m_pImageDisplay = new CImageDisplay(this, "", TITLE | CImageDisplay::ZOOM_BUTTONS | MAXIMIZE_BUTTON);
+    m_pImageDisplay = new CImageDisplay(this, "", CImageDisplay::DEFAULT);
     m_pImageDisplay->enableImageMoveByKey(false);
 
     m_pStackedWidget = new QStackedWidget;
@@ -50,6 +50,7 @@ void CMultiImageDisplay::initConnections()
 {
     connect(m_pListView, &CImageListView::doubleClicked, this, &CMultiImageDisplay::onShowImage);
     connect(m_pImageDisplay, &CImageDisplay::doDoubleClicked, [&]{ m_pStackedWidget->setCurrentIndex(0); });
+    connect(m_pImageDisplay, &CImageDisplay::doExport, this, &CMultiImageDisplay::onExportImage);
 }
 
 void CMultiImageDisplay::initOverlayColors()
@@ -74,6 +75,7 @@ void CMultiImageDisplay::loadImage(const QModelIndex& index)
     {
         int imgIndex = index.row();
         auto pModel = static_cast<const CMultiImageModel*>(index.model());
+        m_currentIndex = index;
 
         //Image
         CImageIO io(pModel->getPath(imgIndex).toStdString());
@@ -149,6 +151,45 @@ void CMultiImageDisplay::setModel(CMultiImageModel *pModel)
 void CMultiImageDisplay::onShowImage(const QModelIndex &index)
 {
     loadImage(index);
+}
+
+void CMultiImageDisplay::onExportImage(const QString &path, bool bWithGraphics)
+{
+    if(!m_currentIndex.isValid())
+        return;
+
+    auto pView = m_pImageDisplay->getView();
+    if(!pView)
+        return;
+
+    try
+    {
+        int imgIndex = m_currentIndex.row();
+        auto pModel = static_cast<const CMultiImageModel*>(m_currentIndex.model());
+
+        //Image
+        CImageIO io(pModel->getPath(imgIndex).toStdString());
+        CMat img = io.read();
+
+        //Mask
+        CMat mask;
+        auto maskPath = pModel->getOverlayPath(imgIndex);
+        if(!maskPath.isEmpty())
+        {
+            CImageIO ioMask(maskPath.toStdString());
+            mask = ioMask.read();
+            img = Utils::Image::mergeColorMask(img, mask, m_overlayColormap, 0.7);
+        }
+
+        if(bWithGraphics)
+            emit doExportImage(path, img, m_pCurrentLayer);
+        else
+            emit doExportImage(path, img, nullptr);
+    }
+    catch(std::exception& e)
+    {
+        qCritical().noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CMultiImageDisplay::keyPressEvent(QKeyEvent *event)

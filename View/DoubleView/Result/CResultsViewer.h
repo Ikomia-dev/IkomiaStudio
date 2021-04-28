@@ -96,6 +96,7 @@ class CResultsViewer : public QWidget
 
         void                    doSaveCurrentResultImage(int index);
         void                    doExportCurrentResultImage(int index, const QString& path, bool bWithGraphics);
+        void                    doExportDatasetImage(const QString& path, CMat& img, CGraphicsLayer* pLayer);
 
         void                    doSaveCurrentResultVideo(size_t id);
         void                    doExportCurrentResultVideo(size_t id, const QString& path);
@@ -138,6 +139,7 @@ class CResultsViewer : public QWidget
         void                    initImageConnections(CImageDisplay* pDisplay);
         void                    initVideoConnections(CVideoDisplay* pDisplay);
         void                    initTableConnections(CResultTableDisplay* pDisplay);
+        void                    initMultiImageConnections(CMultiImageDisplay* pDisplay);
 
         CDataDisplay*           getDataView(DisplayType type, int index) const;
         int                     getDataViewIndex(CDataDisplay* pDisplay) const;

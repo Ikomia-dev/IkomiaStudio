@@ -31,15 +31,22 @@ class CGraphicsLayer;
 
 class CMultiImageDisplay : public CDataDisplay
 {
+    Q_OBJECT
+
     public:
 
         CMultiImageDisplay(QWidget* pParent = nullptr);
 
         void    setModel(CMultiImageModel* pModel);
 
-    public slots:
+    signals:
+
+        void    doExportImage(const QString& path, CMat& img, CGraphicsLayer* pLayer);
+
+    private slots:
 
         void    onShowImage(const QModelIndex &index);
+        void    onExportImage(const QString& path, bool bWithGraphics);
 
     protected:
 
@@ -59,11 +66,12 @@ class CMultiImageDisplay : public CDataDisplay
 
     private:
 
-        CImageDisplay*  m_pImageDisplay = nullptr;
-        CImageListView* m_pListView = nullptr;
-        QStackedWidget* m_pStackedWidget = nullptr;
-        CGraphicsLayer* m_pCurrentLayer = nullptr;
-        CMat            m_overlayColormap;
+        CImageDisplay*          m_pImageDisplay = nullptr;
+        CImageListView*         m_pListView = nullptr;
+        QStackedWidget*         m_pStackedWidget = nullptr;
+        CGraphicsLayer*         m_pCurrentLayer = nullptr;
+        QPersistentModelIndex   m_currentIndex;
+        CMat                    m_overlayColormap;
 };
 
 #endif // CMULTIIMAGESDISPLAY_H

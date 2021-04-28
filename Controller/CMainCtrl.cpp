@@ -362,6 +362,7 @@ void CMainCtrl::initResultsConnections()
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentTableData, m_pModel->getResultManager(), &CResultManager::onExportCurrentTableData);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doSaveCurrentResultVideo, m_pModel->getResultManager(), &CResultManager::onSaveCurrentVideo);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentResultVideo, m_pModel->getResultManager(), &CResultManager::onExportCurrentVideo);
+    connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportDatasetImage, m_pModel->getResultManager(), &CResultManager::onExportDatasetImage);
 
     //Protocol module -> manager
     connect(m_pView->getProtocolModule(), &CProtocolModuleWidget::doNotifyProtocolClosed, m_pModel->getResultManager(), &CResultManager::onProtocolClosed);
