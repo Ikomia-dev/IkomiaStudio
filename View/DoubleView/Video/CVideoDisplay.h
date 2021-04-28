@@ -68,6 +68,8 @@ class CVideoDisplay : public CDataDisplay
 
         void            stopPlayer();
 
+        void            enableGraphicsInteraction(bool bEnable);
+
     signals:
 
         void            doPlayVideo();

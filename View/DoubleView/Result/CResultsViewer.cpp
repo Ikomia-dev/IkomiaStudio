@@ -800,6 +800,7 @@ CImageDisplay *CResultsViewer::createImageDisplay()
     int imgDisplayFlags = CImageDisplay::DEFAULT | CImageDisplay::SAVE_BUTTON;
     auto pDisplay = new CImageDisplay(nullptr, "", imgDisplayFlags);
     pDisplay->setSelectOnClick(true);
+    pDisplay->enableGraphicsInteraction(false);
     return pDisplay;
 }
 
@@ -807,6 +808,7 @@ CVideoDisplay* CResultsViewer::createVideoDisplay()
 {
     CVideoDisplay* pVideoDisplay = new CVideoDisplay(nullptr, "", CVideoDisplay::RESULTS);
     pVideoDisplay->setSelectOnClick(true);
+    pVideoDisplay->enableGraphicsInteraction(false);
     return pVideoDisplay;
 }
 

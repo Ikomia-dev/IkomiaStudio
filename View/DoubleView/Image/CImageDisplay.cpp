@@ -256,6 +256,12 @@ void CImageDisplay::enableImageMoveByKey(bool bEnable)
     m_pView->enableMoveByKey(bEnable);
 }
 
+void CImageDisplay::enableGraphicsInteraction(bool bEnable)
+{
+    if(m_pView)
+        m_pView->setInteractive(bEnable);
+}
+
 bool CImageDisplay::eventFilter(QObject* obj, QEvent* event)
 {
     if(obj == this)

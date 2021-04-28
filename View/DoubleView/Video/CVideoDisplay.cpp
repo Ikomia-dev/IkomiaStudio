@@ -76,6 +76,12 @@ void CVideoDisplay::stopPlayer()
     emit doSyncStop();
 }
 
+void CVideoDisplay::enableGraphicsInteraction(bool bEnable)
+{
+    if(m_pImgDisplay)
+        m_pImgDisplay->enableGraphicsInteraction(bEnable);
+}
+
 void CVideoDisplay::initLayout()
 {
     setObjectName("CVideoDisplay");

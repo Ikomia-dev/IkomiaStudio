@@ -75,6 +75,7 @@ class CImageDisplay : public CDataDisplay
         void            applyZoomViewProperty();
 
         void            enableImageMoveByKey(bool bEnable);
+        void            enableGraphicsInteraction(bool bEnable);
 
     signals:
 
