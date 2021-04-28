@@ -36,8 +36,7 @@ CProcessManager::~CProcessManager()
 void CProcessManager::init()
 {
     //Python must be initialize before this call
-    initModel();
-    createModel();
+    reloadAll();
 }
 
 void CProcessManager::setManagers(CPluginManager *pPluginMgr, CProtocolManager* pProtocolMgr)
@@ -49,7 +48,6 @@ void CProcessManager::setManagers(CPluginManager *pPluginMgr, CProtocolManager* 
 void CProcessManager::setCurrentUser(const CUser &user)
 {
     Q_UNUSED(user);
-    reloadAll();
 }
 
 CProcessModel* CProcessManager::getProcessModel(CProcessManager::ID id)
