@@ -925,43 +925,43 @@ void CProcessManager::syncProcessInfo()
     //Table process
     QSqlQuery q2(m_db);
     q2.prepare(QString("UPDATE process SET "
-                       "shortDescription = IFNULL(?, shortDescription), "
-                       "description = IFNULL(?, description), "
-                       "keywords = IFNULL(?, keywords), "
-                       "user = IFNULL(?, user), "
-                       "authors = IFNULL(?, authors), "
-                       "article = IFNULL(?, article), "
-                       "journal = IFNULL(?, journal), "
-                       "year = IFNULL(?, year), "
-                       "docLink = IFNULL(?, docLink), "
-                       "createdDate = IFNULL(?, createdDate), "
-                       "modifiedDate = IFNULL(?, modifiedDate), "
-                       "version = IFNULL(?, version), "
-                       "license = IFNULL(?, license), "
-                       "repository = IFNULL(?, repository), "
-                       "serverId = IFNULL(?, serverId), "
-                       "userId = IFNULL(?, userId), "
-                       "os = IFNULL(?, os) "
-                       "WHERE name = ?;"));
+                       "shortDescription = IFNULL(:shortDescription, shortDescription), "
+                       "description = IFNULL(:description, description), "
+                       "keywords = IFNULL(:keywords, keywords), "
+                       "user = IFNULL(:user, user), "
+                       "authors = IFNULL(:authors, authors), "
+                       "article = IFNULL(:article, article), "
+                       "journal = IFNULL(:journal, journal), "
+                       "year = IFNULL(:year, year), "
+                       "docLink = IFNULL(:docLink, docLink), "
+                       "createdDate = IFNULL(:createdDate, createdDate), "
+                       "modifiedDate = IFNULL(:modifiedDate, modifiedDate), "
+                       "version = MAX(IFNULL(version, :version), IFNULL(:version, version)), "
+                       "license = IFNULL(:license, license), "
+                       "repository = IFNULL(:repository, repository), "
+                       "serverId = IFNULL(:serverId, serverId), "
+                       "userId = IFNULL(:userId, userId), "
+                       "os = IFNULL(:os, os) "
+                       "WHERE name = :name;"));
 
-    q2.addBindValue(shortDescriptions);
-    q2.addBindValue(descriptions);
-    q2.addBindValue(keywords);
-    q2.addBindValue(users);
-    q2.addBindValue(authors);
-    q2.addBindValue(articles);
-    q2.addBindValue(journals);
-    q2.addBindValue(years);
-    q2.addBindValue(docLinks);
-    q2.addBindValue(createdDates);
-    q2.addBindValue(modifiedDates);
-    q2.addBindValue(versions);
-    q2.addBindValue(licenses);
-    q2.addBindValue(repositories);
-    q2.addBindValue(serverIds);
-    q2.addBindValue(userIds);
-    q2.addBindValue(os);
-    q2.addBindValue(names);
+    q2.bindValue(":shortDescription", shortDescriptions);
+    q2.bindValue(":description", descriptions);
+    q2.bindValue(":keywords", keywords);
+    q2.bindValue(":user", users);
+    q2.bindValue(":authors", authors);
+    q2.bindValue(":article", articles);
+    q2.bindValue(":journal", journals);
+    q2.bindValue(":year", years);
+    q2.bindValue(":docLink", docLinks);
+    q2.bindValue(":createdDate", createdDates);
+    q2.bindValue(":modifiedDate", modifiedDates);
+    q2.bindValue(":version", versions);
+    q2.bindValue(":license", licenses);
+    q2.bindValue(":repository", repositories);
+    q2.bindValue(":serverId", serverIds);
+    q2.bindValue(":userId", userIds);
+    q2.bindValue(":os", os);
+    q2.bindValue(":name", names);
 
     if(!q2.execBatch())
         throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
