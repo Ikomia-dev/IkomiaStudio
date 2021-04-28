@@ -27,6 +27,7 @@ CMultiImageDisplay::CMultiImageDisplay(QWidget* pParent) : CDataDisplay(pParent,
 {
     initLayout();
     initConnections();
+    initOverlayColors();
     m_typeId = DisplayType::MULTI_IMAGE_DISPLAY;
 }
 
@@ -49,6 +50,19 @@ void CMultiImageDisplay::initConnections()
 {
     connect(m_pListView, &CImageListView::doubleClicked, this, &CMultiImageDisplay::onShowImage);
     connect(m_pImageDisplay, &CImageDisplay::doDoubleClicked, [&]{ m_pStackedWidget->setCurrentIndex(0); });
+}
+
+void CMultiImageDisplay::initOverlayColors()
+{
+    std::srand(std::time(nullptr));
+    m_overlayColormap = CMat(256, 1, CV_8UC3, cv::Scalar(0));
+
+    //Random colors
+    for(int i=1; i<256; ++i)
+    {
+        for(int j=0; j<3; ++j)
+            m_overlayColormap.at<cv::Vec3b>(i, 0)[j] = (uchar)((double)std::rand() / (double)RAND_MAX * 255.0);
+    }
 }
 
 void CMultiImageDisplay::loadImage(const QModelIndex& index)
@@ -122,17 +136,7 @@ void CMultiImageDisplay::loadNextImage()
 
 CMat CMultiImageDisplay::createDisplayOverlay(const CMat &img)
 {
-    //Random colors
-    CMat colormap(256, 1, CV_8UC3, cv::Scalar(0));
-    std::srand(std::time(nullptr));
-
-    for(int i=1; i<256; ++i)
-    {
-        for(int j=0; j<3; ++j)
-            colormap.at<cv::Vec3b>(i, 0)[j] = (uchar)((double)std::rand() / (double)RAND_MAX * 255.0);
-    }
-
-    CMat ovrImg = Utils::Image::createOverlayMask(img, colormap);
+    CMat ovrImg = Utils::Image::createOverlayMask(img, m_overlayColormap);
     return ovrImg;
 }
 

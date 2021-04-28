@@ -49,6 +49,7 @@ class CMultiImageDisplay : public CDataDisplay
 
         void    initLayout();
         void    initConnections();
+        void    initOverlayColors();
 
         void    loadImage(const QModelIndex &index);
         void    loadPreviousImage();
@@ -62,6 +63,7 @@ class CMultiImageDisplay : public CDataDisplay
         CImageListView* m_pListView = nullptr;
         QStackedWidget* m_pStackedWidget = nullptr;
         CGraphicsLayer* m_pCurrentLayer = nullptr;
+        CMat            m_overlayColormap;
 };
 
 #endif // CMULTIIMAGESDISPLAY_H
