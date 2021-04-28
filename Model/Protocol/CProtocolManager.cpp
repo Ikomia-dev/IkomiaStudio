@@ -1776,6 +1776,7 @@ void CProtocolManager::updateDataInfo()
 
 void CProtocolManager::reloadCurrentPlugins()
 {
+    CPyEnsureGIL gil;
     if(m_pProtocol == nullptr)
         return;
 

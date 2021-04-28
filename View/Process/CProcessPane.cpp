@@ -179,6 +179,7 @@ void CProcessPane::onShowWidgetFromList(const QString& name)
 
 void CProcessPane::onAllProcessReloaded()
 {
+    CPyEnsureGIL gil;
     m_pParamsWidget->hide();
     m_widgets.clear();
     m_pParamsWidget->clear();
@@ -186,6 +187,7 @@ void CProcessPane::onAllProcessReloaded()
 
 void CProcessPane::onProcessReloaded(const QString &name)
 {
+    CPyEnsureGIL gil;
     m_pParamsWidget->hide();
     m_widgets.erase(name.toStdString());
     m_pParamsWidget->remove(name);
