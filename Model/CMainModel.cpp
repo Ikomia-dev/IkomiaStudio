@@ -37,7 +37,8 @@ CMainModel::CMainModel()
 
 CMainModel::~CMainModel()
 {
-    m_mlflowProcess->kill();
+    m_pMlflowProcess->kill();
+    m_pTensorboardProc->kill();
     m_userMgr.beforeAppClose();
 }
 
@@ -189,6 +190,7 @@ void CMainModel::initProtocolManager()
     m_protocolMgr.setManagers(&m_processMgr, &m_projectMgr, &m_graphicsMgr,
                               &m_resultsMgr, &m_dataMgr, &m_progressMgr, &m_settingsMgr);
     startLocalMLflowServer();
+    startLocalTensorboard();
 }
 
 void CMainModel::initGraphicsManager()
@@ -493,8 +495,8 @@ void CMainModel::startLocalMLflowServer()
     args << "--default-artifact-root" << artifactRootUri;
     args << "--host" << "0.0.0.0";
 
-    m_mlflowProcess = new QProcess(this);
-    connect(m_mlflowProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
+    m_pMlflowProcess = new QProcess(this);
+    connect(m_pMlflowProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
     {
         QString msg;
         switch(error)
@@ -516,9 +518,51 @@ void CMainModel::startLocalMLflowServer()
 
         qInfo().noquote() << msg;
     });
-    connect(m_mlflowProcess, &QProcess::started, [&]
+    connect(m_pMlflowProcess, &QProcess::started, [&]
     {
         qInfo().noquote() << tr("MLflow server launched successfully.");
     });
-    m_mlflowProcess->start(cmd, args);
+    m_pMlflowProcess->start(cmd, args);
+}
+
+void CMainModel::startLocalTensorboard()
+{
+    QStringList args;
+    QString cmd = "tensorboard";
+    QString logDir = QString::fromStdString(Utils::Tensorboard::getLogDirUri());
+
+    // Create local directory to store MLflow experiments and runs
+    Utils::File::createDirectory(logDir.toStdString());
+
+    // Launch server
+    args << "--logdir" << logDir;
+
+    m_pTensorboardProc = new QProcess(this);
+    connect(m_pTensorboardProc, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
+    {
+        QString msg;
+        switch(error)
+        {
+            case QProcess::FailedToStart:
+                msg = tr("Failed to launch Tensorboard server. Check if the process is already running or if mlflow Python package is correctly installed.");
+                break;
+            case QProcess::Crashed:
+                msg = tr("Tensorboard server crashed.");
+                break;
+            case QProcess::Timedout:
+                msg = tr("Tensorboard server do not respond. Process is waiting...");
+                break;
+            case QProcess::UnknownError:
+                msg = tr("Tensorboard server encountered an unknown error...");
+                break;
+            default: break;
+        }
+
+        qInfo().noquote() << msg;
+    });
+    connect(m_pTensorboardProc, &QProcess::started, [&]
+    {
+        qInfo().noquote() << tr("Tensorboard server launched successfully.");
+    });
+    m_pTensorboardProc->start(cmd, args);
 }
