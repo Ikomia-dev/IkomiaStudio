@@ -281,6 +281,7 @@ std::unique_ptr<CProtocol> CProtocolDBManager::load(QSqlDatabase& db, int protoc
     if(!q.isNull("description"))
         pProtocol->setKeywords(q.value("description").toString().toStdString());
 
+    CPyEnsureGIL gil;
     do
     {
         int taskId = q.value("taskId").toInt();

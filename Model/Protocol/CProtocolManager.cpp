@@ -292,7 +292,17 @@ bool CProtocolManager::isProtocolExists() const
 bool CProtocolManager::isProtocolModified() const
 {
     if(m_pProtocol)
-        return m_pProtocol->isModified();
+    {
+        try
+        {
+            return m_pProtocol->isModified();
+        }
+        catch(std::exception& e)
+        {
+            qCWarning(logProtocol).noquote() << QString::fromStdString(e.what());
+            return false;
+        }
+    }
     else
         return false;
 }
