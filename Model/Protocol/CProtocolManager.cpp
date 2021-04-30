@@ -166,6 +166,21 @@ void CProtocolManager::setCurrentTaskSaveFolder(const std::string &path)
     taskPtr->setOutputFolder(path);
 }
 
+void CProtocolManager::setCurrentTaskSaveFormat(size_t outputIndex, size_t formatIndex)
+{
+    auto taskPtr = getActiveTask();
+    if(!taskPtr)
+        return;
+
+    auto outputPtr = taskPtr->getOutput(outputIndex);
+    if(outputPtr)
+    {
+        auto formats = outputPtr->getPossibleSaveFormats();
+        if(formatIndex < formats.size())
+            outputPtr->setSaveFormat(formats[formatIndex]);
+    }
+}
+
 int CProtocolManager::getCurrentFPS() const
 {
     return m_currentFPS;

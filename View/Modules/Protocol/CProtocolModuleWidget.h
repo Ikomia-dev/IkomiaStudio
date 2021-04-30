@@ -106,7 +106,7 @@ class CProtocolModuleWidget : public QWidget
 
     private:
 
-        enum IOPropType { AUTO_SAVE, SAVE_FOLDER};
+        enum IOPropType { AUTO_SAVE, SAVE_FOLDER, SAVE_FORMAT };
 
         struct PropAttribute
         {

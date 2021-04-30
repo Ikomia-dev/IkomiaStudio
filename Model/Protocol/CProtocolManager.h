@@ -73,6 +73,7 @@ class CProtocolManager : public QObject
         void                        setCurrentUser(const CUser& user);
         void                        setCurrentTaskAutoSave(size_t outputIndex, bool bAutoSave);
         void                        setCurrentTaskSaveFolder(const std::string& path);
+        void                        setCurrentTaskSaveFormat(size_t outputIndex, size_t formatIndex);
 
         void                        notifyViewShow();
         void                        notifyGraphicsChanged();

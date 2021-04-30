@@ -279,13 +279,26 @@ void CProtocolModuleWidget::onIOPropertyValueChanged(QtProperty *pProperty, cons
         return;
 
     auto type = it.value().type;
-    if(type == IOPropType::AUTO_SAVE)
+    switch(type)
     {
-        auto outputIndex = (size_t)it.value().data.toInt();
-        m_pModel->setCurrentTaskAutoSave(outputIndex, value.toBool());
+        case IOPropType::AUTO_SAVE:
+        {
+            auto outputIndex = (size_t)it.value().data.toInt();
+            m_pModel->setCurrentTaskAutoSave(outputIndex, value.toBool());
+            break;
+        }
+        case IOPropType::SAVE_FOLDER:
+        {
+            m_pModel->setCurrentTaskSaveFolder(value.toString().toStdString());
+            break;
+        }
+        case IOPropType::SAVE_FORMAT:
+        {
+            auto outputIndex = (size_t)it.value().data.toInt();
+            m_pModel->setCurrentTaskSaveFormat(outputIndex, value.toInt());
+            break;
+        }
     }
-    else if(type == IOPropType::SAVE_FOLDER)
-        m_pModel->setCurrentTaskSaveFolder(value.toString().toStdString());
 }
 
 void CProtocolModuleWidget::initLayout()
@@ -651,11 +664,13 @@ void CProtocolModuleWidget::fillIOProperties(const ProtocolTaskPtr &taskPtr)
         QtProperty* pOutputGroup = m_pVariantManager->addProperty(QtVariantPropertyManager::groupTypeId(), outputName);
         pOutputsGroup->addSubProperty(pOutputGroup);
 
+        // Description
         QtVariantProperty* pDescProp = m_pVariantManager->addProperty(QVariant::String, tr("Description"));
         pDescProp->setValue(QString::fromStdString(outputPtr->getDescription()));
         pDescProp->setEnabled(false);
         pOutputGroup->addSubProperty(pDescProp);
 
+        // Auto-save property
         QtVariantProperty* pAutoSaveProp = m_pVariantManager->addProperty(QVariant::Bool, tr("Auto save"));
         pAutoSaveProp->setValue(outputPtr->isAutoSave());
         PropAttribute propAttr;
@@ -664,10 +679,31 @@ void CProtocolModuleWidget::fillIOProperties(const ProtocolTaskPtr &taskPtr)
         m_ioProperties.insert(pAutoSaveProp, propAttr);
         pOutputGroup->addSubProperty(pAutoSaveProp);
 
-        QtVariantProperty* pSaveFormatProp = m_pVariantManager->addProperty(QVariant::String, tr("Save format"));
-        pSaveFormatProp->setValue(Utils::Data::getExportFormatName(outputPtr->getSaveFormat()));
-        pSaveFormatProp->setEnabled(false);
-        pOutputGroup->addSubProperty(pSaveFormatProp);
+        // Save format
+        auto saveFormats = outputPtr->getPossibleSaveFormats();
+        if(saveFormats.size() > 0)
+        {
+            QStringList formatNames;
+            int currentFormatIndex = 0;
+            auto currentFormat = outputPtr->getSaveFormat();
+
+            for(size_t i=0; i<saveFormats.size(); ++i)
+            {
+                formatNames.append(Utils::Data::getExportFormatName(saveFormats[i]));
+                if(saveFormats[i] == currentFormat)
+                    currentFormatIndex = i;
+            }
+
+            QtVariantProperty* pSaveFormatProp = m_pVariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), tr("Save format"));
+            pSaveFormatProp->setAttribute("enumNames", formatNames);
+            pSaveFormatProp->setValue(currentFormatIndex);
+            pOutputGroup->addSubProperty(pSaveFormatProp);
+
+            PropAttribute propAttr;
+            propAttr.type = IOPropType::SAVE_FORMAT;
+            propAttr.data = (int)i;
+            m_ioProperties.insert(pSaveFormatProp, propAttr);
+        }
     }
 
     // Export options
