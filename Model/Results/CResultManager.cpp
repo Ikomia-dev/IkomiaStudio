@@ -25,7 +25,7 @@
 #include "IO/CFeatureProcessIO.hpp"
 #include "IO/CVideoProcessIO.h"
 #include "IO/CWidgetOutput.h"
-#include "IO/CDatasetIO.hpp"
+#include "IO/CDatasetIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Protocol/CProtocolManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
