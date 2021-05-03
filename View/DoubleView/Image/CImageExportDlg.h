@@ -27,7 +27,9 @@ class CImageExportDlg: public CDialog
 {
     public:
 
-        CImageExportDlg(QWidget * parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        enum DataType { IMAGE, IMAGE_SEQUENCE, VIDEO};
+
+        CImageExportDlg(const QString& title, DataType type, QWidget * parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         QString     getFileName() const;
         bool        isGraphicsExported() const;
@@ -44,6 +46,7 @@ class CImageExportDlg: public CDialog
 
     private:
 
+        DataType        m_dataType = IMAGE;
         QCheckBox*      m_pCheckBurnGraphics = nullptr;
         QLineEdit*      m_pEditPath = nullptr;
         QPushButton*    m_pBrowseBtn = nullptr;

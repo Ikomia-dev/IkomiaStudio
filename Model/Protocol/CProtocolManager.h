@@ -81,6 +81,7 @@ class CProtocolManager : public QObject
         void                        forceBatchMode(bool bEnable);
 
         void                        enableAutoLoadBatchResults(bool bEnable);
+        void                        enableSaveWithGraphics(bool bEnable);
 
         void                        beforeProjectClose(bool bWithCurrentImage);
         void                        beforeDataDeleted(const QModelIndex& index);

@@ -99,7 +99,7 @@ class CResultsViewer : public QWidget
         void                    doExportDatasetImage(const QString& path, CMat& img, CGraphicsLayer* pLayer);
 
         void                    doSaveCurrentResultVideo(size_t id);
-        void                    doExportCurrentResultVideo(size_t id, const QString& path);
+        void                    doExportCurrentResultVideo(size_t id, const QString& path, bool bWithGraphics);
         void                    doRecordVideo(size_t id, bool bRecord);
 
         void                    doSaveCurrentTableData();

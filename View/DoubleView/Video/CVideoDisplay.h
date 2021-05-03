@@ -84,7 +84,7 @@ class CVideoDisplay : public CDataDisplay
         void            doSaveVideo();
         void            doSaveCurrentFrame();
 
-        void            doExportVideo(const QString& filename);
+        void            doExportVideo(const QString& filename, bool bWithGraphics);
         void            doExportCurrentFrame(const QString& path, bool bWithGraphics);
 
         void            doNotifyVideoStart();

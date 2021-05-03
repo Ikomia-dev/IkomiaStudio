@@ -237,6 +237,12 @@ void CProtocolManager::enableAutoLoadBatchResults(bool bEnable)
     m_bAutoLoadBatchResult = bEnable;
 }
 
+void CProtocolManager::enableSaveWithGraphics(bool bEnable)
+{
+    if(m_pProtocol)
+        m_pProtocol->setCfgEntry("GraphicsEmbedded", std::to_string(bEnable));
+}
+
 void CProtocolManager::beforeProjectClose(bool bWithCurrentImage)
 {
     if(bWithCurrentImage == true)

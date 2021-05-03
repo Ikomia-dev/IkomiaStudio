@@ -339,7 +339,7 @@ void CImageDisplay::onZoomOriginal()
 
 void CImageDisplay::onExportBtnClicked()
 {
-    CImageExportDlg exportDlg(this);
+    CImageExportDlg exportDlg(tr("Export image"), CImageExportDlg::IMAGE, this);
     if(exportDlg.exec() == QDialog::Accepted)
         emit doExport(exportDlg.getFileName(), exportDlg.isGraphicsExported());
 }

@@ -26,6 +26,7 @@
 #include <QFileDialog>
 #include <QProgressDialog>
 #include "Main/AppTools.hpp"
+#include "View/DoubleView/Image/CImageExportDlg.h"
 
 CVideoDisplay::CVideoDisplay(QWidget* parent, const QString& name, int flags) : CDataDisplay(parent, name, flags)
 {
@@ -426,19 +427,11 @@ void CVideoDisplay::onSaveVideo()
 
 void CVideoDisplay::onExportVideo()
 {
-    QString filePath;
-    QSettings IkomiaSettings;
+    auto dataType = (m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE ? CImageExportDlg::IMAGE_SEQUENCE : CImageExportDlg::VIDEO);
+    CImageExportDlg exportDlg(tr("Export video"), dataType, this);
 
-    if(m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
-        filePath = QFileDialog::getExistingDirectory(this, tr("Save image sequence"), IkomiaSettings.value(_DefaultDirVideoExport).toString());
-    else
-        filePath = Utils::File::saveFile(this, tr("Save Video"), IkomiaSettings.value(_DefaultDirVideoExport).toString(), tr("avi Files (*.avi)"), QStringList("avi"), ".avi");
-
-    if(filePath.isEmpty())
-        return;
-
-    IkomiaSettings.setValue(_DefaultDirVideoExport, QFileInfo(filePath).path());
-    emit doExportVideo(filePath);
+    if(exportDlg.exec() == QDialog::Accepted)
+        emit doExportVideo(exportDlg.getFileName(), exportDlg.isGraphicsExported());
 }
 
 void CVideoDisplay::onLoadNextFrame()

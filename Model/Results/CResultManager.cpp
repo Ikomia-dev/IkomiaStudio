@@ -487,7 +487,7 @@ void CResultManager::onSaveCurrentVideo(size_t index)
         outputPtr->setSaveInfo(pTask->getOutputFolder(), pTask->getName());
         std::string path = outputPtr->getSavePath();
         Utils::File::createDirectory(Utils::File::getParentPath(path));
-        runProtocolAndSaveVideo(index, path);
+        runProtocolAndSaveVideo(index, path, false);
     }
     catch(std::exception& e)
     {
@@ -495,11 +495,11 @@ void CResultManager::onSaveCurrentVideo(size_t index)
     }
 }
 
-void CResultManager::onExportCurrentVideo(size_t id, const QString& path)
+void CResultManager::onExportCurrentVideo(size_t id, const QString& path, bool bWithGraphics)
 {
     try
     {
-        runProtocolAndSaveVideo(id, path.toStdString());
+        runProtocolAndSaveVideo(id, path.toStdString(), bWithGraphics);
     }
     catch(std::exception& e)
     {
@@ -1141,7 +1141,7 @@ void CResultManager::fillResultTreeIds(const QModelIndex &index, std::vector<int
     }
 }
 
-void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path)
+void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics)
 {
     // Message box non blocking
     QMessageBox* pDlg = new QMessageBox;
@@ -1164,6 +1164,7 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path)
             // Reset process on whole video to go back on live processing
             m_pProtocolMgr->forceBatchMode(false);
             m_pProtocolMgr->enableAutoLoadBatchResults(true);
+            m_pProtocolMgr->enableSaveWithGraphics(false);
             // Move file to appropriate place
             saveOutputVideo(id, path);
         }
@@ -1182,6 +1183,7 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path)
     // Set processing on whole video
     m_pProtocolMgr->forceBatchMode(true);
     m_pProtocolMgr->enableAutoLoadBatchResults(false);
+    m_pProtocolMgr->enableSaveWithGraphics(bWithGraphics);
     // Run protocol to current active task
     m_pProtocolMgr->runProtocolToActiveTask();
 }

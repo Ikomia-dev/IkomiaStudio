@@ -730,9 +730,9 @@ void CResultsViewer::initVideoConnections(CVideoDisplay* pDisplay)
     {
         emit doSaveCurrentResultVideo(getDataViewIndex(pDisplay));
     });
-    connect(pDisplay, &CVideoDisplay::doExportVideo, [&, pDisplay](const QString& path)
+    connect(pDisplay, &CVideoDisplay::doExportVideo, [&, pDisplay](const QString& path, bool bWithGraphics)
     {
-        emit doExportCurrentResultVideo(getDataViewIndex(pDisplay), path);
+        emit doExportCurrentResultVideo(getDataViewIndex(pDisplay), path, bWithGraphics);
     });
     connect(pDisplay, &CVideoDisplay::doRecordVideo, [&, pDisplay](bool bRecord)
     {

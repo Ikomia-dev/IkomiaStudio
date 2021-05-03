@@ -116,7 +116,7 @@ class CResultManager : public QObject
         void                onSaveCurrentImage(int index);
         void                onExportCurrentImage(int index, const QString& path, bool bWithGraphics);
         void                onSaveCurrentVideo(size_t index);
-        void                onExportCurrentVideo(size_t id, const QString& path);
+        void                onExportCurrentVideo(size_t id, const QString& path, bool bWithGraphics);
         void                onSaveCurrentTableData();
         void                onExportCurrentTableData(const QString& path);
         void                onExportDatasetImage(const QString& path, CMat &img, CGraphicsLayer* pLayer);
@@ -164,7 +164,7 @@ class CResultManager : public QObject
 
         void                fillResultTreeIds(const QModelIndex& index, std::vector<int>& ids);
 
-        void                runProtocolAndSaveVideo(size_t id, const std::string& path);
+        void                runProtocolAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics);
 
         void                updateVolumeRender(const ProtocolTaskIOPtr &outputPtr);
 

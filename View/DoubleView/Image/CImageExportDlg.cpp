@@ -17,11 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CImageExportDlg.h"
+#include <QMessageBox>
 #include "Main/AppTools.hpp"
 
-CImageExportDlg::CImageExportDlg(QWidget *parent, Qt::WindowFlags f)
-    : CDialog(tr("Export image"), parent, DEFAULT|EFFECT_ENABLED, f)
+CImageExportDlg::CImageExportDlg(const QString& title, DataType type, QWidget *parent, Qt::WindowFlags f)
+    : CDialog(title, parent, DEFAULT|EFFECT_ENABLED, f)
 {
+    m_dataType = type;
     initLayout();
     initConnections();
 }
@@ -73,14 +75,42 @@ void CImageExportDlg::initConnections()
 
 void CImageExportDlg::onBrowse()
 {
+    QString path;
     QSettings IkomiaSettings;
 
-    auto fileName = Utils::File::saveFile(this, tr("Export screenshot"), IkomiaSettings.value(_DefaultDirImgExport).toString(), tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2)"), QStringList({"jpg", "jpeg", "tif", "tiff", "png", "bmp", "jp2"}), ".png");
-    if(fileName.isEmpty())
-        return;
+    switch(m_dataType)
+    {
+        case DataType::IMAGE:
+            path = Utils::File::saveFile(this, tr("Export screenshot"),
+                                             IkomiaSettings.value(_DefaultDirImgExport).toString(),
+                                             tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2)"),
+                                             QStringList({"jpg", "jpeg", "tif", "tiff", "png", "bmp", "jp2"}), ".png");
+            if(path.isEmpty())
+                return;
 
-    IkomiaSettings.setValue(_DefaultDirImgExport, QFileInfo(fileName).path());
-    m_pEditPath->setText(fileName);
+            IkomiaSettings.setValue(_DefaultDirImgExport, QFileInfo(path).path());
+            break;
+
+        case DataType::IMAGE_SEQUENCE:
+            path = QFileDialog::getExistingDirectory(this, tr("Save image sequence"), IkomiaSettings.value(_DefaultDirVideoExport).toString());
+            if(path.isEmpty())
+                return;
+
+            IkomiaSettings.setValue(_DefaultDirVideoExport, QFileInfo(path).path());
+            break;
+
+        case DataType::VIDEO:
+            path = Utils::File::saveFile(this, tr("Save Video"),
+                                         IkomiaSettings.value(_DefaultDirVideoExport).toString(),
+                                         tr("avi Files (*.avi)"),
+                                         QStringList("avi"), ".avi");
+            if(path.isEmpty())
+                return;
+
+            IkomiaSettings.setValue(_DefaultDirVideoExport, QFileInfo(path).path());
+            break;
+    }
+    m_pEditPath->setText(path);
 }
 
 void CImageExportDlg::onValidate()
