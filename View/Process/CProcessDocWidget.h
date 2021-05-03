@@ -52,6 +52,10 @@ class CProcessDocWidget : public QWidget
         void            doBack();
         void            doSave(bool bFullEdit, const CProcessInfo& info);
 
+    private slots:
+
+        void            onShowSourceCode();
+
     protected:
 
         virtual void    showEvent(QShowEvent* event) override;
@@ -64,11 +68,11 @@ class CProcessDocWidget : public QWidget
     private:
 
         int                     m_actions = EDIT;
-        bool                    m_bInit = false;
         CUser                   m_currentUser;
         QStackedWidget*         m_pStackWidget = nullptr;
         CProcessDocFrame*       m_pDocFrame = nullptr;
         CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
+        CProcessInfo            m_processInfo;
 };
 
 #endif // CPROCESSDOCWIDGET_H

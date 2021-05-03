@@ -18,8 +18,10 @@
 
 #include "CProcessDocWidget.h"
 #include <QtWidgets>
+#include "UtilsTools.hpp"
 #include "CProcessDocFrame.h"
 #include "CProcessEditDocFrame.h"
+#include "Model/Plugin/CPluginTools.h"
 
 CProcessDocWidget::CProcessDocWidget(int actions, QWidget *parent, Qt::WindowFlags f)
     : QWidget(parent, f)
@@ -34,15 +36,9 @@ void CProcessDocWidget::setCurrentUser(const CUser &user)
 
 void CProcessDocWidget::setProcessInfo(const CProcessInfo& info)
 {
-    if(m_bInit == false)
-    {
-        //We create layout at first use to ensure that QWebEngineView is created only when we need it
-        //We suspect a bug on Windows: the QWidgetEngineProcess process is not closed when application is closed
-        //except if the QWebEngineView is shown at least one time...
-        initLayout();
-        initConnections();
-        m_bInit = true;
-    }
+    initLayout();
+    initConnections();
+    m_processInfo = info;
 
     if(m_pDocFrame)
         m_pDocFrame->setProcessInfo(info);
@@ -52,6 +48,20 @@ void CProcessDocWidget::setProcessInfo(const CProcessInfo& info)
         m_pEditDocFrame->setCurrentUser(m_currentUser);
         m_pEditDocFrame->setProcessInfo(info);
     }
+}
+
+void CProcessDocWidget::onShowSourceCode()
+{
+    if(m_processInfo.m_language == CProcessInfo::PYTHON)
+    {
+        auto pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
+        if(!pluginDir.isEmpty() && Utils::File::isFileExist(pluginDir.toStdString()))
+            Utils::File::showLocation(pluginDir);
+        else if(!m_processInfo.m_repo.empty())
+            QDesktopServices::openUrl(QUrl(QString::fromStdString(m_processInfo.m_repo)));
+    }
+    else if(!m_processInfo.m_repo.empty())
+        QDesktopServices::openUrl(QUrl(QString::fromStdString(m_processInfo.m_repo)));
 }
 
 void CProcessDocWidget::showEvent(QShowEvent *event)
@@ -78,6 +88,11 @@ void CProcessDocWidget::initLayout()
         connect(pEditBtn, &QPushButton::clicked, [&]{ m_pStackWidget->setCurrentIndex(1); });
         pActionsLayout->addWidget(pEditBtn);
     }
+
+    QPushButton* pCodeBtn = new QPushButton(QIcon(":/Images/code.png"), "Source code");
+    pCodeBtn->setToolTip(tr("Open code source folder"));
+    connect(pCodeBtn, &QPushButton::clicked, this, &CProcessDocWidget::onShowSourceCode);
+    pActionsLayout->addWidget(pCodeBtn);
     pActionsLayout->addStretch(1);
 
     m_pDocFrame = new CProcessDocFrame;
