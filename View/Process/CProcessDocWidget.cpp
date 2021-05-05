@@ -18,7 +18,7 @@
 
 #include "CProcessDocWidget.h"
 #include <QtWidgets>
-#include "UtilsTools.hpp"
+#include "Main/AppTools.hpp"
 #include "CProcessDocFrame.h"
 #include "CProcessEditDocFrame.h"
 #include "Model/Plugin/CPluginTools.h"
@@ -27,6 +27,8 @@ CProcessDocWidget::CProcessDocWidget(int actions, QWidget *parent, Qt::WindowFla
     : QWidget(parent, f)
 {
     m_actions = actions;
+    initLayout();
+    initConnections();
 }
 
 void CProcessDocWidget::setCurrentUser(const CUser &user)
@@ -36,8 +38,6 @@ void CProcessDocWidget::setCurrentUser(const CUser &user)
 
 void CProcessDocWidget::setProcessInfo(const CProcessInfo& info)
 {
-    initLayout();
-    initConnections();
     m_processInfo = info;
 
     if(m_pDocFrame)
@@ -64,6 +64,19 @@ void CProcessDocWidget::onShowSourceCode()
         QDesktopServices::openUrl(QUrl(QString::fromStdString(m_processInfo.m_repo)));
 }
 
+void CProcessDocWidget::onExportDocumentation()
+{
+    QString pluginDir;;
+    if(m_processInfo.m_language == CProcessInfo::CPP)
+        pluginDir = Utils::CPluginTools::getCppPluginFolder(QString::fromStdString(m_processInfo.m_name));
+    else
+        pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
+
+    auto path = Utils::File::saveFile(this, tr("Export documentation"), pluginDir, tr("HTML (*.html *.htm);;Markdown (*.md)"), QStringList({"html", "htm", "md"}), ".html");
+    if(!path.isEmpty())
+        m_pDocFrame->saveContent(path);
+}
+
 void CProcessDocWidget::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event);
@@ -75,7 +88,7 @@ void CProcessDocWidget::initLayout()
     QHBoxLayout* pActionsLayout = new QHBoxLayout;
     if(m_actions & BACK)
     {
-        QPushButton* pBackBtn = new QPushButton(QIcon(":/Images/back.png"), "");
+        QPushButton* pBackBtn = new QPushButton(QIcon(":/Images/back.png"), " ");
         pBackBtn->setToolTip(tr("Back to process store"));
         connect(pBackBtn, &QPushButton::clicked, [&]{ emit doBack();});
         pActionsLayout->addWidget(pBackBtn);
@@ -83,7 +96,7 @@ void CProcessDocWidget::initLayout()
 
     if(m_actions & EDIT)
     {
-        QPushButton* pEditBtn = new QPushButton(QIcon(":/Images/edit.png"), "");
+        QPushButton* pEditBtn = new QPushButton(QIcon(":/Images/edit.png"), " ");
         pEditBtn->setToolTip(tr("Edit documentation"));
         connect(pEditBtn, &QPushButton::clicked, [&]{ m_pStackWidget->setCurrentIndex(1); });
         pActionsLayout->addWidget(pEditBtn);
@@ -93,6 +106,12 @@ void CProcessDocWidget::initLayout()
     pCodeBtn->setToolTip(tr("Open code source folder"));
     connect(pCodeBtn, &QPushButton::clicked, this, &CProcessDocWidget::onShowSourceCode);
     pActionsLayout->addWidget(pCodeBtn);
+
+    m_pExportDocBtn = new QPushButton(QIcon(":/Images/export.png"), "Export documentation");
+    m_pExportDocBtn->setToolTip(tr("Export algorithm documentation to file"));
+    connect(m_pExportDocBtn, &QPushButton::clicked, this, &CProcessDocWidget::onExportDocumentation);
+    pActionsLayout->addWidget(m_pExportDocBtn);
+
     pActionsLayout->addStretch(1);
 
     m_pDocFrame = new CProcessDocFrame;

@@ -24,6 +24,9 @@
 #include "CProcessDocContent.h"
 #include "Core/CProcessInfo.h"
 
+class QTextBrowser;
+class QTextDocument;
+
 class CProcessDocFrame : public QFrame
 {
     public:
@@ -32,20 +35,34 @@ class CProcessDocFrame : public QFrame
 
         void    setProcessInfo(const CProcessInfo& info);
 
+        void    saveContent(const QString& path);
+
     private:
 
         void    initLayout();
+
+        void    fillDocumentation(const CProcessInfo& info);
 
         QString getMarkdownTemplate() const;
         QString getStatus(const CProcessInfo &info) const;
 
         QString generateMarkdown(const CProcessInfo& info) const;
 
+        void    updateLocalPath(QString& content, const QString &name);
+
     private:
 
         CProcessDocContent  m_content;
         QTextBrowser*       m_pBrowser = nullptr;
         QTextDocument*      m_pDoc = nullptr;
+
+        // List of file patterns used to search for plugin documentation file
+        // readme.md is reserved for git-based repository information
+        const QSet<QString> m_docFiles = {
+            "doc.md", "doc.html", "doc.htm",
+            "documentation.md", "documentation.html", "documentation.htm",
+            "info.md", "info.html", "info.htm"
+        };
 };
 
 #endif // CPROCESSDOCFRAME_H

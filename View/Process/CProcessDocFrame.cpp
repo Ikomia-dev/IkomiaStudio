@@ -17,7 +17,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CProcessDocFrame.h"
+#include <QTextDocumentWriter>
 #include "UtilsTools.hpp"
+#include "Model/Plugin/CPluginTools.h"
 
 CProcessDocFrame::CProcessDocFrame(QWidget *parent, Qt::WindowFlags f):
     QFrame(parent, f)
@@ -27,8 +29,22 @@ CProcessDocFrame::CProcessDocFrame(QWidget *parent, Qt::WindowFlags f):
 
 void CProcessDocFrame::setProcessInfo(const CProcessInfo &info)
 {
-    QString mdContent = generateMarkdown(info);
-    m_pDoc->setMarkdown(mdContent);
+    fillDocumentation(info);
+}
+
+void CProcessDocFrame::saveContent(const QString &path)
+{
+    QByteArray format = "HTML";
+    std::string ext = Utils::File::extension(path.toStdString());
+
+    if(ext == ".md")
+        format = "markdown";
+
+    QTextDocumentWriter writer(path, format);
+    if(writer.write(m_pDoc))
+        qInfo().noquote() << tr("Documentation successfully saved at %1").arg(path);
+    else
+        qCritical().noquote() << tr("Failed to save documentation at %1").arg(path);
 }
 
 void CProcessDocFrame::initLayout()
@@ -47,24 +63,72 @@ void CProcessDocFrame::initLayout()
     setLayout(pMainLayout);
 }
 
+void CProcessDocFrame::fillDocumentation(const CProcessInfo &info)
+{
+    QString pluginDir;
+    QString pluginName = QString::fromStdString(info.m_name);
+
+    if(info.m_language == CProcessInfo::CPP)
+        pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
+    else
+        pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
+
+    QString docFilePath;
+    QDir qpluginDir(pluginDir);
+
+    // Check if local doc file exists
+    foreach (QString fileName, qpluginDir.entryList(QDir::Files|QDir::NoSymLinks))
+    {
+        if(m_docFiles.contains(fileName))
+        {
+            docFilePath = qpluginDir.absoluteFilePath(fileName);
+            break;
+        }
+    }
+
+    if(!docFilePath.isEmpty())
+    {
+        // Load doc file
+        QFile file(docFilePath);
+        if(file.open(QFile::ReadOnly | QFile::Text) == false)
+        {
+            docFilePath.clear();
+            qWarning().noquote() << tr("Found local document file for plugin %1 but loading failed.").arg(pluginName);
+        }
+        else
+        {
+            QString mdContent(file.readAll());
+            updateLocalPath(mdContent, pluginName);
+            m_pDoc->setMarkdown(mdContent);
+        }
+    }
+
+    if(docFilePath.isEmpty())
+    {
+        // Generate doc from plugin metadata
+        QString mdContent = generateMarkdown(info);
+        m_pDoc->setMarkdown(mdContent);
+    }
+}
+
 QString CProcessDocFrame::getMarkdownTemplate() const
 {
     return QString("_icon_ \n\n"
-                   "<span style=\"color:#cc5a20\"><h1> _name_ </h1></span> ![Language logo](_languageIcon_)  \n\n"
+                   "<span style=\"color:#cc5a20\"><h1>_name_</h1></span> ![Language logo](_languageIcon_)  \n\n"
                    "**Version**: _version_  \n"
                    "**_modifiedTxt_**: _modified_  \n"
                    "**_createdTxt_**: _created_  \n"
                    "**_statusLabel_**: _status_  \n"
                    "_description_\n\n"
                    "_docLink_ \n\n"
-                   "<span style=\"color:#cc5a20\"><h2> Publication </h2></span> \n\n"
+                   "<span style=\"color:#cc5a20\"><h2>Publication</h2></span> \n\n"
                    "_article_ \n\n"
                    "*_authors_* \n\n"
                    "_journal_ \n\n"
                    "_year_ \n\n"
                    "_repo_ \n\n"
                    "_license_"
-                   "<span style=\"color:#cc5a20\"><h2> _keywordsTxt_ </h2></span> \n\n"
+                   "<span style=\"color:#cc5a20\"><h2>_keywordsTxt_</h2></span> \n\n"
                    "_keywords_");
 }
 
@@ -184,7 +248,7 @@ QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
 
     if(info.m_repo.empty() == false)
     {
-        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2> Repository </h2></span> \n\n [%1](%1) \n\n").arg(QString::fromStdString(info.m_repo));
+        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2>Repository</h2></span> \n\n [%1](%1) \n\n").arg(QString::fromStdString(info.m_repo));
         newContent = newContent.replace("_repo_", repoStr);
     }
     else
@@ -192,7 +256,7 @@ QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
 
     if(info.m_license.empty() == false)
     {
-        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2> License </h2></span> \n\n %1 \n\n").arg(QString::fromStdString(info.m_license));
+        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2>License</h2></span> \n\n %1 \n\n").arg(QString::fromStdString(info.m_license));
         newContent = newContent.replace("_license_", licenceStr);
     }
     else
@@ -204,4 +268,20 @@ QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
     newContent = newContent.replace("_keywords_", QString::fromStdString(info.m_keywords));
 
     return newContent;
+}
+
+void CProcessDocFrame::updateLocalPath(QString &content, const QString& name)
+{
+    QString reStr = QString("file:(.*\\/Ikomia)\\/Plugins\\/.*\\/%1\\/.*\\.[a-zA-Z0-9]*").arg(name);
+    QRegularExpression re(reStr);
+    QRegularExpressionMatchIterator matchIt = re.globalMatch(content);
+
+    while(matchIt.hasNext())
+    {
+        QRegularExpressionMatch match = matchIt.next();
+        auto fullMatch = match.captured(0);
+        auto homeDir = match.captured(1);
+        fullMatch.replace(homeDir, Utils::IkomiaApp::getQAppFolder());
+        content.replace(match.captured(0), fullMatch);
+    }
 }

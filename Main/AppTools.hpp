@@ -483,6 +483,7 @@ namespace Ikomia
             {
                 switch(format)
                 {
+                    case DataFileFormat::NONE: return "";
                     case DataFileFormat::TXT: return QObject::tr("Text file(*.txt)");
                     case DataFileFormat::JSON: return QObject::tr("JSON file(*.json)");
                     case DataFileFormat::XML: return QObject::tr("XML file(*.xml)");

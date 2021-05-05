@@ -26,6 +26,7 @@
 #include "Model/User/CUser.h"
 
 class QStackedWidget;
+class QPushButton;
 class CProcessDocFrame;
 class CProcessEditDocFrame;
 
@@ -55,6 +56,7 @@ class CProcessDocWidget : public QWidget
     private slots:
 
         void            onShowSourceCode();
+        void            onExportDocumentation();
 
     protected:
 
@@ -73,6 +75,7 @@ class CProcessDocWidget : public QWidget
         CProcessDocFrame*       m_pDocFrame = nullptr;
         CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
         CProcessInfo            m_processInfo;
+        QPushButton*            m_pExportDocBtn = nullptr;
 };
 
 #endif // CPROCESSDOCWIDGET_H
