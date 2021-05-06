@@ -4,147 +4,147 @@
 <context>
     <name>C3dAnimationDlg</name>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="10"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="28"/>
         <source>Build 3D animation</source>
         <translation>Réaliser une animation 3D</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="18"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="36"/>
         <source>Frame per second</source>
         <translation>Image par seconde</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="26"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="44"/>
         <source>Action</source>
         <translation>Action</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="29"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="47"/>
         <source>Rotate up</source>
         <translation>Rotation vers le haut</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="30"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="48"/>
         <source>Rotate down</source>
         <translation>Rotation vers le bas</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="31"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="49"/>
         <source>Rotate left</source>
         <translation>Rotation vers la gauche</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="32"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="50"/>
         <source>Rotate right</source>
         <translation>Rotation vers la droite</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="33"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="51"/>
         <source>Move along x</source>
         <translation>Translation en x</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="34"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="52"/>
         <source>Move along y</source>
         <translation>Translation en y</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="35"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="53"/>
         <source>Zoom in/out</source>
         <translation>Zoomer/Dézoomer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="36"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="132"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="54"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="150"/>
         <source>Free move</source>
         <translation>Mouvement libre</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="39"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="156"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="57"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="174"/>
         <source>Angle(°)</source>
         <translation>Angle(°)</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="41"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="155"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="165"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="59"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="173"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="183"/>
         <source>Add sequence</source>
         <translation>Ajouter une séquence</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="54"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="72"/>
         <source>Play</source>
         <translation>Lancer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="55"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="73"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="56"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="74"/>
         <source>Clear</source>
         <translation>Tout supprimer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="57"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="75"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="58"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="76"/>
         <source>Load</source>
         <translation>Charger</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="68"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="86"/>
         <source>Create</source>
         <translation>Créer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="69"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="87"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="111"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="129"/>
         <source>Rotation of %1° from bottom to top</source>
         <translation>Rotation de %1° vers le bas</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="114"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="132"/>
         <source>Rotation of %1°from top to bottom</source>
         <translation>Rotation de %1° vers le haut</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="117"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="135"/>
         <source>Rotation of %1° from right to left</source>
         <translation>Rotation de %1° vers la gauche</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="120"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="138"/>
         <source>Rotation of %1° from left to right</source>
         <translation>Rotation de %1° vers la droite</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="123"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="126"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="141"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="144"/>
         <source>Move scene along x-axis by %1 pixels</source>
         <translation>Translation en x de %1 pixels</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="129"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="147"/>
         <source>Move scene along z-axis by %1 pixels</source>
         <translation>Translation en z de %1 pixels</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="275"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="293"/>
         <source>Choose destination file</source>
         <translation>Choisir le fichier cible</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="275"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="293"/>
         <source>Video(*.avi)</source>
         <translation>Vidéo(*.avi)</translation>
     </message>
@@ -153,34 +153,34 @@
         <translation type="vanished">Mouvement libre</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="166"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="184"/>
         <source>Distance (px)</source>
         <translation>Distance (px)</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="173"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="195"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="191"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="213"/>
         <source>Record</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="187"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="205"/>
         <source>Stop record</source>
         <translation>Stopper enregistrement</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="245"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="263"/>
         <source>Export animation</source>
         <translation>Exporter l&apos;animation</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="245"/>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="255"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="263"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="273"/>
         <source>Animation file(*.json)</source>
         <translation>Fichier animation(*.json)</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="255"/>
+        <location filename="../View/DoubleView/3D/C3dAnimationDlg.cpp" line="273"/>
         <source>Load animation</source>
         <translation>Charger animation</translation>
     </message>
@@ -196,67 +196,67 @@
 <context>
     <name>C3dDisplay</name>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="81"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="99"/>
         <source>Raycasting</source>
         <translation>Lancer de rayons</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="82"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="100"/>
         <source>MIP</source>
         <translation>MIP</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="83"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="101"/>
         <source>MinIP</source>
         <translation>MinIP</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="84"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="102"/>
         <source>Isosurface</source>
         <translation>Isosurface</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="85"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="103"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="86"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="104"/>
         <source>Screenshot</source>
         <translation>Capture d&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="87"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="105"/>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="91"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="109"/>
         <source>Classic</source>
         <translation>Classique</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="92"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="110"/>
         <source>Skin</source>
         <translation>Skin</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="93"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="111"/>
         <source>Jet</source>
         <translation>Jet</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="94"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="112"/>
         <source>Graycolor</source>
         <translation>Niveaux de gris</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="206"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="224"/>
         <source>Export screenshot</source>
         <translation>Exporter une capture d&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="206"/>
+        <location filename="../View/DoubleView/3D/C3dDisplay.cpp" line="224"/>
         <source>Image formats(*.jpg, *.png, *.tif)</source>
         <translation>Formats d&apos;image(*.jpg,*.png,*.tif)</translation>
     </message>
@@ -264,42 +264,42 @@
 <context>
     <name>CCameraDlg</name>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="14"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="32"/>
         <source>Camera choice</source>
         <translation>Choix de la caméra</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="105"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="123"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="106"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="124"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="108"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="126"/>
         <source>Available cameras</source>
         <translation>Caméras disponibles</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="125"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="143"/>
         <source>IP Cam</source>
         <translation>Caméra IP</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="127"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="145"/>
         <source>&lt;Cam IP Address&gt;</source>
         <translation>&lt;Adresse IP&gt;</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="146"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="164"/>
         <source>Manual Cam</source>
         <translation>Caméra manuelle</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCameraDlg.cpp" line="148"/>
+        <location filename="../View/Common/CCameraDlg.cpp" line="166"/>
         <source>&lt;Cam path or id&gt;</source>
         <translation>&lt;Lien caméra ou ID&gt;</translation>
     </message>
@@ -307,7 +307,7 @@
 <context>
     <name>CCentralViewLayout</name>
     <message>
-        <location filename="../View/Main/CCentralViewLayout.cpp" line="306"/>
+        <location filename="../View/Main/CCentralViewLayout.cpp" line="324"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
     </message>
@@ -315,67 +315,67 @@
 <context>
     <name>CCppNewPluginWidget</name>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="32"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="50"/>
         <source>Empty plugin name</source>
         <translation>Veuillez entrer un nom de plugin svp</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="55"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="73"/>
         <source>Plugin name</source>
         <translation>Nom du plugin</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="58"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="76"/>
         <source>Source folder</source>
         <translation>Dossier des fichiers source du plugin</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="62"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="80"/>
         <source>Ikomia API folder</source>
         <translation>Dossier Ikomia API</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="66"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="84"/>
         <source>Process type</source>
         <translation>Type de traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="68"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="86"/>
         <source>Generic process</source>
         <translation>Traitement générique</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="69"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="87"/>
         <source>Image process</source>
         <translation>Traitement d&apos;images</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="70"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="88"/>
         <source>Interactive image process</source>
         <translation>Traitement d&apos;images avec intéraction</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="71"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="89"/>
         <source>Video process</source>
         <translation>Traitement vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="72"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="90"/>
         <source>Optical flow process</source>
         <translation>Traitement flot optique</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="75"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="93"/>
         <source>Widget type</source>
         <translation>Type de fenêtre</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="77"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="95"/>
         <source>Empty widget</source>
         <translation>Fenêtre vide</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="94"/>
+        <location filename="../View/Modules/PluginManager/CCppNewPluginWidget.cpp" line="112"/>
         <source>Generate</source>
         <translation>Générer</translation>
     </message>
@@ -383,42 +383,42 @@
 <context>
     <name>CCrashReporDlg</name>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="7"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="25"/>
         <source>Crash report</source>
         <translation>Rapport de crash</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="43"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="61"/>
         <source>Warning</source>
         <translation>Avertissement</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="44"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="62"/>
         <source>Retry &amp;Again</source>
         <translation>&amp;Réessayer</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="45"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="63"/>
         <source>&amp;Send later</source>
         <translation>&amp;Envoyer plus tard</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="74"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="92"/>
         <source>Send</source>
         <translation>Envoyer</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="75"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="93"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="81"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="99"/>
         <source>Ikomia has crashed during the last session, would you like to send us the crash report?</source>
         <translation>Ikomia s&apos;est arrêté de façon anormale, souhaitez-vous envoyer le rapport?</translation>
     </message>
     <message>
-        <location filename="../View/Common/CCrashReporDlg.cpp" line="99"/>
+        <location filename="../View/Common/CCrashReporDlg.cpp" line="117"/>
         <source>We specifically send the following information:
 
 </source>
@@ -430,12 +430,12 @@
 <context>
     <name>CDataDisplay</name>
     <message>
-        <location filename="../View/DoubleView/CDataDisplay.cpp" line="59"/>
+        <location filename="../View/DoubleView/CDataDisplay.cpp" line="77"/>
         <source>Minimize/Maximize window</source>
         <translation>Réduire/Agrandir la fenêtre</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/CDataDisplay.cpp" line="65"/>
+        <location filename="../View/DoubleView/CDataDisplay.cpp" line="83"/>
         <source>Close window</source>
         <translation>Fermer la fenêtre</translation>
     </message>
@@ -451,7 +451,7 @@
         <translation type="vanished">Erreur pendant la création de l&apos;affichage vidéo: séquence invalide</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/CDataViewer.cpp" line="54"/>
+        <location filename="../View/DoubleView/CDataViewer.cpp" line="72"/>
         <source>No data loaded.
 Use top buttons to load project, images, videos or camera.</source>
         <translation>Aucune donnée chargée.
@@ -461,67 +461,67 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CDatasetLoadPolicyDlg</name>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="4"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="22"/>
         <source>Load image list</source>
         <translation>Charger une liste d&apos;images</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="24"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="42"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="27"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="45"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="45"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="63"/>
         <source>Multiple files selected. Please choose the way you want to load the data:</source>
         <translation>Plusieurs fichiers ont été sélectionnés. Veuillez choisir la façon de charger les données svp:</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="46"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="64"/>
         <source>Single dataset</source>
         <translation>Jeu de données simple</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="48"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="66"/>
         <source>Structured dataset...</source>
         <translation>Jeu de données structuré...</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="49"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="67"/>
         <source>As many datasets as files (for complex file formats)</source>
         <translation>Autant de jeux de données que de fichiers (format de fichier complexe)</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="63"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="81"/>
         <source>Simple list</source>
         <translation>Simple liste</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="65"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="83"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="66"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="84"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="67"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="85"/>
         <source>Time</source>
         <translation>Séquence temporelle</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="68"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="86"/>
         <source>Modality</source>
         <translation>Modalité</translation>
     </message>
     <message>
-        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="77"/>
+        <location filename="../View/Project/CDatasetLoadPolicyDlg.cpp" line="95"/>
         <source>Extra dimension choice:</source>
         <translation>Choix de la dimension:</translation>
     </message>
@@ -529,12 +529,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CDockWidgetTitleBar</name>
     <message>
-        <location filename="../View/Common/CDockWidgetTitleBar.cpp" line="71"/>
+        <location filename="../View/Common/CDockWidgetTitleBar.cpp" line="89"/>
         <source>Maximize/Restore</source>
         <translation>Agrandir/Réduire</translation>
     </message>
     <message>
-        <location filename="../View/Common/CDockWidgetTitleBar.cpp" line="79"/>
+        <location filename="../View/Common/CDockWidgetTitleBar.cpp" line="97"/>
         <source>Float/Dock</source>
         <translation>Flottant/Ancré</translation>
     </message>
@@ -542,17 +542,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGLWidget</name>
     <message>
-        <location filename="../View/Common/CGLWidget.cpp" line="74"/>
+        <location filename="../View/Common/CGLWidget.cpp" line="92"/>
         <source>Null or invalid OpenGL context.</source>
         <translation>Contexte OpenGL invalide.</translation>
     </message>
     <message>
-        <location filename="../View/Common/CGLWidget.cpp" line="75"/>
+        <location filename="../View/Common/CGLWidget.cpp" line="93"/>
         <source>Please verify your OpenGL installation. There is currently no available OpenGL context.</source>
         <translation>Veuillez vérifier votre installation d&apos;OpenGL svp. Aucun contexte OpenGL disponible.</translation>
     </message>
     <message>
-        <location filename="../View/Common/CGLWidget.cpp" line="247"/>
+        <location filename="../View/Common/CGLWidget.cpp" line="265"/>
         <source>GPU initialization failed. Please see the log file for more details.</source>
         <translation>L&apos;initialisation du GPU a échoué. Veuillez consulter le fichier log pour plus de détails svp.</translation>
     </message>
@@ -560,12 +560,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGeneralSettingsWidget</name>
     <message>
-        <location filename="../View/Preferences/CGeneralSettingsWidget.cpp" line="26"/>
+        <location filename="../View/Preferences/CGeneralSettingsWidget.cpp" line="44"/>
         <source>Enable tutorial helper</source>
         <translation>Activer l&apos;aide tutoriel</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CGeneralSettingsWidget.cpp" line="29"/>
+        <location filename="../View/Preferences/CGeneralSettingsWidget.cpp" line="47"/>
         <source>Enable native file manager</source>
         <translation>Activer le gestionnaire de fichier natif</translation>
     </message>
@@ -573,7 +573,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsDeletableButton</name>
     <message>
-        <location filename="../View/Modules/Protocol/CGraphicsDeletableButton.cpp" line="33"/>
+        <location filename="../View/Modules/Protocol/CGraphicsDeletableButton.cpp" line="51"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
@@ -581,29 +581,29 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsEllipsePropWidget</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="24"/>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="25"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="42"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="43"/>
         <source>Line color</source>
         <translation>Couleur de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="45"/>
         <source>Line size</source>
         <translation>Taille de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="32"/>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="33"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="50"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="51"/>
         <source>Fill color</source>
         <translation>Couleur de remplissage</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="35"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="53"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="38"/>
+        <location filename="../View/Graphics/CGraphicsEllipsePropWidget.cpp" line="56"/>
         <source>Opacity(%)</source>
         <translation>Opacité(%)</translation>
     </message>
@@ -615,24 +615,24 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsLayerChoiceDlg</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="9"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="27"/>
         <source>Select graphics layer</source>
         <translation>Sélectionner la couche graphique</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="31"/>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="45"/>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="74"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="49"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="63"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="92"/>
         <source>Clear graphics input</source>
         <translation>Supprimer l&apos;entrée graphique</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="47"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="65"/>
         <source>Set graphics input</source>
         <translation>Choisir comme entrée graphique</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="77"/>
+        <location filename="../View/Graphics/CGraphicsLayerChoiceDlg.cpp" line="95"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -640,39 +640,39 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsManager</name>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="107"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="125"/>
         <source>Current graphics layer not set: invalid index</source>
         <translation>Pas de couche graphique courante: index invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="114"/>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="135"/>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="278"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="132"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="153"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="296"/>
         <source>Current graphics layer not set: invalid layer</source>
         <translation>Pas de couche graphique courante: couche invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="165"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="183"/>
         <source>Error while adding layer: invalid current image</source>
         <translation>Erreur pendant l&apos;ajout de la couche graphique: image courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="252"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="270"/>
         <source>Add graphics layer error: invalid parent layer</source>
         <translation>Erreur pendant l&apos;ajout de la couche graphique: couche parente invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="256"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="274"/>
         <source>New layer</source>
         <translation>Nouvelle couche</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="271"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="289"/>
         <source>Current graphics layer can only be set for the current image</source>
         <translation>La couche graphique courante doit appartenir à l&apos;image courante</translation>
     </message>
     <message>
-        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="561"/>
+        <location filename="../Model/Graphics/CGraphicsManager.cpp" line="579"/>
         <source>Graphics</source>
         <translation>Graphics</translation>
     </message>
@@ -680,29 +680,29 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsPointPropWidget</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="26"/>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="44"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="45"/>
         <source>Line color</source>
         <translation>Couleur de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="29"/>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="30"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="47"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="48"/>
         <source>Fill color</source>
         <translation>Couleur de remplissage</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="32"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="50"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="37"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="55"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="40"/>
+        <location filename="../View/Graphics/CGraphicsPointPropWidget.cpp" line="58"/>
         <source>Opacity(%)</source>
         <translation>Opacité(%)</translation>
     </message>
@@ -714,29 +714,29 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsPolygonPropWidget</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="24"/>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="25"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="42"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="43"/>
         <source>Line color</source>
         <translation>Couleur de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="45"/>
         <source>Line size</source>
         <translation>Taille de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="32"/>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="33"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="50"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="51"/>
         <source>Fill color</source>
         <translation>Couleur de remplissage</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="35"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="53"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="38"/>
+        <location filename="../View/Graphics/CGraphicsPolygonPropWidget.cpp" line="56"/>
         <source>Opacity(%)</source>
         <translation>Opacité(%)</translation>
     </message>
@@ -748,23 +748,23 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsPolylinePropWidget</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="24"/>
-        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="25"/>
+        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="42"/>
+        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="43"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="45"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="32"/>
+        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="50"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="35"/>
+        <location filename="../View/Graphics/CGraphicsPolylinePropWidget.cpp" line="53"/>
         <source>Opacity(%)</source>
         <translation>Opacité(%)</translation>
     </message>
@@ -776,29 +776,29 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsRectPropWidget</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="24"/>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="25"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="42"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="43"/>
         <source>Line color</source>
         <translation>Couleur de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="45"/>
         <source>Line size</source>
         <translation>Taille de ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="32"/>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="33"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="50"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="51"/>
         <source>Fill color</source>
         <translation>Couleur de remplissage</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="35"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="53"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="38"/>
+        <location filename="../View/Graphics/CGraphicsRectPropWidget.cpp" line="56"/>
         <source>Opacity(%)</source>
         <translation>Opacité(%)</translation>
     </message>
@@ -814,38 +814,38 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Choix de couleur</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="26"/>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="27"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="44"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="45"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="29"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="47"/>
         <source>Font</source>
         <translation>Police</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="32"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="50"/>
         <source>Font size</source>
         <translation>Taille de police</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="37"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="55"/>
         <source>Bold</source>
         <translation>Gras</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="38"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="56"/>
         <source>Italic</source>
         <translation>Italique</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="39"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="57"/>
         <source>Underline</source>
         <translation>Souligné</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="40"/>
+        <location filename="../View/Graphics/CGraphicsTextPropWidget.cpp" line="58"/>
         <source>Strike out</source>
         <translation>Barré</translation>
     </message>
@@ -853,62 +853,62 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsToolbar</name>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="88"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="106"/>
         <source>Graphics edition on/off</source>
         <translation>Edition de graphiques on/off</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="89"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="107"/>
         <source>Selection</source>
         <translation>Sélection</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="91"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="109"/>
         <source>Point</source>
         <translation>Point</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="92"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="110"/>
         <source>Circle/Ellipse</source>
         <translation>Cercle/Ellipse</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="93"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="111"/>
         <source>Square/Rectangle</source>
         <translation>Carré/Rectangle</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="94"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="112"/>
         <source>Polygon</source>
         <translation>Polygone</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="95"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="113"/>
         <source>Free hand polygon</source>
         <translation>Polygone à main levée</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="96"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="114"/>
         <source>Line</source>
         <translation>Ligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="97"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="115"/>
         <source>Polyline</source>
         <translation>Polyligne</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="98"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="116"/>
         <source>Free hand polyline</source>
         <translation>Polyligne à main levée</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="99"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="117"/>
         <source>Text</source>
         <translation>Texte</translation>
     </message>
     <message>
-        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="100"/>
+        <location filename="../View/Graphics/CGraphicsToolbar.cpp" line="118"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
@@ -916,39 +916,40 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CImageDisplay</name>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="40"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="58"/>
         <source>Fit in view</source>
         <translation>Ajusté à la fenêtre</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="41"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="59"/>
         <source>Zoom in</source>
         <translation>Zoomer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="42"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="60"/>
         <source>Zoom out</source>
         <translation>Dézoomer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="43"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="61"/>
         <source>Original size</source>
         <translation>Taille originale</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="55"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="73"/>
         <source>Toggle graphics toolbar</source>
         <translation>Afficher/Masquer la barre d&apos;outils des graphiques</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="64"/>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="94"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="82"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="112"/>
         <source>Save image</source>
         <translation>Sauver l&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="70"/>
-        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="98"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="88"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="116"/>
+        <location filename="../View/DoubleView/Image/CImageDisplay.cpp" line="342"/>
         <source>Export image</source>
         <translation>Exporter l&apos;image</translation>
     </message>
@@ -956,47 +957,65 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CImageExportDlg</name>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="5"/>
         <source>Export image</source>
-        <translation>Exporter l&apos;image</translation>
+        <translation type="vanished">Exporter l&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="23"/>
         <source>Export active graphics layers</source>
-        <translation>Exporter les couches graphiques actives</translation>
+        <translation type="vanished">Exporter les couches graphiques actives</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="24"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="44"/>
         <source>Path</source>
         <translation>Dossier</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="27"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="47"/>
         <source>Select target folder</source>
         <translation>Choisir le dossier de destination</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="35"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="55"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="37"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="57"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="60"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="86"/>
         <source>All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2)</source>
         <translation>Images compatibles (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2)</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="60"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="84"/>
         <source>Export screenshot</source>
         <translation>Exporter une capture d&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="73"/>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="43"/>
+        <source>Embed graphics layers</source>
+        <translation>Incruster les graphiques</translation>
+    </message>
+    <message>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="95"/>
+        <source>Save image sequence</source>
+        <translation>Sauver la séquence d&apos;images</translation>
+    </message>
+    <message>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="103"/>
+        <source>Save Video</source>
+        <translation>Sauver la vidéo</translation>
+    </message>
+    <message>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="105"/>
+        <source>avi Files (*.avi)</source>
+        <translation>Fichiers avi(*.avi)</translation>
+    </message>
+    <message>
+        <location filename="../View/DoubleView/Image/CImageExportDlg.cpp" line="121"/>
         <source>Please enter a valid path</source>
         <translation>Veuillez entrer un chemin de fichier valide svp</translation>
     </message>
@@ -1004,12 +1023,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CImageScene</name>
     <message>
-        <location filename="../View/DoubleView/Image/CImageScene.cpp" line="439"/>
+        <location filename="../View/DoubleView/Image/CImageScene.cpp" line="457"/>
         <source>Graphics</source>
         <translation>Graphics</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Image/CImageScene.cpp" line="447"/>
+        <location filename="../View/DoubleView/Image/CImageScene.cpp" line="465"/>
         <source>Input layer</source>
         <translation>Couche d&apos;entrée</translation>
     </message>
@@ -1017,23 +1036,23 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CImgManager</name>
     <message>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="63"/>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="95"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="81"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="113"/>
         <source>Load images...</source>
         <translation>Charger des images...</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="118"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="136"/>
         <source>Display image failed : invalid image</source>
         <translation>Echec de l&apos;affichage de l&apos;image: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="233"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="251"/>
         <source>Invalid image index</source>
         <translation>Index de l&apos;image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="240"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="258"/>
         <source>Invalid image</source>
         <translation>Image invalide</translation>
     </message>
@@ -1050,7 +1069,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Hauteur</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Image/CImgManager.cpp" line="222"/>
+        <location filename="../Model/Data/Image/CImgManager.cpp" line="240"/>
         <source># Images</source>
         <translation>Nombre d&apos;images</translation>
     </message>
@@ -1106,7 +1125,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Bit max</translation>
     </message>
     <message>
-        <location filename="../View/Common/CInfoPane.cpp" line="18"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="36"/>
         <source>Video properties</source>
         <translation>Propriétés vidéo</translation>
     </message>
@@ -1123,23 +1142,23 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Codec vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Common/CInfoPane.cpp" line="13"/>
-        <location filename="../View/Common/CInfoPane.cpp" line="44"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="31"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="62"/>
         <source>Image properties</source>
         <translation>Propriétés image</translation>
     </message>
     <message>
-        <location filename="../View/Common/CInfoPane.cpp" line="88"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="106"/>
         <source>Width</source>
         <translation>Largeur</translation>
     </message>
     <message>
-        <location filename="../View/Common/CInfoPane.cpp" line="89"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="107"/>
         <source>Height</source>
         <translation>Hauteur</translation>
     </message>
     <message>
-        <location filename="../View/Common/CInfoPane.cpp" line="93"/>
+        <location filename="../View/Common/CInfoPane.cpp" line="111"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
@@ -1166,12 +1185,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CMainDataManager</name>
     <message>
-        <location filename="../Model/Data/CMainDataManager.cpp" line="32"/>
+        <location filename="../Model/Data/CMainDataManager.cpp" line="50"/>
         <source>Invalid image index</source>
         <translation>Index de l&apos;image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Data/CMainDataManager.cpp" line="39"/>
+        <location filename="../Model/Data/CMainDataManager.cpp" line="57"/>
         <source>Invalid dataset</source>
         <translation>Jeu de données invalide</translation>
     </message>
@@ -1179,12 +1198,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CMainModel</name>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="163"/>
+        <location filename="../Model/CMainModel.cpp" line="182"/>
         <source>Load process library and plugins...</source>
         <translation>Chargement de la bibliothèque et des plugins...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="223"/>
+        <location filename="../Model/CMainModel.cpp" line="243"/>
         <source>Configure Python environment...</source>
         <translation>Configuration de l&apos;environment Python...</translation>
     </message>
@@ -1193,7 +1212,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation de l&apos;environment Python...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="399"/>
+        <location filename="../Model/CMainModel.cpp" line="429"/>
         <source>Install Python environment...
 (Please be patient, this may take a while)</source>
         <translation>Installation de l&apos;environment Python...
@@ -1204,51 +1223,76 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation du SDK Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="412"/>
+        <location filename="../Model/CMainModel.cpp" line="442"/>
         <source>Install Ikomia API...</source>
         <translation>Installation de l&apos;API Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="421"/>
+        <location filename="../Model/CMainModel.cpp" line="451"/>
         <source>Install Ikomia Resources...</source>
         <translation>Installation des ressources Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="429"/>
+        <location filename="../Model/CMainModel.cpp" line="459"/>
         <source>Install Gmic resources...</source>
         <translation>Installation des ressources Gmic...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="437"/>
+        <location filename="../Model/CMainModel.cpp" line="467"/>
         <source>Install Python packages...
 (Please be patient, this may take a while)</source>
         <translation>Installation des paquets Python...
 (Cette opération peut prendre quelques instants, merci de patienter)</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="475"/>
+        <location filename="../Model/CMainModel.cpp" line="505"/>
         <source>Failed to launch MLflow server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
         <translation>Echec du lancement du serveur MLflow. Vérifier que le paquet Python est correctement installé.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="478"/>
+        <location filename="../Model/CMainModel.cpp" line="508"/>
         <source>MLflow server crashed.</source>
         <translation>Le serveur MLflow s&apos;est arrêté.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="481"/>
+        <location filename="../Model/CMainModel.cpp" line="511"/>
         <source>MLflow server do not respond. Process is waiting...</source>
         <translation>Le serveur MLflow ne répond pas. Le processus est en attente...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="484"/>
+        <location filename="../Model/CMainModel.cpp" line="514"/>
         <source>MLflow server encountered an unknown error...</source>
-        <translation>Le serveur MLflow a rencontré une erreur inconnues...</translation>
+        <translation>Le serveur MLflow a rencontré une erreur inconnue...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="492"/>
+        <location filename="../Model/CMainModel.cpp" line="523"/>
         <source>MLflow server launched successfully.</source>
         <translation>Serveur MLflow demarré avec succès.</translation>
+    </message>
+    <message>
+        <location filename="../Model/CMainModel.cpp" line="547"/>
+        <source>Failed to launch Tensorboard server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
+        <translation>Echec du lancement du serveur Tensorboard. Merci de vérifier que le paquet Python est correctement installé.</translation>
+    </message>
+    <message>
+        <location filename="../Model/CMainModel.cpp" line="550"/>
+        <source>Tensorboard server crashed.</source>
+        <translation>Le serveur Tensorboard s&apos;est arrêté.</translation>
+    </message>
+    <message>
+        <location filename="../Model/CMainModel.cpp" line="553"/>
+        <source>Tensorboard server do not respond. Process is waiting...</source>
+        <translation>Le serveur Tensorboard ne répond pas. Le processus est en attente...</translation>
+    </message>
+    <message>
+        <location filename="../Model/CMainModel.cpp" line="556"/>
+        <source>Tensorboard server encountered an unknown error...</source>
+        <translation>Le serveur Tensorboard a rencontré une erreur inconnue...</translation>
+    </message>
+    <message>
+        <location filename="../Model/CMainModel.cpp" line="565"/>
+        <source>Tensorboard server launched successfully.</source>
+        <translation>Serveur Tensorboard démarré avec succès.</translation>
     </message>
     <message>
         <source>Install Imageez SDK...</source>
@@ -1267,176 +1311,176 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>CMainView</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="53"/>
+        <location filename="../View/Main/CMainView.cpp" line="71"/>
         <source>Ready!</source>
         <translation>Prêt!</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="331"/>
+        <location filename="../View/Main/CMainView.cpp" line="349"/>
         <source>Modules</source>
         <translation>Modules</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="388"/>
-        <location filename="../View/Main/CMainView.cpp" line="457"/>
+        <location filename="../View/Main/CMainView.cpp" line="406"/>
+        <location filename="../View/Main/CMainView.cpp" line="475"/>
         <source>Open Project</source>
         <translation>Ouvrir un projet</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="388"/>
-        <location filename="../View/Main/CMainView.cpp" line="457"/>
+        <location filename="../View/Main/CMainView.cpp" line="406"/>
+        <location filename="../View/Main/CMainView.cpp" line="475"/>
         <source>db Files (*.db)</source>
         <translation>Fichier projet (*.db)</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="399"/>
+        <location filename="../View/Main/CMainView.cpp" line="417"/>
         <source>Choose image files</source>
         <translation>Sélectionner vos images</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="400"/>
+        <location filename="../View/Main/CMainView.cpp" line="418"/>
         <source>All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.pgm *.exr *.hdr *.ppm)</source>
         <translation>Images compatibles (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.pgm *.exr *.hdr *.ppm)</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="412"/>
+        <location filename="../View/Main/CMainView.cpp" line="430"/>
         <source>Choose video files</source>
         <translation>Sélectionner vos vidéos</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="413"/>
+        <location filename="../View/Main/CMainView.cpp" line="431"/>
         <source>All videos (*.avi *.mp4 *.webm)</source>
         <translation>Vidéos compatibles (*.avi *.mp4 *.webm)</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="439"/>
+        <location filename="../View/Main/CMainView.cpp" line="457"/>
         <source>Choose image folder</source>
         <translation>Choisir un dossier d&apos;images</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="516"/>
+        <location filename="../View/Main/CMainView.cpp" line="534"/>
         <source>New project</source>
         <translation>Nouveau projet</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="517"/>
+        <location filename="../View/Main/CMainView.cpp" line="535"/>
         <source>Create new project</source>
         <translation>Créer un nouveau projet</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="522"/>
+        <location filename="../View/Main/CMainView.cpp" line="540"/>
         <source>&amp;Open project...</source>
         <translation>&amp;Ouvrir un projet...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="523"/>
+        <location filename="../View/Main/CMainView.cpp" line="541"/>
         <source>Open a project</source>
         <translation>Ouvrir un projet</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="526"/>
+        <location filename="../View/Main/CMainView.cpp" line="544"/>
         <source>Open project</source>
         <translation>Ouvrir un projet</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="531"/>
+        <location filename="../View/Main/CMainView.cpp" line="549"/>
         <source>&amp;Open image...</source>
         <translation>&amp;Ouvrir une image...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="532"/>
+        <location filename="../View/Main/CMainView.cpp" line="550"/>
         <source>Open an image</source>
         <translation>Ouvrir une image</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="535"/>
+        <location filename="../View/Main/CMainView.cpp" line="553"/>
         <source>Open image</source>
         <translation>Ouvrir une image</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="540"/>
+        <location filename="../View/Main/CMainView.cpp" line="558"/>
         <source>&amp;Open video...</source>
         <translation>&amp;Ouvrir une vidéo...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="541"/>
+        <location filename="../View/Main/CMainView.cpp" line="559"/>
         <source>Open a video</source>
         <translation>Ouvrir une vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="544"/>
+        <location filename="../View/Main/CMainView.cpp" line="562"/>
         <source>Open video</source>
         <translation>Ouvrir une vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="549"/>
+        <location filename="../View/Main/CMainView.cpp" line="567"/>
         <source>&amp;Open camera...</source>
         <translation>&amp;Démarrer une caméra...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="550"/>
+        <location filename="../View/Main/CMainView.cpp" line="568"/>
         <source>Open a camera</source>
         <translation>Démarrer une caméra</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="553"/>
+        <location filename="../View/Main/CMainView.cpp" line="571"/>
         <source>Open camera</source>
         <translation>Démarrer une caméra</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="558"/>
+        <location filename="../View/Main/CMainView.cpp" line="576"/>
         <source>&amp;Open folder...</source>
         <translation>&amp;Ouvrir un dossier...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="559"/>
+        <location filename="../View/Main/CMainView.cpp" line="577"/>
         <source>Open image folder</source>
         <translation>Ouvrir un dossier image</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="564"/>
+        <location filename="../View/Main/CMainView.cpp" line="582"/>
         <source>&amp;Open plugins store...</source>
         <translation>&amp;Ouvrir le Plugin Store...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="565"/>
-        <location filename="../View/Main/CMainView.cpp" line="568"/>
+        <location filename="../View/Main/CMainView.cpp" line="583"/>
+        <location filename="../View/Main/CMainView.cpp" line="586"/>
         <source>Open plugins store</source>
         <translation>Ouvrir le Plugin Store</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="573"/>
+        <location filename="../View/Main/CMainView.cpp" line="591"/>
         <source>&amp;Load plugins...</source>
         <translation>&amp;Charger les plugins...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="574"/>
+        <location filename="../View/Main/CMainView.cpp" line="592"/>
         <source>Load plugins</source>
         <translation>Charger les plugins</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="579"/>
+        <location filename="../View/Main/CMainView.cpp" line="597"/>
         <source>&amp;Preferences...</source>
         <translation>&amp;Préférences...</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="580"/>
+        <location filename="../View/Main/CMainView.cpp" line="598"/>
         <source>Show preferences</source>
         <translation>Afficher les préférences</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="585"/>
-        <location filename="../View/Main/CMainView.cpp" line="1249"/>
+        <location filename="../View/Main/CMainView.cpp" line="603"/>
+        <location filename="../View/Main/CMainView.cpp" line="1267"/>
         <source>Offline</source>
         <translation>Non connecté</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="602"/>
+        <location filename="../View/Main/CMainView.cpp" line="620"/>
         <source>Workflows</source>
         <translation>Workflows</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="1254"/>
+        <location filename="../View/Main/CMainView.cpp" line="1272"/>
         <source>Online</source>
         <translation>Connecté</translation>
     </message>
@@ -1445,12 +1489,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Se connecter</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="596"/>
+        <location filename="../View/Main/CMainView.cpp" line="614"/>
         <source>Projects</source>
         <translation>Projets</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="599"/>
+        <location filename="../View/Main/CMainView.cpp" line="617"/>
         <source>Process</source>
         <translation>Process</translation>
     </message>
@@ -1459,22 +1503,22 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Protocoles</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="605"/>
+        <location filename="../View/Main/CMainView.cpp" line="623"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="605"/>
+        <location filename="../View/Main/CMainView.cpp" line="623"/>
         <source>Data properties</source>
         <translation>Propriétés</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="616"/>
+        <location filename="../View/Main/CMainView.cpp" line="634"/>
         <source>Logs</source>
         <translation>Journal</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="616"/>
+        <location filename="../View/Main/CMainView.cpp" line="634"/>
         <source>Show notification center</source>
         <translation>Centre de notifications</translation>
     </message>
@@ -1487,39 +1531,39 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Tutoriels</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="949"/>
-        <location filename="../View/Main/CMainView.cpp" line="978"/>
+        <location filename="../View/Main/CMainView.cpp" line="967"/>
+        <location filename="../View/Main/CMainView.cpp" line="996"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="953"/>
+        <location filename="../View/Main/CMainView.cpp" line="971"/>
         <source>Warning</source>
         <translation>Avertissement</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="957"/>
+        <location filename="../View/Main/CMainView.cpp" line="975"/>
         <source>Critical</source>
         <translation>Critique</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="961"/>
+        <location filename="../View/Main/CMainView.cpp" line="979"/>
         <source>Debug</source>
         <translation>Debug</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="965"/>
+        <location filename="../View/Main/CMainView.cpp" line="983"/>
         <source>Exception</source>
         <translation>Exception</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="998"/>
-        <location filename="../View/Main/CMainView.cpp" line="1207"/>
+        <location filename="../View/Main/CMainView.cpp" line="1016"/>
+        <location filename="../View/Main/CMainView.cpp" line="1225"/>
         <source>Successfully finished.</source>
         <translation>Terminé avec succès.</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="1212"/>
+        <location filename="../View/Main/CMainView.cpp" line="1230"/>
         <source>The process has been aborted.</source>
         <translation>Le process  a été interrompu.</translation>
     </message>
@@ -1527,7 +1571,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CModuleDockWidget</name>
     <message>
-        <location filename="../View/Modules/CModuleDockWidget.cpp" line="117"/>
+        <location filename="../View/Modules/CModuleDockWidget.cpp" line="135"/>
         <source>Modules</source>
         <translation>Modules</translation>
     </message>
@@ -1535,67 +1579,67 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CNewUserDlg</name>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="26"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="44"/>
         <source>User information</source>
         <translation>Information utilisateur</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="30"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="48"/>
         <source>Fullname</source>
         <translation>Nom complet</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="33"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="51"/>
         <source>Login</source>
         <translation>Login</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="36"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="54"/>
         <source>Password</source>
         <translation>Mot de passe</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="40"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="58"/>
         <source>Confirm password</source>
         <translation>Confirmer le mot de passe</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="44"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="62"/>
         <source>Role</source>
         <translation>Rôle</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="46"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="64"/>
         <source>Administrator</source>
         <translation>Administrateur</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="47"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="65"/>
         <source>User</source>
         <translation>Utilisateur</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="63"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="81"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="171"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="189"/>
         <source>Enter a login please</source>
         <translation>Veuillez entrer un login svp</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="177"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="195"/>
         <source>Enter a password please</source>
         <translation>Veuillez entrer un mot de passe svp</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="183"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="201"/>
         <source>Confirmation password does not match</source>
         <translation>Le mot de passe et sa confirmation ne correspondent pas</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CNewUserDlg.cpp" line="189"/>
+        <location filename="../View/Preferences/CNewUserDlg.cpp" line="207"/>
         <source>This login already exists. Please enter a new one</source>
         <translation>Ce login existe déjà. Veuillez en entrer un nouveau svp</translation>
     </message>
@@ -1603,28 +1647,28 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CNotificationPane</name>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="72"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="90"/>
         <source>&lt;Search by words&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="106"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="124"/>
         <source>Notification center</source>
         <translation>Centre de notifications</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="137"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="155"/>
         <source>Debug categories</source>
         <translation>Catégories Debug</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="144"/>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="188"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="162"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="206"/>
         <source>All</source>
         <translation>Tout</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="149"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="167"/>
         <source>Default</source>
         <translation></translation>
     </message>
@@ -1633,77 +1677,77 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Protocole</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="150"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="168"/>
         <source>Workflow</source>
         <translation>Workflow</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="151"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="169"/>
         <source>Project</source>
         <translation>Projet</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="152"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="170"/>
         <source>Render</source>
         <translation>Rendu 3D</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="153"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="171"/>
         <source>Graphics</source>
         <translation>Graphiques</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="154"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="172"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="155"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="173"/>
         <source>Plugin</source>
         <translation>Plugin</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="156"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="174"/>
         <source>User</source>
         <translation>Utilisateur</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="157"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="175"/>
         <source>Video</source>
         <translation>Vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="158"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="176"/>
         <source>Progress</source>
         <translation>Progression</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="159"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="177"/>
         <source>Process</source>
         <translation>Process</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="160"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="178"/>
         <source>Store</source>
         <translation>Store</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="186"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="204"/>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="194"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="212"/>
         <source>Activate debug</source>
         <translation>Activer Debug</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="204"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="222"/>
         <source>Max size (in rows)</source>
         <translation>Nombre de lignes max</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="213"/>
+        <location filename="../View/Notifications/CNotificationPane.cpp" line="231"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
@@ -1711,88 +1755,88 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPlotDisplay</name>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="56"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="74"/>
         <source>Global settings</source>
         <translation>Paramètres généraux</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="79"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="97"/>
         <source>Legend</source>
         <translation>Légende</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="83"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="101"/>
         <source>Grid</source>
         <translation>Grille</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="133"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="151"/>
         <source>Thickness</source>
         <translation>Epaisseur</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="138"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="156"/>
         <source>LineType</source>
         <translation>Type de ligne</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="146"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="164"/>
         <source>MarkerType</source>
         <translation>Type de marqueur</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="160"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="178"/>
         <source>Area</source>
         <translation>Surface</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="276"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="294"/>
         <source>Orientation</source>
         <translation>Orientation</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="289"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="307"/>
         <source>Mode</source>
         <translation>Mode</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="466"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="484"/>
         <source>Histogram settings</source>
         <translation>Paramètres d&apos;histogramme</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="471"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="489"/>
         <source>Curve settings</source>
         <translation>Paramètres de courbe</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="476"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="494"/>
         <source>Bar settings</source>
         <translation>Paramètres de diagramme en barre</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="481"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="499"/>
         <source>MultiBar settings</source>
         <translation>Paramètres de diagramme multi-barres</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="486"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="504"/>
         <source>Pie settings</source>
         <translation>Paramètres de diagramme circulaire</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="561"/>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="571"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="579"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="589"/>
         <source>Default</source>
         <translation>Défaut</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="691"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="709"/>
         <source>Color dialog</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="694"/>
+        <location filename="../View/DoubleView/Plot/CPlotDisplay.cpp" line="712"/>
         <source>Plot name</source>
         <translation>Nom</translation>
     </message>
@@ -1863,116 +1907,126 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPluginManager</name>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="41"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="59"/>
         <source>Loading failed: unable to find directory for plugin %1</source>
         <translation>Echec du chargement: impossible de trouver le dossier du plugin %1</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="63"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="81"/>
         <source>Plugin %1 could not be loaded: %2. Please update Ikomia software.</source>
         <translation>Le plugin %1 n&apos; a pas pu être chargé: %2. Merci de mettre à jour Ikomia.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="69"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="87"/>
         <source>Plugin %1 interface is not valid.</source>
         <translation>L&apos;interface du plugin %1 n&apos;est pas valide.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="76"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="94"/>
         <source>Plugin %1 has no process factory.</source>
         <translation>Le plugin %1 n&apos;a pas de process factory.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="86"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="154"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="106"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="184"/>
         <source>Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.</source>
         <translation>Le plugin %1 est déprécié: basé sur Ia version Ikomia %2, alors que la version courante est %3.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="97"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="115"/>
+        <source>Plugin %1 is not compatible: you must update Ikomia Studio to version %2.</source>
+        <translation>Le plugin %1 n&apos;est pas compatible: vous devez mettre à jour Ikomia Studio (version %2).</translation>
+    </message>
+    <message>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="125"/>
         <source>Plugin %1 has no widget factory.</source>
         <translation>Le plugin %1 n&apos;a pas de widget factory.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="105"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="133"/>
         <source>Plugin %1 is not registered.</source>
         <translation>Le plugin %1 n&apos;est pas inscrite.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="107"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="166"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="135"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="203"/>
         <source>Plugin %1 is loaded.</source>
         <translation>Le plugin %1 est chargé.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="113"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="141"/>
         <source>Plugin %1 failed to load:</source>
         <translation>Le plugin %1 a échoué au chargement:</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="172"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="193"/>
+        <source>Plugin %1 is based on Ikomia %2 while the current version is %3. You should consider updating Ikomia Studio.</source>
+        <translation>Le plugin %1 repose sur Ikomia version %2 alors que la version courante est %3. Vous êtes invités à mettre à jour Ikomia Studio.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="209"/>
         <source>Plugin %1 could not be loaded</source>
         <translation>Le plugin %1 n&apos; a pas pu être chargé</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="177"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="183"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="214"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="220"/>
         <source>Plugin %1 could not be loaded:</source>
         <translation>Le plugin %1 n&apos;a pas pu être chargé:</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="234"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="271"/>
         <source>Editing failed: unable to find directory for plugin %1</source>
         <translation>Echec de l&apos;ouverture: impossible de trouver le dossier du plugin %1</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="242"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="279"/>
         <source>Editing failed: file %1 does not exist</source>
         <translation>Echec de l&apos;ouverture: le fichier %1 n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="270"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="307"/>
         <source>Package %1 is already installed</source>
         <translation>Le module %1 est déjà installé</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="300"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="337"/>
         <source>Package %1 successfully installed</source>
         <translation>Le module %1 s&apos;est correctement installé</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="302"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="339"/>
         <source>Installation of package %1 ended with errors or warnings</source>
         <translation>L&apos;installation du module %1 s&apos;est terminée avec des erreurs ou des avertissements</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="313"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="350"/>
         <source>Package %1 is a core module of Ikomia and can&apos;t be updated</source>
         <translation>Le module %1 est un module système d&apos;Ikomia et ne peut être mis à jour</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="323"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="360"/>
         <source>Package %1 is not installed</source>
         <translation>Le module %1 n&apos;est pas installé</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="353"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="390"/>
         <source>Package %1 successfully updated</source>
         <translation>Le module %1 s&apos;est correctement mis à jour</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="355"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="392"/>
         <source>Update of package %1 ended with errors or warnings</source>
         <translation>La mise à jour du module %1 s&apos;est terminée avec des erreurs ou des avertissements</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="382"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="540"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="419"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="577"/>
         <source>Error while gathering outdated Python package list.</source>
         <translation>Erreur pendant la récupération des paquets Python dépassé.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="569"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="606"/>
         <source>Error while gathering Python package list.</source>
         <translation>Erreur pendant la récupération de la liste des paquets Python.</translation>
     </message>
@@ -1980,23 +2034,23 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPluginManagerWidget</name>
     <message>
-        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="11"/>
+        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="29"/>
         <source>Plugin Manager</source>
         <translation>Gestionnaire de plugins</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="29"/>
+        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="47"/>
         <source>Python</source>
         <translation>Python</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="30"/>
+        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="48"/>
         <source>C++</source>
         <translation>C++</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="59"/>
-        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="90"/>
+        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="77"/>
+        <location filename="../View/Modules/PluginManager/CPluginManagerWidget.cpp" line="108"/>
         <source>The plugin %1 is now created and ready to implement</source>
         <translation>Le plugin %1 est maintenant créé et prêt à l&apos;emploi</translation>
     </message>
@@ -2004,17 +2058,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPluginPythonDependencyModel</name>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="17"/>
+        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="35"/>
         <source>Packages</source>
         <translation>Modules</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="17"/>
+        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="35"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="17"/>
+        <location filename="../Model/Plugin/CPluginPythonDependencyModel.cpp" line="35"/>
         <source>Last version</source>
         <translation>Dernière version</translation>
     </message>
@@ -2022,22 +2076,22 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPluginPythonModel</name>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="31"/>
+        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="49"/>
         <source>Plugin name</source>
         <translation>Nom du plugin</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="31"/>
+        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="49"/>
         <source>Authors</source>
         <translation>Auteurs</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="31"/>
+        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="49"/>
         <source>Modified</source>
         <translation>Modifié</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="31"/>
+        <location filename="../Model/Plugin/CPluginPythonModel.cpp" line="49"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
@@ -2045,17 +2099,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPreferencesDlg</name>
     <message>
-        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="8"/>
+        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="26"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="31"/>
+        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="49"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="32"/>
+        <location filename="../View/Preferences/CPreferencesDlg.cpp" line="50"/>
         <source>Workflow</source>
         <translation>Workflow</translation>
     </message>
@@ -2067,8 +2121,8 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessDocDlg</name>
     <message>
-        <location filename="../View/Process/CProcessDocDlg.cpp" line="5"/>
-        <location filename="../View/Process/CProcessDocDlg.cpp" line="12"/>
+        <location filename="../View/Process/CProcessDocDlg.cpp" line="23"/>
+        <location filename="../View/Process/CProcessDocDlg.cpp" line="30"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
@@ -2076,37 +2130,64 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessDocFrame</name>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="79"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="209"/>
         <source>Modified</source>
         <translation>Modifié</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="84"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="214"/>
         <source>Created</source>
         <translation>Créé</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="91"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="220"/>
         <source>Status</source>
         <translation>Statut</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="95"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="145"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="165"/>
         <source>&lt;span style=&quot;color:#9a0000&quot;&gt;deprecated&lt;/span&gt;(based on Ikomia version %1 while the current is %2)</source>
         <translation>&lt;span style=&quot;color:#9a0000&quot;&gt;déprécié&lt;/span&gt;(basé sur la version d&apos;Ikomia %1 alors que la courante est %2)</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="101"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="45"/>
+        <source>Documentation successfully saved at %1</source>
+        <translation>Documentation enregistrée avec succés dans le fichier %1</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="47"/>
+        <source>Failed to save documentation at %1</source>
+        <translation>Echec de sauvegarde de la documentation dans le fichier %1</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="96"/>
+        <source>Found local document file for plugin %1 but loading failed.</source>
+        <translation>Fichier local de documentation trouvé pour le plugin %1 mais le chargement a échoué.</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="151"/>
+        <source>&lt;span style=&quot;color:#9a0000&quot;&gt;Ikomia Studio update required&lt;/span&gt;(based on Ikomia version %1 while the current is %2)</source>
+        <translation>&lt;span style=&quot;color:#9a0000&quot;&gt;Mise à jour Ikomia Studio requise&lt;/span&gt;(basé sur Ikomia version %1 alors que la courante est %2)</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="157"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="177"/>
         <source>&lt;span style=&quot;color:#008f00&quot;&gt;OK&lt;/span&gt; (based on Ikomia version %1)</source>
         <translation>&lt;span style=&quot;color:#008f00&quot;&gt;OK&lt;/span&gt; (basé sur la version d&apos;Ikomia %1)</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="111"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="171"/>
+        <source>&lt;span style=&quot;color:#de7207&quot;&gt;Ikomia Studio update adviced&lt;/span&gt;(based on Ikomia version %1 while the current is %2)</source>
+        <translation>&lt;span style=&quot;color:#de7207&quot;&gt;Mise à jour Ikomia Studio conseillée&lt;/span&gt;(basé sur Ikomia version %1 alors que la courante est %2)</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="229"/>
         <source>Online documentation</source>
         <translation>Documentation en ligne</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocFrame.cpp" line="148"/>
+        <location filename="../View/Process/CProcessDocFrame.cpp" line="266"/>
         <source>Keywords</source>
         <translation>Mots-clés</translation>
     </message>
@@ -2114,66 +2195,86 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessDocWidget</name>
     <message>
-        <location filename="../View/Process/CProcessDocWidget.cpp" line="51"/>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="75"/>
+        <source>Export documentation</source>
+        <translation>Exporter documentation</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="75"/>
+        <source>HTML (*.html *.htm);;Markdown (*.md)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="92"/>
         <source>Back to process store</source>
         <translation>Retour au store</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessDocWidget.cpp" line="59"/>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="100"/>
         <source>Edit documentation</source>
         <translation>Editer la documentation</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="106"/>
+        <source>Open code source folder</source>
+        <translation>Ouvrir le dossier du code source</translation>
+    </message>
+    <message>
+        <location filename="../View/Process/CProcessDocWidget.cpp" line="111"/>
+        <source>Export algorithm documentation to file</source>
+        <translation>Exporter la documentation du plugin</translation>
     </message>
 </context>
 <context>
     <name>CProcessEditDocFrame</name>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="30"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="48"/>
         <source>Save</source>
         <translation>Sauver</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="34"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="52"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="57"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="75"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="61"/>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="130"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="79"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="148"/>
         <source>Keywords</source>
         <translation>Mots-clés</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="65"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="83"/>
         <source>Authors</source>
         <translation>Auteurs</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="69"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="87"/>
         <source>Article</source>
         <translation>Article</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="73"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="91"/>
         <source>Journal</source>
         <translation>Journal</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="77"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="95"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="82"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="100"/>
         <source>Documentation link</source>
         <translation>Lien vers la documentation</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="85"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="103"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
@@ -2182,17 +2283,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Système d&apos;exploitation</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="93"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="111"/>
         <source>Icon path</source>
         <translation>Chemin vers l&apos;icône</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="192"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="210"/>
         <source>Icon</source>
         <translation>Icône</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="192"/>
+        <location filename="../View/Process/CProcessEditDocFrame.cpp" line="210"/>
         <source>All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp)</source>
         <translation>Images compatibles (*.jpg *.jpeg *.tif *.tiff *.png *.bmp)</translation>
     </message>
@@ -2200,7 +2301,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessListPopup</name>
     <message>
-        <location filename="../View/Process/CProcessListPopup.cpp" line="76"/>
+        <location filename="../View/Process/CProcessListPopup.cpp" line="94"/>
         <source>Process list</source>
         <translation>Liste des traitements</translation>
     </message>
@@ -2208,12 +2309,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessListViewDelegate</name>
     <message>
-        <location filename="../View/Process/CProcessListViewDelegate.cpp" line="170"/>
+        <location filename="../View/Process/CProcessListViewDelegate.cpp" line="188"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessListViewDelegate.cpp" line="173"/>
+        <location filename="../View/Process/CProcessListViewDelegate.cpp" line="191"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
@@ -2221,12 +2322,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessPane</name>
     <message>
-        <location filename="../View/Process/CProcessPane.cpp" line="282"/>
+        <location filename="../View/Process/CProcessPane.cpp" line="308"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessPane.cpp" line="299"/>
+        <location filename="../View/Process/CProcessPane.cpp" line="325"/>
         <source>Process library</source>
         <translation>Bibliothèque de traitements</translation>
     </message>
@@ -2234,12 +2335,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessParameters</name>
     <message>
-        <location filename="../View/Process/CProcessParameters.cpp" line="128"/>
+        <location filename="../View/Process/CProcessParameters.cpp" line="146"/>
         <source>Process parameters</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessParameters.cpp" line="133"/>
+        <location filename="../View/Process/CProcessParameters.cpp" line="151"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
@@ -2247,12 +2348,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessPopupDlg</name>
     <message>
-        <location filename="../View/Process/CProcessPopupDlg.cpp" line="5"/>
+        <location filename="../View/Process/CProcessPopupDlg.cpp" line="23"/>
         <source>Process store</source>
         <translation>Store</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessPopupDlg.cpp" line="288"/>
+        <location filename="../View/Process/CProcessPopupDlg.cpp" line="306"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
@@ -2260,47 +2361,47 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProjectManager</name>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="53"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="71"/>
         <source>Loading project...</source>
         <translation>Charegement du projet en cours...</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="255"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="273"/>
         <source>Saving project as...</source>
         <translation>Sauver le projet sous...</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="311"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="329"/>
         <source>Saving project...</source>
         <translation>Sauver le projet...</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="363"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="381"/>
         <source>NewFolder</source>
         <translation>NouveauDossier</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="375"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="393"/>
         <source>NewDataset</source>
         <translation>NouveauDataset</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="441"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="459"/>
         <source>Anonym</source>
         <translation>Anonyme</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="456"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="474"/>
         <source>Study</source>
         <translation>Etude</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="470"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="488"/>
         <source>Serie</source>
         <translation>Série</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="1253"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="1282"/>
         <source>New Project</source>
         <translation>Nouveau projet</translation>
     </message>
@@ -2313,38 +2414,38 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="712"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="741"/>
         <source>Exporting project...</source>
         <translation>Export du projet en cours...</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="743"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="772"/>
         <source>Error while retrieving data path</source>
         <translation>Erreur lors de la récupération du chemin vers les données</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="780"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="809"/>
         <source>Add images to dataset</source>
         <translation>Ajouter des images au jeu de données</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="819"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="848"/>
         <source>Dataset index out of bounds</source>
         <translation>Indice hors limites (dataset)</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="831"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="860"/>
         <source>Add images to dimension</source>
         <translation>Ajouter des images dans cette dimension</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="931"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="960"/>
         <source>Invalid image index</source>
         <translation>Indice invalide (dataset)</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="934"/>
-        <location filename="../Model/Project/CProjectManager.cpp" line="957"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="963"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="986"/>
         <source>No dataset found from model index</source>
         <translation>Pas de jeu de données trouvé à partir du ModelIndex</translation>
     </message>
@@ -2353,7 +2454,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">ModelIndex invalide (vidéo)</translation>
     </message>
     <message>
-        <location filename="../Model/Project/CProjectManager.cpp" line="1178"/>
+        <location filename="../Model/Project/CProjectManager.cpp" line="1207"/>
         <source>Original names of time sequence were not valid, they have been renamed automatically.</source>
         <translation>Les noms originaux de cette série ne respectent pas notre convention; ils ont été renommés automatiquement.</translation>
     </message>
@@ -2365,133 +2466,133 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProjectPane</name>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="349"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="367"/>
         <source>Projects</source>
         <translation>Projets</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="45"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="61"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="83"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="63"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="79"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="101"/>
         <source>Add folder</source>
         <translation>Ajouter un dossier</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="49"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="87"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="67"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="105"/>
         <source>Add Dicom folder</source>
         <translation>Ajouter un dossier DICOM</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="53"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="91"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="71"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="109"/>
         <source>Add dataset</source>
         <translation>Ajouter un jeu de données</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="57"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="95"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="105"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="116"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="75"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="113"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="123"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="134"/>
         <source>Add image(s)</source>
         <translation>Ajouter des images</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="65"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="83"/>
         <source>Save project as...</source>
         <translation>Sauver le projet sous...</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="69"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="326"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="327"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="87"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="344"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="345"/>
         <source>Save project</source>
         <translation>Sauver le projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="73"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="91"/>
         <source>Export project</source>
         <translation>Exporter le projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="77"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="333"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="334"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="95"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="351"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="352"/>
         <source>Close project</source>
         <translation>Fermer le projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="99"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="117"/>
         <source>Remove folder</source>
         <translation>Supprimer le dossier</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="108"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="119"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="126"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="137"/>
         <source>Add dimension</source>
         <translation>Ajouter une dimension</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="110"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="128"/>
         <source>Remove dataset</source>
         <translation>Supprimer le jeu de données</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="121"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="139"/>
         <source>Remove dimension</source>
         <translation>Supprimer la dimension</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="127"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="145"/>
         <source>Set as active layer</source>
         <translation>Choisir comme couche graphique active</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="131"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="149"/>
         <source>Add layer</source>
         <translation>Ajouter une couche graphique</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="135"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="153"/>
         <source>Remove layer</source>
         <translation>Supprimer la couche graphique</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="141"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="159"/>
         <source>Remove image</source>
         <translation>Supprimer l&apos;image</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="145"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="156"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="163"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="174"/>
         <source>Show location</source>
         <translation>Ouvrir l&apos;emplacement</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="152"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="170"/>
         <source>Remove video</source>
         <translation>Supprimer la vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="162"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="180"/>
         <source>Remove stream</source>
         <translation>Supprimer le flux vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="218"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="263"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="236"/>
         <location filename="../View/Project/CProjectPane.cpp" line="281"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="429"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="299"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="447"/>
         <source>Invalid project item</source>
         <translation>Elément du projet invalide</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="227"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="245"/>
         <source>Image(s) can&apos;t be added to the dataset</source>
         <translation>Les images ne peuvent pas être ajoutées</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="228"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="246"/>
         <source>Please check your project structure: 
 - Dimension type must be the same at a given tree level.
 - Image(s) must be inserted into the last dimension level.</source>
@@ -2500,79 +2601,79 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 - Les images doivent être ajoutées dans le dernier niveau de dimension.</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="234"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="252"/>
         <source>Choose image files</source>
         <translation>Sélectionner vos images</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="235"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="253"/>
         <source>All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.ppm)</source>
         <translation>Images compatibles (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.ppm)</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="256"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="274"/>
         <source>No image file selected</source>
         <translation>Pas de fichier image sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="268"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="286"/>
         <source>Choose image folder</source>
         <translation>Choisir un dossier image</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="287"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="305"/>
         <source>Choose Dicom directory</source>
         <translation>Choisissez le dossier DICOM</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="305"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="323"/>
         <source>New project</source>
         <translation>Nouveau projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="306"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="324"/>
         <source>Create new project</source>
         <translation>Créer un nouveau projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="312"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="313"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="330"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="331"/>
         <source>Open project</source>
         <translation>Ouvrir un projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="319"/>
-        <location filename="../View/Project/CProjectPane.cpp" line="320"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="337"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="338"/>
         <source>Save as project</source>
         <translation>Sauver le projet sous</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="438"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="456"/>
         <source>Warning this folder already contains some data.</source>
         <translation>Attention, ce dossier contient déjà des données.</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="439"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="457"/>
         <source>All data will be move into the new dimension. Are you sure to proceed?</source>
         <translation>Toutes les données seront déplacées dans cette nouvelle dimension. Souhaitez-vous continuer?</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="478"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="496"/>
         <source>Load operation cancelled</source>
         <translation>Chargement annulé</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="559"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="577"/>
         <source>Save Project</source>
         <translation>Sauver le projet</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="559"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="577"/>
         <source>db Files (*.db)</source>
         <translation>Fichier projet (*.db)</translation>
     </message>
     <message>
-        <location filename="../View/Project/CProjectPane.cpp" line="589"/>
+        <location filename="../View/Project/CProjectPane.cpp" line="607"/>
         <source>Choose export directory</source>
         <translation>Choisissez le dossier d&apos;export</translation>
     </message>
@@ -2591,7 +2692,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Undéfini</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolIOArea.cpp" line="450"/>
+        <location filename="../View/Modules/Protocol/CProtocolIOArea.cpp" line="470"/>
         <source>Add new input</source>
         <translation>Ajouter une nouvelle entrée</translation>
     </message>
@@ -2603,12 +2704,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Pas de description disponible</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="30"/>
+        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="48"/>
         <source>Process parameters</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="38"/>
+        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="56"/>
         <source>Load</source>
         <translation>Charger</translation>
     </message>
@@ -2624,62 +2725,62 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="5"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="23"/>
         <source>Select source of input data</source>
         <translation>Sélectionner la source des données d&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="93"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="111"/>
         <source>Back</source>
         <translation>Retour</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="97"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="115"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="101"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="119"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="124"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="142"/>
         <source>Image(s)</source>
         <translation>Image(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="127"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="145"/>
         <source>Video(s)</source>
         <translation>Vidéo(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="130"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="148"/>
         <source>Dataset(s)</source>
         <translation>Dataset(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="133"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="151"/>
         <source>Folder(s)</source>
         <translation>Répertoire(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="139"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="157"/>
         <source>Select the type of data you want to process</source>
         <translation>Sélectionner le type de données à traiter</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="140"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="158"/>
         <source>Simple dataset</source>
         <translation>Dataset simple</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="142"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="160"/>
         <source>Volume dataset</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="144"/>
+        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="162"/>
         <source>Time dataset</source>
         <translation>Vidéo ou séquence temporelle</translation>
     </message>
@@ -2687,17 +2788,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProtocolInputViewManager</name>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="195"/>
+        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="213"/>
         <source>Process input management : invalid image</source>
         <translation>Gestionnaire des entrées: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="214"/>
+        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="232"/>
         <source>Process input management: invalid image</source>
         <translation>Gestionnaire des entrées: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="237"/>
+        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="261"/>
         <source>Process input management : invalid volume</source>
         <translation>Gestionnaire des entrées: volume invalide</translation>
     </message>
@@ -2721,27 +2822,27 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le workflow est déjà en cours d&apos;exécution...</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="864"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="919"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="435"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="489"/>
         <source>Workflow has been saved.</source>
         <translation>Le workflow a été sauvegardé avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="451"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="505"/>
         <source>Workflow has been exported.</source>
         <translation>Le workflow a été exporté avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="485"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="539"/>
         <source>Invalid image index</source>
         <translation>ModelIndex de l&apos;image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="489"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="543"/>
         <source>Invalid image item</source>
         <translation>Element du projet invalide (image)</translation>
     </message>
@@ -2750,44 +2851,49 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur d&apos;exécution du traitement: élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="723"/>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1212"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="778"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1272"/>
         <source>New workflow</source>
         <translation>Nouveau workflow</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="977"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1037"/>
         <source>Load workflow error: invalid item index</source>
         <translation>Erreur de chargement du workflow: index de l&apos;item invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1006"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1066"/>
         <source>Delete workflow error: invalid item index</source>
         <translation>Erreur de suppression du workflow: index de l&apos;item invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1105"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1165"/>
         <source>Invalid task: folder path can&apos;t be set.</source>
         <translation>Tâche invalide: le répertoire ne peut pas être défini.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1176"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1236"/>
         <source>Retrieve workflow information failed: invalid item index</source>
         <translation>Echec de la récupération des données du workflow: index de l&apos;élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1481"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1541"/>
         <source>Input index overflow.</source>
         <translation>Indice de l&apos;entrée invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1485"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1545"/>
         <source>Invalid input type.</source>
         <translation>Type d&apos;entrée invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1775"/>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1793"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1569"/>
+        <source>Workflow input cannot be set: invalid item.</source>
+        <translation>L&apos;entrée du workflow ne peut pas être ajoutée: l&apos;item est invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1841"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1859"/>
         <source>No valid image data for input #%1 of task %2.</source>
         <translation>Aucune image disponible pour l&apos;entrée #%1 de la tâche %2.</translation>
     </message>
@@ -2816,12 +2922,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur de suppression du protocole: index de l&apos;élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1067"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1127"/>
         <source>Invalid task: graphics layer input can&apos;t be set.</source>
         <translation>La couche graphique ne peut pas être ajoutée comme entrée: tâche invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1081"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1141"/>
         <source>Invalid graphics layer: input can&apos;t be set.</source>
         <translation>L&apos;entrée ne peut pas être ajoutée: couche graphique invalide.</translation>
     </message>
@@ -2842,7 +2948,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Type d&apos;entrée invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1620"/>
+        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1685"/>
         <source>%1 min %2 sec %3 ms</source>
         <translation></translation>
     </message>
@@ -2858,8 +2964,8 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Exporter le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="147"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="160"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="183"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="196"/>
         <source>Pcl Files (*.pcl)</source>
         <translation></translation>
     </message>
@@ -2876,22 +2982,22 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le protocole a été modifié.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="186"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="222"/>
         <source>Do you want to save the changes?</source>
         <translation>Voulez-vous sauver les changements?</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="279"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="328"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="285"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="334"/>
         <source>Parameters</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="286"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="335"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
@@ -2908,12 +3014,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Fermer le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="372"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="421"/>
         <source>Visualize origin inputs</source>
         <translation>Visualisation des entrées originales</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="376"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="425"/>
         <source>Visualize current inputs</source>
         <translation>Visualisation des entrées courantes</translation>
     </message>
@@ -2934,134 +3040,134 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Arrêter le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="21"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="39"/>
         <source>Workflow Creator</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="147"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="355"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="183"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="404"/>
         <source>Export workflow</source>
         <translation>Exporter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="160"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="341"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="196"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="390"/>
         <source>Load workflow</source>
         <translation>Charger le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="177"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="213"/>
         <source>The workflow is running. Please wait before closing it.</source>
         <translation>Le workflow est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="185"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="221"/>
         <source>The workflow has been modified.</source>
         <translation>Le workflow a été modifié.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="287"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="336"/>
         <source>I/O</source>
         <translation>E/S</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="334"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="383"/>
         <source>New workflow</source>
         <translation>Nouveau workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="348"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="397"/>
         <source>Save workflow</source>
         <translation>Sauver le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="362"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="411"/>
         <source>Close workflow</source>
         <translation>Fermer le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="381"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="430"/>
         <source>Reload plugins of current workflow</source>
         <translation>Rechargement des plugins du worflow courant</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="390"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="439"/>
         <source>Run workflow</source>
         <translation>Exécuter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="394"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="443"/>
         <source>Run workflow from current task</source>
         <translation>Exécuter le workflow depuis la tâche courante</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="398"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="447"/>
         <source>Run workflow from start to current task</source>
         <translation>Exécuter le workflow jusqu&apos;à la tâche courante</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="402"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="451"/>
         <source>Stop workflow</source>
         <translation>Arrêter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="407"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="456"/>
         <source>Original size</source>
         <translation>Taille originale</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="410"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="459"/>
         <source>Zoom in</source>
         <translation>Zoomer</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="413"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="462"/>
         <source>Zoom out</source>
         <translation>Dézoomer</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="585"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="635"/>
         <source>Inputs</source>
         <translation>Entrées</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="600"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="653"/>
         <source>Outputs</source>
         <translation>Sorties</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="612"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="668"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="617"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="674"/>
         <source>Auto save</source>
         <translation>Sauvegarde auto</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="625"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="697"/>
         <source>Save format</source>
         <translation>Format de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="632"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="710"/>
         <source>Save options</source>
         <translation>Options de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="635"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="713"/>
         <source>Folder</source>
         <translation>Répertoire</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="649"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="727"/>
         <source>Process benchmark</source>
         <translation>Analyse du traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="650"/>
+        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="728"/>
         <source>Custom process information</source>
         <translation>Information personnalisée du process</translation>
     </message>
@@ -3073,42 +3179,42 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Informations sur le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="9"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="27"/>
         <source>Workflow information</source>
         <translation>Informations sur le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="34"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="52"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="39"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="57"/>
         <source>Keywords</source>
         <translation>Mots-clés</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="42"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="60"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="53"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="71"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="56"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="74"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="82"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="100"/>
         <source>You must at least set the workflow name please.</source>
         <translation>Vous devez entrer un nom de workflow svp.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="89"/>
+        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="107"/>
         <source>This workflow already exists. Please enter another name.</source>
         <translation>Ce workflow existe déjà. Veuillez entrer un nouveau nom svp.</translation>
     </message>
@@ -3124,39 +3230,39 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProtocolPane</name>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="40"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="58"/>
         <source>No description available</source>
         <translation>Pas de description disponible</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="127"/>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="192"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="145"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="210"/>
         <source>Load workflow</source>
         <translation>Charger un workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="128"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="146"/>
         <source>Load selected workflow</source>
         <translation>Charger le workflow sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="131"/>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="195"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="149"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="213"/>
         <source>Delete workflow</source>
         <translation>Supprimer le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="132"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="150"/>
         <source>Delete selected workflow</source>
         <translation>Supprimer le workflow sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="159"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="177"/>
         <source>Workflow description</source>
         <translation>Description du workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="183"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="201"/>
         <source>Workflow</source>
         <translation>Workflow</translation>
     </message>
@@ -3169,7 +3275,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Supprimer le protocole sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="143"/>
+        <location filename="../View/Protocol/CProtocolPane.cpp" line="161"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
@@ -3197,53 +3303,53 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProtocolRunManager</name>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="82"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="90"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="98"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="157"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="128"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="136"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="145"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="214"/>
         <source>Workflow inputs error : invalid item type.</source>
         <translation>Erreur d&apos;entrée du workflow: type de données invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="109"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="156"/>
         <source>Workflow inputs error : invalid volume.</source>
         <translation>Erreur d&apos;entrée du workflow: volume invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="121"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="169"/>
         <source>Workflow inputs error : invalid video frame.</source>
         <translation>Erreur d&apos;entrée du workflow: frame vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="131"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="181"/>
         <source>Workflow inputs error : invalid image.</source>
         <translation>Erreur d&apos;entrée du workflow: image invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="141"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="192"/>
         <source>Workflow inputs error : invalid video.</source>
         <translation>Erreur d&apos;entrée du workflow: vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="152"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="208"/>
         <source>Workflow inputs error : invalid camera stream.</source>
         <translation>Erreur d&apos;entrée du workflow: flux vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="191"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="250"/>
         <source>Invalid input: workflow can only manage one video or stream input for now.</source>
         <translation>Entrée invalide: le workflow ne peut traiter qu&apos;une source vidéo pour le moment.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="279"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="338"/>
         <source>Protocol is already running...</source>
         <translation>Le workflow est déjà en cours d&apos;exécution...</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1105"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1161"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1222"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1252"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1167"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1224"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1285"/>
+        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1315"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
@@ -3251,12 +3357,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProtocolScene</name>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="519"/>
+        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="537"/>
         <source>Inputs</source>
         <translation>Entrées</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="883"/>
+        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="901"/>
         <source>Choose folder</source>
         <translation>Choisir un dossier</translation>
     </message>
@@ -3264,7 +3370,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProtocolSettingsWidget</name>
     <message>
-        <location filename="../View/Preferences/CProtocolSettingsWidget.cpp" line="17"/>
+        <location filename="../View/Preferences/CProtocolSettingsWidget.cpp" line="35"/>
         <source>Auto-save folder</source>
         <translation>Répertoire de sauvegarde auto</translation>
     </message>
@@ -3272,72 +3378,72 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPythonNewPluginDlg</name>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="7"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="25"/>
         <source>New Python plugin</source>
         <translation>Nouveau plugin Python</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="26"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="44"/>
         <source>Empty plugin name</source>
         <translation>Veuillez entrer un nom de plugin svp</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="47"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="65"/>
         <source>Plugin name</source>
         <translation>Nom du plugin</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="50"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="68"/>
         <source>Process type</source>
         <translation>Type de traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="52"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="70"/>
         <source>Generic process</source>
         <translation>Traitement générique</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="53"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="71"/>
         <source>Image process</source>
         <translation>Traitement d&apos;images</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="54"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="72"/>
         <source>Interactive image process</source>
         <translation>Traitement d&apos;images avec intéraction</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="55"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="73"/>
         <source>Video process</source>
         <translation>Traitement vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="56"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="74"/>
         <source>Optical flow process</source>
         <translation>Traitement flot optique</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="59"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="77"/>
         <source>Widget type</source>
         <translation>Type de fenêtre</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="61"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="79"/>
         <source>Empty widget</source>
         <translation>Fenêtre vide</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="64"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="82"/>
         <source>GUI framework</source>
         <translation>Gestionnaire de fenêtres</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="80"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="98"/>
         <source>Generate</source>
         <translation>Générer</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="83"/>
+        <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="101"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -3345,37 +3451,37 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPythonPluginManagerWidget</name>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="128"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="146"/>
         <source>Create new plugin...</source>
         <translation>Créer un nouveau plugin...</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="129"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="147"/>
         <source>Reload selected plugin</source>
         <translation>Recharger le plugin sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="130"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="148"/>
         <source>Reload all plugins</source>
         <translation>Recharger tous les plugins</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="131"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="149"/>
         <source>Edit plugin</source>
         <translation>Ouvrir le fichier source</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="132"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="150"/>
         <source>Show location</source>
         <translation>Ouvrir l&apos;emplacement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="145"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="163"/>
         <source>Install selected plugin</source>
         <translation>Installer le plugin sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="146"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="164"/>
         <source>Update selected plugin</source>
         <translation>Mettre à jour le plugin sélectionné</translation>
     </message>
@@ -3383,7 +3489,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CRenderManager</name>
     <message>
-        <location filename="../Model/Render/CRenderManager.cpp" line="68"/>
+        <location filename="../Model/Render/CRenderManager.cpp" line="86"/>
         <source>Volume rendering...</source>
         <translation>Rendu 3D...</translation>
     </message>
@@ -3391,7 +3497,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CResultManager</name>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="60"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="78"/>
         <source>Current result not set: invalid index</source>
         <translation>Impossible modifier le résultat courant: index invalide</translation>
     </message>
@@ -3408,12 +3514,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur lors de la sauvegarde de l&apos;image résultat: impossible de créer le dossier </translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="390"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="415"/>
         <source>Error while saving result image: invalid current task</source>
         <translation>Erreur lors de la sauvegarde de l&apos;image résultat: tâche courant invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="350"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="371"/>
         <source>Error while saving result video: invalid index</source>
         <translation>Erreur lors de la sauvegarde de la vidéo résultat: index invalide</translation>
     </message>
@@ -3430,88 +3536,88 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur lors de la sauvegarde de la vidéo résultat: impossible de créer le dossier </translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="399"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="458"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="424"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="483"/>
         <source>Error while saving result image: invalid output #%1</source>
         <translation>Erreur lors de la sauvegarde de l&apos;image résultat: sortie #%1 invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="449"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="474"/>
         <source>Error while saving result video: invalid current task</source>
         <translation>Erreur lors de la sauvegarde de la vidéo résultat: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="517"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="551"/>
         <source>Error while loading results: image index not valid</source>
         <translation>Erreur lors du chargements des résultats: index invalide (image)</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="564"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="598"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="774"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="942"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="823"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="991"/>
         <source>Process output management: invalid image</source>
         <translation>Gestionnaire des sorties: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="780"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="948"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="829"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="997"/>
         <source>Process output management: invalid image buffer</source>
         <translation>Gestionnaire des sorties: données de l&apos;image invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="809"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="858"/>
         <source>Process output management : invalid volume</source>
         <translation>Gestionnaire des sorties: volume invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="815"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="864"/>
         <source>Process output management : invalid volume buffer</source>
         <translation>Gestionnaire des sorties: données du volume invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="848"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="897"/>
         <source>Process output management : invalid graphics</source>
         <translation>Gestionnaire des sorties: graphiques invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="871"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1223"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1257"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1275"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="920"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1296"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1330"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1348"/>
         <source>Process output management : invalid measures</source>
         <translation>Gestionnaire des sorties: mesures invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="912"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="961"/>
         <source>Wrong data format for plot output, type double expected</source>
         <translation>Format de données invalide, type double attendu</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1039"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1089"/>
         <source>Process output management: invalid dataset</source>
         <translation>Gestionnaire des sorties: dataset invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1045"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1095"/>
         <source>Process output management: no data available</source>
         <translation>Gestionnaire des sorties: aucune donnée disponible</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1097"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1148"/>
         <source>The workflow is running in order to generate your video, please wait until it finishes.</source>
         <translation>Le workflow est en cours d&apos;exécution et de création de votre vidéo, merci d&apos;attendre la fin du traitement.</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1376"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1449"/>
         <source>Error while recording video:</source>
         <translation>Erreur pendant l&apos;enregistrement de la vidéo:</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1406"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1479"/>
         <source>Video record has been added to the current project.</source>
         <translation>L&apos;enregistrement vidéo a été ajouté au projet courant.</translation>
     </message>
@@ -3520,12 +3626,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Gestionnaire des sorties: valeurs numériques invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1003"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1053"/>
         <source>Process output management: invalid output type</source>
         <translation>Gestionnaire des sorties: type de données invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1009"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1059"/>
         <source>Process output management: invalid widget</source>
         <translation>Gestionnaire des sorties: fenêtre invalide</translation>
     </message>
@@ -3534,34 +3640,34 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le protocole est en cours d&apos;exécution et de création de votre vidéo, merci d&apos;attendre la fin du traitement.</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1098"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1149"/>
         <source>Abort exporting</source>
         <translation>Annuler l&apos;export</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1160"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1215"/>
         <source>Invalid current task</source>
         <translation>Tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1164"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1219"/>
         <source>Invalid output index</source>
         <translation>Index de sortie invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1216"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1250"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1268"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1289"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1323"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1341"/>
         <source>Error while saving measures: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des mesures: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1286"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1359"/>
         <source>Error while saving graphics: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des graphiques: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1326"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1399"/>
         <source>Error while loading results: invalid item index</source>
         <translation>Erreur lors du chargement des résultats: index invalide</translation>
     </message>
@@ -3573,12 +3679,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CResultTableDisplay</name>
     <message>
-        <location filename="../View/DoubleView/Result/CResultTableDisplay.cpp" line="35"/>
+        <location filename="../View/DoubleView/Result/CResultTableDisplay.cpp" line="53"/>
         <source>Export table</source>
         <translation>Exporter le tableau</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultTableDisplay.cpp" line="35"/>
+        <location filename="../View/DoubleView/Result/CResultTableDisplay.cpp" line="53"/>
         <source>Table formats(*.csv)</source>
         <translation>Format de tableau(*.csv)</translation>
     </message>
@@ -3590,63 +3696,63 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CResultsViewer</name>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="104"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="133"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="122"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="151"/>
         <source>Error while creating image display : invalid index</source>
         <translation>Erreur pendant la création de l&apos;affichage: index invalide</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="224"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="242"/>
         <source>Error while creating widget display : invalid index</source>
         <translation>Erreur pendant la création de l&apos;affichage: index invalide</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="258"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="276"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="266"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="268"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="284"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="286"/>
         <source>Image Results</source>
         <translation>Image résultat</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="273"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="275"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="291"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="293"/>
         <source>Table Results</source>
         <translation>Tableau de résultats</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="280"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="282"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="298"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="300"/>
         <source>Plot Results</source>
         <translation>Courbes et diagrammes</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="287"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="289"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="305"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="307"/>
         <source>Video Results</source>
         <translation>Vidéo résultat</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="294"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="296"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="312"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="314"/>
         <source>Custom Results</source>
         <translation>Résultats personnalisés</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="301"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="319"/>
         <source>Dataset Results</source>
         <translation>Dataset</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="303"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="321"/>
         <source>Dnn Datatset Results</source>
         <translation>DNN Dataset</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="822"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="852"/>
         <source>No result to show</source>
         <translation>Aucun résultat</translation>
     </message>
@@ -3654,52 +3760,52 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CStoreDlg</name>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="9"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="27"/>
         <source>Ikomia Store</source>
         <translation>Ikomia Store</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="35"/>
-        <location filename="../View/Store/CStoreDlg.cpp" line="153"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="53"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="171"/>
         <source>You have to be registered to display online plugins</source>
         <translation>Vous devez être connecté pour afficher les plugins en ligne</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="41"/>
-        <location filename="../View/Store/CStoreDlg.cpp" line="62"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="59"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="80"/>
         <source>No plugin found</source>
         <translation>Aucun plugin trouvé</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="43"/>
-        <location filename="../View/Store/CStoreDlg.cpp" line="64"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="61"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="82"/>
         <source>%1 plugin(s) available</source>
         <translation>%1 plugin(s) disponible(s)</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="56"/>
-        <location filename="../View/Store/CStoreDlg.cpp" line="173"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="74"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="191"/>
         <source>No plugins loaded</source>
         <translation>Aucun plugin chargé</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="122"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="140"/>
         <source>Online store</source>
         <translation>Store en ligne</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="123"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="141"/>
         <source>Installed plugins</source>
         <translation>Plugins installés</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="142"/>
-        <location filename="../View/Store/CStoreDlg.cpp" line="167"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="160"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="185"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStoreDlg.cpp" line="144"/>
+        <location filename="../View/Store/CStoreDlg.cpp" line="162"/>
         <source>Refresh</source>
         <translation>Actualiser</translation>
     </message>
@@ -3707,158 +3813,173 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CStoreManager</name>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="70"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="88"/>
         <source>You have to login before publishing plugins</source>
         <translation>Vous devez être authentifié pour publier des plugins</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="78"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="96"/>
         <source>This plugin is not yours, you can&apos;t publish it</source>
         <translation>Ce n&apos;est pas un de vos plugins, impossible de le publier</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="210"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="228"/>
         <source>Plugin compression failed, transfer to server aborted</source>
         <translation>Echec lors de la compression du plugin, la publication sur le serveur est annulée</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="101"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="119"/>
         <source>You have to login before installing plugins</source>
         <translation>Vous devez être authentifié pour installer des plugins</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="63"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="94"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="81"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="112"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="63"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="94"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="81"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="112"/>
         <source>A plugin is already downloaded or uploaded. Please wait until it is finished.</source>
         <translation>Une installation/publication de plugin est déjà en cours. Veuillez attendre la fin du traitement svp.</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="185"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="289"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="859"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="203"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="307"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="871"/>
         <source>Invalid JSON document</source>
         <translation>Document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="192"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="296"/>
-        <location filename="../Model/Store/CStoreManager.cpp" line="867"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="210"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="314"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="879"/>
         <source>Invalid JSON document structure</source>
         <translation>Structure du document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="248"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="266"/>
         <source>Plugin package was not published successfully. Check your connection and try again.</source>
         <translation>La publication du plugin a échoué. Veuillez vérifier votre connexion puis recommencer l&apos;opération.</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="254"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="272"/>
         <source>Plugin was successfully published on the server</source>
         <translation>Le plugin a été publié sur le serveur avec succès</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="270"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="288"/>
         <source>Plugin icon was not published successfully.</source>
         <translation>La publication de l&apos;icône du plugin a échoué.</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="305"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="323"/>
         <source>Invalid package file name</source>
         <translation>Nom du fichier à télécharger invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="375"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="393"/>
         <source>Restart required</source>
         <translation>Redémarrage requis</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="376"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="394"/>
         <source>Ikomia needs restarting to finalize plugin installation. Do you want to restart now?</source>
         <translation>Ikomia doit redémarrer pour finaliser l&apos;installation du plugin. Voulez-vous redémarrer maintenant?</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="380"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="398"/>
         <source>Restarting Ikomia...</source>
         <translation>Redémarrage d&apos;Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="409"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="427"/>
         <source>Archive extraction failed: installation aborted</source>
         <translation>Echec de la décompression du plugin, l&apos;installation a échoué</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="457"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1140"/>
+        <source>Plugin dependencies installation...</source>
+        <translation>Installation des dépendances du plugin...</translation>
+    </message>
+    <message>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1222"/>
+        <source>Reloading plugin...</source>
+        <translation>Rechargement du plugin...</translation>
+    </message>
+    <message>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1228"/>
         <source>Plugin was successfully installed</source>
         <translation>Le plugin a été installé avec succès</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="483"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1231"/>
+        <source>Plugin was successfully installed but failed to load. Try to restart Ikomia Studio.</source>
+        <translation>Le plugin s&apos;est installé correctement mais son chargement a échoué. Essayer de redémarrer Ikomia Studio.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Store/CStoreManager.cpp" line="492"/>
         <source>Downloading plugin...</source>
         <translation>Téléchargement du plugin...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="558"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="567"/>
         <source>Loading plugins...</source>
         <translation>Chargement des plugins...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="607"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="616"/>
         <source>Publication failed: plugin name is mandatory</source>
         <translation>Echec de la publication: le champ nom du plugin est obligatoire</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="614"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="623"/>
         <source>Publication failed: short description is mandatory</source>
         <translation>Echec de la publication: le champ short description du plugin est obligatoire</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="624"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="633"/>
         <source>Publication failed: description is mandatory</source>
         <translation>Echec de la publication: le champ description du plugin est obligatoire</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="636"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="645"/>
         <source>Publication failed: author is mandatory</source>
         <translation>Echec de la publication: le champ auteur du plugin est obligatoire</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="679"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="688"/>
         <source>Publication failed: version is mandatory</source>
         <translation>Echec de la publication: le champ version du plugin est obligatoire</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="805"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="817"/>
         <source>Archive extraction failed: installation of %1 aborted</source>
         <translation>L&apos;extraction de l&apos;archive a échoué: l&apos;installation de %1 est annulée</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="930"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="942"/>
         <source>Unable to find folder of plugin %1</source>
         <translation>Impossible de trouver le dossier du plugin %1</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="934"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="946"/>
         <source>Plugin compression...</source>
         <translation>Compression du plugin...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="954"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="966"/>
         <source>Plugin extraction...</source>
         <translation>Extraction du plugin...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="1034"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1046"/>
         <source>Uploading plugin...</source>
         <translation>Upload du plugin...</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreManager.cpp" line="1087"/>
+        <location filename="../Model/Store/CStoreManager.cpp" line="1099"/>
         <source>Uploading icon...</source>
         <translation>Téléchargement de l&apos;icône...</translation>
     </message>
@@ -3874,27 +3995,27 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Structure du document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="185"/>
+        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="203"/>
         <source>Icon loading failed: invalid JSON document</source>
         <translation>Le chargement de l&apos;icône a échoué: document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="193"/>
+        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="211"/>
         <source>Icon loading failed: invalid JSON document structure</source>
         <translation>Le chargement de l&apos;icône a échoué: structure du document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="204"/>
+        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="222"/>
         <source>Icon loading failed: no icon found on server</source>
         <translation>Le chargement de l&apos;icône a échoué: aucun icône trouvé sur le serveur</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="250"/>
+        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="268"/>
         <source>Unable to load logo for plugin %1</source>
         <translation>Impossible de charger le logo du plugin %1</translation>
     </message>
     <message>
-        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="259"/>
+        <location filename="../Model/Store/CStoreOnlineIconManager.cpp" line="277"/>
         <source>Unable to save logo for plugin %1</source>
         <translation>Impossible de sauver le logo du plugin %1</translation>
     </message>
@@ -3902,27 +4023,27 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CStorePluginListViewDelegate</name>
     <message>
-        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="256"/>
+        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="344"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="261"/>
+        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="349"/>
         <source>Install</source>
         <translation>Installation</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="263"/>
+        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="351"/>
         <source>Publish</source>
         <translation>Publication</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="273"/>
+        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="361"/>
         <source>Tested</source>
         <translation>Testé</translation>
     </message>
     <message>
-        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="274"/>
+        <location filename="../View/Store/CStorePluginListViewDelegate.cpp" line="362"/>
         <source>Certified</source>
         <translation>Certifié</translation>
     </message>
@@ -3930,62 +4051,62 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CTutoStartingHelper</name>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="24"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="42"/>
         <source>Please click here and connect to your account.</source>
         <translation>Merci de cliquer ici et de vous connecter à votre compte.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="34"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="52"/>
         <source>Please enter your credentials or subscribe online.</source>
         <translation>Merci de rentrer vos identifiants ou de vous inscrire en ligne.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="44"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="62"/>
         <source>Open your project.</source>
         <translation>Ouvrez votre projet.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="54"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="72"/>
         <source>Open your image.</source>
         <translation>Ouvrez votre image.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="64"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="82"/>
         <source>Open your video.</source>
         <translation>Ouvrez votre vidéo.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="74"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="92"/>
         <source>Open your streaming device.</source>
         <translation>Ouvrez votre flux vidéo.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="84"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="102"/>
         <source>Navigate in your projects.</source>
         <translation>Naviguer dans vos projets.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="94"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="112"/>
         <source>Please click here to see all available algorithms.</source>
         <translation>Merci de cliquer ici pour voir tous les algorithmes disponibles.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="104"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="122"/>
         <source>All algorithms are listed here (OpenCV, G&apos;MIC and every plugins).</source>
         <translation>Tous les algorithmes sont listés ici (OpenCV, G&apos;MIC et tous les plugins).</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="114"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="132"/>
         <source>Type your keyword (e.g. smooth) and find your favorite algorithm!</source>
         <translation>Tapez votre mot-clé (e.g. smooth) et trouvez votre algorithme préféré!</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="124"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="142"/>
         <source>Open the workflow creator. Test, chain or compare your algorithms.</source>
         <translation>Ouvrez le workflow creator. Testez, enchaînez ou comparez vos algorihtmes.</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="134"/>
+        <location filename="../Model/Wizard/Tutorials/CTutoStartingHelper.hpp" line="152"/>
         <source>Open Ikomia Store and download what you need. Enjoy Ikomia!</source>
         <translation>Ouvrez l&apos;Ikomia Store et téléchargez ce dont vous avez besoin. Amusez-vous bien avec Ikomia!</translation>
     </message>
@@ -3997,34 +4118,34 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CUserLoginDlg</name>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="17"/>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="45"/>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="71"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="35"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="63"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="89"/>
         <source>Connect</source>
         <translation>Se connecter</translation>
     </message>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="26"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="44"/>
         <source>Disconnect</source>
         <translation>Se déconnecter</translation>
     </message>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="36"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="54"/>
         <source>Login</source>
         <translation>Identifiant</translation>
     </message>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="39"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="57"/>
         <source>Password</source>
         <translation>Mot de passe</translation>
     </message>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="43"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="61"/>
         <source>Remember me</source>
         <translation>Mémoriser</translation>
     </message>
     <message>
-        <location filename="../View/Main/CUserLoginDlg.cpp" line="48"/>
+        <location filename="../View/Main/CUserLoginDlg.cpp" line="66"/>
         <source>&lt;a href=&quot;https://ikomia.com/accounts/signup/&quot;&gt;Go to sign up page&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://ikomia.com/accounts/signup/&quot;&gt;S&apos;inscrire&lt;/a&gt;</translation>
     </message>
@@ -4032,17 +4153,17 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CUserManagementWidget</name>
     <message>
-        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="47"/>
+        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="65"/>
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="48"/>
+        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="66"/>
         <source>Edit</source>
         <translation>Editer</translation>
     </message>
     <message>
-        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="50"/>
+        <location filename="../View/Preferences/CUserManagementWidget.cpp" line="68"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
@@ -4050,35 +4171,35 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CUserManager</name>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="70"/>
-        <location filename="../Model/User/CUserManager.cpp" line="122"/>
+        <location filename="../Model/User/CUserManager.cpp" line="88"/>
+        <location filename="../Model/User/CUserManager.cpp" line="140"/>
         <source>Invalid JSON document</source>
         <translation>Document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="76"/>
-        <location filename="../Model/User/CUserManager.cpp" line="129"/>
+        <location filename="../Model/User/CUserManager.cpp" line="94"/>
+        <location filename="../Model/User/CUserManager.cpp" line="147"/>
         <source>Invalid JSON document structure</source>
         <translation>Structure du document JSON invalide</translation>
     </message>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="82"/>
-        <location filename="../Model/User/CUserManager.cpp" line="92"/>
+        <location filename="../Model/User/CUserManager.cpp" line="100"/>
+        <location filename="../Model/User/CUserManager.cpp" line="110"/>
         <source>Connection successfull</source>
         <translation>Connexion avec succès</translation>
     </message>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="103"/>
+        <location filename="../Model/User/CUserManager.cpp" line="121"/>
         <source>User sucessfully disconnected</source>
         <translation>Déconnexion avec succès</translation>
     </message>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="260"/>
+        <location filename="../Model/User/CUserManager.cpp" line="278"/>
         <source>Invalid login or password</source>
         <translation>Identifiant ou mot de passe invalide</translation>
     </message>
     <message>
-        <location filename="../Model/User/CUserManager.cpp" line="330"/>
+        <location filename="../Model/User/CUserManager.cpp" line="348"/>
         <source>You have been disconnected.
 Main reasons are internet connection issues or concurrent login for a single account.</source>
         <translation>Vous avez été déconnecté.
@@ -4088,34 +4209,34 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>CVideoDisplay</name>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="65"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="100"/>
         <source>Play</source>
         <translation>Lancer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="66"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="101"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="67"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="102"/>
         <source>Record</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="84"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="119"/>
         <source>Save video</source>
         <translation>Sauvegarder la vidéo</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="85"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="120"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="431"/>
         <source>Export video</source>
         <translation>Exporter la vidéo</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="395"/>
         <source>avi Files (*.avi)</source>
-        <translation>Fichiers avi(*.avi)</translation>
+        <translation type="vanished">Fichiers avi(*.avi)</translation>
     </message>
     <message>
         <source>Save</source>
@@ -4126,19 +4247,18 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Exporter</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="371"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="408"/>
         <source>Record video</source>
         <translation>Enregistrer la vidéo</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="378"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="415"/>
         <source>Stop record</source>
         <translation>Stopper l&apos;enregistrement</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="395"/>
         <source>Save Video</source>
-        <translation>Sauver la vidéo</translation>
+        <translation type="vanished">Sauver la vidéo</translation>
     </message>
     <message>
         <source>mp4 Files (*.mp4)</source>
@@ -4180,28 +4300,28 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Bit max</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="343"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="382"/>
         <source>Total frame number</source>
         <translation>Nombre total d&apos;images</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="427"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="466"/>
         <source>No video player available: invalid project item.</source>
         <translation>Pas de gestionnaire vidéo: item invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="434"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="473"/>
         <source>No video player available: project item is not a video, stream or image sequence.</source>
         <translation>Pas de gestionnaire vidéo: l&apos;item du projet n&apos;est pas une séquence vidéo.</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="443"/>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="449"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="482"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="488"/>
         <source>No video player available: project item is not an image sequence.</source>
         <translation>Pas de gestionnaire vidéo: l&apos;item du projet n&apos;est pas une séquence d&apos;images.</translation>
     </message>
     <message>
-        <location filename="../Model/Data/Video/CVideoManager.cpp" line="542"/>
+        <location filename="../Model/Data/Video/CVideoManager.cpp" line="586"/>
         <source>Error while saving video frame:</source>
         <translation>Erreur pendant l&apos;enregistrement de la frame vidéo:</translation>
     </message>
@@ -4241,12 +4361,12 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>CWizardDocPage</name>
     <message>
-        <location filename="../View/Wizard/CWizardDocPage.cpp" line="40"/>
+        <location filename="../View/Wizard/CWizardDocPage.cpp" line="58"/>
         <source>Back to process store</source>
         <translation>Retour au Store</translation>
     </message>
     <message>
-        <location filename="../View/Wizard/CWizardDocPage.cpp" line="48"/>
+        <location filename="../View/Wizard/CWizardDocPage.cpp" line="66"/>
         <source>Edit documentation</source>
         <translation>Editer la documentation</translation>
     </message>
@@ -4262,18 +4382,18 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Vous ne savez pas comment démarrer avec Imageez? N&apos;hésitez pas à suivre un de nos tutoriels intéractifs!</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/CWizardManager.cpp" line="208"/>
+        <location filename="../Model/Wizard/CWizardManager.cpp" line="226"/>
         <source>First step in Ikomia?</source>
         <translation>Premiers pas sur Ikomia?</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/CWizardManager.cpp" line="209"/>
+        <location filename="../Model/Wizard/CWizardManager.cpp" line="227"/>
         <source>You don&apos;t know how to start with Ikomia? Feel free to choose any of our interactive tutorials!</source>
         <translation>Vous ne savez pas comment utiliser Ikomia? N&apos;hésitez pas à parcourir les tutoriels interactifs!</translation>
     </message>
     <message>
-        <location filename="../Model/Wizard/CWizardManager.cpp" line="38"/>
-        <location filename="../Model/Wizard/CWizardManager.cpp" line="218"/>
+        <location filename="../Model/Wizard/CWizardManager.cpp" line="56"/>
+        <location filename="../Model/Wizard/CWizardManager.cpp" line="236"/>
         <source>Don&apos;t show again.</source>
         <translation>Ne plus afficher.</translation>
     </message>
@@ -4281,12 +4401,12 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>CWizardPane</name>
     <message>
-        <location filename="../View/Wizard/CWizardPane.cpp" line="95"/>
+        <location filename="../View/Wizard/CWizardPane.cpp" line="113"/>
         <source>Tutorials</source>
         <translation>Tutoriels</translation>
     </message>
     <message>
-        <location filename="../View/Wizard/CWizardPane.cpp" line="113"/>
+        <location filename="../View/Wizard/CWizardPane.cpp" line="131"/>
         <source>&lt;Search tutorials by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
@@ -4294,17 +4414,17 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>CWizardStepPage</name>
     <message>
-        <location filename="../View/Wizard/CWizardStepPage.cpp" line="48"/>
+        <location filename="../View/Wizard/CWizardStepPage.cpp" line="66"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Wizard/CWizardStepPage.cpp" line="63"/>
+        <location filename="../View/Wizard/CWizardStepPage.cpp" line="81"/>
         <source>Step by step summary</source>
         <translation>Résumé étape par étape</translation>
     </message>
     <message>
-        <location filename="../View/Wizard/CWizardStepPage.cpp" line="82"/>
+        <location filename="../View/Wizard/CWizardStepPage.cpp" line="100"/>
         <source>Step details</source>
         <translation>Détails</translation>
     </message>
@@ -4312,12 +4432,12 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>CWizardTutoListViewDelegate</name>
     <message>
-        <location filename="../View/Wizard/CWizardTutoListViewDelegate.cpp" line="270"/>
+        <location filename="../View/Wizard/CWizardTutoListViewDelegate.cpp" line="288"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../View/Wizard/CWizardTutoListViewDelegate.cpp" line="273"/>
+        <location filename="../View/Wizard/CWizardTutoListViewDelegate.cpp" line="291"/>
         <source>Play</source>
         <translation>Lancer</translation>
     </message>
@@ -4333,82 +4453,82 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Main/AppTools.hpp" line="389"/>
+        <location filename="../Main/AppTools.hpp" line="412"/>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="392"/>
+        <location filename="../Main/AppTools.hpp" line="415"/>
         <source>Administrator</source>
         <translation>Administrateur</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="393"/>
+        <location filename="../Main/AppTools.hpp" line="416"/>
         <source>User</source>
         <translation>Utilisateur</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="463"/>
+        <location filename="../Main/AppTools.hpp" line="487"/>
         <source>Text file(*.txt)</source>
         <translation>Fichier texte(*.txt)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="464"/>
+        <location filename="../Main/AppTools.hpp" line="488"/>
         <source>JSON file(*.json)</source>
         <translation>Fichier JSON(*.json)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="465"/>
+        <location filename="../Main/AppTools.hpp" line="489"/>
         <source>XML file(*.xml)</source>
         <translation>Fichier XML(*.xml)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="466"/>
+        <location filename="../Main/AppTools.hpp" line="490"/>
         <source>YAML file(*.yml)</source>
         <translation>Fichier YAML(*.yml)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="467"/>
+        <location filename="../Main/AppTools.hpp" line="491"/>
         <source>CSV file(*.csv)</source>
         <translation>Fichier CSV(*.csv)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="468"/>
+        <location filename="../Main/AppTools.hpp" line="492"/>
         <source>Bitmap image file(*.bmp)</source>
         <translation>Image Bitmap(*.bmp)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="469"/>
+        <location filename="../Main/AppTools.hpp" line="493"/>
         <source>JPEG image file(*.jpg)</source>
         <translation>Image JPEG(*.jpg)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="470"/>
+        <location filename="../Main/AppTools.hpp" line="494"/>
         <source>JP2K image file(*.jp2)</source>
         <translation>Image JPEG2000(*.jp2)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="471"/>
+        <location filename="../Main/AppTools.hpp" line="495"/>
         <source>PNG image file(*.png)</source>
         <translation>Image PNG(*.png)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="472"/>
+        <location filename="../Main/AppTools.hpp" line="496"/>
         <source>TIFF image file(*.tif)</source>
         <translation>Image TIFF(*.tif)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="473"/>
+        <location filename="../Main/AppTools.hpp" line="497"/>
         <source>WebP image file(*.webp)</source>
         <translation>Image WebP(*.webp)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="474"/>
+        <location filename="../Main/AppTools.hpp" line="498"/>
         <source>AVI video file(*.avi)</source>
         <translation>Vidéo AVI(*.avi)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="475"/>
+        <location filename="../Main/AppTools.hpp" line="499"/>
         <source>MPEG video file(*.mp4)</source>
         <translation>Vidéo MPEG4(*.mp4)</translation>
     </message>
@@ -4417,37 +4537,37 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Vidéo MPEG4(*.mp4)</translation>
     </message>
     <message>
-        <location filename="../Model/Render/C3dAnimation.cpp" line="238"/>
+        <location filename="../Model/Render/C3dAnimation.cpp" line="256"/>
         <source>The file %1 can&apos;t be created or opened in write mode</source>
         <translation>Le fichier %1 ne peut pas être créé ou ouvert en écriture</translation>
     </message>
     <message>
-        <location filename="../Model/Render/C3dAnimation.cpp" line="251"/>
+        <location filename="../Model/Render/C3dAnimation.cpp" line="269"/>
         <source>The file %1 can&apos;t be opened</source>
         <translation>Impossible d&apos;ouvrir le fichier %1</translation>
     </message>
     <message>
-        <location filename="../Model/Render/C3dAnimation.cpp" line="259"/>
+        <location filename="../Model/Render/C3dAnimation.cpp" line="277"/>
         <source>Invalid JSON data for this animation</source>
         <translation>Les données JSON pour cette animation sont invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Render/C3dAnimation.cpp" line="266"/>
+        <location filename="../Model/Render/C3dAnimation.cpp" line="284"/>
         <source>No data available for this animation</source>
         <translation>Pas de donnée disponible pour cette animation</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultDbManager.cpp" line="181"/>
+        <location filename="../Model/Results/CResultDbManager.cpp" line="199"/>
         <source>Id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultDbManager.cpp" line="182"/>
+        <location filename="../Model/Results/CResultDbManager.cpp" line="200"/>
         <source>Object</source>
         <translation>Objet</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultDbManager.cpp" line="183"/>
+        <location filename="../Model/Results/CResultDbManager.cpp" line="201"/>
         <source>Category</source>
         <translation>Catégorie</translation>
     </message>
@@ -4456,115 +4576,115 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">L&apos;objet graphique ne peut pas être créé à partir de données vides</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="36"/>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="32"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="54"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="50"/>
         <source>Empty plugin name</source>
         <translation>Veuillez entrer un nom de plugin svp</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="55"/>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="59"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="73"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="77"/>
         <source>Read main template failed</source>
         <translation>Impossible de lire le template principal</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="67"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="85"/>
         <source>Write Qt project file to %1 failed</source>
         <translation>L&apos;écriture du fichier projet Qt %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="78"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="96"/>
         <source>Read global header template failed</source>
         <translation>La lecture du template d&apos;entête principal a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="88"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="106"/>
         <source>Write global header file to %1 failed</source>
         <translation>L&apos;écriture du fichier d&apos;entête principal %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="99"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="117"/>
         <source>Read core header template failed</source>
         <translation>La lecture du template d&apos;entête (Core) a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="114"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="132"/>
         <source>Write core header file to %1 failed</source>
         <translation>L&apos;écriture du fichier d&apos;entête (Core) %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="125"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="143"/>
         <source>Read core source template failed</source>
         <translation>La lecture du template source (Core) a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="137"/>
+        <location filename="../View/Modules/PluginManager/CCppPluginMaker.cpp" line="155"/>
         <source>Write core source file to %1 failed</source>
         <translation>L&apos;écriture du fichier source (Core) %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="46"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="64"/>
         <source>Write module init file to %1 failed</source>
         <translation>L&apos;écriture du fichier d&apos;initialisation de module %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="69"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="87"/>
         <source>Write main file to %1 failed</source>
         <translation>L&apos;écriture du fichier principal %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="80"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="98"/>
         <source>Read process template failed</source>
         <translation>La lecture du template de traitement a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="91"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="109"/>
         <source>Write process file to %1 failed</source>
         <translation>L&apos;écriture du fichier source du traitement %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="102"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="120"/>
         <source>Read widget template failed</source>
         <translation>La lecture du template de fenêtre a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="116"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="134"/>
         <source>Write widget file to %1 failed</source>
         <translation>L&apos;écriture du fichier source de fenêtre %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="164"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="182"/>
         <source>Read Qt layout template failed</source>
         <translation>La lecture du template de layout Qt a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolDummyItem.cpp" line="40"/>
+        <location filename="../View/Modules/Protocol/CProtocolDummyItem.cpp" line="58"/>
         <source>Click here to add new process</source>
         <translation>Cliquer ici pour ajouter un nouveau traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="53"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="71"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="55"/>
-        <location filename="../View/Modules/Protocol/CProtocolItem.h" line="115"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="73"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.h" line="135"/>
         <source>Idle</source>
         <translation>En attente</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="57"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="75"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="590"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="608"/>
         <source>Apply on volume</source>
         <translation>Appliquer sur le volume</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="597"/>
+        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="615"/>
         <source>Outputs auto-export</source>
         <translation>Outputs auto-export</translation>
     </message>
@@ -4577,7 +4697,7 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Initialisation GPU...</translation>
     </message>
     <message>
-        <location filename="../Main/main.cpp" line="92"/>
+        <location filename="../Main/main.cpp" line="110"/>
         <source>Welcome to Ikomia software</source>
         <translation>Bienvenue dans le logiciel Ikomia Studio</translation>
     </message>
@@ -4590,7 +4710,7 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Aucune donnée</translation>
     </message>
     <message>
-        <location filename="../Model/Settings/CSettingsManager.cpp" line="147"/>
+        <location filename="../Model/Settings/CSettingsManager.cpp" line="168"/>
         <source>Empty settings data</source>
         <translation>Données de paramétrage vide</translation>
     </message>

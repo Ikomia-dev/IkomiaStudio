@@ -421,8 +421,8 @@ FORMS += \
 RESOURCES += \
         res.qrc
 
-#Use of 'lupdate Ikomia.pro' to update translation files
-#Use of 'lrelease Ikomia.pro' to generate .qm files
+#Use of 'lupdate IkomiaStudio.pro' to update translation files
+#Use of 'lrelease IkomiaStudio.pro' to generate .qm files
 TRANSLATIONS = Translations/ikomia_fr.ts
 
 #Make install directive
