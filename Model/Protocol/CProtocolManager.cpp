@@ -966,6 +966,9 @@ void CProtocolManager::onInputDataChanged(const QModelIndex& itemIndex, int inpu
         if(m_pProtocol == nullptr)
             return;
 
+        if(m_runMgr.isRunning())
+            return;
+
         if(m_inputs.empty())
             initInputs();
 
