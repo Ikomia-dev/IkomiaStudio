@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2021 Ikomia SAS
  * Contact: https://www.ikomia.com
  *
@@ -35,6 +35,7 @@ class CProcessPopupDlg : public CDialog
     public:
 
         CProcessPopupDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        ~CProcessPopupDlg();
 
         void            initLayout();
         void            initConnections();

@@ -35,6 +35,12 @@ CProcessPopupDlg::CProcessPopupDlg(QWidget *parent, Qt::WindowFlags f):
     resize(m_size);
 }
 
+CProcessPopupDlg::~CProcessPopupDlg()
+{
+    CPyEnsureGIL gil;
+    m_widgets.clear();
+}
+
 void CProcessPopupDlg::initLayout()
 {
     setWindowOpacity(0.9);
