@@ -206,7 +206,7 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                 }
             }
         }
-        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded").arg(QString::fromStdString(mainModuleName));
+        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded").arg(pluginDir.dirName());
         return nullptr;
     }
     catch(boost::python::error_already_set&)
