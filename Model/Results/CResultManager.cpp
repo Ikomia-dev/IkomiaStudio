@@ -1219,10 +1219,12 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
         throw CException(CoreExCode::INVALID_PARAMETER, tr("Invalid output index").toStdString(), __func__, __FILE__, __LINE__);
 
     auto pImageIO = std::static_pointer_cast<CImageProcessIO>(outputs[index]);
-    auto img = pImageIO->getImage();
+    auto srcImg = pImageIO->getImage();
+    CMat img;
 
     if(bWithGraphics)
     {
+        img = srcImg.clone();
         auto graphicsOutputs = pTask->getOutputs({IODataType::OUTPUT_GRAPHICS});
         for(size_t i=0; i<graphicsOutputs.size(); ++i)
         {
@@ -1234,6 +1236,9 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
             }
         }
     }
+    else
+        img = srcImg;
+
     CImageIO io(Utils::File::getAvailablePath(path));
     io.write(img);
 }
@@ -1438,7 +1443,7 @@ void CResultManager::startRecordVideo()
 
     // Get active task for naming
     auto name = m_pProtocolMgr->getProtocolName();
-    m_currentVideoRecord = Utils::IkomiaApp::getAppFolder() + "/videoRecord";
+    m_currentVideoRecord = Utils::IkomiaApp::getAppFolder() + "/VideoRecord";
 
     try
     {
