@@ -80,6 +80,7 @@ class CDataDisplay : public QFrame
         void                    setSelectOnClick(bool bSelect);
         virtual void            setSelected(bool bSelected);
         void                    setMaximized(bool bMaximized);
+        virtual void            setActive(bool bActive);
 
         virtual QSize           minimumSizeHint() const;
 
@@ -136,6 +137,7 @@ class CDataDisplay : public QFrame
         bool                m_bIsMinimized = false;
         bool                m_bSelectOnClick = false;
         bool                m_bUpdateViewProperty = true;
+        bool                m_bActive = true;
 };
 
 #endif // CDATAVIEW_H

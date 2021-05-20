@@ -54,7 +54,7 @@ CDataViewer::CDataViewer(QWidget* parent) : QWidget(parent)
     m_pStacked = new QStackedWidget;
     m_pStacked->addWidget(m_pDataListView);
     m_pStacked->addWidget(m_pDataDisplay);
-    m_pStacked->setCurrentIndex(1);
+    setActiveWidget(1);
 
     m_pLayout = new QVBoxLayout;
     m_pLayout->setMargin(10);
@@ -229,6 +229,15 @@ void CDataViewer::init3dDisplayConnections(C3dDisplay *pDisplay)
     });
     connect(pDisplay->getGLWidget(), &CGLWidget::doUpdateWindowSize, [&](int width, int height){ emit doUpdateWindowSize(width, height); });
     connect(pDisplay->getGLWidget(), &CGLWidget::doSendErrorMessage, [&](const QString& msg){ emit doSendErrorMessage(msg); });
+}
+
+void CDataViewer::setActiveWidget(int index)
+{
+    m_pStacked->setCurrentIndex(index);
+
+    auto displays = m_pDataDisplay->getDataViews();
+    for(auto it : displays)
+        it->setActive(index == 1);
 }
 
 QList<CImageDisplay *> CDataViewer::getImageDisplays() const
@@ -438,9 +447,8 @@ void CDataViewer::updateDataListViewIndex(const QModelIndex& index)
     if(index.isValid())
     {
         if(isItemShownInListView(index))
-        {
             displayListView();
-        }
+
         m_pPathNavigator->addPath(index);
         m_pDataListView->updateIndex(index);
     }
@@ -531,7 +539,7 @@ void CDataViewer::initDisplay(const std::map<DisplayType, int> &mapTypeCount)
 
 void CDataViewer::displayListView()
 {
-    m_pStacked->setCurrentIndex(0);
+    setActiveWidget(0);
     emit doDisplayListView();
 }
 
@@ -560,7 +568,7 @@ void CDataViewer::displayImage(int index, CImageScene *pScene, QImage image, QSt
         }
     }
     //Set main data display visible
-    m_pStacked->setCurrentIndex(1);
+    setActiveWidget(1);
     //Set image after making the display visible to have a good fit in view behaviour
     pDisplay->setViewProperty(pViewProp);
     pDisplay->setSelected(true);
@@ -600,7 +608,7 @@ void CDataViewer::displayVideo(const QModelIndex &modelIndex, int displayIndex, 
     }
     pDisplay->setViewProperty(pViewProp);
     //Set main data display visible
-    m_pStacked->setCurrentIndex(1);
+    setActiveWidget(1);
     //Set image after making the display visible to have a good fit in view behaviour
     pDisplay->show();    
     //Force zoom fit if it's a new video
@@ -631,7 +639,7 @@ void CDataViewer::displayVolume(CImageScene *pScene, QImage image, QString name,
     }
 
     //Set main data display visible
-    m_pStacked->setCurrentIndex(1);
+    setActiveWidget(1);
     //Set image after making the display visible to have a good fit in view behaviour
     pDisplay->setViewProperty(pViewProp);
     pDisplay->setSelected(true);
@@ -645,7 +653,7 @@ void CDataViewer::displayVolume(CImageScene *pScene, QImage image, QString name,
 void CDataViewer::switchView()
 {
     if(m_pStacked->currentIndex() == 0)
-        m_pStacked->setCurrentIndex(1);
+        setActiveWidget(1);
     else
         displayListView();
 }
@@ -770,7 +778,7 @@ void CDataViewer::clearAll()
     m_pDataDisplay->removeAll();
     auto pEmptyDysplay = createEmptyDisplay();
     m_pDataDisplay->addDataView(pEmptyDysplay);
-    m_pStacked->setCurrentIndex(1);
+    setActiveWidget(1);
 }
 
 void CDataViewer::onDisplayVolume(const QModelIndex& index)

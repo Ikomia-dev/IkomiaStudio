@@ -246,6 +246,13 @@ void CVideoDisplay::setSelected(bool bSelect)
     }
 }
 
+void CVideoDisplay::setActive(bool bActive)
+{
+    CDataDisplay::setActive(bActive);
+    if(!bActive)
+        stopPlayer();
+}
+
 bool CVideoDisplay::isPlaying() const
 {
     return m_pTimer->isActive();

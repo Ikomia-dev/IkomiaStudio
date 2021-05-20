@@ -186,6 +186,8 @@ class CDataViewer : public QWidget
         void                    initVolumeConnections(CVolumeDisplay* pDisplay);
         void                    init3dDisplayConnections(C3dDisplay* pDisplay);
 
+        void                    setActiveWidget(int index);
+
         QList<CImageDisplay*>   getImageDisplays() const;
         QList<CImageDisplay*>   getAllImageDisplays() const;
         CImageDisplay*          getImageDisplay(CDataDisplay* pDisplay) const;

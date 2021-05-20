@@ -442,6 +442,11 @@ void CDataDisplay::setMaximized(bool bMaximized)
     m_bIsMaximized = bMaximized;
 }
 
+void CDataDisplay::setActive(bool bActive)
+{
+    m_bActive = bActive;
+}
+
 bool CDataDisplay::isMaximized() const
 {
     return m_bIsMaximized;

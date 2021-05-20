@@ -55,8 +55,9 @@ class CVideoDisplay : public CDataDisplay
 
         void            setSourceType(const CDataVideoBuffer::Type& type);
         void            setImage(CImageScene *pScene, QImage image, QString name, bool bZoomFit);
-        virtual void    setViewSpaceShared(bool bShared) override;
-        virtual void    setSelected(bool bSelect) override;
+        void            setViewSpaceShared(bool bShared) override;
+        void            setSelected(bool bSelect) override;
+        void            setActive(bool bActive) override;
 
         bool            hasStreamOptions() const;
         bool            isPlaying() const;
