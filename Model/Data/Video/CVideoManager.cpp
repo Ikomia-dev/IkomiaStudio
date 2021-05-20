@@ -470,7 +470,7 @@ CVideoPlayer* CVideoManager::getPlayer(const QModelIndex &modelIndex)
         auto type = pItem->getTypeId();
         if(type != TreeItemType::VIDEO && type != TreeItemType::LIVE_STREAM && type != TreeItemType::IMAGE)
         {
-            qCCritical(logVideo).noquote() << tr("No video player available: project item is not a video, stream or image sequence.");
+            qCWarning(logVideo).noquote() << tr("No video player available: project item is not a video, stream or image sequence.");
             return nullptr;
         }
 
@@ -479,13 +479,13 @@ CVideoPlayer* CVideoManager::getPlayer(const QModelIndex &modelIndex)
             auto pDataset = CProjectUtils::getDataset<CMat>(wrapInd);
             if(!pDataset)
             {
-                qCCritical(logVideo).noquote() << tr("No video player available: project item is not an image sequence.");
+                qCWarning(logVideo).noquote() << tr("No video player available: project item is not an image sequence.");
                 return nullptr;
             }
 
             if(!pDataset->hasDimension(DataDimension::TIME))
             {
-                qCCritical(logVideo).noquote() << tr("No video player available: project item is not an image sequence.");
+                qCWarning(logVideo).noquote() << tr("No video player available: project item is not an image sequence.");
                 return nullptr;
             }
         }
@@ -730,10 +730,8 @@ void CVideoManager::setVideoRecord(const QModelIndex& modelIndex, bool bEnable)
             //Création d'un sous-dossier du même nom
             std::string folder = Utils::IkomiaApp::getAppFolder() + "/VideoRecord/";
             Utils::File::createDirectory(folder);
-            // Index is current video stream item -> parent = dimension TIME -> parent = dataset
-            auto datasetIndex = pPlayer->getWrapIndex().parent().parent();
-            int number = datasetIndex.model()->rowCount(datasetIndex);
-            std::string path = folder + "liveCamera_" + std::to_string(number) + ".avi";
+            std::string path = folder + "liveCamera.avi";
+            path = Utils::File::getAvailablePath(path);
             pPlayer->startRecord(path);
         }
         catch (std::exception& e)

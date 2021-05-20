@@ -1470,9 +1470,7 @@ void CResultManager::startRecordVideo()
     if(pInfo)
         fps = m_pProtocolMgr->getCurrentFPS();
 
-    m_pVideoMgr->setFPS(fps);
-    m_pVideoMgr->setSize(pInfo->m_width, pInfo->m_height);
-    m_pVideoMgr->startStreamWrite();
+    m_pVideoMgr->startStreamWrite(pInfo->m_width, pInfo->m_height, fps);
 }
 
 void CResultManager::stopRecordVideo()

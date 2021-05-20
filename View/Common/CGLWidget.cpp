@@ -245,11 +245,8 @@ void CGLWidget::makeVideoAnimation(const QString &path, const C3dAnimation &anim
 
     m_animation = animation;
     m_pVideoWriter = new CDataVideoBuffer(path.toStdString());
-    m_pVideoWriter->setFPS(m_animation.getFps());
-    m_pVideoWriter->setSize(m_wndWidth, m_wndHeight);
     //m_pVideoWriter->setFrameCount(m_animation.getFrameCount());
-    //m_pVideoWriter->setFourCC(-1);
-    m_pVideoWriter->startStreamWrite();
+    m_pVideoWriter->startStreamWrite(m_wndWidth, m_wndHeight, m_animation.getFps());
 
     m_pAnimationTimer = new QTimer(this);
     connect(m_pAnimationTimer, &QTimer::timeout, this, &CGLWidget::onAddAnimationVideoFrame);

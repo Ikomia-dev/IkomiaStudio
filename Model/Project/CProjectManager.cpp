@@ -492,7 +492,7 @@ void CProjectManager::onAddDicomFolder(const QModelIndex &index, const QString &
 
             //Add images of the serie
             QStringList qfiles;
-            auto files = imageIO.fileNames(bounds);
+            auto files = imageIO.getFileNames(bounds);
             for(size_t k=0; k<files.size(); ++k)
                 qfiles.append(QString::fromStdString(files[k]));
 
