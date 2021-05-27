@@ -501,7 +501,12 @@ void CProtocolManager::saveProtocol(const QString &path)
     {
         try
         {
-            m_dbMgr.save(m_pProtocol, path);
+            auto ext = Utils::File::extension(path.toStdString());
+            if(ext == ".pcl")
+                m_dbMgr.save(m_pProtocol, path);
+            else
+                m_pProtocol->save(path.toStdString());
+
             emit doNewProtocolNotification(tr("Workflow has been exported."), Notification::INFO);
         }
         catch(std::exception& e)
@@ -521,7 +526,15 @@ void CProtocolManager::loadProtocol(const QString &path)
         if(m_pProtocol)
             emit doCloseProtocol();
 
-        m_pProtocol = m_dbMgr.load(path, m_pProcessMgr, m_pGraphicsMgr->getContext());
+        auto ext = Utils::File::extension(path.toStdString());
+        if(ext == ".pcl")
+            m_pProtocol = m_dbMgr.load(path, m_pProcessMgr, m_pGraphicsMgr->getContext());
+        else
+        {
+            m_pProtocol = std::make_unique<CProtocol>();
+            m_pProtocol->load(path);
+        }
+
         if(m_pProtocol)
             initProtocol();
     }

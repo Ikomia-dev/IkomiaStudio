@@ -179,8 +179,9 @@ void CProtocolModuleWidget::onExportProtocol()
     }
 
     QSettings IkomiaSettings;
+    QStringList extensions = {"json", "pcl"};
 
-    auto fileName = Utils::File::saveFile(this, tr("Export workflow"), IkomiaSettings.value(_defaultDirProtocolExport).toString(), tr("Pcl Files (*.pcl)"), QStringList("pcl"), ".pcl");
+    auto fileName = Utils::File::saveFile(this, tr("Export workflow"), IkomiaSettings.value(_defaultDirProtocolExport).toString(), tr("Workflow (*.json *.pcl)"), extensions, ".json");
     if(fileName.isEmpty())
         return;
 
