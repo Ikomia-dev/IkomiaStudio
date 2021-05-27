@@ -16,8 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # default path on arch, win32, mac and centos7
 IKOMIA_EXT_LIB_PATH = $$PWD/..
 # Global path for Ikomia API libs
-IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaApi
-IKOMIA_LIB_PATH = $$PWD/../IkomiaApi/Build/Lib/Cpp
+IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaApi/cpp
+IKOMIA_LIB_PATH = $$PWD/../IkomiaApi/cpp/Build/Lib
 
 # Include some useful macros
 include(macros.pri)

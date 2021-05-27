@@ -288,7 +288,7 @@ void CMainModel::initPython()
     #ifdef Q_OS_WIN64
         modulePath += "C:/Developpement/Ikomia/Build/Lib/Python;";
     #else
-        modulePath += QDir::homePath().toStdString() + "/Developpement/Ikomia/Build/Lib/Python:";
+        modulePath += QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
     #endif
 #endif
 
@@ -315,7 +315,7 @@ void CMainModel::initPython()
         pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
         pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
         pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
-        std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
+        std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
 #elif defined(Q_OS_WIN64)
         std::string programFilesPath = getenv("PROGRAMFILES");
         std::string pythonFolder = programFilesPath + "/Python" + Utils::Python::getDevBinVersion();

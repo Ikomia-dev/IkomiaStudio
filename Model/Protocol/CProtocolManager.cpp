@@ -28,7 +28,6 @@
 #include "IO/CGraphicsProcessInput.h"
 #include "IO/CImageProcessIO.h"
 #include "IO/CVideoProcessIO.h"
-
 #include "IO/CPathIO.h"
 
 CProtocolManager::CProtocolManager() :
