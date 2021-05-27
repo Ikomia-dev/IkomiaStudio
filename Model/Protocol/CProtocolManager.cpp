@@ -358,9 +358,10 @@ bool CProtocolManager::isBatchInput(size_t index) const
 void CProtocolManager::createProtocol(const std::string &name, const std::string &keywords, const std::string &description)
 {
     assert(m_pProcessMgr);
+    assert(m_pGraphicsMgr);
     try
     {
-        m_pProtocol = std::make_unique<CProtocol>(name);
+        m_pProtocol = std::make_unique<CProtocol>(name, &m_pProcessMgr->m_processRegistrator, &m_pProcessMgr->m_ioRegistrator, m_pGraphicsMgr->getContext());
         m_pProtocol->setKeywords(keywords);
         m_pProtocol->setDescription(description);
         m_pProtocol->setOutputFolder(m_pSettingsMgr->getProtocolSaveFolder() + name + "/");
@@ -531,8 +532,8 @@ void CProtocolManager::loadProtocol(const QString &path)
             m_pProtocol = m_dbMgr.load(path, m_pProcessMgr, m_pGraphicsMgr->getContext());
         else
         {
-            m_pProtocol = std::make_unique<CProtocol>();
-            m_pProtocol->load(path);
+            m_pProtocol = std::make_unique<CProtocol>("", &m_pProcessMgr->m_processRegistrator, &m_pProcessMgr->m_ioRegistrator, m_pGraphicsMgr->getContext());
+            m_pProtocol->load(path.toStdString());
         }
 
         if(m_pProtocol)
@@ -1445,8 +1446,6 @@ void CProtocolManager::initProtocol()
     assert(m_pProtocol);
 
     m_runMgr.setProtocol(m_pProtocol);
-    //Set I/O object factory
-    m_pProtocol->setTaskIORegistration(&m_pProcessMgr->m_ioRegistrator);
     emit doProtocolCreated();
 
     //Set inputs
@@ -1598,7 +1597,6 @@ ProtocolVertex CProtocolManager::addProcess(const std::string &name, const Proto
     }
 
     //Add process to protocol
-    pProcess->setGraphicsContext(m_pGraphicsMgr->getContext());
     auto parentTaskId = m_pProtocol->getActiveTaskId();
     auto newTaskId = m_pProtocol->addTask(pProcess);
 

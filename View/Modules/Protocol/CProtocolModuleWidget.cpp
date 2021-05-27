@@ -194,7 +194,7 @@ void CProtocolModuleWidget::onLoadProtocol()
     assert(m_pModel);
     QSettings IkomiaSettings;
 
-    QString path = QFileDialog::getOpenFileName(nullptr, tr("Load workflow"), IkomiaSettings.value(_defaultDirProtocol).toString(), tr("Pcl Files (*.pcl)"), nullptr, CSettingsManager::dialogOptions());
+    QString path = QFileDialog::getOpenFileName(nullptr, tr("Load workflow"), IkomiaSettings.value(_defaultDirProtocol).toString(), tr("Workflow (*.json *.pcl)"), nullptr, CSettingsManager::dialogOptions());
     if(path.isNull() == false)
     {
         m_lastPathProtocol = QFileInfo(path).path(); // store path for next time

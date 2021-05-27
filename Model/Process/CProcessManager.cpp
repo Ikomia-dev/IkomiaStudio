@@ -182,15 +182,9 @@ void CProcessManager::updateProcessInfo(const CProcessInfo &info)
 ProtocolTaskPtr CProcessManager::createObject(const std::string &processName, const ProtocolTaskParamPtr& pParam)
 {
     ProtocolTaskPtr taskPtr = nullptr;
-
     try
     {
-        auto factory = m_processRegistrator.getProcessFactory();
-        taskPtr = factory.createObject(processName, std::move(pParam));
-    }
-    catch(boost::python::error_already_set&)
-    {
-        qCCritical(logProcess).noquote() << QString::fromStdString(Utils::Python::handlePythonException());
+        taskPtr = m_processRegistrator.createProcessObject(processName, pParam);
     }
     catch(std::exception& e)
     {
@@ -202,15 +196,9 @@ ProtocolTaskPtr CProcessManager::createObject(const std::string &processName, co
 ProtocolTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const ProtocolTaskParamPtr &pParam)
 {
     ProtocolTaskWidgetPtr widgetPtr = nullptr;
-
     try
     {
-        auto factory = m_processRegistrator.getWidgetFactory();
-        widgetPtr = factory.createObject(processName, std::move(pParam));
-    }
-    catch(boost::python::error_already_set&)
-    {
-        qCCritical(logProcess).noquote() << QString::fromStdString(Utils::Python::handlePythonException());
+        widgetPtr = m_processRegistrator.createWidgetObject(processName, std::move(pParam));
     }
     catch(std::exception& e)
     {

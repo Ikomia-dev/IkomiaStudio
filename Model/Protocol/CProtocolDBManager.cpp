@@ -270,7 +270,7 @@ std::unique_ptr<CProtocol> CProtocolDBManager::load(QSqlDatabase& db, int protoc
        return nullptr;
 
     auto name = q.value("protocolName").toString().toStdString();
-    pProtocol = std::make_unique<CProtocol>(name);
+    pProtocol = std::make_unique<CProtocol>(name, &pProcessMgr->m_processRegistrator, &pProcessMgr->m_ioRegistrator, graphicsContextPtr);
 
     if(m_pSettingsMgr)
         pProtocol->setOutputFolder(m_pSettingsMgr->getProtocolSaveFolder() + name + "/");
@@ -293,7 +293,6 @@ std::unique_ptr<CProtocol> CProtocolDBManager::load(QSqlDatabase& db, int protoc
         {
             pTask->setParamMap(paramMap);
             pTask->parametersModified();
-            pTask->setGraphicsContext(graphicsContextPtr);
             auto vertexId = pProtocol->addTask(pTask);
             mapDbIdToVertexId.insert(std::make_pair(taskId, vertexId));
         }
