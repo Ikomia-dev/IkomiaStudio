@@ -23,7 +23,7 @@
 #include "Main/AppDefine.hpp"
 #include "Main/CoreTools.hpp"
 #include "PythonThread.hpp"
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/Settings/CSettingsManager.h"
 #include "CImageDataManager.h"
 #include "Data/CDataConversion.h"
@@ -32,7 +32,7 @@ namespace Ikomia
 {
     namespace Utils
     {
-        namespace Protocol
+        namespace Workflow
         {
             inline QColor       getPortColor(IODataType dataType)
             {
@@ -466,13 +466,13 @@ namespace Ikomia
             inline int getCurrent()
             {
                 #if defined(Q_OS_LINUX)
-                    return CProcessInfo::LINUX;
+                    return CTaskInfo::LINUX;
                 #elif defined(Q_OS_MACOS)
-                    return CProcessInfo::OSX;
+                    return CTaskInfo::OSX;
                 #elif defined(Q_OS_WIN64)
-                    return CProcessInfo::WIN;
+                    return CTaskInfo::WIN;
                 #else
-                    return CProcessInfo::ALL;
+                    return CTaskInfo::ALL;
                 #endif
             }
         }
@@ -530,7 +530,7 @@ namespace Ikomia
 
             inline QPixmap loadPixmap(const QString& path, const QSize& size)
             {
-                CImageIO io(path.toStdString());
+                CImageDataIO io(path.toStdString());
                 CMat img = io.read();
                 QImage image = CDataConversion::CMatToQImage(img);
                 QPixmap pixmap =  QPixmap::fromImage(image);

@@ -66,7 +66,7 @@ class CStoreManager : public QObject
         void            onRequestLocalModel();
         void            onPublishPlugin(const QModelIndex& index);
         void            onInstallPlugin(const QModelIndex& index);
-        void            onUpdatePluginInfo(bool bFullEdit, const CProcessInfo& info);
+        void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            onServerSearchChanged(const QString& text);
         void            onLocalSearchChanged(const QString& text);
 
@@ -114,14 +114,14 @@ class CStoreManager : public QObject
 
         void            downloadPluginPackage(const QString& packageUrl);
 
-        void            installPythonPluginDependencies(const QString& directory, const CProcessInfo &info, const CUser &user);
+        void            installPythonPluginDependencies(const QString& directory, const CTaskInfo &info, const CUser &user);
 
         void            deletePlugin();
         void            deleteTranferFile();
 
         void            clearContext();
 
-        void            finalizePluginInstall(const CProcessInfo &info, const CUser &user);
+        void            finalizePluginInstall(const CTaskInfo &info, const CUser &user);
 
     private:
 

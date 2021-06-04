@@ -41,7 +41,7 @@ class CImageItemDbMgr : public CProjectItemBaseDbMgr
         void                        createTables();
 
         void                        loadPaths();
-        void                        loadProtocolImageMap();
+        void                        loadWorkflowImageMap();
 
         std::shared_ptr<CImageItem> addImagesToDataset(QModelIndex &datasetItemIndex, const QString &file);
         std::shared_ptr<CImageItem> addImagesToDimension(QModelIndex &itemIndex, const QString &file);
@@ -51,9 +51,9 @@ class CImageItemDbMgr : public CProjectItemBaseDbMgr
     private:
 
         bool                        m_bPathLoaded = false;
-        bool                        m_bProtocolImageMapLoaded = false;
+        bool                        m_bWorkflowImageMapLoaded = false;
         QMap<int, QString>          m_mapPaths;
-        QMap<int, QVector<int>>     m_mapProtocolIds;
+        QMap<int, QVector<int>>     m_mapWorkflowIds;
 };
 
 class CImageItemDbMgrFactory: public CProjectDbMgrFactory

@@ -67,7 +67,7 @@ void CPythonNewPluginDlg::initLayout()
 
     auto pLabelProcessType = new QLabel(tr("Process type"));
     m_pComboPyProcessType = new QComboBox;
-    m_pComboPyProcessType->addItem(tr("Generic process"), PluginManager::CPROTOCOL_TASK);
+    m_pComboPyProcessType->addItem(tr("Generic process"), PluginManager::CWorkflow_TASK);
     m_pComboPyProcessType->addItem(tr("Image process"), PluginManager::CIMAGE_PROCESS_2D);
     m_pComboPyProcessType->addItem(tr("Interactive image process"), PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D);
     m_pComboPyProcessType->addItem(tr("Video process"), PluginManager::CVIDEO_PROCESS);
@@ -76,7 +76,7 @@ void CPythonNewPluginDlg::initLayout()
 
     auto pLabelWidgetType = new QLabel(tr("Widget type"));
     m_pComboPyWidgetType = new QComboBox;
-    m_pComboPyWidgetType->addItem(tr("Empty widget"), PluginManager::CPROTOCOL_TASK_WIDGET);
+    m_pComboPyWidgetType->addItem(tr("Empty widget"), PluginManager::CWorkflow_TASK_WIDGET);
     m_pComboPyWidgetType->setCurrentIndex(0);
 
     auto pLabelFramework = new QLabel(tr("GUI framework"));

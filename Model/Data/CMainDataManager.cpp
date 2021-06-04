@@ -19,7 +19,7 @@
 #include "CMainDataManager.h"
 #include "Main/LogCategory.h"
 #include "Model/Project/CProjectUtils.hpp"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 
 CMainDataManager::CMainDataManager()
 {
@@ -75,12 +75,12 @@ CDataInfoPtr CMainDataManager::getDataInfoPtr(const QModelIndex& wrapIndex)
     ProjectTreeItem* itemPtr = static_cast<ProjectTreeItem*>(wrapIndex.internalPointer());
     if(itemPtr->getTypeId() == static_cast<size_t>(TreeItemType::IMAGE))
     {
-        CImageIO io(fileName.toStdString());
+        CImageDataIO io(fileName.toStdString());
         return io.dataInfo();
     }
     else if(itemPtr->getTypeId() == static_cast<size_t>(TreeItemType::VIDEO))
     {
-        CVideoIO io(fileName.toStdString());
+        CVideoDataIO io(fileName.toStdString());
         return io.dataInfo();
     }
     return nullptr;
@@ -96,14 +96,14 @@ int CMainDataManager::getSelectedDisplayIndex() const
     return m_selectedDisplayIndex;
 }
 
-void CMainDataManager::setManagers(CProjectManager *pProjectMgr, CProtocolManager *pProtocolMgr, CGraphicsManager *pGraphicsMgr,
+void CMainDataManager::setManagers(CProjectManager *pProjectMgr, CWorkflowManager *pWorkflowMgr, CGraphicsManager *pGraphicsMgr,
                                    CResultManager* pResultMgr, CRenderManager *pRenderMgr, CProgressBarManager *pProgressMgr)
 {
     m_pProjectMgr = pProjectMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
 
     m_imgMgr.setManagers(pProjectMgr, pGraphicsMgr, pResultMgr, pRenderMgr, pProgressMgr);
-    m_videoMgr.setManagers(pProjectMgr, pProtocolMgr, pGraphicsMgr, pResultMgr, pProgressMgr);
+    m_videoMgr.setManagers(pProjectMgr, pWorkflowMgr, pGraphicsMgr, pResultMgr, pProgressMgr);
 }
 
 void CMainDataManager::setProgressSignalHandler(CProgressSignalHandler* pHandler)
@@ -204,7 +204,7 @@ void CMainDataManager::reloadCurrent()
 
 void CMainDataManager::onSetSelectedDisplay(DisplayCategory category, int index)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     if(category == m_selectedDisplayCategory && index == m_selectedDisplayIndex)
         return;
@@ -215,20 +215,20 @@ void CMainDataManager::onSetSelectedDisplay(DisplayCategory category, int index)
 
 void CMainDataManager::onSaveCurrentVideoFrame(const QModelIndex &modelIndex, int index)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
-    if(m_pProtocolMgr->isProtocolExists())
-        m_pProtocolMgr->saveCurrentInputImage((size_t)index);
+    if(m_pWorkflowMgr->isWorkflowExists())
+        m_pWorkflowMgr->saveCurrentInputImage((size_t)index);
     else
         m_videoMgr.saveCurrentFrame(modelIndex);
 }
 
 void CMainDataManager::onExportCurrentImage(int index, const QString &path, bool bWithGraphics)
 {
-    assert(m_pProjectMgr && m_pProtocolMgr);
+    assert(m_pProjectMgr && m_pWorkflowMgr);
 
-    if(m_pProtocolMgr->isProtocolExists())
-        m_pProtocolMgr->exportCurrentInputImage(index, path, bWithGraphics);
+    if(m_pWorkflowMgr->isWorkflowExists())
+        m_pWorkflowMgr->exportCurrentInputImage(index, path, bWithGraphics);
     else
     {
         QModelIndex currentIndex = m_pProjectMgr->getCurrentDataItemIndex();
@@ -238,20 +238,20 @@ void CMainDataManager::onExportCurrentImage(int index, const QString &path, bool
 
 void CMainDataManager::onExportCurrentVideoFrame(const QModelIndex& index, int inputIndex, const QString &path, bool bWithGraphics)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
-    if(m_pProtocolMgr->isProtocolExists())
-        m_pProtocolMgr->exportCurrentInputImage(inputIndex, path, bWithGraphics);
+    if(m_pWorkflowMgr->isWorkflowExists())
+        m_pWorkflowMgr->exportCurrentInputImage(inputIndex, path, bWithGraphics);
     else
         m_videoMgr.exportCurrentFrame(index, path, bWithGraphics);
 }
 
 void CMainDataManager::onEnableInfo(bool bEnable)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
-    if(m_pProtocolMgr->isProtocolExists())
-        m_pProtocolMgr->updateDataInfo();
+    if(m_pWorkflowMgr->isWorkflowExists())
+        m_pWorkflowMgr->updateDataInfo();
     else
         m_imgMgr.enableInfoUpdate(bEnable);
 
@@ -260,11 +260,11 @@ void CMainDataManager::onEnableInfo(bool bEnable)
 
 void CMainDataManager::onPlayVideo(int index)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
     assert(m_pProjectMgr);
 
-    if(m_pProtocolMgr->isProtocolExists())
-        m_pProtocolMgr->playVideoInput(index);
+    if(m_pWorkflowMgr->isWorkflowExists())
+        m_pWorkflowMgr->playVideoInput(index);
     else
         m_videoMgr.play(m_pProjectMgr->getCurrentVideoItemIndex(), index);
 }

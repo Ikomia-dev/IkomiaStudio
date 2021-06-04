@@ -19,7 +19,7 @@
 #include "CPreferencesDlg.h"
 #include <QStackedWidget>
 #include "CUserManagementWidget.h"
-#include "CProtocolSettingsWidget.h"
+#include "CWorkflowSettingsWidget.h"
 #include "Widgets/FancyTabBar/fancytabbar.h"
 
 CPreferencesDlg::CPreferencesDlg(QWidget *parent, Qt::WindowFlags f)
@@ -34,16 +34,16 @@ CGeneralSettingsWidget*CPreferencesDlg::getGeneralSettings() const
     return m_pGeneralSettingsWidget;
 }
 
-CProtocolSettingsWidget *CPreferencesDlg::getProtocolSettings() const
+CWorkflowSettingsWidget *CPreferencesDlg::getWorkflowSettings() const
 {
-    return m_pProtocolSettingsWidget;
+    return m_pWorkflowSettingsWidget;
 }
 
 void CPreferencesDlg::initLayout()
 {
     //m_pUserManagementWidget = new CUserManagementWidget;
     m_pGeneralSettingsWidget = new CGeneralSettingsWidget;
-    m_pProtocolSettingsWidget = new CProtocolSettingsWidget;
+    m_pWorkflowSettingsWidget = new CWorkflowSettingsWidget;
 
     m_pTabBar = new FancyTabBar(FancyTabBar::Left);
     m_pTabBar->insertTab(0, QIcon(":/Images/settings-3d.png"), tr("General"));
@@ -54,7 +54,7 @@ void CPreferencesDlg::initLayout()
 
     m_pStackWidget = new QStackedWidget;
     m_pStackWidget->addWidget(m_pGeneralSettingsWidget);
-    m_pStackWidget->addWidget(m_pProtocolSettingsWidget);
+    m_pStackWidget->addWidget(m_pWorkflowSettingsWidget);
     //m_pStackWidget->addWidget(m_pUserManagementWidget);
     m_pStackWidget->setCurrentIndex(0);
 

@@ -86,7 +86,7 @@ void CWizardDocPage::initLayout()
 void CWizardDocPage::initConnections()
 {
     /*connect(m_pEditDocFrame, &CProcessEditDocFrame::doCancel, [&]{ m_pStackWidget->setCurrentIndex(0); });
-    connect(m_pEditDocFrame, &CProcessEditDocFrame::doSave, [&](bool bFullEdit, const CProcessInfo& info)
+    connect(m_pEditDocFrame, &CProcessEditDocFrame::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doSave(bFullEdit, info);
         m_pDocFrame->setProcessInfo(info);

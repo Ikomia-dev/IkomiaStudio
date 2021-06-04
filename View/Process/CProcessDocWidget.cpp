@@ -36,7 +36,7 @@ void CProcessDocWidget::setCurrentUser(const CUser &user)
     m_currentUser = user;
 }
 
-void CProcessDocWidget::setProcessInfo(const CProcessInfo& info)
+void CProcessDocWidget::setProcessInfo(const CTaskInfo& info)
 {
     m_processInfo = info;
 
@@ -52,7 +52,7 @@ void CProcessDocWidget::setProcessInfo(const CProcessInfo& info)
 
 void CProcessDocWidget::onShowSourceCode()
 {
-    if(m_processInfo.m_language == CProcessInfo::PYTHON)
+    if(m_processInfo.m_language == CTaskInfo::PYTHON)
     {
         auto pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
         if(!pluginDir.isEmpty() && Utils::File::isFileExist(pluginDir.toStdString()))
@@ -67,7 +67,7 @@ void CProcessDocWidget::onShowSourceCode()
 void CProcessDocWidget::onExportDocumentation()
 {
     QString pluginDir;;
-    if(m_processInfo.m_language == CProcessInfo::CPP)
+    if(m_processInfo.m_language == CTaskInfo::CPP)
         pluginDir = Utils::CPluginTools::getCppPluginFolder(QString::fromStdString(m_processInfo.m_name));
     else
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
@@ -131,7 +131,7 @@ void CProcessDocWidget::initLayout()
 void CProcessDocWidget::initConnections()
 {
     connect(m_pEditDocFrame, &CProcessEditDocFrame::doCancel, [&]{ m_pStackWidget->setCurrentIndex(0); });
-    connect(m_pEditDocFrame, &CProcessEditDocFrame::doSave, [&](bool bFullEdit, const CProcessInfo& info)
+    connect(m_pEditDocFrame, &CProcessEditDocFrame::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doSave(bFullEdit, info);
         m_pDocFrame->setProcessInfo(info);

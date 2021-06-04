@@ -38,10 +38,10 @@ void CSettingsManager::notifyViewShow()
 {
     initTutorialHelperOption();
     initNativeDialogOption();
-    initProtocolOption();
+    initWorkflowOption();
 }
 
-std::string CSettingsManager::getProtocolSaveFolder() const
+std::string CSettingsManager::getWorkflowSaveFolder() const
 {
     return m_protocolSaveFolder;
 }
@@ -69,7 +69,7 @@ void CSettingsManager::initTutorialHelperOption()
     emit doEnableTutorialHelper(m_bShowTuto);
 }
 
-void CSettingsManager::initProtocolOption()
+void CSettingsManager::initWorkflowOption()
 {
     m_protocolSaveFolder = Utils::IkomiaApp::getAppFolder() + "/Workflows/";
     QJsonObject json = getSettings("protocol");
@@ -79,7 +79,7 @@ void CSettingsManager::initProtocolOption()
         if(m_protocolSaveFolder.back() != '/')
             m_protocolSaveFolder += "/";
     }
-    emit doSetProtocolSaveFolder(QString::fromStdString(m_protocolSaveFolder));
+    emit doSetWorkflowSaveFolder(QString::fromStdString(m_protocolSaveFolder));
 }
 
 void CSettingsManager::setSettings(const QString &category, const QJsonObject& jsonData)
@@ -195,7 +195,7 @@ void CSettingsManager::onEnableTutorialHelper(bool bEnable)
     setTutoEnabled(bEnable);
 }
 
-void CSettingsManager::onSetProtocolSaveFolder(const QString &path)
+void CSettingsManager::onSetWorkflowSaveFolder(const QString &path)
 {
     m_protocolSaveFolder = path.toStdString();
     if(m_protocolSaveFolder.back() != '/')

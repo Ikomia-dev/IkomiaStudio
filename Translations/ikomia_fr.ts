@@ -573,7 +573,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CGraphicsDeletableButton</name>
     <message>
-        <location filename="../View/Modules/Protocol/CGraphicsDeletableButton.cpp" line="51"/>
+        <location filename="../View/Modules/Workflow/CGraphicsDeletableButton.cpp" line="51"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
@@ -1499,8 +1499,8 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Process</translation>
     </message>
     <message>
-        <source>Protocols</source>
-        <translation type="vanished">Protocoles</translation>
+        <source>Workflows</source>
+        <translation type="vanished">Workflowes</translation>
     </message>
     <message>
         <location filename="../View/Main/CMainView.cpp" line="623"/>
@@ -1673,8 +1673,8 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation></translation>
     </message>
     <message>
-        <source>Protocol</source>
-        <translation type="vanished">Protocole</translation>
+        <source>Workflow</source>
+        <translation type="vanished">Workflowe</translation>
     </message>
     <message>
         <location filename="../View/Notifications/CNotificationPane.cpp" line="168"/>
@@ -2679,43 +2679,43 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
 </context>
 <context>
-    <name>CProtocolConnection</name>
+    <name>CWorkflowConnection</name>
     <message>
         <source>Delete connection</source>
         <translation type="vanished">Supprimer la connexion</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolIOArea</name>
+    <name>CWorkflowIOArea</name>
     <message>
         <source>Undefined</source>
         <translation type="vanished">Undéfini</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolIOArea.cpp" line="470"/>
+        <location filename="../View/Modules/Workflow/CWorkflowIOArea.cpp" line="470"/>
         <source>Add new input</source>
         <translation>Ajouter une nouvelle entrée</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolInfoDlg</name>
+    <name>CWorkflowInfoDlg</name>
     <message>
         <source>No description available</source>
         <translation type="vanished">Pas de description disponible</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="48"/>
+        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="48"/>
         <source>Process parameters</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolInfoDlg.cpp" line="56"/>
+        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="56"/>
         <source>Load</source>
         <translation>Charger</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolInputTypeDlg</name>
+    <name>CWorkflowInputTypeDlg</name>
     <message>
         <source>Select input data from current project</source>
         <translation type="vanished">Sélectionner une entrée dans le projet courant</translation>
@@ -2725,96 +2725,96 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="23"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="23"/>
         <source>Select source of input data</source>
         <translation>Sélectionner la source des données d&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="111"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="111"/>
         <source>Back</source>
         <translation>Retour</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="115"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="115"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="119"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="119"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="142"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="142"/>
         <source>Image(s)</source>
         <translation>Image(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="145"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="145"/>
         <source>Video(s)</source>
         <translation>Vidéo(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="148"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="148"/>
         <source>Dataset(s)</source>
         <translation>Dataset(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="151"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="151"/>
         <source>Folder(s)</source>
         <translation>Répertoire(s)</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="157"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="157"/>
         <source>Select the type of data you want to process</source>
         <translation>Sélectionner le type de données à traiter</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="158"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="158"/>
         <source>Simple dataset</source>
         <translation>Dataset simple</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="160"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="160"/>
         <source>Volume dataset</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolInputTypeDlg.cpp" line="162"/>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="162"/>
         <source>Time dataset</source>
         <translation>Vidéo ou séquence temporelle</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolInputViewManager</name>
+    <name>CWorkflowInputViewManager</name>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="213"/>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="213"/>
         <source>Process input management : invalid image</source>
         <translation>Gestionnaire des entrées: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="232"/>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="232"/>
         <source>Process input management: invalid image</source>
         <translation>Gestionnaire des entrées: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolInputViewManager.cpp" line="261"/>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="261"/>
         <source>Process input management : invalid volume</source>
         <translation>Gestionnaire des entrées: volume invalide</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolManager</name>
+    <name>CWorkflowManager</name>
     <message>
         <source>Invalid protocol current task</source>
         <translation type="vanished">Tâche courant du protocole invalide</translation>
     </message>
     <message>
-        <source>Protocol has been saved.</source>
+        <source>Workflow has been saved.</source>
         <translation type="vanished">Le protocole a été sauvegardé avec succès.</translation>
     </message>
     <message>
-        <source>Protocol has been exported.</source>
+        <source>Workflow has been exported.</source>
         <translation type="vanished">Le protocole a été exporté avec succès.</translation>
     </message>
     <message>
@@ -2822,27 +2822,27 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le workflow est déjà en cours d&apos;exécution...</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="919"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="919"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="489"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="489"/>
         <source>Workflow has been saved.</source>
         <translation>Le workflow a été sauvegardé avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="505"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="505"/>
         <source>Workflow has been exported.</source>
         <translation>Le workflow a été exporté avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="539"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="539"/>
         <source>Invalid image index</source>
         <translation>ModelIndex de l&apos;image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="543"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="543"/>
         <source>Invalid image item</source>
         <translation>Element du projet invalide (image)</translation>
     </message>
@@ -2851,49 +2851,49 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur d&apos;exécution du traitement: élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="778"/>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1272"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="778"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1272"/>
         <source>New workflow</source>
         <translation>Nouveau workflow</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1037"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1037"/>
         <source>Load workflow error: invalid item index</source>
         <translation>Erreur de chargement du workflow: index de l&apos;item invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1066"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1066"/>
         <source>Delete workflow error: invalid item index</source>
         <translation>Erreur de suppression du workflow: index de l&apos;item invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1165"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1165"/>
         <source>Invalid task: folder path can&apos;t be set.</source>
         <translation>Tâche invalide: le répertoire ne peut pas être défini.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1236"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1236"/>
         <source>Retrieve workflow information failed: invalid item index</source>
         <translation>Echec de la récupération des données du workflow: index de l&apos;élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1541"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1541"/>
         <source>Input index overflow.</source>
         <translation>Indice de l&apos;entrée invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1545"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1545"/>
         <source>Invalid input type.</source>
         <translation>Type d&apos;entrée invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1569"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1569"/>
         <source>Workflow input cannot be set: invalid item.</source>
         <translation>L&apos;entrée du workflow ne peut pas être ajoutée: l&apos;item est invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1841"/>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1859"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1841"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1859"/>
         <source>No valid image data for input #%1 of task %2.</source>
         <translation>Aucune image disponible pour l&apos;entrée #%1 de la tâche %2.</translation>
     </message>
@@ -2922,12 +2922,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur de suppression du protocole: index de l&apos;élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1127"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1127"/>
         <source>Invalid task: graphics layer input can&apos;t be set.</source>
         <translation>La couche graphique ne peut pas être ajoutée comme entrée: tâche invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1141"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1141"/>
         <source>Invalid graphics layer: input can&apos;t be set.</source>
         <translation>L&apos;entrée ne peut pas être ajoutée: couche graphique invalide.</translation>
     </message>
@@ -2940,32 +2940,32 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Type d&apos;entrée invalide: image requise</translation>
     </message>
     <message>
-        <source>Protocol inputs error : invalid image</source>
+        <source>Workflow inputs error : invalid image</source>
         <translation type="vanished">Entrée image invalide</translation>
     </message>
     <message>
-        <source>Protocol inputs error : invalid item type</source>
+        <source>Workflow inputs error : invalid item type</source>
         <translation type="vanished">Type d&apos;entrée invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolManager.cpp" line="1685"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1685"/>
         <source>%1 min %2 sec %3 ms</source>
         <translation></translation>
     </message>
     <message>
-        <source>Protocol time limit reached. You should think about upgrading your Ikomia plan</source>
+        <source>Workflow time limit reached. You should think about upgrading your Ikomia plan</source>
         <translation type="vanished">La limite du temps d&apos;exécution d&apos;un protocole a été atteinte. Veuillez consulter les formules d&apos;abonnement pour utilisation sans limite</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolModuleWidget</name>
+    <name>CWorkflowModuleWidget</name>
     <message>
         <source>Export protocol</source>
         <translation type="vanished">Exporter le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="183"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="196"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="183"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="196"/>
         <source>Pcl Files (*.pcl)</source>
         <translation></translation>
     </message>
@@ -2982,22 +2982,22 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le protocole a été modifié.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="222"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="222"/>
         <source>Do you want to save the changes?</source>
         <translation>Voulez-vous sauver les changements?</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="328"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="328"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="334"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="334"/>
         <source>Parameters</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="335"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="335"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
@@ -3014,12 +3014,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Fermer le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="421"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="421"/>
         <source>Visualize origin inputs</source>
         <translation>Visualisation des entrées originales</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="425"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="425"/>
         <source>Visualize current inputs</source>
         <translation>Visualisation des entrées courantes</translation>
     </message>
@@ -3040,181 +3040,181 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Arrêter le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="39"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="39"/>
         <source>Workflow Creator</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="183"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="404"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="183"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="404"/>
         <source>Export workflow</source>
         <translation>Exporter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="196"/>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="390"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="196"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="390"/>
         <source>Load workflow</source>
         <translation>Charger le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="213"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="213"/>
         <source>The workflow is running. Please wait before closing it.</source>
         <translation>Le workflow est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="221"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="221"/>
         <source>The workflow has been modified.</source>
         <translation>Le workflow a été modifié.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="336"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="336"/>
         <source>I/O</source>
         <translation>E/S</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="383"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="383"/>
         <source>New workflow</source>
         <translation>Nouveau workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="397"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="397"/>
         <source>Save workflow</source>
         <translation>Sauver le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="411"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="411"/>
         <source>Close workflow</source>
         <translation>Fermer le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="430"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="430"/>
         <source>Reload plugins of current workflow</source>
         <translation>Rechargement des plugins du worflow courant</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="439"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="439"/>
         <source>Run workflow</source>
         <translation>Exécuter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="443"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="443"/>
         <source>Run workflow from current task</source>
         <translation>Exécuter le workflow depuis la tâche courante</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="447"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="447"/>
         <source>Run workflow from start to current task</source>
         <translation>Exécuter le workflow jusqu&apos;à la tâche courante</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="451"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="451"/>
         <source>Stop workflow</source>
         <translation>Arrêter le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="456"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="456"/>
         <source>Original size</source>
         <translation>Taille originale</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="459"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="459"/>
         <source>Zoom in</source>
         <translation>Zoomer</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="462"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="462"/>
         <source>Zoom out</source>
         <translation>Dézoomer</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="635"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="635"/>
         <source>Inputs</source>
         <translation>Entrées</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="653"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="653"/>
         <source>Outputs</source>
         <translation>Sorties</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="668"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="668"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="674"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="674"/>
         <source>Auto save</source>
         <translation>Sauvegarde auto</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="697"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="697"/>
         <source>Save format</source>
         <translation>Format de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="710"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="710"/>
         <source>Save options</source>
         <translation>Options de sauvegarde</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="713"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="713"/>
         <source>Folder</source>
         <translation>Répertoire</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="727"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="727"/>
         <source>Process benchmark</source>
         <translation>Analyse du traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolModuleWidget.cpp" line="728"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="728"/>
         <source>Custom process information</source>
         <translation>Information personnalisée du process</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolNewDlg</name>
+    <name>CWorkflowNewDlg</name>
     <message>
-        <source>Protocol information</source>
+        <source>Workflow information</source>
         <translation type="vanished">Informations sur le protocole</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="27"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="27"/>
         <source>Workflow information</source>
         <translation>Informations sur le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="52"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="52"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="57"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="57"/>
         <source>Keywords</source>
         <translation>Mots-clés</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="60"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="60"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="71"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="71"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="74"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="74"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="100"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="100"/>
         <source>You must at least set the workflow name please.</source>
         <translation>Vous devez entrer un nom de workflow svp.</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolNewDlg.cpp" line="107"/>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="107"/>
         <source>This workflow already exists. Please enter another name.</source>
         <translation>Ce workflow existe déjà. Veuillez entrer un nouveau nom svp.</translation>
     </message>
@@ -3228,41 +3228,41 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
 </context>
 <context>
-    <name>CProtocolPane</name>
+    <name>CWorkflowPane</name>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="58"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="58"/>
         <source>No description available</source>
         <translation>Pas de description disponible</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="145"/>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="210"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="145"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="210"/>
         <source>Load workflow</source>
         <translation>Charger un workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="146"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="146"/>
         <source>Load selected workflow</source>
         <translation>Charger le workflow sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="149"/>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="213"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="149"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="213"/>
         <source>Delete workflow</source>
         <translation>Supprimer le workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="150"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="150"/>
         <source>Delete selected workflow</source>
         <translation>Supprimer le workflow sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="177"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="177"/>
         <source>Workflow description</source>
         <translation>Description du workflow</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="201"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="201"/>
         <source>Workflow</source>
         <translation>Workflow</translation>
     </message>
@@ -3275,12 +3275,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Supprimer le protocole sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Protocol/CProtocolPane.cpp" line="161"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="161"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
     <message>
-        <source>Protocol description</source>
+        <source>Workflow description</source>
         <translation type="vanished">Description</translation>
     </message>
     <message>
@@ -3288,8 +3288,8 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Utiliser sur l&apos;image courante</translation>
     </message>
     <message>
-        <source>Protocols</source>
-        <translation type="vanished">Protocoles</translation>
+        <source>Workflows</source>
+        <translation type="vanished">Workflowes</translation>
     </message>
     <message>
         <source>Load protocol</source>
@@ -3301,76 +3301,76 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
 </context>
 <context>
-    <name>CProtocolRunManager</name>
+    <name>CWorkflowRunManager</name>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="128"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="136"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="145"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="214"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="128"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="136"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="145"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="214"/>
         <source>Workflow inputs error : invalid item type.</source>
         <translation>Erreur d&apos;entrée du workflow: type de données invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="156"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="156"/>
         <source>Workflow inputs error : invalid volume.</source>
         <translation>Erreur d&apos;entrée du workflow: volume invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="169"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="169"/>
         <source>Workflow inputs error : invalid video frame.</source>
         <translation>Erreur d&apos;entrée du workflow: frame vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="181"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="181"/>
         <source>Workflow inputs error : invalid image.</source>
         <translation>Erreur d&apos;entrée du workflow: image invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="192"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="192"/>
         <source>Workflow inputs error : invalid video.</source>
         <translation>Erreur d&apos;entrée du workflow: vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="208"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="208"/>
         <source>Workflow inputs error : invalid camera stream.</source>
         <translation>Erreur d&apos;entrée du workflow: flux vidéo invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="250"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="250"/>
         <source>Invalid input: workflow can only manage one video or stream input for now.</source>
         <translation>Entrée invalide: le workflow ne peut traiter qu&apos;une source vidéo pour le moment.</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="338"/>
-        <source>Protocol is already running...</source>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="338"/>
+        <source>Workflow is already running...</source>
         <translation>Le workflow est déjà en cours d&apos;exécution...</translation>
     </message>
     <message>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1167"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1224"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1285"/>
-        <location filename="../Model/Protocol/CProtocolRunManager.cpp" line="1315"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1167"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1224"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1285"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1315"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolScene</name>
+    <name>CWorkflowScene</name>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="537"/>
+        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="537"/>
         <source>Inputs</source>
         <translation>Entrées</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolScene.cpp" line="901"/>
+        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="901"/>
         <source>Choose folder</source>
         <translation>Choisir un dossier</translation>
     </message>
 </context>
 <context>
-    <name>CProtocolSettingsWidget</name>
+    <name>CWorkflowSettingsWidget</name>
     <message>
-        <location filename="../View/Preferences/CProtocolSettingsWidget.cpp" line="35"/>
+        <location filename="../View/Preferences/CWorkflowSettingsWidget.cpp" line="35"/>
         <source>Auto-save folder</source>
         <translation>Répertoire de sauvegarde auto</translation>
     </message>
@@ -4658,33 +4658,33 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation>La lecture du template de layout Qt a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolDummyItem.cpp" line="58"/>
+        <location filename="../View/Modules/Workflow/CWorkflowDummyItem.cpp" line="58"/>
         <source>Click here to add new process</source>
         <translation>Cliquer ici pour ajouter un nouveau traitement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="71"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.cpp" line="71"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="73"/>
-        <location filename="../View/Modules/Protocol/CProtocolItem.h" line="135"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.cpp" line="73"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.h" line="135"/>
         <source>Idle</source>
         <translation>En attente</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="75"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.cpp" line="75"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="608"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.cpp" line="608"/>
         <source>Apply on volume</source>
         <translation>Appliquer sur le volume</translation>
     </message>
     <message>
-        <location filename="../View/Modules/Protocol/CProtocolItem.cpp" line="615"/>
+        <location filename="../View/Modules/Workflow/CWorkflowItem.cpp" line="615"/>
         <source>Outputs auto-export</source>
         <translation>Outputs auto-export</translation>
     </message>

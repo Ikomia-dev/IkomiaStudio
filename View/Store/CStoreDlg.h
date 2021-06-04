@@ -23,7 +23,7 @@
 
 #include <QDialog>
 #include "View/Common/CDialog.h"
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CStorePluginListView;
@@ -46,7 +46,7 @@ class CStoreDlg : public CDialog
         void            doGetLocalModel();
         void            doPublishPlugin(const QModelIndex& index);
         void            doInstallPlugin(const QModelIndex& index);
-        void            doUpdatePluginInfo(bool bFullEdit, const CProcessInfo& info);
+        void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            doServerSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
         void            doClose();

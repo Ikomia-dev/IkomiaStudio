@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     QThreadPool::globalInstance()->setStackSize(8*1024*1024);
 
     // Meta registration
-    qRegisterMetaType<ProtocolVertex>("ProtocolVertex");
-    qRegisterMetaType<CProtocolTask::State>("CProtocolTask::State");
+    qRegisterMetaType<WorkflowVertex>("WorkflowVertex");
+    qRegisterMetaType<CWorkflowTask::State>("CWorkflowTask::State");
     qRegisterMetaType<QVector<int>>();
     qRegisterMetaType<QTextBlock>("QTextBlock");
     qRegisterMetaType<QTextCursor>("QTextCursor");

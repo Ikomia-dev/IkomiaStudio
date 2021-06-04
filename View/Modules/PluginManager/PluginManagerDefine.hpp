@@ -25,7 +25,7 @@ namespace Ikomia
     {
         enum ProcessBaseClass
         {
-            CPROTOCOL_TASK,
+            CWorkflow_TASK,
             CIMAGE_PROCESS_2D,
             CINTERACTIVE_IMAGE_PROCESS_2D,
             CVIDEO_PROCESS,
@@ -34,7 +34,7 @@ namespace Ikomia
 
         enum WidgetBaseClass
         {
-            CPROTOCOL_TASK_WIDGET
+            CWorkflow_TASK_WIDGET
         };
     }
 }

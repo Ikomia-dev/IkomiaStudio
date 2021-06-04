@@ -45,7 +45,7 @@ class CMainDataManager : public QObject
         int             getSelectedDisplayCategory() const;
         int             getSelectedDisplayIndex() const;
 
-        void            setManagers(CProjectManager* pProjectMgr, CProtocolManager* pProtocolMgr, CGraphicsManager* pGraphicsMgr,
+        void            setManagers(CProjectManager* pProjectMgr, CWorkflowManager* pWorkflowMgr, CGraphicsManager* pGraphicsMgr,
                                     CResultManager *pResultMgr, CRenderManager* pRenderMgr, CProgressBarManager* pProgressMgr);
         void            setProgressSignalHandler(CProgressSignalHandler* pHandler);
 
@@ -80,7 +80,7 @@ class CMainDataManager : public QObject
         CImgManager         m_imgMgr;
         CVideoManager       m_videoMgr;
         CProjectManager*    m_pProjectMgr = nullptr;
-        CProtocolManager*   m_pProtocolMgr = nullptr;
+        CWorkflowManager*   m_pWorkflowMgr = nullptr;
         int                 m_selectedDisplayCategory = DisplayCategory::INPUT;
         int                 m_selectedDisplayIndex = 0;
 };

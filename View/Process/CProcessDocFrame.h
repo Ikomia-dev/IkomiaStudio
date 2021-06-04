@@ -22,7 +22,7 @@
 #define CPROCESSDOCFRAME_H
 
 #include "CProcessDocContent.h"
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 
 class QTextBrowser;
 class QTextDocument;
@@ -33,7 +33,7 @@ class CProcessDocFrame : public QFrame
 
         CProcessDocFrame(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-        void    setProcessInfo(const CProcessInfo& info);
+        void    setProcessInfo(const CTaskInfo& info);
 
         void    saveContent(const QString& path);
 
@@ -41,12 +41,12 @@ class CProcessDocFrame : public QFrame
 
         void    initLayout();
 
-        void    fillDocumentation(const CProcessInfo& info);
+        void    fillDocumentation(const CTaskInfo& info);
 
         QString getMarkdownTemplate() const;
-        QString getStatus(const CProcessInfo &info) const;
+        QString getStatus(const CTaskInfo &info) const;
 
-        QString generateMarkdown(const CProcessInfo& info) const;
+        QString generateMarkdown(const CTaskInfo& info) const;
 
         void    updateLocalPath(QString& content, const QString &name);
 

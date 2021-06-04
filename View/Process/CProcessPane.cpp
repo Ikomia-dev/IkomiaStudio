@@ -118,7 +118,7 @@ void CProcessPane::onSearchProcess(const QString& text)
     emit doSearchProcess(text);
 }
 
-void CProcessPane::onSetWidgetInstance(const std::string& processName, ProtocolTaskWidgetPtr &widgetPtr)
+void CProcessPane::onSetWidgetInstance(const std::string& processName, WorkflowTaskWidgetPtr &widgetPtr)
 {
     if(m_bQueryWidget == false)
         return;
@@ -137,7 +137,7 @@ void CProcessPane::onSetWidgetInstance(const std::string& processName, ProtocolT
             adjustProcessWidget();
 
             //Manage apply button signal
-            auto pFunc = [this](const ProtocolTaskParamPtr& pParam)
+            auto pFunc = [this](const WorkflowTaskParamPtr& pParam)
             {
                 if(m_pCurrentView == m_pProcessTree)
                 {
@@ -158,7 +158,7 @@ void CProcessPane::onSetWidgetInstance(const std::string& processName, ProtocolT
                 m_pParamsWidget->hide();
                 m_pProcessList->hide();
             };
-            connect(widgetPtr.get(), &CProtocolTaskWidget::doApplyProcess, pFunc);
+            connect(widgetPtr.get(), &CWorkflowTaskWidget::doApplyProcess, pFunc);
         }
     }
     catch(std::exception& e)
@@ -167,7 +167,7 @@ void CProcessPane::onSetWidgetInstance(const std::string& processName, ProtocolT
     }
 }
 
-void CProcessPane::onSetProcessInfo(const CProcessInfo &info)
+void CProcessPane::onSetProcessInfo(const CTaskInfo &info)
 {
     m_pParamsWidget->setProcessInfo(info);
 }

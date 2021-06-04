@@ -27,7 +27,7 @@ CProcessDocFrame::CProcessDocFrame(QWidget *parent, Qt::WindowFlags f):
     initLayout();
 }
 
-void CProcessDocFrame::setProcessInfo(const CProcessInfo &info)
+void CProcessDocFrame::setProcessInfo(const CTaskInfo &info)
 {
     fillDocumentation(info);
 }
@@ -63,12 +63,12 @@ void CProcessDocFrame::initLayout()
     setLayout(pMainLayout);
 }
 
-void CProcessDocFrame::fillDocumentation(const CProcessInfo &info)
+void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
 {
     QString pluginDir;
     QString pluginName = QString::fromStdString(info.m_name);
 
-    if(info.m_language == CProcessInfo::CPP)
+    if(info.m_language == CTaskInfo::CPP)
         pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
     else
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
@@ -132,12 +132,12 @@ QString CProcessDocFrame::getMarkdownTemplate() const
                    "_keywords_");
 }
 
-QString CProcessDocFrame::getStatus(const CProcessInfo &info) const
+QString CProcessDocFrame::getStatus(const CTaskInfo &info) const
 {
     QString status;
     QString ikomiaVersion = QString::fromStdString(info.m_ikomiaVersion);
 
-    if(info.m_language == CProcessInfo::CPP)
+    if(info.m_language == CTaskInfo::CPP)
     {
         PluginState state = Utils::Plugin::getCppState(ikomiaVersion);
         if(state == PluginState::DEPRECATED)
@@ -180,12 +180,12 @@ QString CProcessDocFrame::getStatus(const CProcessInfo &info) const
     return status;
 }
 
-QString CProcessDocFrame::generateMarkdown(const CProcessInfo &info) const
+QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 {
     auto templateContent = getMarkdownTemplate();
 
     QString languageIconPath;
-    if(info.m_language == CProcessInfo::PYTHON)
+    if(info.m_language == CTaskInfo::PYTHON)
         languageIconPath = "qrc:/Images/python-language-logo-32.png";
     else
         languageIconPath = "qrc:/Images/C++-language-logo-32.png";

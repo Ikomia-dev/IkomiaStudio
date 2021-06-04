@@ -129,7 +129,7 @@ void CStoreDlg::initConnections()
     connect(m_pServerPluginsView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowServerPluginInfo);
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
-    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CProcessInfo& info)
+    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doUpdatePluginInfo(bFullEdit, info);
     });
@@ -235,7 +235,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     auto pModel = static_cast<const CStoreQueryModel*>(index.model());
     auto record = pModel->record(index.row());
 
-    CProcessInfo info;
+    CTaskInfo info;
     info.m_id = record.value("id").toInt();
     info.m_name = record.value("name").toString().toStdString();
     info.m_description = record.value("description").toString().toStdString();

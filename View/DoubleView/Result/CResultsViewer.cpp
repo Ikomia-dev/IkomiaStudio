@@ -43,7 +43,7 @@
 #include "View/DoubleView/Result/CResultTableDisplay.h"
 #include "View/DoubleView/Video/CVideoDisplay.h"
 #include "View/DoubleView/CWidgetDataDisplay.h"
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 
 CResultsViewer::CResultsViewer(CImageViewSync* pViewSync, CVideoViewSync* pVideoViewSync, QWidget* parent) : QWidget(parent)
 {

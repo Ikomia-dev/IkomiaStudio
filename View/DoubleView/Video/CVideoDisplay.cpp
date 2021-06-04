@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CVideoDisplay.h"
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 #include "View/Common/CDialog.h"
 #include <QPushButton>
 #include <QSlider>

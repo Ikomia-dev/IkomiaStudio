@@ -20,7 +20,7 @@
 #include "Main/LogCategory.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
 #include "Model/Results/CResultManager.h"
 #include "Data/CDataConversion.h"
@@ -252,11 +252,11 @@ CVideoManager::~CVideoManager()
     clearPlayers();
 }
 
-void CVideoManager::setManagers(CProjectManager *pProjectMgr, CProtocolManager* pProtocolMgr, CGraphicsManager* pGraphicsMgr,
+void CVideoManager::setManagers(CProjectManager *pProjectMgr, CWorkflowManager* pWorkflowMgr, CGraphicsManager* pGraphicsMgr,
                                 CResultManager* pResultMgr, CProgressBarManager* pProgressMgr)
 {
     m_pProjectMgr = pProjectMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
     m_pGraphicsMgr = pGraphicsMgr;
     m_pResultMgr = pResultMgr;
     m_pProgressMgr = pProgressMgr;
@@ -368,9 +368,9 @@ void CVideoManager::displayVideoInfo(const QModelIndex& index)
     if(pDataInfoPtr == nullptr)
         return;
 
-    // When workflow exists, displayed video frames are managed by CProtocolManager
+    // When workflow exists, displayed video frames are managed by CWorkflowManager
     // and video player can only retrieve source image information.
-    // We must override image information by those given by CProtocolManager
+    // We must override image information by those given by CWorkflowManager
     if(!m_selectedWorkflowImage.empty())
         pDataInfoPtr->updateImage(m_selectedWorkflowImage);
 
@@ -543,7 +543,7 @@ void CVideoManager::stopPlay(const QModelIndex& index)
 
 void CVideoManager::closeData(const QModelIndex& index)
 {
-    emit doStopProtocolThread();
+    emit doStopWorkflowThread();
 
     auto it = m_players.find(index);
     if(it != m_players.end())
@@ -599,7 +599,7 @@ void CVideoManager::saveCurrentFrame(const QModelIndex& index)
     {
         destPath += "/frame.png";
         destPath = Utils::File::getAvailablePath(destPath);
-        CImageIO io(destPath);
+        CImageDataIO io(destPath);
         io.write(currentImage);
     }
     catch(std::exception& e)
@@ -639,7 +639,7 @@ void CVideoManager::exportCurrentFrame(const QModelIndex& index, const QString &
 
     try
     {
-        CImageIO io(path.toStdString());
+        CImageDataIO io(path.toStdString());
         io.write(imgSaved);
     }
     catch(std::exception& e)
@@ -670,7 +670,7 @@ void CVideoManager::onDisplayCurrentVideoImage(const QModelIndex& modelIndex, in
     displayCurrentVideoImage(modelIndex, index);
 }
 
-void CVideoManager::onCloseProtocol()
+void CVideoManager::onCloseWorkflow()
 {
     // Clear processed image
     for(auto it=m_players.begin(); it!=m_players.end(); ++it)
@@ -680,7 +680,7 @@ void CVideoManager::onCloseProtocol()
 void CVideoManager::onImageIsLoaded(const QModelIndex& modelIndex, const CMat& image, int index, bool bNewSequence)
 {
     assert(m_pProjectMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     auto pPlayer = getPlayer(modelIndex);
     if(!pPlayer)
@@ -688,7 +688,7 @@ void CVideoManager::onImageIsLoaded(const QModelIndex& modelIndex, const CMat& i
 
     pPlayer->setCurrentImage(image);
 
-    if(m_pProtocolMgr->isProtocolExists() == false)
+    if(m_pWorkflowMgr->isWorkflowExists() == false)
         displayCurrentVideoImage(modelIndex, index);
     else
     {

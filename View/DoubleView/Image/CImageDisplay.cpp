@@ -31,7 +31,7 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include "CImageExportDlg.h"
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 
 CImageDisplay::CImageDisplay(QWidget* pParent, QString name, int flags) : CDataDisplay(pParent, name, flags)
 {

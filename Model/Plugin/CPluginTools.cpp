@@ -33,7 +33,7 @@ std::string Utils::CPluginTools::getTransferPath()
 std::string Utils::CPluginTools::getDirectory(const std::string& name, int language)
 {
     std::string directory;
-    if(language == CProcessInfo::CPP)
+    if(language == CTaskInfo::CPP)
         directory = Utils::Plugin::getCppPath() + "/" + Utils::String::httpFormat(name);
     else
         directory = Utils::Plugin::getPythonPath() + "/" + Utils::String::httpFormat(name);
@@ -81,9 +81,9 @@ QString Utils::CPluginTools::getPythonLoadedPluginFolder(const QString &name)
                     if(exFactory.check())
                     {
                         auto plugin = exFactory();
-                        auto processFactoryPtr = plugin->getProcessFactory();
+                        auto TaskFactoryPtr = plugin->getProcessFactory();
 
-                        if(QString::fromStdString(processFactoryPtr->getInfo().m_name) == name)
+                        if(QString::fromStdString(TaskFactoryPtr->getInfo().m_name) == name)
                             return currentPluginDirPath;
                     }
                 }
@@ -120,10 +120,10 @@ QString Utils::CPluginTools::getCppPluginFolder(const QString &name)
                     auto pPlugin = qobject_cast<CPluginProcessInterface*>(pObject);
                     if(pPlugin)
                     {
-                        auto processFactoryPtr = pPlugin->getProcessFactory();
-                        if(processFactoryPtr)
+                        auto TaskFactoryPtr = pPlugin->getProcessFactory();
+                        if(TaskFactoryPtr)
                         {
-                            if(QString::fromStdString(processFactoryPtr->getInfo().m_name) == name)
+                            if(QString::fromStdString(TaskFactoryPtr->getInfo().m_name) == name)
                                 return currentPluginDirPath;
                         }
                     }

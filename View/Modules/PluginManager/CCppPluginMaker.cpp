@@ -164,7 +164,7 @@ QString CCppPluginMaker::getProcessBaseClass() const
     QString baseClass;
     switch(m_processBaseClass)
     {
-        case PluginManager::CPROTOCOL_TASK: baseClass = "CProtocolTask"; break;
+        case PluginManager::CWorkflow_TASK: baseClass = "CWorkflowTask"; break;
         case PluginManager::CIMAGE_PROCESS_2D: baseClass = "CImageProcess2d"; break;
         case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: baseClass = "CInteractiveImageProcess2d"; break;
         case PluginManager::CVIDEO_PROCESS: baseClass = "CVideoProcess"; break;
@@ -178,7 +178,7 @@ QString CCppPluginMaker::getProcessBaseClassHeader() const
     QString header;
     switch(m_processBaseClass)
     {
-        case PluginManager::CPROTOCOL_TASK: header = "Protocol/CProtocolTask.h"; break;
+        case PluginManager::CWorkflow_TASK: header = "Workflow/CWorkflowTask.h"; break;
         case PluginManager::CIMAGE_PROCESS_2D: header = "Core/CImageProcess2d.h"; break;
         case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: header = "Core/CInteractiveImageProcess2d.h"; break;
         case PluginManager::CVIDEO_PROCESS: header = "Core/CVideoProcess.h"; break;
@@ -189,11 +189,11 @@ QString CCppPluginMaker::getProcessBaseClassHeader() const
 
 QString CCppPluginMaker::getWidgetBaseClass() const
 {
-    return "CProtocolTaskWidget";
+    return "CWorkflowTaskWidget";
 }
 
 QString CCppPluginMaker::getWidgetBaseClassHeader() const
 {
-    return "Protocol/CProtocolTaskWidget.hpp";
+    return "Workflow/CWorkflowTaskWidget.hpp";
 }
 

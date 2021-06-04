@@ -42,9 +42,9 @@ class CPluginManager : public QObject
         CPluginManager();
 
         void                loadProcessPlugins();
-        ProcessFactoryPtr   loadProcessPlugin(const QString& name, int language);
-        ProcessFactoryPtr   loadCppProcessPlugin(const QString& fileName);
-        ProcessFactoryPtr   loadPythonProcessPlugin(const QString& directory);
+        TaskFactoryPtr      loadProcessPlugin(const QString& name, int language);
+        TaskFactoryPtr      loadCppProcessPlugin(const QString& fileName);
+        TaskFactoryPtr      loadPythonProcessPlugin(const QString& directory);
 
         void                setRegistrator(CProcessRegistration* pRegistrator);
         void                setCurrentUser(const CUser& user);

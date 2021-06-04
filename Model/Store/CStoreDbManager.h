@@ -22,7 +22,7 @@
 #define CSTOREDBMANAGER_H
 
 #include <QSqlDatabase>
-#include "Core/CProcessFactory.hpp"
+#include "Core/CTaskFactory.hpp"
 #include "Model/User/CUser.h"
 
 class CStoreDbManager
@@ -43,7 +43,7 @@ class CStoreDbManager
         void            setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser& user);
 
         void            insertPlugins(const QJsonArray& plugins);
-        void            insertPlugin(int serverId, const CProcessInfo& procInfo, const CUser &user);
+        void            insertPlugin(int serverId, const CTaskInfo& procInfo, const CUser &user);
 
         void            removeRemotePlugin(const QString& pluginName);
         void            removeLocalPlugin(const QString& pluginName);

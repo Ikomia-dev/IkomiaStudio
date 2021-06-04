@@ -46,11 +46,11 @@ void CPluginManager::loadProcessPlugins()
     loadPythonProcessPlugins();
 }
 
-ProcessFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int language)
+TaskFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int language)
 {
     assert(m_pRegistrator);
 
-    if(language == CProcessInfo::PYTHON)
+    if(language == CTaskInfo::PYTHON)
     {
         QString pluginDir = Utils::CPluginTools::getPythonPluginFolder(name);
         if(pluginDir.isEmpty() == false)
@@ -61,7 +61,7 @@ ProcessFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int lan
     return nullptr;
 }
 
-ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
+TaskFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
 {
     try
     {
@@ -88,23 +88,23 @@ ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
                 return nullptr;
             }
 
-            auto processFactoryPtr = pPlugin->getProcessFactory();
-            if(processFactoryPtr == nullptr)
+            auto taskFactoryPtr = pPlugin->getProcessFactory();
+            if(taskFactoryPtr == nullptr)
             {
                 qCCritical(logPlugin).noquote() << tr("Plugin %1 has no process factory.").arg(fileName);
                 return nullptr;
             }
-            processFactoryPtr->getInfo().setInternal(false);
-            processFactoryPtr->getInfo().setLanguage(CProcessInfo::CPP);
-            processFactoryPtr->getInfo().setOS(Utils::OS::getCurrent());
+            taskFactoryPtr->getInfo().setInternal(false);
+            taskFactoryPtr->getInfo().setLanguage(CTaskInfo::CPP);
+            taskFactoryPtr->getInfo().setOS(Utils::OS::getCurrent());
 
-            auto version = QString::fromStdString(processFactoryPtr->getInfo().getIkomiaVersion());
+            auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
             auto state = Utils::Plugin::getCppState(version);
 
             if(state == PluginState::DEPRECATED)
             {
                 QString str = tr("Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.")
-                        .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                        .arg(QString::fromStdString(taskFactoryPtr->getInfo().getName()))
                         .arg(version)
                         .arg(Utils::IkomiaApp::getCurrentVersionNumber());
                 qCCritical(logPlugin).noquote() << str;
@@ -113,7 +113,7 @@ ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
             else if(state == PluginState::UPDATED)
             {
                 QString str = tr("Plugin %1 is not compatible: you must update Ikomia Studio to version %2.")
-                        .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                        .arg(QString::fromStdString(taskFactoryPtr->getInfo().getName()))
                         .arg(version);
                 qCCritical(logPlugin).noquote() << str;
                 return nullptr;
@@ -122,18 +122,18 @@ ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
             auto widgetFactoryPtr = pPlugin->getWidgetFactory();
             if(widgetFactoryPtr == nullptr)
             {
-                QString str = tr("Plugin %1 has no widget factory.").arg(QString::fromStdString(processFactoryPtr->getInfo().getName()));
+                QString str = tr("Plugin %1 has no widget factory.").arg(QString::fromStdString(taskFactoryPtr->getInfo().getName()));
                 qCCritical(logPlugin).noquote() << str;
                 return nullptr;
             }
 
             if(m_pRegistrator)
-                m_pRegistrator->registerProcess(processFactoryPtr, widgetFactoryPtr);
+                m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
             else
                 qCCritical(logPlugin).noquote() << tr("Plugin %1 is not registered.").arg(fileName);
 
             qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(fileName);
-            return processFactoryPtr;
+            return taskFactoryPtr;
         }
     }
     catch(std::exception& e)
@@ -143,7 +143,7 @@ ProcessFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
     return nullptr;
 }
 
-ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
+TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
 {
     std::string mainModuleName;
 
@@ -171,18 +171,18 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                 if(exFactory.check())
                 {
                     auto plugin = exFactory();
-                    auto processFactoryPtr = plugin->getProcessFactory();
-                    processFactoryPtr->getInfo().setInternal(false);
-                    processFactoryPtr->getInfo().setLanguage(CProcessInfo::PYTHON);
-                    processFactoryPtr->getInfo().setOS(CProcessInfo::ALL);
+                    auto taskFactoryPtr = plugin->getProcessFactory();
+                    taskFactoryPtr->getInfo().setInternal(false);
+                    taskFactoryPtr->getInfo().setLanguage(CTaskInfo::PYTHON);
+                    taskFactoryPtr->getInfo().setOS(CTaskInfo::ALL);
 
-                    auto version = QString::fromStdString(processFactoryPtr->getInfo().getIkomiaVersion());
+                    auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
                     auto state = Utils::Plugin::getPythonState(version);
 
                     if(state == PluginState::DEPRECATED)
                     {
                         QString str = tr("Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.")
-                                .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                                .arg(QString::fromStdString(taskFactoryPtr->getInfo().getName()))
                                 .arg(version)
                                 .arg(Utils::IkomiaApp::getCurrentVersionNumber());
                         qCCritical(logPlugin).noquote() << str;
@@ -191,7 +191,7 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                     else if(state == PluginState::UPDATED)
                     {
                         QString str = tr("Plugin %1 is based on Ikomia %2 while the current version is %3. You should consider updating Ikomia Studio.")
-                                .arg(QString::fromStdString(processFactoryPtr->getInfo().getName()))
+                                .arg(QString::fromStdString(taskFactoryPtr->getInfo().getName()))
                                 .arg(version);
                         qCWarning(logPlugin).noquote() << str;
                     }
@@ -199,10 +199,10 @@ ProcessFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directo
                     auto widgetFactoryPtr = plugin->getWidgetFactory();
                     if(m_pRegistrator)
                     {
-                        m_pRegistrator->registerProcess(processFactoryPtr, widgetFactoryPtr);
+                        m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
                         qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(QString::fromStdString(mainModuleName));
                     }
-                    return processFactoryPtr;
+                    return taskFactoryPtr;
                 }
             }
         }
@@ -285,7 +285,7 @@ void CPluginManager::onEditPythonPlugin(const QString &pluginName)
 void CPluginManager::onShowLocation(const QString &pluginName, int language)
 {
     QString pluginDir;
-    if(language == CProcessInfo::PYTHON)
+    if(language == CTaskInfo::PYTHON)
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
     else
         pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);

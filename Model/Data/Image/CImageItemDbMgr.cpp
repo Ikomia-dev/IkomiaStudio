@@ -33,7 +33,7 @@ CImageItemDbMgr::CImageItemDbMgr(const QString &path, const QString &connection)
 std::shared_ptr<CItem> CImageItemDbMgr::load(const QSqlQuery &q, QModelIndex &previousIndex)
 {
     loadPaths();
-    loadProtocolImageMap();
+    loadWorkflowImageMap();
 
     auto id = q.record().value("id").toInt();
     auto itPath = m_mapPaths.find(id);
@@ -57,11 +57,11 @@ std::shared_ptr<CItem> CImageItemDbMgr::load(const QSqlQuery &q, QModelIndex &pr
         pImage = addImagesToDimension(previousIndex, path);
 
     //Add protocol<->image associations
-    auto itProtocol = m_mapProtocolIds.find(id);
-    if(itProtocol != m_mapProtocolIds.end())
+    auto itWorkflow = m_mapWorkflowIds.find(id);
+    if(itWorkflow != m_mapWorkflowIds.end())
     {
-        for(int i=0; i<itProtocol.value().size(); ++i)
-            pImage->addProtocolDbId(itProtocol.value()[i]);
+        for(int i=0; i<itWorkflow.value().size(); ++i)
+            pImage->addWorkflowDbId(itWorkflow.value()[i]);
     }
     return pImage;
 }
@@ -79,9 +79,9 @@ void CImageItemDbMgr::save(std::shared_ptr<ProjectTreeItem> itemPtr, int dbId)
     m_mapPaths.insert(id, path);
 
     //Insert protocol ids associated with current image into the global map
-    auto protocolIds = QVector<int>::fromStdVector(pItem->getProtocolDbIds());
+    auto protocolIds = QVector<int>::fromStdVector(pItem->getWorkflowDbIds());
     if(protocolIds.size() > 0)
-        m_mapProtocolIds.insert(id, protocolIds);
+        m_mapWorkflowIds.insert(id, protocolIds);
 }
 
 void CImageItemDbMgr::batchSave()
@@ -112,7 +112,7 @@ void CImageItemDbMgr::batchSave()
     ids.clear();
     values.clear();
 
-    for(auto it=m_mapProtocolIds.begin(); it!=m_mapProtocolIds.end(); ++it)
+    for(auto it=m_mapWorkflowIds.begin(); it!=m_mapWorkflowIds.end(); ++it)
     {
         for(int i=0; i<it.value().size(); ++i)
         {
@@ -185,9 +185,9 @@ void CImageItemDbMgr::loadPaths()
     }
 }
 
-void CImageItemDbMgr::loadProtocolImageMap()
+void CImageItemDbMgr::loadWorkflowImageMap()
 {
-    if(m_bProtocolImageMapLoaded == false)
+    if(m_bWorkflowImageMapLoaded == false)
     {
         //Get all image-protocol associations
         auto db = Utils::Database::connect(m_dbPath, m_connection);
@@ -208,13 +208,13 @@ void CImageItemDbMgr::loadProtocolImageMap()
 
         while(q.next())
         {
-            auto it = m_mapProtocolIds.find(q.value(0).toInt());
-            if(it == m_mapProtocolIds.end())
-                m_mapProtocolIds.insert(q.value(0).toInt(), QVector<int>({q.value(1).toInt()}));
+            auto it = m_mapWorkflowIds.find(q.value(0).toInt());
+            if(it == m_mapWorkflowIds.end())
+                m_mapWorkflowIds.insert(q.value(0).toInt(), QVector<int>({q.value(1).toInt()}));
             else
                 it.value() << q.value(1).toInt();
         }
-        m_bProtocolImageMapLoaded = true;
+        m_bWorkflowImageMapLoaded = true;
     }
 }
 

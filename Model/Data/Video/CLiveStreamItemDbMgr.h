@@ -41,14 +41,14 @@ class CLiveStreamItemDbMgr : public CProjectItemBaseDbMgr
         void                        createTables();
 
         void                        loadPaths();
-        void                        loadProtocolVideoMap();
+        void                        loadWorkflowVideoMap();
 
     private:
 
         bool                    m_bPathLoaded = false;
-        bool                    m_bProtocolVideoMapLoaded = false;
+        bool                    m_bWorkflowVideoMapLoaded = false;
         QMap<int, QString>      m_mapPaths;
-        QMap<int, QVector<int>> m_mapProtocolIds;
+        QMap<int, QVector<int>> m_mapWorkflowIds;
 };
 
 class CLiveStreamItemDbMgrFactory: public CProjectDbMgrFactory

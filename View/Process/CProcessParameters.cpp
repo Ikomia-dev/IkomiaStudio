@@ -54,7 +54,7 @@ void CProcessParameters::setCurrentWidget(const QString& processName)
     }
 }
 
-void CProcessParameters::setProcessInfo(const CProcessInfo &info)
+void CProcessParameters::setProcessInfo(const CTaskInfo &info)
 {
     if(m_pDocDlg)
         m_pDocDlg->setProcessInfo(info);
@@ -173,7 +173,7 @@ void CProcessParameters::initLayout()
 void CProcessParameters::initConnections()
 {
     connect(m_pBtnDocumentation, &QPushButton::clicked, this, &CProcessParameters::onShowDocumentation);
-    connect(m_pDocDlg->getDocWidget(), &CProcessDocWidget::doSave, [&](bool bFullEdit, const CProcessInfo& info)
+    connect(m_pDocDlg->getDocWidget(), &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doUpdateProcessInfo(bFullEdit, info);
     });

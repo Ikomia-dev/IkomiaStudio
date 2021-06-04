@@ -79,7 +79,7 @@ void CProcessPopupDlg::initConnections()
     connect(m_pProcessView, &CProcessListView::doListViewLicked, this, &CProcessPopupDlg::onListViewClicked);
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackedWidget->setCurrentIndex(0); });
-    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CProcessInfo& info)
+    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doUpdateProcessInfo(bFullEdit, info);
     });
@@ -146,7 +146,7 @@ void CProcessPopupDlg::onSetProcessTreeModel(QSortFilterProxyModel* pModel)
     m_pTreeView->expandAll();
 }
 
-void CProcessPopupDlg::onSetWidgetInstance(const std::string &processName, ProtocolTaskWidgetPtr &widgetPtr)
+void CProcessPopupDlg::onSetWidgetInstance(const std::string &processName, WorkflowTaskWidgetPtr &widgetPtr)
 {
     if(m_bQueryWidget == false)
         return;
@@ -168,14 +168,14 @@ void CProcessPopupDlg::onSetWidgetInstance(const std::string &processName, Proto
     adjustParamsWidget(listItemIndex);
 
     //Manage apply button signal
-    auto pFunc = [this, processName](const ProtocolTaskParamPtr& pParam)
+    auto pFunc = [this, processName](const WorkflowTaskParamPtr& pParam)
     {
         setResult(QDialog::Accepted);
         emit doAddProcess(processName, pParam);
         m_pParamsWidget->hide();
         done(1);
     };
-    connect(widgetPtr.get(), &CProtocolTaskWidget::doApplyProcess, pFunc);
+    connect(widgetPtr.get(), &CWorkflowTaskWidget::doApplyProcess, pFunc);
 }
 
 void CProcessPopupDlg::onTreeViewClicked(const QModelIndex& index)
@@ -337,14 +337,14 @@ QWidget *CProcessPopupDlg::createRightWidget()
     return m_pRightStackedWidget;
 }
 
-CProcessInfo CProcessPopupDlg::getProcessInfo(const QModelIndex &index) const
+CTaskInfo CProcessPopupDlg::getProcessInfo(const QModelIndex &index) const
 {
     auto pProxyModel = static_cast<const CProcessTableProxyModel*>(index.model());
     auto srcIndex = pProxyModel->mapToSource(index);
     auto pModel = static_cast<const QSqlTableModel*>(srcIndex.model());
     auto record = pModel->record(index.row());
 
-    CProcessInfo info;
+    CTaskInfo info;
     info.m_id = record.value("id").toInt();
     info.m_name = record.value("name").toString().toStdString();
     info.m_description = record.value("description").toString().toStdString();

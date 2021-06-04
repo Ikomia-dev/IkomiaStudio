@@ -52,7 +52,7 @@ class CMainCtrl : public QObject
         void    initConnections();
         void    initProjectConnections();
         void    initProcessConnections();
-        void    initProtocolConnections();
+        void    initWorkflowConnections();
         void    initInfoConnections();
         void    initRenderConnections();
         void    initProgressConnections();

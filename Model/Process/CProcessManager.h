@@ -30,7 +30,7 @@
 
 
 class CPluginManager;
-class CProtocolManager;
+class CWorkflowManager;
 
 
 class CProcessTableModel : public QSqlTableModel
@@ -146,16 +146,16 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
         void                    init();
 
-        void                    setManagers(CPluginManager* pPluginMgr, CProtocolManager* pProtocolMgr);
+        void                    setManagers(CPluginManager* pPluginMgr, CWorkflowManager* pWorkflowMgr);
         void                    setCurrentUser(const CUser& user);
 
         CProcessModel*          getProcessModel(CProcessManager::ID id);
-        CProcessInfo            getProcessInfo(const std::string& processName) const;
+        CTaskInfo            getProcessInfo(const std::string& processName) const;
 
         void                    notifyViewShow();
 
-        ProtocolTaskPtr         createObject(const std::string& processName, const ProtocolTaskParamPtr &pParam);
-        ProtocolTaskWidgetPtr   createWidget(const std::string& processName, const ProtocolTaskParamPtr &pParam);
+        WorkflowTaskPtr         createObject(const std::string& processName, const WorkflowTaskParamPtr &pParam);
+        WorkflowTaskWidgetPtr   createWidget(const std::string& processName, const WorkflowTaskParamPtr &pParam);
 
         bool                    reloadAll();
         bool                    reloadPlugin(const QString& pluginName, int language);
@@ -164,8 +164,8 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
         void                    doSetProcessModel(QSortFilterProxyModel* pModel);
         void                    doSetTableModel(QSortFilterProxyModel* pModel);
-        void                    doSetWidgetInstance(const std::string& processName, ProtocolTaskWidgetPtr& widgetPtr);
-        void                    doSetProcessInfo(const CProcessInfo& info);
+        void                    doSetWidgetInstance(const std::string& processName, WorkflowTaskWidgetPtr& widgetPtr);
+        void                    doSetProcessInfo(const CTaskInfo& info);
         void                    doOnAllProcessReloaded();
         void                    doOnProcessReloaded(const QString& name);
 
@@ -179,7 +179,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         void                    onSearchTableProcess(const QString& text);
         void                    onQueryWidgetInstance(const std::string& processName);
         void                    onQueryProcessInfo(const std::string& processName);
-        void                    onUpdateProcessInfo(bool bFullEdit, const CProcessInfo& info);
+        void                    onUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
 
     protected:
 
@@ -329,8 +329,8 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         size_t                  buildPath(const std::string& path);
 
         size_t                  addFolder(const std::string& folder, const std::string & path, size_t parentId);
-        size_t                  addProcess(const ProcessFactoryPtr& process, size_t folderId);
-        void                    addProcessInfo(const ProcessFactoryPtr &process, size_t id, size_t folderId);
+        size_t                  addProcess(const TaskFactoryPtr& process, size_t folderId);
+        void                    addProcessInfo(const TaskFactoryPtr &process, size_t id, size_t folderId);
         void                    addFoldersInfo();
         void                    addCustomPathIcon(const std::string& path, const std::string& iconPath);
 
@@ -338,9 +338,9 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         void                    notifyTableModelUpdate();
 
         void                    updateTableModelQuery();
-        void                    updateProcessInfo(const CProcessInfo& info);
+        void                    updateProcessInfo(const CTaskInfo& info);
 
-        void                    syncProcessInfo();
+        void                    synCTaskInfo();
 
     public:
 
@@ -361,7 +361,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         CProcessTableProxyModel*    m_pTableProxyModel = nullptr;
         ProcessPathInfo             m_pathMap;
         CPluginManager*             m_pPluginMgr = nullptr;
-        CProtocolManager*           m_pProtocolMgr = nullptr;
+        CWorkflowManager*           m_pWorkflowMgr = nullptr;
         unsigned int                m_id = 0;
         ID                          m_processId = ID::PROCESS_TREE;
         const std::vector<ID>       m_viewIds = {ID::PROCESS_TREE, ID::PROCESS_POPUP};

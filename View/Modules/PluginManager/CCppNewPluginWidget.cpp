@@ -83,7 +83,7 @@ void CCppNewPluginWidget::initLayout()
 
     auto pLabelProcessType = new QLabel(tr("Process type"));
     m_pComboCppProcessType = new QComboBox;
-    m_pComboCppProcessType->addItem(tr("Generic process"), PluginManager::CPROTOCOL_TASK);
+    m_pComboCppProcessType->addItem(tr("Generic process"), PluginManager::CWorkflow_TASK);
     m_pComboCppProcessType->addItem(tr("Image process"), PluginManager::CIMAGE_PROCESS_2D);
     m_pComboCppProcessType->addItem(tr("Interactive image process"), PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D);
     m_pComboCppProcessType->addItem(tr("Video process"), PluginManager::CVIDEO_PROCESS);
@@ -92,7 +92,7 @@ void CCppNewPluginWidget::initLayout()
 
     auto pLabelWidgetType = new QLabel(tr("Widget type"));
     m_pComboCppWidgetType = new QComboBox;
-    m_pComboCppWidgetType->addItem(tr("Empty widget"), PluginManager::CPROTOCOL_TASK_WIDGET);
+    m_pComboCppWidgetType->addItem(tr("Empty widget"), PluginManager::CWorkflow_TASK_WIDGET);
     m_pComboCppWidgetType->setCurrentIndex(0);
 
     auto pLayout = new QGridLayout;

@@ -56,11 +56,6 @@ SOURCES += \
         Model/Project/CProjectExportMgr.cpp \
         Model/Process/CProcessManager.cpp \
         Model/Project/CProjectViewProxyModel.cpp \
-        Model/Protocol/CProtocolInput.cpp \
-        Model/Protocol/CProtocolManager.cpp \
-        Model/Protocol/CProtocolDBManager.cpp \
-        Model/Protocol/CProtocolInputViewManager.cpp \
-        Model/Protocol/CProtocolRunManager.cpp \
         Model/Render/CRenderManager.cpp \
         Model/Render/C3dAnimation.cpp \
         Model/ProgressBar/CProgressBarManager.cpp \
@@ -90,6 +85,11 @@ SOURCES += \
         Model/Wizard/CWizardQueryModel.cpp \
         Model/Wizard/CWizardStepModel.cpp \
         Model/Settings/CSettingsManager.cpp \
+        Model/Workflow/CWorkflowDBManager.cpp \
+        Model/Workflow/CWorkflowInput.cpp \
+        Model/Workflow/CWorkflowInputViewManager.cpp \
+        Model/Workflow/CWorkflowManager.cpp \
+        Model/Workflow/CWorkflowRunManager.cpp \
         View/Common/CCrashReporDlg.cpp \
         View/Common/CImageListView.cpp \
         View/Common/CSvgButton.cpp \
@@ -101,18 +101,18 @@ SOURCES += \
         View/Modules/PluginManager/CPluginManagerWidget.cpp \
         View/Modules/PluginManager/CPythonPluginMaker.cpp \
         View/Modules/PluginManager/CCppPluginMaker.cpp \
-        View/Modules/Protocol/CProtocolView.cpp \
-        View/Modules/Protocol/CProtocolScene.cpp \
-        View/Modules/Protocol/CProtocolItem.cpp \
-        View/Modules/Protocol/CProtocolPortItem.cpp \
-        View/Modules/Protocol/CProtocolConnection.cpp \
-        View/Modules/Protocol/CProtocolLabelArea.cpp \
-        View/Modules/Protocol/CProtocolDummyItem.cpp \
-        View/Modules/Protocol/CProtocolModuleWidget.cpp \
-        View/Modules/Protocol/CProtocolIOArea.cpp \
-        View/Modules/Protocol/CProtocolInputTypeDlg.cpp \
-        View/Modules/Protocol/CProtocolNewDlg.cpp \
-        View/Modules/Protocol/CGraphicsDeletableButton.cpp \
+        View/Modules/Workflow/CWorkflowView.cpp \
+        View/Modules/Workflow/CWorkflowScene.cpp \
+        View/Modules/Workflow/CWorkflowItem.cpp \
+        View/Modules/Workflow/CWorkflowPortItem.cpp \
+        View/Modules/Workflow/CWorkflowConnection.cpp \
+        View/Modules/Workflow/CWorkflowLabelArea.cpp \
+        View/Modules/Workflow/CWorkflowDummyItem.cpp \
+        View/Modules/Workflow/CWorkflowModuleWidget.cpp \
+        View/Modules/Workflow/CWorkflowIOArea.cpp \
+        View/Modules/Workflow/CWorkflowInputTypeDlg.cpp \
+        View/Modules/Workflow/CWorkflowNewDlg.cpp \
+        View/Modules/Workflow/CGraphicsDeletableButton.cpp \
         View/Modules/CModuleDockWidget.cpp \
         View/Project/CProjectPane.cpp \
         View/Project/CProjectTreeView.cpp \
@@ -187,9 +187,9 @@ SOURCES += \
         View/Preferences/CUserManagementWidget.cpp \
         View/Preferences/CNewUserDlg.cpp \
         View/Preferences/CGeneralSettingsWidget.cpp \
-        View/Preferences/CProtocolSettingsWidget.cpp \
-        View/Protocol/CProtocolPane.cpp \
-        View/Protocol/CProtocolInfoDlg.cpp \
+        View/Preferences/CWorkflowSettingsWidget.cpp \
+        View/Workflow/CWorkflowPane.cpp \
+        View/Workflow/CWorkflowInfoDlg.cpp \
         View/Store/CStoreDlg.cpp \
         View/Store/CStorePluginListView.cpp \
         View/Store/CStorePluginListViewDelegate.cpp \
@@ -248,11 +248,6 @@ HEADERS += \
         Model/Process/CProcessManager.h \
         Model/Process/CProcessModel.hpp \
         Model/Project/CProjectViewProxyModel.h \
-        Model/Protocol/CProtocolInput.h \
-        Model/Protocol/CProtocolManager.h \
-        Model/Protocol/CProtocolDBManager.h \
-        Model/Protocol/CProtocolInputViewManager.h \
-        Model/Protocol/CProtocolRunManager.h \
         Model/Render/CRenderManager.h \
         Model/Render/C3dAnimation.h \
         Model/ProgressBar/CProgressBarManager.h \
@@ -290,6 +285,11 @@ HEADERS += \
         Model/Store/CStoreOnlineIconManager.h \
         Model/Settings/CSettingsManager.h \
         Model/Wizard/Tutorials/CTutoStartingHelper.hpp \
+        Model/Workflow/CWorkflowDBManager.h \
+        Model/Workflow/CWorkflowInput.h \
+        Model/Workflow/CWorkflowInputViewManager.h \
+        Model/Workflow/CWorkflowManager.h \
+        Model/Workflow/CWorkflowRunManager.h \
         View/Common/CCrashReporDlg.h \
         View/Common/CImageListView.h \
         View/Common/CSvgButton.h \
@@ -300,18 +300,18 @@ HEADERS += \
         View/Modules/PluginManager/CPythonNewPluginDlg.h \
         View/Modules/PluginManager/CPythonPluginManagerWidget.h \
         View/Modules/PluginManager/PluginManagerDefine.hpp \
-        View/Modules/Protocol/CProtocolView.h \
-        View/Modules/Protocol/CProtocolScene.h \
-        View/Modules/Protocol/CProtocolItem.h \
-        View/Modules/Protocol/CProtocolPortItem.h \
-        View/Modules/Protocol/CProtocolConnection.h \
-        View/Modules/Protocol/CProtocolLabelArea.h \
-        View/Modules/Protocol/CProtocolDummyItem.h \
-        View/Modules/Protocol/CProtocolModuleWidget.h \
-        View/Modules/Protocol/CProtocolIOArea.h \
-        View/Modules/Protocol/CProtocolInputTypeDlg.h \
-        View/Modules/Protocol/CProtocolNewDlg.h \
-        View/Modules/Protocol/CGraphicsDeletableButton.h \
+        View/Modules/Workflow/CWorkflowView.h \
+        View/Modules/Workflow/CWorkflowScene.h \
+        View/Modules/Workflow/CWorkflowItem.h \
+        View/Modules/Workflow/CWorkflowPortItem.h \
+        View/Modules/Workflow/CWorkflowConnection.h \
+        View/Modules/Workflow/CWorkflowLabelArea.h \
+        View/Modules/Workflow/CWorkflowDummyItem.h \
+        View/Modules/Workflow/CWorkflowModuleWidget.h \
+        View/Modules/Workflow/CWorkflowIOArea.h \
+        View/Modules/Workflow/CWorkflowInputTypeDlg.h \
+        View/Modules/Workflow/CWorkflowNewDlg.h \
+        View/Modules/Workflow/CGraphicsDeletableButton.h \
         View/Modules/PluginManager/CPluginManagerWidget.h \
         View/Modules/PluginManager/CPythonPluginMaker.h \
         View/Modules/PluginManager/CCppPluginMaker.h \
@@ -390,7 +390,7 @@ HEADERS += \
         View/Preferences/CPreferencesDlg.h \
         View/Preferences/CNewUserDlg.h \
         View/Preferences/CGeneralSettingsWidget.h \
-        View/Preferences/CProtocolSettingsWidget.h \
+        View/Preferences/CWorkflowSettingsWidget.h \
         View/Wizard/CWizardPane.h \
         View/Wizard/CWizardTutoListView.h \
         View/Wizard/CWizardTutoListViewDelegate.h \
@@ -399,8 +399,8 @@ HEADERS += \
         View/Wizard/CWizardDocFrame.h \
         View/Wizard/CWizardStepListView.h \
         View/Wizard/CWizardStepListViewDelegate.h \
-        View/Protocol/CProtocolPane.h \
-        View/Protocol/CProtocolInfoDlg.h \
+        View/Workflow/CWorkflowPane.h \
+        View/Workflow/CWorkflowInfoDlg.h \
         View/Store/CStoreDlg.h \
         View/Store/CStorePluginListView.h \
         View/Store/CStorePluginListViewDelegate.h \

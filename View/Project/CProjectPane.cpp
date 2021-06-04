@@ -205,7 +205,7 @@ void CProjectPane::onShowContextMenu(const QPoint &pos)
     }
 }
 
-void CProjectPane::onApplyProcess(const std::string& processName, const std::shared_ptr<CProtocolTaskParam> &pParam)
+void CProjectPane::onApplyProcess(const std::string& processName, const std::shared_ptr<CWorkflowTaskParam> &pParam)
 {
     emit doApplyProcess(m_pTreeView->currentIndex(), processName, pParam);
 }

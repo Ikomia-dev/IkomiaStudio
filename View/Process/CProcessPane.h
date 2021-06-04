@@ -49,15 +49,15 @@ class CProcessPane : public QWidget
         void    onSetTableModel(QSortFilterProxyModel* pTableModel);
         void    onTreeItemClicked(const QModelIndex& index);
         void    onSearchProcess(const QString& text);
-        void    onSetWidgetInstance(const std::string &processName, ProtocolTaskWidgetPtr& widgetPtr);
-        void    onSetProcessInfo(const CProcessInfo& info);
+        void    onSetWidgetInstance(const std::string &processName, WorkflowTaskWidgetPtr& widgetPtr);
+        void    onSetProcessInfo(const CTaskInfo& info);
         void    onShowWidgetFromList(const QString& name);
         void    onAllProcessReloaded();
         void    onProcessReloaded(const QString& name);
 
     signals:
 
-        void    doApplyProcess(const std::string& name, const std::shared_ptr<CProtocolTaskParam>& pParam);
+        void    doApplyProcess(const std::string& name, const std::shared_ptr<CWorkflowTaskParam>& pParam);
         void    doSearchProcess(const QString& text);
         void    doInitWidgetFactoryConnection();
         void    doEndWidgetFactoryConnection();
@@ -88,7 +88,7 @@ class CProcessPane : public QWidget
 
     private:
 
-        using UMapNameWidget = std::unordered_map<std::string, ProtocolTaskWidgetPtr>;
+        using UMapNameWidget = std::unordered_map<std::string, WorkflowTaskWidgetPtr>;
 
         QTreeView*          m_pProcessTree = nullptr;
         //We need to have persistent storage due to shared_ptr

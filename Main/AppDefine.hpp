@@ -20,7 +20,7 @@
 #define APPDEFINE_HPP
 
 #include "Main/CoreDefine.hpp"
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 
 #define MATOMO_APP_ID   3
 
@@ -49,7 +49,7 @@ namespace Ikomia
         MANY_TO_MANY
     };
 
-    enum ProtocolGraphicsItem
+    enum WorkflowGraphicsItem
     {
         TASK,
         CONNECTION,
@@ -59,13 +59,13 @@ namespace Ikomia
         LABEL_AREA
     };
 
-    enum ProtocolInputViewMode
+    enum WorkflowInputViewMode
     {
         ORIGIN,
         CURRENT
     };
 
-    enum ProtocolInputMode : size_t
+    enum WorkflowInputMode : size_t
     {
         CURRENT_DATA,
         FIXED_DATA
@@ -110,8 +110,8 @@ namespace Ikomia
     constexpr auto _DefaultDirDicom = "default_dir_project_dicom";
     constexpr auto _DefaultDirProjectSaveAs = "default_dir_project_saveAs";
     constexpr auto _DefaultDirProjectExport = "default_dir_project_export";
-    constexpr auto _defaultDirProtocol = "default_dir_protocol";
-    constexpr auto _defaultDirProtocolExport = "default_dir_protocol_export";
+    constexpr auto _defaultDirWorkflow = "default_dir_protocol";
+    constexpr auto _defaultDirWorkflowExport = "default_dir_protocol_export";
 
     //Structure to manage loading of multiple data sources into a dataset
     using DatasetLoadPolicy = std::pair<Relationship, DataDimension>;

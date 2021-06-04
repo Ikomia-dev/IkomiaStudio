@@ -25,11 +25,11 @@
 CStoreDbManager::CStoreDbManager()
 {
 #if defined(Q_OS_LINUX)
-    m_currentOS = CProcessInfo::LINUX;
+    m_currentOS = CTaskInfo::LINUX;
 #elif defined(Q_OS_MACOS)
-    m_currentOS = CProcessInfo::OSX;
+    m_currentOS = CTaskInfo::OSX;
 #elif defined(Q_OS_WIN64)
-    m_currentOS = CProcessInfo::WIN;
+    m_currentOS = CTaskInfo::WIN;
 #endif
 }
 
@@ -152,7 +152,7 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
 
         // Check OS compatibility
         int pluginOS = plugin["os"].toInt();
-        if(pluginOS != CProcessInfo::ALL && m_currentOS != pluginOS)
+        if(pluginOS != CTaskInfo::ALL && m_currentOS != pluginOS)
             continue;
 
         ids << plugin["id"].toInt();
@@ -249,9 +249,9 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
         throw CException(DatabaseExCode::INVALID_QUERY, qFts.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::insertPlugin(int serverId, const CProcessInfo &procInfo, const CUser &user)
+void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, const CUser &user)
 {
-    if(procInfo.m_os != CProcessInfo::ALL && m_currentOS != procInfo.m_os)
+    if(procInfo.m_os != CTaskInfo::ALL && m_currentOS != procInfo.m_os)
         throw CException(CoreExCode::INVALID_PARAMETER, "This plugin ("+ procInfo.m_name +") is not build for your platform.",  __func__, __FILE__, __LINE__);
 
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());

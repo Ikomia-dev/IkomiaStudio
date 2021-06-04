@@ -52,7 +52,7 @@ CProcessManager* CMainModel::getProcessManager()
     return &m_processMgr;
 }
 
-CProtocolManager* CMainModel::getProtocolManager()
+CWorkflowManager* CMainModel::getWorkflowManager()
 {
     return &m_protocolMgr;
 }
@@ -112,7 +112,7 @@ void CMainModel::init()
     initProjectManager();
     initPluginManager();
     initProcessManager();
-    initProtocolManager();
+    initWorkflowManager();
     initGraphicsManager();
     initResultsManager();
     initRenderManager();
@@ -185,7 +185,7 @@ void CMainModel::initProcessManager()
     m_processMgr.init();
 }
 
-void CMainModel::initProtocolManager()
+void CMainModel::initWorkflowManager()
 {
     m_protocolMgr.setManagers(&m_processMgr, &m_projectMgr, &m_graphicsMgr,
                               &m_resultsMgr, &m_dataMgr, &m_progressMgr, &m_settingsMgr);

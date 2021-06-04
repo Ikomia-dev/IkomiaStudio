@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include "Main/AppDefine.hpp"
-#include "Core/CProtocol.h"
+#include "Core/CWorkflow.h"
 #include "View/Common/CProgressCircleManager.h"
 
 //-------------------------------//

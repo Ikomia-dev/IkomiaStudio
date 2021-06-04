@@ -22,7 +22,7 @@
 #define CPROCESSDOCWIDGET_H
 
 #include <QWidget>
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class QStackedWidget;
@@ -46,12 +46,12 @@ class CProcessDocWidget : public QWidget
         CProcessDocWidget(int actions, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void            setCurrentUser(const CUser& user);
-        void            setProcessInfo(const CProcessInfo &info);
+        void            setProcessInfo(const CTaskInfo &info);
 
     signals:
 
         void            doBack();
-        void            doSave(bool bFullEdit, const CProcessInfo& info);
+        void            doSave(bool bFullEdit, const CTaskInfo& info);
 
     private slots:
 
@@ -74,7 +74,7 @@ class CProcessDocWidget : public QWidget
         QStackedWidget*         m_pStackWidget = nullptr;
         CProcessDocFrame*       m_pDocFrame = nullptr;
         CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
-        CProcessInfo            m_processInfo;
+        CTaskInfo            m_processInfo;
         QPushButton*            m_pExportDocBtn = nullptr;
 };
 

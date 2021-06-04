@@ -27,7 +27,7 @@
 class FancyTabBar;
 class CUserManagementWidget;
 class QSqlQueryModel;
-class CProtocolSettingsWidget;
+class CWorkflowSettingsWidget;
 
 // Not use for the moment
 class CPreferencesDlg : public CDialog
@@ -39,7 +39,7 @@ class CPreferencesDlg : public CDialog
         CPreferencesDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         CGeneralSettingsWidget*     getGeneralSettings() const;
-        CProtocolSettingsWidget*    getProtocolSettings() const;
+        CWorkflowSettingsWidget*    getWorkflowSettings() const;
 
     private:
 
@@ -52,7 +52,7 @@ class CPreferencesDlg : public CDialog
         QStackedWidget*             m_pStackWidget = nullptr;
         CUserManagementWidget*      m_pUserManagementWidget = nullptr;
         CGeneralSettingsWidget*     m_pGeneralSettingsWidget = nullptr;
-        CProtocolSettingsWidget*    m_pProtocolSettingsWidget = nullptr;
+        CWorkflowSettingsWidget*    m_pWorkflowSettingsWidget = nullptr;
 };
 
 #endif // CPREFERENCESDLG_H

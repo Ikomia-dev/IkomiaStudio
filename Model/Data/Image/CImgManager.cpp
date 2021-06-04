@@ -85,7 +85,7 @@ CMat CImgManager::getImage(const QModelIndex& wrapIndex)
     auto pDataInfo = pDataset->getDataInfo()[currentImgIndex];
     assert(pDataInfo != nullptr);
 
-    CImageIO io(pDataInfo->getFileName());
+    CImageDataIO io(pDataInfo->getFileName());
     m_pCurrentDataInfo = io.dataInfo();
 
     // Load data
@@ -116,7 +116,7 @@ CMat CImgManager::getImage(const QModelIndex &datasetWrapIndex, int imgIndex)
     auto pDataInfo = pDataset->getDataInfo()[imgIndex];
     assert(pDataInfo != nullptr);
 
-    CImageIO io(pDataInfo->getFileName());
+    CImageDataIO io(pDataInfo->getFileName());
     m_pCurrentDataInfo = io.dataInfo();
 
     // Load data
@@ -271,7 +271,7 @@ void CImgManager::exportImage(const QModelIndex& index, const QString &path, boo
 
     try
     {
-        CImageIO io(Utils::File::getAvailablePath(path.toStdString()));
+        CImageDataIO io(Utils::File::getAvailablePath(path.toStdString()));
         io.write(imgToSave);
     }
     catch(std::exception& e)
@@ -294,7 +294,7 @@ void CImgManager::exportImage(const CMat &image, const std::vector<ProxyGraphics
 
     try
     {
-        CImageIO io(Utils::File::getAvailablePath(path.toStdString()));
+        CImageDataIO io(Utils::File::getAvailablePath(path.toStdString()));
         io.write(imgToSave);
     }
     catch(std::exception& e)
@@ -315,7 +315,7 @@ void CImgManager::enableInfoUpdate(bool bEnable)
     }
 }
 
-void CImgManager::onCloseProtocol()
+void CImgManager::onCloseWorkflow()
 {
     assert(m_pProjectMgr);
     assert(m_pRenderMgr);

@@ -138,7 +138,7 @@ void CProcessListViewDelegate::paintLanguageIcon(QPainter *painter, const QStyle
     int language = pTable->record(index.row()).value("language").toInt();
 
     QString pixmapPath;
-    if(language == CProcessInfo::CPP)
+    if(language == CTaskInfo::CPP)
         pixmapPath = ":/Images/C++-language-logo.png";
     else
         pixmapPath = ":/Images/python-language-logo.png";
@@ -165,11 +165,11 @@ void CProcessListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOption
     int os = pTable->record(index.row()).value("os").toInt();
 
     QString pixmapPath;
-    if(os == CProcessInfo::LINUX)
+    if(os == CTaskInfo::LINUX)
         pixmapPath = ":/Images/linux.png";
-    else if(os == CProcessInfo::WIN)
+    else if(os == CTaskInfo::WIN)
         pixmapPath = ":/Images/win.png";
-    else if(os == CProcessInfo::OSX)
+    else if(os == CTaskInfo::OSX)
         pixmapPath = ":/Images/mac.png";
     else
         pixmapPath = ":/Images/all.png";

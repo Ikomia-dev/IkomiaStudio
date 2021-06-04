@@ -49,15 +49,15 @@ class CProcessPopupDlg : public CDialog
         void            doTreeViewClicked(const QModelIndex& index);
         void            doTextChanged(const QString& text);
         void            doListViewDoubleClicked(const QString& processName);
-        void            doAddProcess(const std::string& processName, const ProtocolTaskParamPtr& pParam);
+        void            doAddProcess(const std::string& processName, const WorkflowTaskParamPtr& pParam);
         void            doQueryWidgetInstance(const std::string& processName);
-        void            doUpdateProcessInfo(bool bFullEdit, const CProcessInfo& info);
+        void            doUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
 
     public slots:
 
         void            onSetProcessListModel(QSortFilterProxyModel* pModel);
         void            onSetProcessTreeModel(QSortFilterProxyModel* pModel);
-        void            onSetWidgetInstance(const std::string &processName, ProtocolTaskWidgetPtr& widgetPtr);
+        void            onSetWidgetInstance(const std::string &processName, WorkflowTaskWidgetPtr& widgetPtr);
         void            onTreeViewClicked(const QModelIndex& index);
         void            onTextChanged(const QString& text);
         void            onActivateScrollBar();
@@ -74,13 +74,13 @@ class CProcessPopupDlg : public CDialog
         QWidget*        createLeftWidget();
         QWidget*        createRightWidget();
 
-        CProcessInfo    getProcessInfo(const QModelIndex& index) const;
+        CTaskInfo    getProcessInfo(const QModelIndex& index) const;
 
         void            adjustParamsWidget(const QModelIndex &index);
 
     private:
 
-        using UMapNameWidget = QMap<QString, ProtocolTaskWidgetPtr>;
+        using UMapNameWidget = QMap<QString, WorkflowTaskWidgetPtr>;
 
         QStackedWidget*     m_pRightStackedWidget = nullptr;
         QLineEdit*          m_pSearchProcess = nullptr;

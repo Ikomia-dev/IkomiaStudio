@@ -93,12 +93,12 @@ class CImageItem : public CItem
         {
             return TreeItemType::IMAGE;
         }
-        std::vector<int>        getProtocolDbIds() const
+        std::vector<int>        getWorkflowDbIds() const
         {
             return std::vector<int>(m_protocolIds.begin(), m_protocolIds.end());
         }
 
-        void                    addProtocolDbId(int id)
+        void                    addWorkflowDbId(int id)
         {
             m_protocolIds.insert(id);
         }

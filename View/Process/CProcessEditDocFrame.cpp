@@ -32,7 +32,7 @@ void CProcessEditDocFrame::setCurrentUser(const CUser &user)
     m_currentUser = user;
 }
 
-void CProcessEditDocFrame::setProcessInfo(const CProcessInfo &info)
+void CProcessEditDocFrame::setProcessInfo(const CTaskInfo &info)
 {
     m_originalInfo = info;
     m_bFullEdit = info.m_bInternal == false && (info.m_userId == -1 || info.m_userId == m_currentUser.m_id);
@@ -171,9 +171,9 @@ void CProcessEditDocFrame::fillForm()
         m_pEditDocLink->setText(QString::fromStdString(m_originalInfo.m_docLink));
         m_pEditVersion->setText(QString::fromStdString(m_originalInfo.m_version));
         m_pEditIconPath->setText(QString::fromStdString(m_originalInfo.m_iconPath));
-        /*m_pRadioLinux->setChecked(m_originalInfo.m_os == CProcessInfo::LINUX);
-        m_pRadioMac->setChecked(m_originalInfo.m_os == CProcessInfo::OSX);
-        m_pRadioWin->setChecked(m_originalInfo.m_os == CProcessInfo::WIN);*/
+        /*m_pRadioLinux->setChecked(m_originalInfo.m_os == CTaskInfo::LINUX);
+        m_pRadioMac->setChecked(m_originalInfo.m_os == CTaskInfo::OSX);
+        m_pRadioWin->setChecked(m_originalInfo.m_os == CTaskInfo::WIN);*/
     }
     else
         m_pTextEditKeywords2->setPlainText(QString::fromStdString(m_originalInfo.m_keywords));
@@ -181,7 +181,7 @@ void CProcessEditDocFrame::fillForm()
 
 void CProcessEditDocFrame::onSave()
 {
-    CProcessInfo info;
+    CTaskInfo info;
     info.m_id = m_originalInfo.m_id;
     info.m_name = m_originalInfo.m_name;
     info.m_os = m_originalInfo.m_os;
@@ -197,7 +197,7 @@ void CProcessEditDocFrame::onSave()
         info.m_docLink = m_pEditDocLink->text().toStdString();
         info.m_version = m_pEditVersion->text().toStdString();
         info.m_iconPath = m_pEditIconPath->text().toStdString();
-        //info.m_os = m_pRadioLinux->isChecked() ? CProcessInfo::LINUX : (m_pRadioMac->isChecked() ? CProcessInfo::OSX : CProcessInfo::WIN);
+        //info.m_os = m_pRadioLinux->isChecked() ? CTaskInfo::LINUX : (m_pRadioMac->isChecked() ? CTaskInfo::OSX : CTaskInfo::WIN);
     }
     else
         info.m_keywords = m_pTextEditKeywords2->toPlainText().toStdString();

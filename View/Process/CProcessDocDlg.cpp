@@ -43,7 +43,7 @@ void CProcessDocDlg::setCurrentUser(const CUser &user)
         m_pDocWidget->setCurrentUser(user);
 }
 
-void CProcessDocDlg::setProcessInfo(const CProcessInfo &info)
+void CProcessDocDlg::setProcessInfo(const CTaskInfo &info)
 {
     if(m_pDocWidget)
         m_pDocWidget->setProcessInfo(info);

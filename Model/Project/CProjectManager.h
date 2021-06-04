@@ -33,7 +33,7 @@ class CGraphicsLayer;
 class CGraphicsManager;
 class CRenderManager;
 class CResultManager;
-class CProtocolManager;
+class CWorkflowManager;
 class CVideoManager;
 class CProgressBarManager;
 class CMainDataManager;
@@ -64,7 +64,7 @@ class CProjectManager : public QObject
         QModelIndex         addStream(const QModelIndex& itemIndex, const QString& cameraId, const QString& cameraName);
 
         void                setManagers(CGraphicsManager* pGraphicsMgr, CRenderManager* pRenderMgr,
-                                        CResultManager* pResultsMgr, CProtocolManager* pProtocolMgr,
+                                        CResultManager* pResultsMgr, CWorkflowManager* pWorkflowMgr,
                                         CProgressBarManager *pProgressMgr, CMainDataManager* pDataMgr);
 
         QModelIndex         getDatasetIndex(const QModelIndex &index) const;
@@ -214,7 +214,7 @@ class CProjectManager : public QObject
         CGraphicsManager*                   m_pGraphicsMgr = nullptr;
         CRenderManager*                     m_pRenderMgr = nullptr;
         CResultManager*                     m_pResultsMgr = nullptr;
-        CProtocolManager*                   m_pProtocolMgr = nullptr;
+        CWorkflowManager*                   m_pWorkflowMgr = nullptr;
         CProgressBarManager*                m_pProgressMgr = nullptr;
         CMainDataManager*                   m_pDataMgr = nullptr;
         CProgressSignalHandler              m_progressSignal;

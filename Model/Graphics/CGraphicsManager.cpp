@@ -105,10 +105,10 @@ bool CGraphicsManager::isChildLayer(const QModelIndex &index, const QModelIndex 
     return isChild;
 }
 
-void CGraphicsManager::setManagers(CProjectManager *pProjectMgr, CProtocolManager *pProtocolMgr)
+void CGraphicsManager::setManagers(CProjectManager *pProjectMgr, CWorkflowManager *pWorkflowMgr)
 {
     m_pProjectMgr = pProjectMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
 }
 
 void CGraphicsManager::setLayerVisible(const QModelIndex &index, bool bVisible)
@@ -365,7 +365,7 @@ void CGraphicsManager::removeLayer(const QModelIndex &itemIndex)
 
     if(pLayer)
     {
-        m_pProtocolMgr->beforeGraphicsLayerRemoved(pLayer);
+        m_pWorkflowMgr->beforeGraphicsLayerRemoved(pLayer);
         CGraphicsLayerInfo info(pLayer, 0, CGraphicsLayerInfo::SOURCE);
         emit doRemoveGraphicsLayerToSource(info, true);
         emit doGraphicsSceneChanged();
@@ -472,15 +472,15 @@ void CGraphicsManager::burnLayerToImage(const CGraphicsLayer *pLayer, CMat &imag
 void CGraphicsManager::onGraphicsChanged()
 {
     assert(m_pProjectMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
     m_pProjectMgr->notifyDataChanged();
-    m_pProtocolMgr->notifyGraphicsChanged();
+    m_pWorkflowMgr->notifyGraphicsChanged();
 }
 
 void CGraphicsManager::onGraphicsRemoved(const QSet<CGraphicsLayer *> &layers)
 {
     assert(m_pProjectMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     //remove empty and non-user layers
     for(auto it: layers)
@@ -490,7 +490,7 @@ void CGraphicsManager::onGraphicsRemoved(const QSet<CGraphicsLayer *> &layers)
     }
 
     m_pProjectMgr->notifyDataChanged();
-    m_pProtocolMgr->notifyGraphicsChanged();
+    m_pWorkflowMgr->notifyGraphicsChanged();
 }
 
 void CGraphicsManager::setLayerHighlighted(const QModelIndex &index, bool bHighlighted)

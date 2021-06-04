@@ -21,7 +21,7 @@
 //------------------------------
 //----- C_PluginName_Param
 //------------------------------
-C_PluginName_Param::C_PluginName_Param() : CProtocolTaskParam()
+C_PluginName_Param::C_PluginName_Param() : CWorkflowTaskParam()
 {
 }
 
@@ -49,8 +49,8 @@ C_PluginName_::C_PluginName_() : _ProcessBaseClass_()
 {
     //Add input/output of the process here
     //Example :
-    //addInput(std::make_shared<CImageProcessIO>());
-    //addOutput(std::make_shared<CImageProcessIO>());
+    //addInput(std::make_shared<CImageIO>());
+    //addOutput(std::make_shared<CImageIO>());
 }
 
 C_PluginName_::C_PluginName_(const std::string& name, const std::shared_ptr<C_PluginName_Param>& pParam) : _ProcessBaseClass_(name)
@@ -59,8 +59,8 @@ C_PluginName_::C_PluginName_(const std::string& name, const std::shared_ptr<C_Pl
 
     //Add input/output of the process here
     //Example :
-    //addInput(std::make_shared<CImageProcessIO>());
-    //addOutput(std::make_shared<CImageProcessIO>());
+    //addInput(std::make_shared<CImageIO>());
+    //addOutput(std::make_shared<CImageIO>());
 }
 
 size_t C_PluginName_::getProgressSteps()
@@ -76,8 +76,8 @@ void C_PluginName_::run()
     beginTaskRun();
         
     //Examples :
-    //Get input : auto pInput = std::dynamic_pointer_cast<CImageProcessIO>(getInput(0));
-    //Get output : auto pOutput = std::dynamic_pointer_cast<CImageProcessIO>(getOutput(0));
+    //Get input : auto pInput = std::dynamic_pointer_cast<CImageIO>(getInput(0));
+    //Get output : auto pOutput = std::dynamic_pointer_cast<CImageIO>(getOutput(0));
     //Get parameters : auto pParam = std::dynamic_pointer_cast<C_PluginName_Param>(m_pParam);
     //Get image from input/output: CMat srcImage = pInput->getImage() -> srcImage is a cv::Mat based object
     //Set image of input/output: pOutput->setImage(srcImage)
@@ -97,7 +97,7 @@ C_PluginName_Widget::C_PluginName_Widget(QWidget *parent) : _WidgetBaseClass_(pa
     init();
 }
 
-C_PluginName_Widget::C_PluginName_Widget(ProtocolTaskParamPtr pParam, QWidget *parent) : _WidgetBaseClass_(parent)
+C_PluginName_Widget::C_PluginName_Widget(WorkflowTaskParamPtr pParam, QWidget *parent) : _WidgetBaseClass_(parent)
 {
     //Create specific parameters object
     m_pParam = std::dynamic_pointer_cast<C_PluginName_Param>(pParam);

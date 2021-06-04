@@ -96,9 +96,9 @@ CProcessPane *CMainView::getProcessPane()
     return m_pProcessPane;
 }
 
-CProtocolPane *CMainView::getProtocolPane()
+CWorkflowPane *CMainView::getWorkflowPane()
 {
-    return m_pProtocolPane;
+    return m_pWorkflowPane;
 }
 
 CInfoPane* CMainView::getInfoPane()
@@ -111,9 +111,9 @@ CWizardPane*CMainView::getWizardPane()
     return m_pWizardPane;
 }
 
-CProtocolModuleWidget *CMainView::getProtocolModule()
+CWorkflowModuleWidget *CMainView::getWorkflowModule()
 {
-    return m_pProtocolModule;
+    return m_pWorkflowModule;
 }
 
 CGraphicsToolbar *CMainView::getGraphicsToolbar() const
@@ -181,7 +181,7 @@ QToolButton* CMainView::getBtn(int id)
             pBtn = m_pProcessBtn;
             break;
         case BTN_WORKFLOW_PANE:
-            pBtn = m_pProtocolBtn;
+            pBtn = m_pWorkflowBtn;
             break;
         case BTN_PROPERTIES_PANE:
             pBtn = m_pPropertiesBtn;
@@ -303,7 +303,7 @@ void CMainView::initCentralView()
     // Add up tab (toolbar)
     initMainToolBar();
 
-    // Init left tab (Project - Process - Protocols - Information)
+    // Init left tab (Project - Process - Workflows - Information)
     initLeftTab();
 
     //Init graphics toolbar
@@ -347,15 +347,15 @@ void CMainView::initUpView()
 void CMainView::initBottomView()
 {
     m_pModuleDock = new CModuleDockWidget(tr("Modules"), this);
-    initProtocolModule();
+    initWorkflowModule();
     initPluginMakerModule();
     addDockWidget(Qt::BottomDockWidgetArea, m_pModuleDock);
 }
 
-void CMainView::initProtocolModule()
+void CMainView::initWorkflowModule()
 {
-    m_pProtocolModule = new CProtocolModuleWidget(this);
-    m_pModuleDock->addModuleWidget(m_pProtocolModule, QIcon(":/Images/module_protocol.png"));
+    m_pWorkflowModule = new CWorkflowModuleWidget(this);
+    m_pModuleDock->addModuleWidget(m_pWorkflowModule, QIcon(":/Images/module_protocol.png"));
 }
 
 void CMainView::initPluginMakerModule()
@@ -487,10 +487,10 @@ void CMainView::initConnections()
     connect(m_pUserLoginBtn, &QToolButton::clicked, this, &CMainView::showLoginDialog);
 
     //Procotol module -> module dock widget
-    connect(m_pProtocolModule, &CProtocolModuleWidget::doUpdateTitle, [&](){ m_pModuleDock->updateWindowTitle(); });
+    connect(m_pWorkflowModule, &CWorkflowModuleWidget::doUpdateTitle, [&](){ m_pModuleDock->updateWindowTitle(); });
 
-    //Protocol module -> MainView
-    connect(m_pProtocolModule, &CProtocolModuleWidget::doShowProcessPopup, this, &CMainView::onShowProcessPopup);
+    //Workflow module -> MainView
+    connect(m_pWorkflowModule, &CWorkflowModuleWidget::doShowProcessPopup, this, &CMainView::onShowProcessPopup);
 
     //Graphics toolbar -> MainView
     connect(m_pGraphicsToolbar, &CGraphicsToolbar::doToggleGraphicsProperties, [&]{ toggleGraphicsProperties(); });
@@ -500,13 +500,13 @@ void CMainView::initConnections()
     connect(m_pDoubleView, &CDoubleView::doToggleGraphicsToolbar, [&]{ toggleGraphicsToolbar(); });
     connect(m_pDoubleView, &CDoubleView::doHideGraphicsToolbar, [&]{ hideGraphicsToolbar(); });
 
-    //Protocol Pane -> MainView
-    connect(m_pProtocolPane, &CProtocolPane::doOpenProtocolView, [&]{ m_pModuleDock->showModule(0); });
+    //Workflow Pane -> MainView
+    connect(m_pWorkflowPane, &CWorkflowPane::doOpenWorkflowView, [&]{ m_pModuleDock->showModule(0); });
 
     // Left buttons
     connect(m_pProjectBtn, &QToolButton::clicked, [this]{ m_pCentralViewLayout->getLeftTab()->setCurrentRow(0); });
     connect(m_pProcessBtn, &QToolButton::clicked, [this]{ m_pCentralViewLayout->getLeftTab()->setCurrentRow(1); });
-    connect(m_pProtocolBtn, &QToolButton::clicked, [this]{ m_pCentralViewLayout->getLeftTab()->setCurrentRow(2); });
+    connect(m_pWorkflowBtn, &QToolButton::clicked, [this]{ m_pCentralViewLayout->getLeftTab()->setCurrentRow(2); });
     connect(m_pPropertiesBtn, &QToolButton::clicked, [this]{ m_pCentralViewLayout->getLeftTab()->setCurrentRow(3); });
 
     // Right buttons
@@ -617,7 +617,7 @@ void CMainView::initLeftTab()
     m_pProcessBtn = createLeftTabBtn(tr("Process"), tr("Process"), QIcon(":/Images/process.png"), m_pProcessPane);
 
     // Add button to show/hide protocol pane
-    m_pProtocolBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/protocols.png"), m_pProtocolPane);
+    m_pWorkflowBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/protocols.png"), m_pWorkflowPane);
 
     // Add button to show/hide protocol pane
     m_pPropertiesBtn = createLeftTabBtn(tr("Properties"), tr("Data properties"), QIcon(":/Images/info-color.png"), m_pInfoPane); 
@@ -644,14 +644,14 @@ void CMainView::initLeftPanes()
 
     m_pProjectPane = new CProjectPane;
     m_pProcessPane = new CProcessPane;
-    m_pProtocolPane = new CProtocolPane;
+    m_pWorkflowPane = new CWorkflowPane;
     m_pInfoPane = new CInfoPane;
 
     m_pLeftPanes = new CStackedPane;
     m_pLeftPanes->setAnimation("maximumWidth", 0, 400);
     m_pLeftPanes->addPane(m_pProjectPane);
     m_pLeftPanes->addPane(m_pProcessPane);
-    m_pLeftPanes->addPane(m_pProtocolPane);
+    m_pLeftPanes->addPane(m_pWorkflowPane);
     m_pLeftPanes->addPane(m_pInfoPane);
 
     m_pMainViewSplitter->addWidget(m_pLeftPanes);
@@ -932,8 +932,8 @@ void CMainView::onSetCurrentUser(const CUser& user)
     if(m_pStoreDlg)
         m_pStoreDlg->setCurrentUser(user);
 
-    if(m_pProtocolModule)
-        m_pProtocolModule->setCurrentUser(user);
+    if(m_pWorkflowModule)
+        m_pWorkflowModule->setCurrentUser(user);
 
     if(m_pProcessPane)
         m_pProcessPane->setCurrentUser(user);
@@ -944,7 +944,7 @@ void CMainView::onSetCurrentUser(const CUser& user)
     manageUserStatus();
 }
 
-void CMainView::onSetProtocolChangedIcon()
+void CMainView::onSetWorkflowChangedIcon()
 {
     if(m_pModuleDock->isModuleOpen(0))
         m_pModuleDock->getModuleBtn(0)->setIcon(QIcon(":/Images/module_protocol_warning.png"));

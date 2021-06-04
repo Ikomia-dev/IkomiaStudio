@@ -27,7 +27,7 @@
 #include "Model/Graphics/CGraphicsManager.h"
 #include "Model/Render/CRenderManager.h"
 #include "Model/Results/CResultManager.h"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Data/Video/CVideoManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
 #include "Model/Data/CMainDataManager.h"
@@ -443,7 +443,7 @@ void CProjectManager::onAddDicomFolder(const QModelIndex &index, const QString &
                            {DataDimension::VOLUME, {0, 0}},
                            {DataDimension::IMAGE, {0, 0}}};
 
-    CImageIO imageIO(folder.toStdString());
+    CImageDataIO imageIO(folder.toStdString());
 
     QModelIndex firstImgIndex;
 
@@ -718,7 +718,7 @@ void CProjectManager::onUpdateIndex(const QPersistentModelIndex& index)
         // Notify view to stop video
         m_pDataMgr->closeData(m_currentDataItemIndex);
         m_currentDataItemIndex = index;
-        m_pProtocolMgr->onInputDataChanged(index, 0, true);
+        m_pWorkflowMgr->onInputDataChanged(index, 0, true);
     }
     else
     {
@@ -878,7 +878,7 @@ void CProjectManager::displayImage(const QModelIndex &itemIndex)
     assert(m_pGraphicsMgr);
     assert(m_pResultsMgr);
     assert(m_pRenderMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     auto indexWrapped = wrapIndex(itemIndex);
     //Get the corresponding image item
@@ -911,7 +911,7 @@ void CProjectManager::displayImage(const QModelIndex &itemIndex)
         // Notify data manager to display image
         m_pDataMgr->displaySimpleImage(imgItemPtr->getScene(), itemIndex, indexWrapped, 0, bStackChanged);
     }
-    m_pProtocolMgr->loadImageProtocols(itemIndex);
+    m_pWorkflowMgr->loadImageWorkflows(itemIndex);
 }
 
 void CProjectManager::displayVideo(const QModelIndex& itemIndex)
@@ -1150,25 +1150,25 @@ void CProjectManager::manageCheckStateChanged(const QModelIndex &index)
 void CProjectManager::notifyBeforeProjectClose(const QModelIndex& projectIndex, bool bWithCurrentImg)
 {
     assert(m_pGraphicsMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
     assert(m_pResultsMgr);
     int row = projectIndex.row();
     m_pGraphicsMgr->beforeProjectClose(row);
-    m_pProtocolMgr->beforeProjectClose(bWithCurrentImg);
+    m_pWorkflowMgr->beforeProjectClose(bWithCurrentImg);
     m_pResultsMgr->notifyBeforeProjectClosed(row, bWithCurrentImg);
     m_pDataMgr->beforeProjectClose(row, bWithCurrentImg);
 }
 
 void CProjectManager::notifyBeforeDataDeleted(const QModelIndex &index)
 {
-    assert(m_pProtocolMgr);
-    m_pProtocolMgr->beforeDataDeleted(index);
+    assert(m_pWorkflowMgr);
+    m_pWorkflowMgr->beforeDataDeleted(index);
 }
 
 void CProjectManager::notifyBeforeDataDeleted(const std::vector<QModelIndex> &indexes)
 {
-    assert(m_pProtocolMgr);
-    m_pProtocolMgr->beforeDataDeleted(indexes);
+    assert(m_pWorkflowMgr);
+    m_pWorkflowMgr->beforeDataDeleted(indexes);
 }
 
 void CProjectManager::checkSequenceFileNames(DataDimension dim, QStringList &files)
@@ -1668,13 +1668,13 @@ QModelIndex CProjectManager::addStream(const QModelIndex& itemIndex, const QStri
 }
 
 void CProjectManager::setManagers(CGraphicsManager *pGraphicsMgr, CRenderManager *pRenderMgr, CResultManager *pResultsMgr,
-                                  CProtocolManager *pProtocolMgr, CProgressBarManager* pProgressMgr,
+                                  CWorkflowManager *pWorkflowMgr, CProgressBarManager* pProgressMgr,
                                   CMainDataManager* pDataMgr)
 {
     m_pGraphicsMgr = pGraphicsMgr;
     m_pRenderMgr = pRenderMgr;
     m_pResultsMgr = pResultsMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
     m_pDataMgr = pDataMgr;
     m_pDataMgr->setProgressSignalHandler(&m_progressSignal);
     m_pProgressMgr = pProgressMgr;

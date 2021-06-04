@@ -58,7 +58,7 @@ class CImgManager : public QObject
 
     public slots:
 
-        void                    onCloseProtocol();
+        void                    onCloseWorkflow();
 
     private:
 

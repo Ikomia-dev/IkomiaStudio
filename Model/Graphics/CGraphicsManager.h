@@ -26,7 +26,7 @@
 #include "Graphics/CGraphicsContext.h"
 #include "Model/Project/CProjectDbManager.hpp"
 #include "Model/Project/CProjectManager.h"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
 #include "CGraphicsRegistration.h"
 #include "CGraphicsDbManager.h"
@@ -51,7 +51,7 @@ class CGraphicsManager : public QObject
 
         bool                    isChildLayer(const QModelIndex& index, const QModelIndex& parentIndex) const;
 
-        void                    setManagers(CProjectManager* pProjectMgr, CProtocolManager* pProtocolMgr);
+        void                    setManagers(CProjectManager* pProjectMgr, CWorkflowManager* pWorkflowMgr);
         void                    setLayerVisible(const QModelIndex& index, bool bVisible);
         void                    setCurrentLayer(const QModelIndex& index, bool bNotifyView);
         void                    setCurrentLayer(CGraphicsLayer* pLayer);
@@ -176,7 +176,7 @@ class CGraphicsManager : public QObject
     private:
 
         CProjectManager*        m_pProjectMgr = nullptr;
-        CProtocolManager*       m_pProtocolMgr = nullptr;
+        CWorkflowManager*       m_pWorkflowMgr = nullptr;
         QPersistentModelIndex   m_currentLayerIndex = QPersistentModelIndex();
         QPersistentModelIndex   m_currentImgIndex = QPersistentModelIndex();
         CGraphicsRegistration   m_registration;

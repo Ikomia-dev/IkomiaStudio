@@ -21,7 +21,7 @@
 #include <QTimer>
 #include "Main/CoreTools.hpp"
 #include "Model/Store/CStoreQueryModel.h"
-#include "Core/CProcessFactory.hpp"
+#include "Core/CTaskFactory.hpp"
 
 CStorePluginListViewDelegate::CStorePluginListViewDelegate(int pluginSource, QObject *parent)
     : CListViewDelegate(parent)
@@ -87,7 +87,7 @@ bool CStorePluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, in
             int language = pModel->record(itemIndex.row()).value("language").toInt();
             auto state = getProcessState(itemIndex);
 
-            if(language == CProcessInfo::CPP)
+            if(language == CTaskInfo::CPP)
                 bEnable = (state == PluginState::VALID);
             else
                 bEnable = (state == PluginState::VALID || state == PluginState::UPDATED);
@@ -115,8 +115,8 @@ void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &
             int language = pModel->record(index.row()).value("language").toInt();
             auto state = getProcessState(index);
 
-            if( (language == CProcessInfo::CPP && state == PluginState::VALID) ||
-                (language == CProcessInfo::PYTHON && (state == PluginState::VALID || state == PluginState::UPDATED)))
+            if( (language == CTaskInfo::CPP && state == PluginState::VALID) ||
+                (language == CTaskInfo::PYTHON && (state == PluginState::VALID || state == PluginState::UPDATED)))
             {
                 emit doInstallPlugin(index);
             }
@@ -168,7 +168,7 @@ PluginState CStorePluginListViewDelegate::getProcessState(const QModelIndex &ind
     int language = pModel->record(index.row()).value("language").toInt();
     auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
 
-    if(language == CProcessInfo::CPP)
+    if(language == CTaskInfo::CPP)
         return Utils::Plugin::getCppState(ikomiaVersion);
     else
         return Utils::Plugin::getPythonState(ikomiaVersion);
@@ -184,7 +184,7 @@ QString CStorePluginListViewDelegate::getStatusMessage(const QModelIndex &index)
     int language = pModel->record(index.row()).value("language").toInt();
     auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
 
-    if(language == CProcessInfo::CPP)
+    if(language == CTaskInfo::CPP)
     {
         auto state = Utils::Plugin::getCppState(ikomiaVersion);
         if(state == PluginState::DEPRECATED)
@@ -263,7 +263,7 @@ void CStorePluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QS
     QString pixmapPath;
     int language = pModel->record(index.row()).value("language").toInt();
 
-    if(language == CProcessInfo::CPP)
+    if(language == CTaskInfo::CPP)
         pixmapPath = ":/Images/C++-language-logo.png";
     else
         pixmapPath = ":/Images/python-language-logo.png";
@@ -293,11 +293,11 @@ void CStorePluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOp
     int os = pModel->record(index.row()).value("os").toInt();
 
     QString pixmapPath;
-    if(os == CProcessInfo::LINUX)
+    if(os == CTaskInfo::LINUX)
         pixmapPath = ":/Images/linux.png";
-    else if(os == CProcessInfo::WIN)
+    else if(os == CTaskInfo::WIN)
         pixmapPath = ":/Images/win.png";
-    else if(os == CProcessInfo::OSX)
+    else if(os == CTaskInfo::OSX)
         pixmapPath = ":/Images/mac.png";
     else
         pixmapPath = ":/Images/all.png";

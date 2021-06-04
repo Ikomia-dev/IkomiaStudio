@@ -79,7 +79,7 @@ void CPluginManagerWidget::initConnections()
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doReloadAll, [&]{ emit doReloadAll(); });
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doReload, [&](const QString& pluginName)
     {
-        emit doReload(pluginName, CProcessInfo::PYTHON);
+        emit doReload(pluginName, CTaskInfo::PYTHON);
     });
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doEdit, [&](const QString& pluginName)
     {
@@ -87,7 +87,7 @@ void CPluginManagerWidget::initConnections()
     });
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doShowLocation, [&](const QString& pluginName)
     {
-        emit doShowLocation(pluginName, CProcessInfo::PYTHON);
+        emit doShowLocation(pluginName, CTaskInfo::PYTHON);
     });
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doGetPluginDependencyModel, [&](const QString& pluginName)
     {

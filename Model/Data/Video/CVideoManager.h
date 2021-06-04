@@ -27,7 +27,7 @@
 class CProjectManager;
 class CImageScene;
 class CProgressBarManager;
-class CProtocolManager;
+class CWorkflowManager;
 class CGraphicsManager;
 class CResultManager;
 
@@ -110,7 +110,7 @@ class CVideoManager : public QObject
         CVideoManager();
         ~CVideoManager();
 
-        void                setManagers(CProjectManager* pProjectMgr, CProtocolManager* pProtocolMgr, CGraphicsManager *pGraphicsMgr,
+        void                setManagers(CProjectManager* pProjectMgr, CWorkflowManager* pWorkflowMgr, CGraphicsManager *pGraphicsMgr,
                                         CResultManager *pResultMgr, CProgressBarManager* pProgressMgr);
         void                setVideoRecord(const QModelIndex &modelIndex, bool bEnable);
         void                setProgressSignalHandler(CProgressSignalHandler* pHandler);
@@ -152,7 +152,7 @@ class CVideoManager : public QObject
 
         void                onNotifyVideoStart(const QModelIndex &index);
         void                onDisplayCurrentVideoImage(const QModelIndex& modelIndex, int index);
-        void                onCloseProtocol();
+        void                onCloseWorkflow();
         void                onImageIsLoaded(const QModelIndex &modelIndex, const CMat& image, int index, bool bNewSequence);
         void                onInitInfo(const QModelIndex &modelIndex, int index);
 
@@ -178,7 +178,7 @@ class CVideoManager : public QObject
 
         void                doNotifyVideoStart(int frameCount);
 
-        void                doStopProtocolThread();
+        void                doStopWorkflowThread();
         void                doStopRecording(const QModelIndex& index);
         void                doStopVideoPlayerView(const QModelIndex& index);
 
@@ -200,7 +200,7 @@ class CVideoManager : public QObject
         CProgressBarManager*    m_pProgressMgr = nullptr;
         CProgressSignalHandler* m_pProgressSignal = nullptr;
         CGraphicsManager*       m_pGraphicsMgr = nullptr;
-        CProtocolManager*       m_pProtocolMgr = nullptr;
+        CWorkflowManager*       m_pWorkflowMgr = nullptr;
         CResultManager*         m_pResultMgr = nullptr;
         CMat                    m_selectedWorkflowImage;
         bool                    m_bInfoUpdate = false;

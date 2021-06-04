@@ -23,8 +23,8 @@
 
 #include <QObject>
 #include <QSqlDatabase>
-#include "Core/CProtocol.h"
-#include "IO/CMeasureProcessIO.h"
+#include "Core/CWorkflow.h"
+#include "IO/CMeasureIO.h"
 #include "CResultDbManager.h"
 #include "CResultItem.hpp"
 #include "View/DoubleView/Result/CResultsViewer.h"
@@ -33,7 +33,7 @@
 
 class CProjectModel;
 class CProjectManager;
-class CProtocolManager;
+class CWorkflowManager;
 class CGraphicsManager;
 class CGraphicsLayer;
 class CRenderManager;
@@ -55,14 +55,14 @@ class CResultManager : public QObject
 
         void                init();
 
-        void                setManagers(CProjectManager* pProjectMgr, CProtocolManager* pProtocolMgr, CGraphicsManager* pGraphicsMgr,
+        void                setManagers(CProjectManager* pProjectMgr, CWorkflowManager* pWorkflowMgr, CGraphicsManager* pGraphicsMgr,
                                         CRenderManager* pRenderMgr, CMainDataManager* pDataMgr, CProgressBarManager* pProgressMgr = nullptr);
         void                setCurrentResult(const QModelIndex& index);
         void                setCurrentOutputImage(const QModelIndex &index);
 
         QModelIndex         getRootIndex() const;
 
-        void                manageOutputs(const ProtocolTaskPtr& pTask, const ProtocolVertex &taskId, const QModelIndex &itemIndex);
+        void                manageOutputs(const WorkflowTaskPtr& pTask, const WorkflowVertex &taskId, const QModelIndex &itemIndex);
 
         void                loadImageResults(const QModelIndex& index);
 
@@ -70,7 +70,7 @@ class CResultManager : public QObject
 
         void                notifyProjectSaved(int projectIndex);
         void                notifyBeforeProjectClosed(int projectIndex, bool bWithCurrentImage);
-        void                notifyBeforeProtocolCleared();
+        void                notifyBeforeWorkflowCleared();
         void                notifyDisplaySelected(int index);
 
         void                removeResult(const QModelIndex& index);
@@ -121,7 +121,7 @@ class CResultManager : public QObject
         void                onExportCurrentTableData(const QString& path);
         void                onExportDatasetImage(const QString& path, CMat &img, CGraphicsLayer* pLayer);
 
-        void                onProtocolClosed();
+        void                onWorkflowClosed();
 
         void                onRecordResultVideo(size_t index, bool bRecord);
 
@@ -138,10 +138,10 @@ class CResultManager : public QObject
         void                setRecordVideoState(size_t id, bool bRecord);
 
         ResultItemPtr       getResultItem(const QModelIndex& index) const;
-        OutputDisplays      getOutputDisplays(const ProtocolTaskPtr& pTask) const;
+        OutputDisplays      getOutputDisplays(const WorkflowTaskPtr& pTask) const;
         DisplayType         getResultViewType(IODataType type) const;
         std::set<IODataType>        getImageBasedDataTypes() const;
-        CViewPropertyIO::ViewMode   getViewMode(const ProtocolTaskPtr& taskPtr);
+        CViewPropertyIO::ViewMode   getViewMode(const WorkflowTaskPtr& taskPtr);
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;
@@ -150,23 +150,23 @@ class CResultManager : public QObject
         void                clearGraphics();
         void                clearPreviousOutputs();
 
-        void                manageImageOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, size_t index, CViewPropertyIO *pViewProp);
-        void                manageVolumeOutput(const ProtocolTaskIOPtr& outputPtr, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp);
-        void                manageGraphicsOutput(const ProtocolTaskIOPtr& pOutput);
-        void                manageBlobOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
-        void                manageNumericOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO *pViewProp);
-        void                manageVideoOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO *pViewProp);
-        void                manageWidgetOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, size_t index, CViewPropertyIO *pViewProp);
+        void                manageImageOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, size_t index, CViewPropertyIO *pViewProp);
+        void                manageVolumeOutput(const WorkflowTaskIOPtr& outputPtr, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp);
+        void                manageGraphicsOutput(const WorkflowTaskIOPtr& pOutput);
+        void                manageBlobOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
+        void                manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO *pViewProp);
+        void                manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO *pViewProp);
+        void                manageWidgetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, size_t index, CViewPropertyIO *pViewProp);
         void                manageVideoRecord(size_t index, const CMat& image);
-        void                manageDatasetOutput(const ProtocolTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
+        void                manageDatasetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
 
         QModelIndex         findResultFromName(const QString& name, QModelIndex startIndex=QModelIndex()) const;
 
         void                fillResultTreeIds(const QModelIndex& index, std::vector<int>& ids);
 
-        void                runProtocolAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics);
+        void                runWorkflowAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics);
 
-        void                updateVolumeRender(const ProtocolTaskIOPtr &outputPtr);
+        void                updateVolumeRender(const WorkflowTaskIOPtr &outputPtr);
 
         void                saveOutputImage(int index, const std::string& path, bool bWithGraphics);
         void                saveOutputVideo(size_t id, const std::string& path);
@@ -182,7 +182,7 @@ class CResultManager : public QObject
 
     private:
 
-        bool                    m_bProtocolInProgress = false;
+        bool                    m_bWorkflowInProgress = false;
         bool                    m_bImageOverlay = false;
         bool                    m_bBinaryVolume = false;
         int                     m_tmpGraphicsImageIndex = -1;
@@ -190,7 +190,7 @@ class CResultManager : public QObject
         int                     m_videoPosition = 0;
         size_t                  m_currentOutputCount = 0;
         CProjectManager*        m_pProjectMgr = nullptr;
-        CProtocolManager*       m_pProtocolMgr = nullptr;
+        CWorkflowManager*       m_pWorkflowMgr = nullptr;
         CGraphicsManager*       m_pGraphicsMgr = nullptr;
         CRenderManager*         m_pRenderMgr = nullptr;
         CProgressBarManager*    m_pProgressMgr = nullptr;
@@ -202,7 +202,7 @@ class CResultManager : public QObject
         QAbstractItemModel*     m_pCurrentTableModel = nullptr;
         CMultiImageModel*       m_pMultiImgModel = nullptr;
         CGraphicsLayerInfo      m_tempGraphicsLayerInfo;
-        ProtocolTaskPtr         m_pCurrentTask = nullptr;
+        WorkflowTaskPtr         m_pCurrentTask = nullptr;
         std::string             m_currentVideoRecord = "";
         std::map<size_t,bool>   m_recordVideoMap;
         CViewPropertyIO::ViewMode   m_currentViewMode = CViewPropertyIO::ViewMode::GUI_DRIVEN;

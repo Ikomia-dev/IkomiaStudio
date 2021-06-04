@@ -78,7 +78,7 @@ void CMultiImageDisplay::loadImage(const QModelIndex& index)
         m_currentIndex = index;
 
         //Image
-        CImageIO io(pModel->getPath(imgIndex).toStdString());
+        CImageDataIO io(pModel->getPath(imgIndex).toStdString());
         CMat img = io.read();
         m_pImageDisplay->setImage(CDataConversion::CMatToQImage(img), true);
         m_pImageDisplay->setName(pModel->getFileName(imgIndex));
@@ -94,7 +94,7 @@ void CMultiImageDisplay::loadImage(const QModelIndex& index)
         auto overlayPath = pModel->getOverlayPath(imgIndex);
         if(!overlayPath.isEmpty())
         {
-            CImageIO ioOvr(overlayPath.toStdString());
+            CImageDataIO ioOvr(overlayPath.toStdString());
             CMat img = ioOvr.read();
             CMat ovrImg = createDisplayOverlay(img);
             m_pImageDisplay->getView()->setOverlayImage(CDataConversion::CMatToQImage(ovrImg));
@@ -168,7 +168,7 @@ void CMultiImageDisplay::onExportImage(const QString &path, bool bWithGraphics)
         auto pModel = static_cast<const CMultiImageModel*>(m_currentIndex.model());
 
         //Image
-        CImageIO io(pModel->getPath(imgIndex).toStdString());
+        CImageDataIO io(pModel->getPath(imgIndex).toStdString());
         CMat img = io.read();
 
         //Mask
@@ -176,7 +176,7 @@ void CMultiImageDisplay::onExportImage(const QString &path, bool bWithGraphics)
         auto maskPath = pModel->getOverlayPath(imgIndex);
         if(!maskPath.isEmpty())
         {
-            CImageIO ioMask(maskPath.toStdString());
+            CImageDataIO ioMask(maskPath.toStdString());
             mask = ioMask.read();
             img = Utils::Image::mergeColorMask(img, mask, m_overlayColormap, 0.7);
         }

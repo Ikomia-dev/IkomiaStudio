@@ -84,7 +84,7 @@ class CTutoOpticalFlow : public CWizardScenario
                     "Click and watch the result on the right.",
                     "QPushButton{border: 2px solid green; border-radius: 5px}",
                     m_pView->getProcessPane(),
-                    SIGNAL(doApplyProcess(std::string,std::shared_ptr<CProtocolTaskParam>)));
+                    SIGNAL(doApplyProcess(std::string,std::shared_ptr<CWorkflowTaskParam>)));
         }
 };
 

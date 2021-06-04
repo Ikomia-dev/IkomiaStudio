@@ -23,7 +23,7 @@
 #include <QTreeView>
 #include <QDialog>
 #include "Model/Plugin/CPluginManager.h"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 
 CProcessManager::CProcessManager()
 {  
@@ -39,10 +39,10 @@ void CProcessManager::init()
     reloadAll();
 }
 
-void CProcessManager::setManagers(CPluginManager *pPluginMgr, CProtocolManager* pProtocolMgr)
+void CProcessManager::setManagers(CPluginManager *pPluginMgr, CWorkflowManager* pWorkflowMgr)
 {
     m_pPluginMgr = pPluginMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
 }
 
 void CProcessManager::setCurrentUser(const CUser &user)
@@ -55,9 +55,9 @@ CProcessModel* CProcessManager::getProcessModel(CProcessManager::ID id)
     return m_processList[id].get();
 }
 
-CProcessInfo CProcessManager::getProcessInfo(const std::string &processName) const
+CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
 {
-    CProcessInfo info;
+    CTaskInfo info;
 
     auto db = Utils::Database::connect(m_dbName, Utils::Database::getProcessConnectionName());
     if(!db.isValid())
@@ -131,7 +131,7 @@ void CProcessManager::updateTableModelQuery()
         m_processTableList[id]->select();
 }
 
-void CProcessManager::updateProcessInfo(const CProcessInfo &info)
+void CProcessManager::updateProcessInfo(const CTaskInfo &info)
 {
     makeCurrentDb();
     QSqlQuery q(m_db);
@@ -179,9 +179,9 @@ void CProcessManager::updateProcessInfo(const CProcessInfo &info)
     }
 }
 
-ProtocolTaskPtr CProcessManager::createObject(const std::string &processName, const ProtocolTaskParamPtr& pParam)
+WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, const WorkflowTaskParamPtr& pParam)
 {
-    ProtocolTaskPtr taskPtr = nullptr;
+    WorkflowTaskPtr taskPtr = nullptr;
     try
     {
         taskPtr = m_processRegistrator.createProcessObject(processName, pParam);
@@ -193,9 +193,9 @@ ProtocolTaskPtr CProcessManager::createObject(const std::string &processName, co
     return taskPtr;
 }
 
-ProtocolTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const ProtocolTaskParamPtr &pParam)
+WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const WorkflowTaskParamPtr &pParam)
 {
-    ProtocolTaskWidgetPtr widgetPtr = nullptr;
+    WorkflowTaskWidgetPtr widgetPtr = nullptr;
     try
     {
         widgetPtr = m_processRegistrator.createWidgetObject(processName, std::move(pParam));
@@ -225,7 +225,7 @@ void CProcessManager::resetModel()
 bool CProcessManager::reloadAll()
 {
     assert(m_pPluginMgr);
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     try
     {
@@ -235,7 +235,7 @@ bool CProcessManager::reloadAll()
         notifyModelUpdate();
         notifyTableModelUpdate();
         m_pPluginMgr->notifyPluginsLoaded();
-        m_pProtocolMgr->onAllProcessReloaded();
+        m_pWorkflowMgr->onAllProcessReloaded();
         emit doOnAllProcessReloaded();
         return true;
     }
@@ -255,16 +255,16 @@ bool CProcessManager::reloadPlugin(const QString &pluginName, int language)
             return reloadAll();
         else
         {
-            ProcessFactoryPtr factoryPtr = m_pPluginMgr->loadProcessPlugin(pluginName, language);
+            TaskFactoryPtr factoryPtr = m_pPluginMgr->loadProcessPlugin(pluginName, language);
             if(factoryPtr)
             {
                 assert(m_pPluginMgr);
-                assert(m_pProtocolMgr);
+                assert(m_pWorkflowMgr);
                 updateProcessInfo(factoryPtr->getInfo());
                 notifyModelUpdate();
                 notifyTableModelUpdate();
                 m_pPluginMgr->notifyPluginsLoaded();
-                m_pProtocolMgr->onProcessReloaded(pluginName);
+                m_pWorkflowMgr->onProcessReloaded(pluginName);
                 emit doOnProcessReloaded(pluginName);
                 return true;
             }
@@ -378,7 +378,7 @@ void CProcessManager::onQueryProcessInfo(const std::string &processName)
     emit doSetProcessInfo(info);
 }
 
-void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CProcessInfo &info)
+void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
 {
     //Db string format check
     QString shortDescription = QString::fromStdString(Utils::String::dbFormat(info.m_shortDescription));
@@ -700,7 +700,7 @@ void CProcessManager::createModel()
         addFoldersInfo();
 
         //Synchronise memory database with file database (main)
-        syncProcessInfo();
+        synCTaskInfo();
 
         // Fill all models from database
         for(const auto& id : m_viewIds)
@@ -772,7 +772,7 @@ void CProcessManager::addCustomPathIcon(const std::string& path, const std::stri
         m_iconMap.insert(std::make_pair(path, iconPath));
 }
 
-size_t CProcessManager::addProcess(const ProcessFactoryPtr &process, size_t folderId)
+size_t CProcessManager::addProcess(const TaskFactoryPtr &process, size_t folderId)
 {
     size_t id = m_id++;
     QString processName = QString::fromStdString(process->getInfo().getName());
@@ -781,7 +781,7 @@ size_t CProcessManager::addProcess(const ProcessFactoryPtr &process, size_t fold
     return id;
 }
 
-void CProcessManager::addProcessInfo(const ProcessFactoryPtr& process, size_t id, size_t folderId)
+void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, size_t folderId)
 {
     makeCurrentDb();
     QSqlQuery q(m_db);
@@ -866,7 +866,7 @@ void CProcessManager::addFoldersInfo()
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CProcessManager::syncProcessInfo()
+void CProcessManager::synCTaskInfo()
 {
     auto db = QSqlDatabase::database(Utils::Database::getMainConnectionName());
     if(!db.isValid())

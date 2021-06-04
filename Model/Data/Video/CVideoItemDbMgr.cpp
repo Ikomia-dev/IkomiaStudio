@@ -33,7 +33,7 @@ CVideoItemDbMgr::CVideoItemDbMgr(const QString &path, const QString &connection)
 std::shared_ptr<CItem> CVideoItemDbMgr::load(const QSqlQuery &q, QModelIndex &previousIndex)
 {
     loadPaths();
-    loadProtocolVideoMap();
+    loadWorkflowVideoMap();
 
     auto id = q.record().value("id").toInt();
     auto itPath = m_mapPaths.find(id);
@@ -60,11 +60,11 @@ std::shared_ptr<CItem> CVideoItemDbMgr::load(const QSqlQuery &q, QModelIndex &pr
     auto pVideo = std::make_shared<CVideoItem>(path.stem().string(), path.string());
 
     //Add protocol<->Video associations
-    auto itProtocol = m_mapProtocolIds.find(id);
-    if(itProtocol != m_mapProtocolIds.end())
+    auto itWorkflow = m_mapWorkflowIds.find(id);
+    if(itWorkflow != m_mapWorkflowIds.end())
     {
-        for(int i=0; i<itProtocol.value().size(); ++i)
-            pVideo->addProtocolDbId(itProtocol.value()[i]);
+        for(int i=0; i<itWorkflow.value().size(); ++i)
+            pVideo->addWorkflowDbId(itWorkflow.value()[i]);
     }
     return pVideo;
 }
@@ -82,9 +82,9 @@ void CVideoItemDbMgr::save(std::shared_ptr<ProjectTreeItem> itemPtr, int dbId)
     m_mapPaths.insert(id, path);
 
     //Insert protocol ids associated with current Video into the global map
-    auto protocolIds = QVector<int>::fromStdVector(pItem->getProtocolDbIds());
+    auto protocolIds = QVector<int>::fromStdVector(pItem->getWorkflowDbIds());
     if(protocolIds.size() > 0)
-        m_mapProtocolIds.insert(id, protocolIds);
+        m_mapWorkflowIds.insert(id, protocolIds);
 }
 
 void CVideoItemDbMgr::batchSave()
@@ -115,7 +115,7 @@ void CVideoItemDbMgr::batchSave()
     ids.clear();
     values.clear();
 
-    for(auto it=m_mapProtocolIds.begin(); it!=m_mapProtocolIds.end(); ++it)
+    for(auto it=m_mapWorkflowIds.begin(); it!=m_mapWorkflowIds.end(); ++it)
     {
         for(int i=0; i<it.value().size(); ++i)
         {
@@ -188,9 +188,9 @@ void CVideoItemDbMgr::loadPaths()
     }
 }
 
-void CVideoItemDbMgr::loadProtocolVideoMap()
+void CVideoItemDbMgr::loadWorkflowVideoMap()
 {
-    if(m_bProtocolVideoMapLoaded == false)
+    if(m_bWorkflowVideoMapLoaded == false)
     {
         //Get all Video-protocol associations
         auto db = Utils::Database::connect(m_dbPath, m_connection);
@@ -211,13 +211,13 @@ void CVideoItemDbMgr::loadProtocolVideoMap()
 
         while(q.next())
         {
-            auto it = m_mapProtocolIds.find(q.value(0).toInt());
-            if(it == m_mapProtocolIds.end())
-                m_mapProtocolIds.insert(q.value(0).toInt(), QVector<int>({q.value(1).toInt()}));
+            auto it = m_mapWorkflowIds.find(q.value(0).toInt());
+            if(it == m_mapWorkflowIds.end())
+                m_mapWorkflowIds.insert(q.value(0).toInt(), QVector<int>({q.value(1).toInt()}));
             else
                 it.value() << q.value(1).toInt();
         }
-        m_bProtocolVideoMapLoaded = true;
+        m_bWorkflowVideoMapLoaded = true;
     }
 }
 

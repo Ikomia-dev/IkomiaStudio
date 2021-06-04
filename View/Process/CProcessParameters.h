@@ -23,7 +23,7 @@
 
 #include "View/Common/CDialog.h"
 #include "Main/forwards.hpp"
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CResizeStackedWidget;
@@ -40,7 +40,7 @@ class CProcessParameters : public CDialog
         void            addWidget(QWidget* pWidget, QString processName);
 
         void            setCurrentWidget(const QString& processName);
-        void            setProcessInfo(const CProcessInfo& info);
+        void            setProcessInfo(const CTaskInfo& info);
         void            setCurrentUser(const CUser& user);
 
         QWidget*        getWidget();
@@ -55,7 +55,7 @@ class CProcessParameters : public CDialog
 
     signals:
 
-        void            doUpdateProcessInfo(bool bFullEdit, const CProcessInfo& info);
+        void            doUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
 
     protected:
 
@@ -72,7 +72,7 @@ class CProcessParameters : public CDialog
 
         QFrame*         createLine();
 
-        CProcessInfo    getProcessInfo() const;
+        CTaskInfo    getProcessInfo() const;
 
         void            updateWidgetPosition(QWidget* pWidget, int borderSize);
 

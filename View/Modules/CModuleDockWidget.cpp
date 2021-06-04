@@ -20,7 +20,7 @@
 #include <QStackedWidget>
 #include "../Common/CToolbarBorderLayout.h"
 #include "../Common/CDockWidgetTitleBar.h"
-#include "Protocol/CProtocolModuleWidget.h"
+#include "Workflow/CWorkflowModuleWidget.h"
 
 CModuleDockWidget::CModuleDockWidget(const QString &title, QWidget *parent, Qt::WindowFlags flags) : QDockWidget(title, parent, flags)
 {
@@ -115,9 +115,9 @@ void CModuleDockWidget::desactivateScrollBar()
 {
     for(int i=0; i<m_pModuleViews->count(); ++i)
     {
-        if(QString(m_pModuleViews->widget(i)->metaObject()->className()) == "CProtocolModuleWidget")
+        if(QString(m_pModuleViews->widget(i)->metaObject()->className()) == "CWorkflowModuleWidget")
         {
-            auto pWid = qobject_cast<CProtocolModuleWidget*>(m_pModuleViews->widget(i));
+            auto pWid = qobject_cast<CWorkflowModuleWidget*>(m_pModuleViews->widget(i));
             auto pView = pWid->getView();
             // Desactivate scroll for animation during animation
             pView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
@@ -158,9 +158,9 @@ void CModuleDockWidget::onActivateScrollBar()
 {
     for(int i=0; i<m_pModuleViews->count(); ++i)
     {
-        if(QString(m_pModuleViews->widget(i)->metaObject()->className()) == "CProtocolModuleWidget")
+        if(QString(m_pModuleViews->widget(i)->metaObject()->className()) == "CWorkflowModuleWidget")
         {
-            auto pWid = qobject_cast<CProtocolModuleWidget*>(m_pModuleViews->widget(i));
+            auto pWid = qobject_cast<CWorkflowModuleWidget*>(m_pModuleViews->widget(i));
             auto pView = pWid->getView();
             // Activate scroll for animation and activate when animation finishes
             pView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAsNeeded );

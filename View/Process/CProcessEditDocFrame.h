@@ -22,7 +22,7 @@
 #define CPROCESSEDITDOCFRAME_H
 
 #include <QFrame>
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CProcessEditDocFrame : public QFrame
@@ -34,11 +34,11 @@ class CProcessEditDocFrame : public QFrame
         CProcessEditDocFrame(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void        setCurrentUser(const CUser& user);
-        void        setProcessInfo(const CProcessInfo& info);
+        void        setProcessInfo(const CTaskInfo& info);
 
     signals:
 
-        void        doSave(bool bFullEdit, const CProcessInfo& info);
+        void        doSave(bool bFullEdit, const CTaskInfo& info);
         void        doCancel();
 
     private:
@@ -59,7 +59,7 @@ class CProcessEditDocFrame : public QFrame
 
         bool            m_bFullEdit = false;
         CUser           m_currentUser;
-        CProcessInfo    m_originalInfo;
+        CTaskInfo    m_originalInfo;
         QStackedWidget* m_pStackWidget = nullptr;
         QTextEdit*      m_pTextEditDescription = nullptr;
         QTextEdit*      m_pTextEditKeywords = nullptr;

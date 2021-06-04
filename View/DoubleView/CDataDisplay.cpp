@@ -26,7 +26,7 @@
 
 #include "CDataDisplay.h"
 #include <QCheckBox>
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 
 CDataDisplay::CDataDisplay(QWidget* parent, const QString& name, int flags) : QFrame(parent)
 {

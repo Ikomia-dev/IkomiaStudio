@@ -22,12 +22,12 @@ import copy
 
 # --------------------
 # - Class to handle the process parameters
-# - Inherits PyCore.CProtocolTaskParam from Ikomia API
+# - Inherits PyCore.CWorkflowTaskParam from Ikomia API
 # --------------------
-class _PluginName_Param(core.CProtocolTaskParam):
+class _PluginName_Param(core.CWorkflowTaskParam):
 
     def __init__(self):
-        core.CProtocolTaskParam.__init__(self)
+        core.CWorkflowTaskParam.__init__(self)
         # Place default value initialization here
         # Example : self.windowSize = 25
 
@@ -47,15 +47,15 @@ class _PluginName_Param(core.CProtocolTaskParam):
 
 # --------------------
 # - Class which implements the process
-# - Inherits PyCore.CProtocolTask or derived from Ikomia API
+# - Inherits PyCore.CWorkflowTask or derived from Ikomia API
 # --------------------
 class _PluginName_Process(_ProcessBaseClass_):
 
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
         # Add input/output of the process here
-        # Example :  self.addInput(PyDataProcess.CImageProcessIO())
-        #           self.addOutput(PyDataProcess.CImageProcessIO())
+        # Example :  self.addInput(PyDataProcess.CImageIO())
+        #           self.addOutput(PyDataProcess.CImageIO())
 
         # Create parameters class
         if param is None:
@@ -101,12 +101,12 @@ class _PluginName_Process(_ProcessBaseClass_):
 
 # --------------------
 # - Factory class to build process object
-# - Inherits PyDataProcess.CProcessFactory from Ikomia API
+# - Inherits PyDataProcess.CTaskFactory from Ikomia API
 # --------------------
-class _PluginName_ProcessFactory(dataprocess.CProcessFactory):
+class _PluginName_ProcessFactory(dataprocess.CTaskFactory):
 
     def __init__(self):
-        dataprocess.CProcessFactory.__init__(self)
+        dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "_PluginName_"
         self.info.shortDescription = "your short description"

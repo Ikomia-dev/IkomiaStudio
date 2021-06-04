@@ -22,7 +22,7 @@
 #define CPROCESSDOCDLG_H
 
 #include "View/Common/CDialog.h"
-#include "Core/CProcessInfo.h"
+#include "Core/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CProcessDocWidget;
@@ -36,7 +36,7 @@ class CProcessDocDlg : public CDialog
         ~CProcessDocDlg();
 
         void                setCurrentUser(const CUser& user);
-        void                setProcessInfo(const CProcessInfo& info);
+        void                setProcessInfo(const CTaskInfo& info);
 
         CProcessDocWidget*  getDocWidget();
 

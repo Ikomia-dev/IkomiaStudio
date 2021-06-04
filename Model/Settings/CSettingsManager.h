@@ -38,7 +38,7 @@ class CSettingsManager : public QObject
         void        init();
         void        notifyViewShow();
 
-        std::string getProtocolSaveFolder() const;
+        std::string getWorkflowSaveFolder() const;
 
         bool        isNativeDlgEnabled() const;
         bool        isTutorialEnabled() const;
@@ -51,20 +51,20 @@ class CSettingsManager : public QObject
 
         void        doEnableNativeDialog(bool bEnable);
         void        doEnableTutorialHelper(bool bEnable);
-        void        doSetProtocolSaveFolder(const QString& path);
+        void        doSetWorkflowSaveFolder(const QString& path);
 
     public slots:
 
         void        onUseNativeDlg(bool bEnable);
         void        onEnableTutorialHelper(bool bEnable);
-        void        onSetProtocolSaveFolder(const QString& path);
+        void        onSetWorkflowSaveFolder(const QString& path);
 
     private:
 
         void        initMainDb();
         void        initNativeDialogOption();
         void        initTutorialHelperOption();
-        void        initProtocolOption();
+        void        initWorkflowOption();
 
         void        setSettings(const QString& category, const QJsonObject &jsonData);
         void        setUseNativeDlg(bool bEnable);

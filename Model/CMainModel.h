@@ -26,7 +26,7 @@
 #include "Project/CProjectManager.h"
 #include "Plugin/CPluginManager.h"
 #include "Process/CProcessManager.h"
-#include "Protocol/CProtocolManager.h"
+#include "Workflow/CWorkflowManager.h"
 #include "Render/CRenderManager.h"
 #include "ProgressBar/CProgressBarManager.h"
 #include "Graphics/CGraphicsManager.h"
@@ -58,7 +58,7 @@ class CMainModel : public QObject
         //Getters
         CProjectManager*        getProjectManager();
         CProcessManager*        getProcessManager();
-        CProtocolManager*       getProtocolManager();
+        CWorkflowManager*       getWorkflowManager();
         CRenderManager*         getRenderManager();
         CProgressBarManager*    getProgressManager();
         CGraphicsManager*       getGraphicsManager();
@@ -90,7 +90,7 @@ class CMainModel : public QObject
         void                    initNetworkManager();
         void                    initProjectManager();
         void                    initProcessManager();
-        void                    initProtocolManager();
+        void                    initWorkflowManager();
         void                    initGraphicsManager();
         void                    initResultsManager();
         void                    initRenderManager();
@@ -116,7 +116,7 @@ class CMainModel : public QObject
         CDbManager              m_dbMgr;
         CProjectManager         m_projectMgr;
         CProcessManager         m_processMgr;
-        CProtocolManager        m_protocolMgr;
+        CWorkflowManager        m_protocolMgr;
         CRenderManager          m_renderMgr;
         CProgressBarManager     m_progressMgr;
         CGraphicsManager        m_graphicsMgr;

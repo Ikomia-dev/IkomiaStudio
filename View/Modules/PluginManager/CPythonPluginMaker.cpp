@@ -143,7 +143,7 @@ QString CPythonPluginMaker::getProcessBaseClass() const
     QString baseClass;
     switch(m_processBaseClass)
     {
-        case PluginManager::CPROTOCOL_TASK: baseClass = "core.CProtocolTask"; break;
+        case PluginManager::CWorkflow_TASK: baseClass = "core.CWorkflowTask"; break;
         case PluginManager::CIMAGE_PROCESS_2D: baseClass = "dataprocess.CImageProcess2d"; break;
         case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: baseClass = "dataprocess.CInteractiveImageProcess2d"; break;
         case PluginManager::CVIDEO_PROCESS: baseClass = "dataprocess.CVideoProcess"; break;
@@ -154,7 +154,7 @@ QString CPythonPluginMaker::getProcessBaseClass() const
 
 QString CPythonPluginMaker::getWidgetBaseClass() const
 {
-    return "core.CProtocolTaskWidget";
+    return "core.CWorkflowTaskWidget";
 }
 
 QString CPythonPluginMaker::getQtBinding() const

@@ -24,13 +24,13 @@
 #include "View/DoubleView/3D/C3dDisplay.h"
 #include "View/Process/CProcessPane.h"
 #include "View/Process/CProcessPopupDlg.h"
-#include "View/Modules/Protocol/CProtocolModuleWidget.h"
-#include "View/Modules/Protocol/CProtocolScene.h"
-#include "View/Protocol/CProtocolPane.h"
+#include "View/Modules/Workflow/CWorkflowModuleWidget.h"
+#include "View/Modules/Workflow/CWorkflowScene.h"
+#include "View/Workflow/CWorkflowPane.h"
 #include "View/Graphics/CGraphicsToolbar.h"
 #include "View/Store/CStoreDlg.h"
 #include "View/Wizard/CWizardPane.h"
-#include "View/Preferences/CProtocolSettingsWidget.h"
+#include "View/Preferences/CWorkflowSettingsWidget.h"
 #include "Model/Data/CFeaturesTableModel.h"
 #include "Model/Data/CMultiImageModel.h"
 #include <QApplication>
@@ -70,7 +70,7 @@ void CMainCtrl::initConnections()
     initProcessConnections();
 
     //ApplyProcess connections
-    initProtocolConnections();
+    initWorkflowConnections();
 
     //Image information connections
     initInfoConnections();
@@ -186,10 +186,10 @@ void CMainCtrl::initProcessConnections()
     connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doTreeViewClicked, m_pModel->getProcessManager(), &CProcessManager::onUpdateTableModel);
     connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doTextChanged, m_pModel->getProcessManager(), &CProcessManager::onSearchTableProcess);
     connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doQueryWidgetInstance, m_pModel->getProcessManager(), &CProcessManager::onQueryWidgetInstance);
-    connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doUpdateProcessInfo, m_pModel->getProtocolManager(), &CProtocolManager::onUpdateProcessInfo);
+    connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doUpdateProcessInfo, m_pModel->getWorkflowManager(), &CWorkflowManager::onUpdateProcessInfo);
 
     //Process popup dialog -> protocol manager
-    connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doAddProcess, m_pModel->getProtocolManager(), &CProtocolManager::onAddProcess);
+    connect(m_pView->getProcessPopup(), &CProcessPopupDlg::doAddProcess, m_pModel->getWorkflowManager(), &CWorkflowManager::onAddProcess);
 
     // When we open/close the process popup dialog, we must switch process model AND table process model in process manager in order to get the right behaviour
     // To achieve this, we connect/disconnect the model update mechanism
@@ -210,49 +210,49 @@ void CMainCtrl::initProcessConnections()
     });
 }
 
-void CMainCtrl::initProtocolConnections()
+void CMainCtrl::initWorkflowConnections()
 {
     //Process view -> project view
     connect(m_pView->getProcessPane(), &CProcessPane::doApplyProcess, m_pView->getProjectPane(), &CProjectPane::onApplyProcess);
 
     //Project view -> protocol manager
-    connect(m_pView->getProjectPane(), &CProjectPane::doApplyProcess, m_pModel->getProtocolManager(), &CProtocolManager::onApplyProcess);
+    connect(m_pView->getProjectPane(), &CProjectPane::doApplyProcess, m_pModel->getWorkflowManager(), &CWorkflowManager::onApplyProcess);
 
-    //Protocol pane -> protocol manager
-    connect(m_pView->getProtocolPane(), &CProtocolPane::doLoadProtocol, m_pModel->getProtocolManager(), &CProtocolManager::onLoadProtocol);
-    connect(m_pView->getProtocolPane(), &CProtocolPane::doDeleteProtocol, m_pModel->getProtocolManager(), &CProtocolManager::onDeleteProtocol);
-    connect(m_pView->getProtocolPane(), &CProtocolPane::doSearchProtocol, m_pModel->getProtocolManager(), &CProtocolManager::onSearchProtocol);
-    connect(m_pView->getProtocolPane(), &CProtocolPane::doGetProtocolInfo, m_pModel->getProtocolManager(), &CProtocolManager::onGetProtocolInfo);
+    //Workflow pane -> protocol manager
+    connect(m_pView->getWorkflowPane(), &CWorkflowPane::doLoadWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onLoadWorkflow);
+    connect(m_pView->getWorkflowPane(), &CWorkflowPane::doDeleteWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onDeleteWorkflow);
+    connect(m_pView->getWorkflowPane(), &CWorkflowPane::doSearchWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onSearchWorkflow);
+    connect(m_pView->getWorkflowPane(), &CWorkflowPane::doGetWorkflowInfo, m_pModel->getWorkflowManager(), &CWorkflowManager::onGetWorkflowInfo);
 
-    //Protocol module -> manager
-    connect(m_pView->getProtocolModule(), &CProtocolModuleWidget::doNotifyProtocolClosed, m_pModel->getProtocolManager(), &CProtocolManager::onProtocolClosed);
+    //Workflow module -> manager
+    connect(m_pView->getWorkflowModule(), &CWorkflowModuleWidget::doNotifyWorkflowClosed, m_pModel->getWorkflowManager(), &CWorkflowManager::onWorkflowClosed);
 
-    //Protocol manager -> protocol module
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doSetManager, m_pView->getProtocolModule(), &CProtocolModuleWidget::onSetModel);
+    //Workflow manager -> protocol module
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetManager, m_pView->getWorkflowModule(), &CWorkflowModuleWidget::onSetModel);
 
-    //Protocol manager -> protocol pane
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doSetNamesModel, m_pView->getProtocolPane(), &CProtocolPane::onSetModel);
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doSetNamesFromImageModel, m_pView->getProtocolPane(), &CProtocolPane::onSetFromImageModel);
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doSetDescription, m_pView->getProtocolPane(), &CProtocolPane::onSetDescription);
+    //Workflow manager -> protocol pane
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetModel);
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesFromImageModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetFromImageModel);
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetDescription, m_pView->getWorkflowPane(), &CWorkflowPane::onSetDescription);
 
-    //Protocol manager -> main view
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doNewProtocolNotification, m_pView, &CMainView::onNewNotification);
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doSetProtocolChangedIcon, m_pView, &CMainView::onSetProtocolChangedIcon);
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doStopVideo, m_pView->getDoubleView(), &CDoubleView::onStopVideo);
+    //Workflow manager -> main view
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doNewWorkflowNotification, m_pView, &CMainView::onNewNotification);
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetWorkflowChangedIcon, m_pView, &CMainView::onSetWorkflowChangedIcon);
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doStopVideo, m_pView->getDoubleView(), &CDoubleView::onStopVideo);
 
-    //Protocol input view manager -> main view
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doInitDisplay, m_pView->getDoubleView(), &CDoubleView::onInitDisplay);
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doDisplayVideo, m_pView->getDoubleView(), &CDoubleView::onDisplayVideo);
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doUpdateVolumeImage, m_pView->getDoubleView(), &CDoubleView::onUpdateVolumeImage);
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doApplyViewProperty, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onApplyViewProperty);
+    //Workflow input view manager -> main view
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doInitDisplay, m_pView->getDoubleView(), &CDoubleView::onInitDisplay);
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doDisplayVideo, m_pView->getDoubleView(), &CDoubleView::onDisplayVideo);
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doUpdateVolumeImage, m_pView->getDoubleView(), &CDoubleView::onUpdateVolumeImage);
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doApplyViewProperty, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onApplyViewProperty);
 
-    //Protocol input view manager -> video manager
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doInitVideoInfo, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onInitInfo);
-    connect(m_pModel->getProtocolManager()->getInputViewManager(), &CProtocolInputViewManager::doDisplayVideoImage, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onDisplayCurrentVideoImage);
+    //Workflow input view manager -> video manager
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doInitVideoInfo, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onInitInfo);
+    connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doDisplayVideoImage, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onDisplayCurrentVideoImage);
 
     //Double view -> protocol manager
-    connect(m_pView->getDoubleView(), &CDoubleView::doSetSelectedDisplay, m_pModel->getProtocolManager(), &CProtocolManager::onIODisplaysSelected);
+    connect(m_pView->getDoubleView(), &CDoubleView::doSetSelectedDisplay, m_pModel->getWorkflowManager(), &CWorkflowManager::onIODisplaysSelected);
 }
 
 void CMainCtrl::initInfoConnections()
@@ -263,8 +263,8 @@ void CMainCtrl::initInfoConnections()
     //Video manager -> Info pane
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doDisplayVideoInfo, m_pView->getInfoPane(), &CInfoPane::onDisplayVideoInfo);
 
-    //Protocol manager -> Info pane
-    connect(m_pModel->getProtocolManager(), &CProtocolManager::doUpdateImageInfo, m_pView->getInfoPane(), &CInfoPane::onDisplayImageInfo);
+    //Workflow manager -> Info pane
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doUpdateImageInfo, m_pView->getInfoPane(), &CInfoPane::onDisplayImageInfo);
 
     //Info pane -> Data manager
     connect(m_pView->getInfoPane(), &CInfoPane::doEnableInfo, m_pModel->getDataManager(), &CMainDataManager::onEnableInfo);
@@ -364,8 +364,8 @@ void CMainCtrl::initResultsConnections()
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentResultVideo, m_pModel->getResultManager(), &CResultManager::onExportCurrentVideo);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportDatasetImage, m_pModel->getResultManager(), &CResultManager::onExportDatasetImage);
 
-    //Protocol module -> manager
-    connect(m_pView->getProtocolModule(), &CProtocolModuleWidget::doNotifyProtocolClosed, m_pModel->getResultManager(), &CResultManager::onProtocolClosed);
+    //Workflow module -> manager
+    connect(m_pView->getWorkflowModule(), &CWorkflowModuleWidget::doNotifyWorkflowClosed, m_pModel->getResultManager(), &CResultManager::onWorkflowClosed);
 
     //Results manager -> main view
     connect(m_pModel->getResultManager(), &CResultManager::doNewResultNotification, m_pView, &CMainView::onNewNotification);
@@ -402,8 +402,8 @@ void CMainCtrl::initVideoConnections()
     connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doDisplayVideoImage, m_pModel->getProjectManager(), &CProjectManager::onDisplayVideoImage);
 
     // Video manager -> protocol manager
-    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doVideoDataChanged, m_pModel->getProtocolManager(), &CProtocolManager::onInputDataChanged);
-    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doStopProtocolThread, m_pModel->getProtocolManager(), &CProtocolManager::onStopThread);
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doVideoDataChanged, m_pModel->getWorkflowManager(), &CWorkflowManager::onInputDataChanged);
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doStopWorkflowThread, m_pModel->getWorkflowManager(), &CWorkflowManager::onStopThread);
 
     // ResultManager -> ProjectManager
     connect(m_pModel->getResultManager(), &CResultManager::doAddRecordVideo, m_pModel->getProjectManager(), &CProjectManager::onAddRecordVideo);
@@ -411,8 +411,8 @@ void CMainCtrl::initVideoConnections()
     // ResultManager -> ResultViewer
     connect(m_pModel->getResultManager(), &CResultManager::doStopRecording, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onStopRecordingVideo);
 
-    //Protocol manager -> protocol manager
-    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doNotifyVideoStart, m_pModel->getProtocolManager(), &CProtocolManager::onNotifyVideoStart);
+    //Workflow manager -> protocol manager
+    connect(m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::doNotifyVideoStart, m_pModel->getWorkflowManager(), &CWorkflowManager::onNotifyVideoStart);
 
     // VideoDisplay -> ProjectManager
     connect(m_pView->getDoubleView()->getDataViewer(), &CDataViewer::doUpdateVideoPos, m_pModel->getProjectManager(), &CProjectManager::onUpdateVideoPos);
@@ -426,9 +426,9 @@ void CMainCtrl::initVideoConnections()
     // Sync result view with result manager
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doRecordVideo, m_pModel->getResultManager(), &CResultManager::onRecordResultVideo);
 
-    //Protocol module -> manager
-    connect(m_pView->getProtocolModule(), &CProtocolModuleWidget::doNotifyProtocolClosed, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onCloseProtocol);
-    connect(m_pView->getProtocolModule(), &CProtocolModuleWidget::doNotifyProtocolClosed, m_pModel->getDataManager()->getImgMgr(), &CImgManager::onCloseProtocol);
+    //Workflow module -> manager
+    connect(m_pView->getWorkflowModule(), &CWorkflowModuleWidget::doNotifyWorkflowClosed, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onCloseWorkflow);
+    connect(m_pView->getWorkflowModule(), &CWorkflowModuleWidget::doNotifyWorkflowClosed, m_pModel->getDataManager()->getImgMgr(), &CImgManager::onCloseWorkflow);
 }
 
 void CMainCtrl::initUserConnections()
@@ -479,12 +479,12 @@ void CMainCtrl::initSettingsConnections()
     // Preferences widget -> manager
     connect(m_pView->getPreferenceDlg()->getGeneralSettings(), &CGeneralSettingsWidget::doEnableTutorialHelper, m_pModel->getSettingsManager(), &CSettingsManager::onEnableTutorialHelper);
     connect(m_pView->getPreferenceDlg()->getGeneralSettings(), &CGeneralSettingsWidget::doEnableNativeDialog, m_pModel->getSettingsManager(), &CSettingsManager::onUseNativeDlg);
-    connect(m_pView->getPreferenceDlg()->getProtocolSettings(), &CProtocolSettingsWidget::doSetSaveFolder, m_pModel->getSettingsManager(), &CSettingsManager::onSetProtocolSaveFolder);
+    connect(m_pView->getPreferenceDlg()->getWorkflowSettings(), &CWorkflowSettingsWidget::doSetSaveFolder, m_pModel->getSettingsManager(), &CSettingsManager::onSetWorkflowSaveFolder);
 
     // Manager -> preferences widget
     connect(m_pModel->getSettingsManager(), &CSettingsManager::doEnableTutorialHelper, m_pView->getPreferenceDlg()->getGeneralSettings(), &CGeneralSettingsWidget::onEnableTutorialHelper);
     connect(m_pModel->getSettingsManager(), &CSettingsManager::doEnableNativeDialog, m_pView->getPreferenceDlg()->getGeneralSettings(), &CGeneralSettingsWidget::onEnableNativeDialog);
-    connect(m_pModel->getSettingsManager(), &CSettingsManager::doSetProtocolSaveFolder, m_pView->getPreferenceDlg()->getProtocolSettings(), &CProtocolSettingsWidget::onSetSaveFolder);
+    connect(m_pModel->getSettingsManager(), &CSettingsManager::doSetWorkflowSaveFolder, m_pView->getPreferenceDlg()->getWorkflowSettings(), &CWorkflowSettingsWidget::onSetSaveFolder);
 }
 
 void CMainCtrl::initPluginConnections()
@@ -520,8 +520,8 @@ void CMainCtrl::initDataConnections()
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);    
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);
 
-    //Image manager -> Protocol manager
-    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doInputDataChanged, m_pModel->getProtocolManager(), &CProtocolManager::onInputDataChanged);
+    //Image manager -> Workflow manager
+    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doInputDataChanged, m_pModel->getWorkflowManager(), &CWorkflowManager::onInputDataChanged);
 
     //Double view -> Main data manager
     connect(m_pView->getDoubleView(), &CDoubleView::doSetSelectedDisplay, m_pModel->getDataManager(), &CMainDataManager::onSetSelectedDisplay);

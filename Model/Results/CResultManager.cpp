@@ -19,15 +19,15 @@
 #include "CResultManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
-#include "IO/CImageProcessIO.h"
-#include "IO/CGraphicsProcessOutput.h"
-#include "IO/CMeasureProcessIO.h"
-#include "IO/CFeatureProcessIO.hpp"
-#include "IO/CVideoProcessIO.h"
+#include "IO/CImageIO.h"
+#include "IO/CGraphicsOutput.h"
+#include "IO/CMeasureIO.h"
+#include "IO/CFeatureIO.hpp"
+#include "IO/CVideoIO.h"
 #include "IO/CWidgetOutput.h"
 #include "IO/CDatasetIO.h"
 #include "Model/Project/CProjectManager.h"
-#include "Model/Protocol/CProtocolManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
 #include "Model/Results/CResultItem.hpp"
 #include "Model/Render/CRenderManager.h"
@@ -60,11 +60,11 @@ void CResultManager::init()
     }
 }
 
-void CResultManager::setManagers(CProjectManager *pProjectMgr, CProtocolManager* pProtocolMgr, CGraphicsManager* pGraphicsMgr,
+void CResultManager::setManagers(CProjectManager *pProjectMgr, CWorkflowManager* pWorkflowMgr, CGraphicsManager* pGraphicsMgr,
                                  CRenderManager *pRenderMgr, CMainDataManager *pDataMgr, CProgressBarManager *pProgressMgr)
 {
     m_pProjectMgr = pProjectMgr;
-    m_pProtocolMgr = pProtocolMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
     m_pGraphicsMgr = pGraphicsMgr;
     m_pRenderMgr = pRenderMgr;
     m_pProgressMgr = pProgressMgr;
@@ -87,14 +87,14 @@ void CResultManager::setCurrentResult(const QModelIndex &index)
 //Display 2D image output from 3D volume
 void CResultManager::setCurrentOutputImage(const QModelIndex& index)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
-    if(m_bProtocolInProgress == false)
+    if(m_bWorkflowInProgress == false)
         return;
 
     DimensionIndices indices = CProjectUtils::getIndicesInDataset(m_pProjectMgr->wrapIndex(index));
     auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     int volumeIndex = 0;
 
     for(size_t i=0; i<pTask->getOutputCount(); ++i)
@@ -103,7 +103,7 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
         if((dataType == IODataType::VOLUME || dataType == IODataType::VOLUME_BINARY) &&
             pTask->getOutput(i)->isDataAvailable())
         {
-            auto pOut = std::dynamic_pointer_cast<CImageProcessIO>(pTask->getOutput(i));
+            auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));
             if(pOut)
             {
                 pOut->setCurrentImage(currentImgIndex);
@@ -120,9 +120,9 @@ QModelIndex CResultManager::getRootIndex() const
     return m_pProjectMgr->getImageSubTreeRootIndex(TreeItemType::RESULT);
 }
 
-void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolVertex& taskId, const QModelIndex& itemIndex)
+void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowVertex& taskId, const QModelIndex& itemIndex)
 {
-    m_bProtocolInProgress = true;
+    m_bWorkflowInProgress = true;
     size_t outputCount = pTask->getOutputCount();
 
     if(m_pCurrentTask != pTask || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
@@ -172,7 +172,7 @@ void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolV
                         //Get video inputs index to synchronize views
                         std::set<IODataType> types = {IODataType::VIDEO, IODataType::VIDEO_BINARY, IODataType::VIDEO_LABEL,
                                                       IODataType::LIVE_STREAM, IODataType::LIVE_STREAM_BINARY, IODataType::LIVE_STREAM_LABEL};
-                        std::vector<int> videoInputIndices = m_pProtocolMgr->getDisplayedInputIndices(pTask, types);
+                        std::vector<int> videoInputIndices = m_pWorkflowMgr->getDisplayedInputIndices(pTask, types);
                         manageVideoOutput(outputPtr, pTask->getName(), videoIndex++, videoInputIndices, pOutputViewProp);
                         break;
                     }
@@ -192,7 +192,7 @@ void CResultManager::manageOutputs(const ProtocolTaskPtr &pTask, const ProtocolV
                         break;
 
                     case IODataType::OUTPUT_GRAPHICS:
-                        if(m_pProtocolMgr->isRoot(taskId) == false)
+                        if(m_pWorkflowMgr->isRoot(taskId) == false)
                             manageGraphicsOutput(outputPtr);
                         break;
 
@@ -301,7 +301,7 @@ void CResultManager::notifyBeforeProjectClosed(int projectIndex, bool bWithCurre
         clearPreviousOutputs();
 }
 
-void CResultManager::notifyBeforeProtocolCleared()
+void CResultManager::notifyBeforeWorkflowCleared()
 {
     clearPreviousOutputs();
 }
@@ -311,7 +311,7 @@ void CResultManager::notifyDisplaySelected(int index)
     if(m_pCurrentTask == nullptr)
         return;
 
-    ProtocolTaskIOPtr outputPtr = m_pCurrentTask->getOutput(index);
+    WorkflowTaskIOPtr outputPtr = m_pCurrentTask->getOutput(index);
     if(outputPtr == nullptr)
         return;
 
@@ -331,11 +331,11 @@ void CResultManager::notifyDisplaySelected(int index)
     m_selectedIndex = index;
 }
 
-void CResultManager::onProtocolClosed()
+void CResultManager::onWorkflowClosed()
 {
     CPyEnsureGIL gil;
     m_pCurrentTask = nullptr;
-    m_bProtocolInProgress = false;
+    m_bWorkflowInProgress = false;
     clearPreviousOutputs();
     emit doClearResultsView();
 }
@@ -365,7 +365,7 @@ void CResultManager::onRecordResultVideo(size_t index, bool bRecord)
 void CResultManager::onVideoSaveIsFinished(QStringList &paths, CDataVideoBuffer::Type sourceType)
 {
     //Récupération du chemin de l'image source
-    QModelIndex imgIndex = m_pProtocolMgr->getCurrentVideoInputModelIndex();
+    QModelIndex imgIndex = m_pWorkflowMgr->getCurrentVideoInputModelIndex();
     if(!imgIndex.isValid())
     {
         qCCritical(logResults).noquote() << tr("Error while saving result video: invalid index");
@@ -406,10 +406,10 @@ void CResultManager::removeResult(const QModelIndex &index)
 
 void CResultManager::onSaveCurrentImage(int index)
 {
-    assert(m_pProjectMgr && m_pProtocolMgr);
+    assert(m_pProjectMgr && m_pWorkflowMgr);
 
     //Sauvegarde de l'image résultat
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving result image: invalid current task");
@@ -465,10 +465,10 @@ void CResultManager::onExportCurrentImage(int index, const QString &path, bool b
 
 void CResultManager::onSaveCurrentVideo(size_t index)
 {
-    assert(m_pProjectMgr && m_pProtocolMgr);
+    assert(m_pProjectMgr && m_pWorkflowMgr);
 
     // Save video after launching workflow
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving result video: invalid current task");
@@ -487,7 +487,7 @@ void CResultManager::onSaveCurrentVideo(size_t index)
         outputPtr->setSaveInfo(pTask->getOutputFolder(), pTask->getName());
         std::string path = outputPtr->getSavePath();
         Utils::File::createDirectory(Utils::File::getParentPath(path));
-        runProtocolAndSaveVideo(index, path, false);
+        runWorkflowAndSaveVideo(index, path, false);
     }
     catch(std::exception& e)
     {
@@ -499,7 +499,7 @@ void CResultManager::onExportCurrentVideo(size_t id, const QString& path, bool b
 {
     try
     {
-        runProtocolAndSaveVideo(id, path.toStdString(), bWithGraphics);
+        runWorkflowAndSaveVideo(id, path.toStdString(), bWithGraphics);
     }
     catch(std::exception& e)
     {
@@ -538,7 +538,7 @@ void CResultManager::onExportDatasetImage(const QString &path, CMat &img, CGraph
     if(pLayer)
         m_pGraphicsMgr->burnLayerToImage(pLayer, img);
 
-    CImageIO io(path.toStdString());
+    CImageDataIO io(path.toStdString());
     io.write(img);
 }
 
@@ -635,7 +635,7 @@ ResultItemPtr CResultManager::getResultItem(const QModelIndex &index) const
     return pItem->getNode<ResultItemPtr>();
 }
 
-OutputDisplays CResultManager::getOutputDisplays(const ProtocolTaskPtr &pTask) const
+OutputDisplays CResultManager::getOutputDisplays(const WorkflowTaskPtr &pTask) const
 {
     OutputDisplays outDisplays;
     try
@@ -669,7 +669,7 @@ OutputDisplays CResultManager::getOutputDisplays(const ProtocolTaskPtr &pTask) c
     }
     catch(std::exception& e)
     {
-        qCCritical(logProtocol).noquote() << QString::fromStdString(e.what());
+        qCCritical(logWorkflow).noquote() << QString::fromStdString(e.what());
     }
     return outDisplays;
 }
@@ -727,7 +727,7 @@ std::set<IODataType> CResultManager::getImageBasedDataTypes() const
     return dataTypes;
 }
 
-CViewPropertyIO::ViewMode CResultManager::getViewMode(const ProtocolTaskPtr &taskPtr)
+CViewPropertyIO::ViewMode CResultManager::getViewMode(const WorkflowTaskPtr &taskPtr)
 {
     CViewPropertyIO::ViewMode mode;
     if(taskPtr->isSelfInput())
@@ -813,11 +813,11 @@ void CResultManager::clearPreviousOutputs()
     }
 }
 
-void CResultManager::manageImageOutput(const ProtocolTaskIOPtr &pOutput, const std::string& taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const std::string& taskName, size_t index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CImageProcessIO>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CImageIO>(pOutput);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management: invalid image");
@@ -847,12 +847,12 @@ void CResultManager::manageImageOutput(const ProtocolTaskIOPtr &pOutput, const s
     }
 }
 
-void CResultManager::manageVolumeOutput(const ProtocolTaskIOPtr &outputPtr, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
 {
     assert(m_pRenderMgr);
     assert(outputPtr);
 
-    auto pOut = std::dynamic_pointer_cast<CImageProcessIO>(outputPtr);
+    auto pOut = std::dynamic_pointer_cast<CImageIO>(outputPtr);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid volume");
@@ -887,11 +887,11 @@ void CResultManager::manageVolumeOutput(const ProtocolTaskIOPtr &outputPtr, cons
     }
 }
 
-void CResultManager::manageGraphicsOutput(const ProtocolTaskIOPtr &pOutput)
+void CResultManager::manageGraphicsOutput(const WorkflowTaskIOPtr &pOutput)
 {
     assert(m_pGraphicsMgr && pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CGraphicsProcessOutput>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CGraphicsOutput>(pOutput);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid graphics");
@@ -910,11 +910,11 @@ void CResultManager::manageGraphicsOutput(const ProtocolTaskIOPtr &pOutput)
     m_pGraphicsMgr->addTemporaryLayer(m_tempGraphicsLayerInfo);
 }
 
-void CResultManager::manageBlobOutput(const ProtocolTaskIOPtr &pOutput, const std::string &taskName, CViewPropertyIO* pViewProp)
+void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CMeasureProcessIO>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CMeasureIO>(pOutput);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -937,11 +937,11 @@ void CResultManager::manageBlobOutput(const ProtocolTaskIOPtr &pOutput, const st
     }
 }
 
-void CResultManager::manageNumericOutput(const ProtocolTaskIOPtr& pOutput, const std::string& taskName, CViewPropertyIO* pViewProp)
+void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CFeatureProcessIOBase>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CFeatureIOBase>(pOutput);
     auto outType = pOut->getOutputType();
 
     if(outType == NumericOutputType::TABLE)
@@ -955,7 +955,7 @@ void CResultManager::manageNumericOutput(const ProtocolTaskIOPtr& pOutput, const
     }
     else if(outType == NumericOutputType::PLOT)
     {        
-        auto pOutPlot = std::dynamic_pointer_cast<CFeatureProcessIO<double>>(pOutput);
+        auto pOutPlot = std::dynamic_pointer_cast<CFeatureIO<double>>(pOutput);
         if(pOutPlot == nullptr)
         {
             qCritical(logResults).noquote() << tr("Wrong data format for plot output, type double expected");
@@ -981,11 +981,11 @@ void CResultManager::manageNumericOutput(const ProtocolTaskIOPtr& pOutput, const
     }
 }
 
-void CResultManager::manageVideoOutput(const ProtocolTaskIOPtr& pOutput, const std::string& taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
+void CResultManager::manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CVideoProcessIO>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CVideoIO>(pOutput);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management: invalid image");
@@ -1016,8 +1016,8 @@ void CResultManager::manageVideoOutput(const ProtocolTaskIOPtr& pOutput, const s
     //Emit signal to display result
     emit doDisplayVideo(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), videoInputIndices, pViewProp);
     //Get source video info
-    auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pProtocolMgr->getCurrentVideoInputModelIndex());
-    auto srcType = m_pDataMgr->getVideoMgr()->getSourceType(m_pProtocolMgr->getCurrentVideoInputModelIndex());
+    auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
+    auto srcType = m_pDataMgr->getVideoMgr()->getSourceType(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
 
     //Emit signals to initialize video info (fps...)
     if(videoInfoPtr)
@@ -1042,7 +1042,7 @@ void CResultManager::manageVideoOutput(const ProtocolTaskIOPtr& pOutput, const s
     }
 }
 
-void CResultManager::manageWidgetOutput(const ProtocolTaskIOPtr &pOutput, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::manageWidgetOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
     Q_UNUSED(taskName);
@@ -1079,7 +1079,7 @@ void CResultManager::manageVideoRecord(size_t index, const CMat& image)
     }
 }
 
-void CResultManager::manageDatasetOutput(const ProtocolTaskIOPtr &pOutput, const std::string &taskName, CViewPropertyIO *pViewProp)
+void CResultManager::manageDatasetOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, CViewPropertyIO *pViewProp)
 {
     assert(pOutput);
 
@@ -1141,7 +1141,7 @@ void CResultManager::fillResultTreeIds(const QModelIndex &index, std::vector<int
     }
 }
 
-void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics)
+void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path, bool bWithGraphics)
 {
     // Message box non blocking
     QMessageBox* pDlg = new QMessageBox;
@@ -1150,21 +1150,21 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path,
 
     connect(pAbortBtn, &QPushButton::clicked, [&]
     {
-        m_pProtocolMgr->stopProtocol();
+        m_pWorkflowMgr->stopWorkflow();
     });
 
     pDlg->show();
 
     // Create a single shot connection between protocol manager finish and video saving
     QMetaObject::Connection* pConn = new QMetaObject::Connection();
-    *pConn = connect(m_pProtocolMgr, &CProtocolManager::doFinishedProtocol, [this, path, pDlg, id, pConn]
+    *pConn = connect(m_pWorkflowMgr, &CWorkflowManager::doFinishedWorkflow, [this, path, pDlg, id, pConn]
     {
         try
         {
             // Reset process on whole video to go back on live processing
-            m_pProtocolMgr->forceBatchMode(false);
-            m_pProtocolMgr->enableAutoLoadBatchResults(true);
-            m_pProtocolMgr->enableSaveWithGraphics(false);
+            m_pWorkflowMgr->forceBatchMode(false);
+            m_pWorkflowMgr->enableAutoLoadBatchResults(true);
+            m_pWorkflowMgr->enableSaveWithGraphics(false);
             // Move file to appropriate place
             saveOutputVideo(id, path);
         }
@@ -1181,18 +1181,18 @@ void CResultManager::runProtocolAndSaveVideo(size_t id, const std::string& path,
     });
 
     // Set processing on whole video
-    m_pProtocolMgr->forceBatchMode(true);
-    m_pProtocolMgr->enableAutoLoadBatchResults(false);
-    m_pProtocolMgr->enableSaveWithGraphics(bWithGraphics);
+    m_pWorkflowMgr->forceBatchMode(true);
+    m_pWorkflowMgr->enableAutoLoadBatchResults(false);
+    m_pWorkflowMgr->enableSaveWithGraphics(bWithGraphics);
     // Run protocol to current active task
-    m_pProtocolMgr->runProtocolToActiveTask();
+    m_pWorkflowMgr->runWorkflowToActiveTask();
 }
 
-void CResultManager::updateVolumeRender(const ProtocolTaskIOPtr &outputPtr)
+void CResultManager::updateVolumeRender(const WorkflowTaskIOPtr &outputPtr)
 {
     assert(m_pRenderMgr);
 
-    auto outPtr = std::dynamic_pointer_cast<CImageProcessIO>(outputPtr);
+    auto outPtr = std::dynamic_pointer_cast<CImageIO>(outputPtr);
     if(outPtr == nullptr)
         return;
 
@@ -1207,10 +1207,10 @@ void CResultManager::updateVolumeRender(const ProtocolTaskIOPtr &outputPtr)
 
 void CResultManager::saveOutputImage(int index, const std::string &path, bool bWithGraphics)
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
     assert(index >= 0);
 
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
         throw CException(CoreExCode::NULL_POINTER, tr("Invalid current task").toStdString(), __func__, __FILE__, __LINE__);
 
@@ -1218,7 +1218,7 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
     if(index >= (int)outputs.size())
         throw CException(CoreExCode::INVALID_PARAMETER, tr("Invalid output index").toStdString(), __func__, __FILE__, __LINE__);
 
-    auto pImageIO = std::static_pointer_cast<CImageProcessIO>(outputs[index]);
+    auto pImageIO = std::static_pointer_cast<CImageIO>(outputs[index]);
     auto srcImg = pImageIO->getImage();
     CMat img;
 
@@ -1228,7 +1228,7 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
         auto graphicsOutputs = pTask->getOutputs({IODataType::OUTPUT_GRAPHICS});
         for(size_t i=0; i<graphicsOutputs.size(); ++i)
         {
-            auto graphicsOutPtr = std::static_pointer_cast<CGraphicsProcessOutput>(graphicsOutputs[i]);
+            auto graphicsOutPtr = std::static_pointer_cast<CGraphicsOutput>(graphicsOutputs[i]);
             if(graphicsOutPtr->getImageIndex() == index)
             {
                 m_pGraphicsMgr->burnGraphicsToImage(graphicsOutPtr->getItems(), img);
@@ -1239,14 +1239,14 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
     else
         img = srcImg;
 
-    CImageIO io(Utils::File::getAvailablePath(path));
+    CImageDataIO io(Utils::File::getAvailablePath(path));
     io.write(img);
 }
 
 void CResultManager::saveOutputVideo(size_t id, const std::string& path)
 {
-    assert(m_pProtocolMgr);
-    ProtocolTaskPtr pTask = m_pProtocolMgr->getActiveTask();
+    assert(m_pWorkflowMgr);
+    WorkflowTaskPtr pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
         throw CException(CoreExCode::NULL_POINTER, "Invalid current task", __func__, __FILE__, __LINE__);
 
@@ -1257,7 +1257,7 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
     if(dataType == IODataType::VIDEO || dataType == IODataType::VIDEO_BINARY || dataType == IODataType::VIDEO_LABEL)
     {
         // Move to user-defined path
-        auto pVideoIO = std::static_pointer_cast<CVideoProcessIO>(output);
+        auto pVideoIO = std::static_pointer_cast<CVideoIO>(output);
         auto infoPtr = std::static_pointer_cast<CDataVideoInfo>(pVideoIO->getDataInfo());
         auto resultPath = pVideoIO->getVideoPath();
 
@@ -1279,8 +1279,8 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
         emit doVideoSaveIsFinished(paths, static_cast<CDataVideoBuffer::Type>(infoPtr->m_sourceType));
     }
 
-    //Create Protocol <-> Image association
-    //mapProtocolToImage();
+    //Create Workflow <-> Image association
+    //mapWorkflowToImage();
 }
 
 void CResultManager::saveOutputMeasures()
@@ -1288,14 +1288,14 @@ void CResultManager::saveOutputMeasures()
     auto pMultiProject = m_pProjectMgr->getMultiModel();
     assert(pMultiProject);
 
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving measures: invalid current task");
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CMeasureProcessIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -1307,8 +1307,8 @@ void CResultManager::saveOutputMeasures()
     if(!rootIndex.isValid())
         rootIndex = createRootResult();
 
-    //Set the structure of the result tree for protocol: ProtocolResults -> TaskResults
-    auto protocolName = m_pProtocolMgr->getProtocolName();
+    //Set the structure of the result tree for protocol: WorkflowResults -> TaskResults
+    auto protocolName = m_pWorkflowMgr->getWorkflowName();
     auto protocolResultIndex = findResultFromName(QString::fromStdString(protocolName));
 
     if(!protocolResultIndex.isValid())
@@ -1322,14 +1322,14 @@ void CResultManager::saveOutputMeasures()
 
 void CResultManager::saveOutputMeasures(const std::string &path)
 {
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving measures: invalid current task");
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CMeasureProcessIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -1340,14 +1340,14 @@ void CResultManager::saveOutputMeasures(const std::string &path)
 
 void CResultManager::saveOutputFeatures(const std::string &path)
 {
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving measures: invalid current task");
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CFeatureProcessIOBase>(pTask->getOutputFromType(IODataType::NUMERIC_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CFeatureIOBase>(pTask->getOutputFromType(IODataType::NUMERIC_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -1358,28 +1358,28 @@ void CResultManager::saveOutputFeatures(const std::string &path)
 
 void CResultManager::saveOutputGraphics()
 {
-    auto pTask = m_pProtocolMgr->getActiveTask();
+    auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
     {
         qCCritical(logResults).noquote() << tr("Error while saving graphics: invalid current task");
         return;
     }
 
-    //Set the structure of the graphics tree for protocol: ProtocolLayer -> TaskLayer
-    auto protocolName = QString::fromStdString(m_pProtocolMgr->getProtocolName());
+    //Set the structure of the graphics tree for protocol: WorkflowLayer -> TaskLayer
+    auto protocolName = QString::fromStdString(m_pWorkflowMgr->getWorkflowName());
     auto protocolLayerIndex = m_pGraphicsMgr->findLayerFromName(protocolName);
     auto currentLayerIndex = m_pGraphicsMgr->getCurrentLayerIndex();
 
     if(!protocolLayerIndex.isValid())
     {
         //Create protocol layer if it does not exist
-        auto pProtocolLayer = new CGraphicsLayer(protocolName);
+        auto pWorkflowLayer = new CGraphicsLayer(protocolName);
         auto rootLayerIndex = m_pGraphicsMgr->getRootLayerIndex();
 
         if(rootLayerIndex.isValid())
             m_pGraphicsMgr->setCurrentLayer(m_pGraphicsMgr->getRootLayerIndex(), true);
 
-        protocolLayerIndex = m_pGraphicsMgr->addLayer(pProtocolLayer);
+        protocolLayerIndex = m_pGraphicsMgr->addLayer(pWorkflowLayer);
     }
     else if(protocolLayerIndex != currentLayerIndex && !m_pGraphicsMgr->isChildLayer(currentLayerIndex, protocolLayerIndex))
     {
@@ -1388,7 +1388,7 @@ void CResultManager::saveOutputGraphics()
     }
 
     //Add to project and image scene
-    auto pOut = std::dynamic_pointer_cast<CGraphicsProcessOutput>(pTask->getOutputFromType(IODataType::OUTPUT_GRAPHICS));
+    auto pOut = std::dynamic_pointer_cast<CGraphicsOutput>(pTask->getOutputFromType(IODataType::OUTPUT_GRAPHICS));
     if(pOut)
     {
         //We have to create new layer from output objects
@@ -1439,10 +1439,10 @@ void CResultManager::loadResults(const QModelIndex &index)
 
 void CResultManager::startRecordVideo()
 {
-    assert(m_pProtocolMgr);
+    assert(m_pWorkflowMgr);
 
     // Get active task for naming
-    auto name = m_pProtocolMgr->getProtocolName();
+    auto name = m_pWorkflowMgr->getWorkflowName();
     m_currentVideoRecord = Utils::IkomiaApp::getAppFolder() + "/VideoRecord";
 
     try
@@ -1465,10 +1465,10 @@ void CResultManager::startRecordVideo()
 
     // Get info from source video manager and copy information to video manager
     int fps = 25;
-    auto pInfo = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pProtocolMgr->getCurrentVideoInputModelIndex());
+    auto pInfo = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
 
     if(pInfo)
-        fps = m_pProtocolMgr->getCurrentFPS();
+        fps = m_pWorkflowMgr->getCurrentFPS();
 
     m_pVideoMgr->startStreamWrite(pInfo->m_width, pInfo->m_height, fps);
 }

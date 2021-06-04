@@ -24,7 +24,7 @@ _QtBindingBlock_
 
 # --------------------
 # - Class which implements widget associated with the process
-# - Inherits PyCore.CProtocolTaskWidget from Ikomia API
+# - Inherits PyCore.CWorkflowTaskWidget from Ikomia API
 # --------------------
 class _PluginName_Widget(_WidgetBaseClass_):
 

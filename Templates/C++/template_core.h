@@ -25,7 +25,7 @@
 #include <memory>
 #include "_PluginName_Global.hpp"
 #include "CPluginProcessInterface.hpp"
-#include "Protocol/CProtocolTaskParam.hpp"
+#include "Workflow/CWorkflowTaskParam.hpp"
 
 #include "Core/CWidgetFactory.hpp"
 #include "_ProcessBaseClassHeader_"
@@ -34,7 +34,7 @@
 //------------------------------
 //----- C_PluginName_Param
 //------------------------------
-class C_PluginName_Param: public CProtocolTaskParam
+class C_PluginName_Param: public CWorkflowTaskParam
 {
     public:
 
@@ -64,7 +64,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_ : public _ProcessBaseClas
         void            run() override;
 };
 
-class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CProcessFactory
+class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CTaskFactory
 {
     public:
 
@@ -80,10 +80,10 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CProcessF
             m_info.m_iconPath = "";
             //For search
             m_info.m_keywords = "Your keywords here";
-            m_info.m_language = CProcessInfo::CPP;
+            m_info.m_language = CTaskInfo::CPP;
         }
 
-        virtual ProtocolTaskPtr create(const ProtocolTaskParamPtr& pParam) override
+        virtual WorkflowTaskPtr create(const WorkflowTaskParamPtr& pParam) override
         {
             auto pDerivedParam = std::dynamic_pointer_cast<C_PluginName_Param>(pParam);
             if(pDerivedParam != nullptr)
@@ -91,7 +91,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CProcessF
             else
                 return create();
         }
-        virtual ProtocolTaskPtr create() override
+        virtual WorkflowTaskPtr create() override
         {
             auto pDerivedParam = std::make_shared<C_PluginName_Param>();
             assert(pDerivedParam != nullptr);
@@ -107,7 +107,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Widget : public _WidgetBas
     public:
 
         C_PluginName_Widget(QWidget *parent = Q_NULLPTR);
-        C_PluginName_Widget(ProtocolTaskParamPtr pParam, QWidget *parent = Q_NULLPTR);
+        C_PluginName_Widget(WorkflowTaskParamPtr pParam, QWidget *parent = Q_NULLPTR);
 
     protected:
 
@@ -127,7 +127,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_WidgetFactory : public CWi
             m_name = "_PluginName_";
         }
 
-        virtual ProtocolTaskWidgetPtr   create(ProtocolTaskParamPtr pParam)
+        virtual WorkflowTaskWidgetPtr   create(WorkflowTaskParamPtr pParam)
         {
             return std::make_shared<C_PluginName_Widget>(pParam);
         }
@@ -144,7 +144,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Interface : public QObject
 
     public:
 
-        virtual std::shared_ptr<CProcessFactory> getProcessFactory()
+        virtual std::shared_ptr<CTaskFactory> getProcessFactory()
         {
             return std::make_shared<C_PluginName_Factory>();
         }

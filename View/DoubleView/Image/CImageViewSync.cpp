@@ -18,7 +18,7 @@
 
 #include "CImageViewSync.h"
 #include <QScrollBar>
-#include "Protocol/CViewPropertyIO.h"
+#include "Workflow/CViewPropertyIO.h"
 #include <QTimer>
 
 CImageViewSync::CImageViewSync()

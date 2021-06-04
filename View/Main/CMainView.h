@@ -47,10 +47,10 @@
 #include "View/Project/CProjectPane.h"
 #include "View/Project/CDatasetLoadPolicyDlg.h"
 #include "View/Process/CProcessPane.h"
-#include "View/Protocol/CProtocolPane.h"
-#include "View/Modules/Protocol/CProtocolView.h"
+#include "View/Workflow/CWorkflowPane.h"
+#include "View/Modules/Workflow/CWorkflowView.h"
 #include "View/Modules/CModuleDockWidget.h"
-#include "View/Modules/Protocol/CProtocolModuleWidget.h"
+#include "View/Modules/Workflow/CWorkflowModuleWidget.h"
 #include "View/Modules/PluginManager/CPluginManagerWidget.h"
 #include "View/Graphics/CGraphicsToolbar.h"
 #include "View/Graphics/CGraphicsPropertiesWidget.h"
@@ -118,10 +118,10 @@ class CMainView : public QMainWindow
         CProjectPane*           getProjectPane();
         CDoubleView*            getDoubleView();
         CProcessPane*           getProcessPane();
-        CProtocolPane*          getProtocolPane();
+        CWorkflowPane*          getWorkflowPane();
         CInfoPane*              getInfoPane();
         CWizardPane*            getWizardPane();
-        CProtocolModuleWidget*  getProtocolModule();
+        CWorkflowModuleWidget*  getWorkflowModule();
         CGraphicsToolbar*       getGraphicsToolbar() const;
         QSystemTrayIcon*        getNotifier();
         CNotificationPane*      getNotificationCenter();
@@ -173,7 +173,7 @@ class CMainView : public QMainWindow
 
         void                    onSetGraphicsContext(GraphicsContextPtr& context);
         void                    onSetCurrentUser(const CUser& user);
-        void                    onSetProtocolChangedIcon();
+        void                    onSetWorkflowChangedIcon();
 
         void                    onGraphicsContextChanged();
 
@@ -207,7 +207,7 @@ class CMainView : public QMainWindow
         void                    initCentralView();
         void                    initUpView();
         void                    initBottomView();
-        void                    initProtocolModule();
+        void                    initWorkflowModule();
         void                    initPluginMakerModule();
         void                    initConnections();
         void                    initMainToolBar();
@@ -284,14 +284,14 @@ class CMainView : public QMainWindow
         CStackedPane*                       m_pRightPanes = nullptr;
         CProjectPane*                       m_pProjectPane = nullptr;
         CProcessPane*                       m_pProcessPane = nullptr;
-        CProtocolPane*                      m_pProtocolPane = nullptr;
+        CWorkflowPane*                      m_pWorkflowPane = nullptr;
         CWizardPane*                        m_pWizardPane = nullptr;
         CInfoPane*                          m_pInfoPane = nullptr;
         CProgressCircleManager              m_circleProgressMgr;
         CDoubleView*                        m_pDoubleView = nullptr;
         CGraphicsToolbar*                   m_pGraphicsToolbar = nullptr;
         CGraphicsPropertiesWidget*          m_pGraphicsProperties = nullptr;
-        CProtocolModuleWidget*              m_pProtocolModule = nullptr;
+        CWorkflowModuleWidget*              m_pWorkflowModule = nullptr;
         CPluginManagerWidget*               m_pPluginMgrModule = nullptr;
         QLabel*                             m_pTimer = nullptr;
         QSystemTrayIcon*                    m_pNotifier = nullptr;
@@ -307,7 +307,7 @@ class CMainView : public QMainWindow
         CProcessPopupDlg*                   m_pProcessDlg = nullptr;
         QToolButton*                        m_pProjectBtn = nullptr;
         QToolButton*                        m_pProcessBtn = nullptr;
-        QToolButton*                        m_pProtocolBtn = nullptr;
+        QToolButton*                        m_pWorkflowBtn = nullptr;
         QToolButton*                        m_pPropertiesBtn = nullptr;
         QErrorMessage*                      m_pErrMsgDlg = nullptr;
         CUser                               m_currentUser;

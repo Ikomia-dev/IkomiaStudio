@@ -105,7 +105,7 @@ class CProjectPane : public QWidget
 
         void                doCloseProject(const QModelIndex& index);
 
-        void                doApplyProcess(const QModelIndex& index, const std::string& processName, const std::shared_ptr<CProtocolTaskParam>& pParam);
+        void                doApplyProcess(const QModelIndex& index, const std::string& processName, const std::shared_ptr<CWorkflowTaskParam>& pParam);
 
         void                doInsertProjectDimension(const QModelIndex& index, const DataDimension dim);
 
@@ -121,7 +121,7 @@ class CProjectPane : public QWidget
         void                onUpdateIndex(const QModelIndex& index);
         void                onUpdateProject(CMultiProjectModel* pProject);
         void                onShowContextMenu(const QPoint& pos);
-        void                onApplyProcess(const std::string& processName, const std::shared_ptr<CProtocolTaskParam>& pParam);
+        void                onApplyProcess(const std::string& processName, const std::shared_ptr<CWorkflowTaskParam>& pParam);
         void                onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
         void                onUpdateSelectedIndex(const QModelIndex& index);
         void                onSelectionChanged(const QItemSelection& selected, const QItemSelection& /*deselected*/);
