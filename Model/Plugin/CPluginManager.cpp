@@ -138,7 +138,7 @@ TaskFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
     }
     catch(std::exception& e)
     {
-        qCWarning(logPlugin).noquote().noquote() << tr("Plugin %1 failed to load:").arg(fileName) << QString(e.what());
+        qCWarning(logPlugin).noquote() << tr("Plugin %1 failed to load:").arg(fileName) << QString(e.what());
     }
     return nullptr;
 }
@@ -174,7 +174,7 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                     auto taskFactoryPtr = plugin->getProcessFactory();
                     taskFactoryPtr->getInfo().setInternal(false);
                     taskFactoryPtr->getInfo().setLanguage(CTaskInfo::PYTHON);
-                    taskFactoryPtr->getInfo().setOS(CTaskInfo::ALL);
+                    taskFactoryPtr->getInfo().setOS(OSType::ALL);
 
                     auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
                     auto state = Utils::Plugin::getPythonState(version);

@@ -293,11 +293,11 @@ void CStorePluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOp
     int os = pModel->record(index.row()).value("os").toInt();
 
     QString pixmapPath;
-    if(os == CTaskInfo::LINUX)
+    if(os == OSType::LINUX)
         pixmapPath = ":/Images/linux.png";
-    else if(os == CTaskInfo::WIN)
+    else if(os == OSType::WIN)
         pixmapPath = ":/Images/win.png";
-    else if(os == CTaskInfo::OSX)
+    else if(os == OSType::OSX)
         pixmapPath = ":/Images/mac.png";
     else
         pixmapPath = ":/Images/all.png";

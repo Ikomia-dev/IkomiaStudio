@@ -461,22 +461,6 @@ namespace Ikomia
             }
         }
 
-        namespace OS
-        {
-            inline int getCurrent()
-            {
-                #if defined(Q_OS_LINUX)
-                    return CTaskInfo::LINUX;
-                #elif defined(Q_OS_MACOS)
-                    return CTaskInfo::OSX;
-                #elif defined(Q_OS_WIN64)
-                    return CTaskInfo::WIN;
-                #else
-                    return CTaskInfo::ALL;
-                #endif
-            }
-        }
-
         namespace Data
         {
             inline QString getExportFormatName(DataFileFormat format)

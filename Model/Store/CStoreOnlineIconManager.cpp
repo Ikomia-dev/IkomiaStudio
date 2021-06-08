@@ -45,7 +45,7 @@ void CStoreOnlineIconManager::loadIcons(QJsonArray* pPlugins)
         QJsonObject plugin = (*m_pPlugins)[i].toObject();
         int pluginOS = plugin["os"].toInt();
 
-        if(pluginOS == CTaskInfo::ALL || currentOS == pluginOS)
+        if(pluginOS == OSType::ALL || currentOS == pluginOS)
         {
             if(isIconExists(plugin["name"].toString()) == true)
                 setPluginIconPath(i, getPluginIconPath(plugin["name"].toString()));
@@ -66,7 +66,7 @@ void CStoreOnlineIconManager::loadIcons(QJsonArray* pPlugins)
         QJsonObject plugin = (*m_pPlugins)[i].toObject();
         int pluginOS = plugin["os"].toInt();
 
-        if((pluginOS == CTaskInfo::ALL || currentOS == pluginOS) && (isIconExists(plugin["name"].toString()) == false))
+        if((pluginOS == OSType::ALL || currentOS == pluginOS) && (isIconExists(plugin["name"].toString()) == false))
         {
             //Http request to get plugin icon url
             QUrlQuery urlQuery(Utils::Network::getBaseUrl() + QString("/api/plugin/%1/icon/").arg(plugin["id"].toInt()));
