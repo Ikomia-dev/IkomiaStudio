@@ -164,11 +164,11 @@ QString CCppPluginMaker::getProcessBaseClass() const
     QString baseClass;
     switch(m_processBaseClass)
     {
-        case PluginManager::CWorkflow_TASK: baseClass = "CWorkflowTask"; break;
-        case PluginManager::CIMAGE_PROCESS_2D: baseClass = "CImageProcess2d"; break;
-        case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: baseClass = "CInteractiveImageProcess2d"; break;
-        case PluginManager::CVIDEO_PROCESS: baseClass = "CVideoProcess"; break;
-        case PluginManager::CVIDEO_PROCESS_OF: baseClass = "CVideoProcessOF"; break;
+        case PluginManager::CWORKFLOW_TASK: baseClass = "CWorkflowTask"; break;
+        case PluginManager::C2DIMAGE_TASK: baseClass = "C2dImageTask"; break;
+        case PluginManager::C2DIMAGE_INTERACTIVE_TASK: baseClass = "C2dImageInteractiveTask"; break;
+        case PluginManager::CVIDEO_TASK: baseClass = "CVideoTask"; break;
+        case PluginManager::CVIDEO_OF_TASK: baseClass = "CVideoOFTask"; break;
     }
     return baseClass;
 }
@@ -178,11 +178,11 @@ QString CCppPluginMaker::getProcessBaseClassHeader() const
     QString header;
     switch(m_processBaseClass)
     {
-        case PluginManager::CWorkflow_TASK: header = "Workflow/CWorkflowTask.h"; break;
-        case PluginManager::CIMAGE_PROCESS_2D: header = "Core/CImageProcess2d.h"; break;
-        case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: header = "Core/CInteractiveImageProcess2d.h"; break;
-        case PluginManager::CVIDEO_PROCESS: header = "Core/CVideoProcess.h"; break;
-        case PluginManager::CVIDEO_PROCESS_OF: header = "Core/CVideoProcessOF.h"; break;
+        case PluginManager::CWORKFLOW_TASK: header = "Workflow/CWorkflowTask.h"; break;
+        case PluginManager::C2DIMAGE_TASK: header = "Core/C2dImageTask.h"; break;
+        case PluginManager::C2DIMAGE_INTERACTIVE_TASK: header = "Core/C2dImageInteractiveTask.h"; break;
+        case PluginManager::CVIDEO_TASK: header = "Core/CVideoProcess.h"; break;
+        case PluginManager::CVIDEO_OF_TASK: header = "Core/CVideoOFTask.h"; break;
     }
     return header;
 }

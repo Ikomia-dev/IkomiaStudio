@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ikomia import utils, core, dataprocess
-import _PluginName__process as processMod
+from ikomia import core, dataprocess
+from ikomia.utils import pyqtutils, qtconversion
+from _PluginName_._PluginName__process import _PluginName_Param
 
 _QtBindingBlock_
 
@@ -32,7 +33,7 @@ class _PluginName_Widget(_WidgetBaseClass_):
         _WidgetBaseClass_.__init__(self, parent)
 
         if param is None:
-            self.parameters = processMod._PluginName_Param()
+            self.parameters = _PluginName_Param()
         else:
             self.parameters = param
 

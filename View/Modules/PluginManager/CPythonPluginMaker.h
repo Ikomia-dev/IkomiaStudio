@@ -57,8 +57,8 @@ class CPythonPluginMaker
     private:
 
         QString                         m_name;
-        PluginManager::ProcessBaseClass m_processBaseClass = PluginManager::CWorkflow_TASK;
-        PluginManager::WidgetBaseClass  m_widgetBaseClass = PluginManager::CWorkflow_TASK_WIDGET;
+        PluginManager::ProcessBaseClass m_processBaseClass = PluginManager::CWORKFLOW_TASK;
+        PluginManager::WidgetBaseClass  m_widgetBaseClass = PluginManager::CWORKFLOW_TASK_WIDGET;
         QtBinding                       m_qtBinding = PYQT;
 };
 

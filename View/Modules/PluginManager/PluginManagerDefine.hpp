@@ -25,16 +25,16 @@ namespace Ikomia
     {
         enum ProcessBaseClass
         {
-            CWorkflow_TASK,
-            CIMAGE_PROCESS_2D,
-            CINTERACTIVE_IMAGE_PROCESS_2D,
-            CVIDEO_PROCESS,
-            CVIDEO_PROCESS_OF
+            CWORKFLOW_TASK,
+            C2DIMAGE_TASK,
+            C2DIMAGE_INTERACTIVE_TASK,
+            CVIDEO_TASK,
+            CVIDEO_OF_TASK
         };
 
         enum WidgetBaseClass
         {
-            CWorkflow_TASK_WIDGET
+            CWORKFLOW_TASK_WIDGET
         };
     }
 }

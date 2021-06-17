@@ -54,8 +54,8 @@ class CCppPluginMaker
         QString                         m_name;
         QString                         m_srcFolder;
         QString                         m_apiFolder;
-        PluginManager::ProcessBaseClass   m_processBaseClass = PluginManager::CWorkflow_TASK;
-        PluginManager::WidgetBaseClass    m_widgetBaseClass = PluginManager::CWorkflow_TASK_WIDGET;
+        PluginManager::ProcessBaseClass   m_processBaseClass = PluginManager::CWORKFLOW_TASK;
+        PluginManager::WidgetBaseClass    m_widgetBaseClass = PluginManager::CWORKFLOW_TASK_WIDGET;
 };
 
 #endif // CCPPPLUGINMAKER_H

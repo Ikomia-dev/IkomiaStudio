@@ -143,11 +143,11 @@ QString CPythonPluginMaker::getProcessBaseClass() const
     QString baseClass;
     switch(m_processBaseClass)
     {
-        case PluginManager::CWorkflow_TASK: baseClass = "core.CWorkflowTask"; break;
-        case PluginManager::CIMAGE_PROCESS_2D: baseClass = "dataprocess.CImageProcess2d"; break;
-        case PluginManager::CINTERACTIVE_IMAGE_PROCESS_2D: baseClass = "dataprocess.CInteractiveImageProcess2d"; break;
-        case PluginManager::CVIDEO_PROCESS: baseClass = "dataprocess.CVideoProcess"; break;
-        case PluginManager::CVIDEO_PROCESS_OF: baseClass = "dataprocess.CVideoProcessOF"; break;
+        case PluginManager::CWORKFLOW_TASK: baseClass = "core.CWorkflowTask"; break;
+        case PluginManager::C2DIMAGE_TASK: baseClass = "dataprocess.C2dImageTask"; break;
+        case PluginManager::C2DIMAGE_INTERACTIVE_TASK: baseClass = "dataprocess.C2dImageInteractiveTask"; break;
+        case PluginManager::CVIDEO_TASK: baseClass = "dataprocess.CVideoTask"; break;
+        case PluginManager::CVIDEO_OF_TASK: baseClass = "dataprocess.CVideoOFTask"; break;
     }
     return baseClass;
 }

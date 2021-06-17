@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ikomia import dataprocess
-import _PluginName__process as processMod
-import _PluginName__widget as widgetMod
 
 
 # --------------------
@@ -32,8 +30,10 @@ class _PluginName_(dataprocess.CPluginProcessInterface):
 
     def getProcessFactory(self):
         # Instantiate process object
-        return processMod._PluginName_ProcessFactory()
+        from _PluginName_._PluginName__process import _PluginName_ProcessFactory
+        return _PluginName_ProcessFactory()
 
     def getWidgetFactory(self):
         # Instantiate associated widget object
-        return widgetMod._PluginName_WidgetFactory()
+        from _PluginName_._PluginName__widget import _PluginName_WidgetFactory
+        return _PluginName_WidgetFactory()
