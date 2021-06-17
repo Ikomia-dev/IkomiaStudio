@@ -138,7 +138,7 @@ void CProcessListViewDelegate::paintLanguageIcon(QPainter *painter, const QStyle
     int language = pTable->record(index.row()).value("language").toInt();
 
     QString pixmapPath;
-    if(language == CTaskInfo::CPP)
+    if(language == ApiLanguage::CPP)
         pixmapPath = ":/Images/C++-language-logo.png";
     else
         pixmapPath = ":/Images/python-language-logo.png";

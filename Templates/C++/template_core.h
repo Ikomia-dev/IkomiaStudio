@@ -80,7 +80,7 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CTaskFact
             m_info.m_iconPath = "";
             //For search
             m_info.m_keywords = "Your keywords here";
-            m_info.m_language = CTaskInfo::CPP;
+            m_info.m_language = ApiLanguage::CPP;
         }
 
         virtual WorkflowTaskPtr create(const WorkflowTaskParamPtr& pParam) override

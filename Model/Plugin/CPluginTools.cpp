@@ -33,7 +33,7 @@ std::string Utils::CPluginTools::getTransferPath()
 std::string Utils::CPluginTools::getDirectory(const std::string& name, int language)
 {
     std::string directory;
-    if(language == CTaskInfo::CPP)
+    if(language == ApiLanguage::CPP)
         directory = Utils::Plugin::getCppPath() + "/" + Utils::String::httpFormat(name);
     else
         directory = Utils::Plugin::getPythonPath() + "/" + Utils::String::httpFormat(name);

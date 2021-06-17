@@ -42,7 +42,7 @@ void CPluginPythonDependencyModel::setPluginName(const QString &name,
         boost::python::str strPluginFolder(pluginFolder.toStdString().c_str());
         boost::python::object ikomia = Utils::CPluginTools::loadPythonModule("ikomia");
         boost::python::object utils = ikomia.attr("utils");
-        boost::python::object modules = utils.attr("getPluginDependencies")(strPluginFolder);
+        boost::python::object modules = utils.attr("get_plugin_dependencies")(strPluginFolder);
         boost::python::object validModules = modules[0];
         boost::python::object missingModules = modules[1];
 

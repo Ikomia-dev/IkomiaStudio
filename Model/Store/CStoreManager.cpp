@@ -360,7 +360,7 @@ void CStoreManager::onDownloadPackageDone()
     std::string dirName = Utils::File::getFileNameWithoutExtension(m_currentPluginPackageFile.toStdString());
     int language = m_pServerPluginModel->record(m_currentServerIndex.row()).value("language").toInt();
 
-    if(language == CTaskInfo::CPP)
+    if(language == ApiLanguage::CPP)
         destDir = QString::fromStdString(Utils::Plugin::getCppPath() + "/" + dirName);
     else
         destDir = QString::fromStdString(Utils::Plugin::getPythonPath() + "/" + dirName);
@@ -369,7 +369,7 @@ void CStoreManager::onDownloadPackageDone()
     if(boost::filesystem::exists(pluginFolder))
     {
         //Plugin already exists, it's an update
-        if(language == CTaskInfo::CPP)
+        if(language == ApiLanguage::CPP)
         {
             //Save plugin archive name to settings to finalize installation on next start
             QSettings ikomiaSettings;
@@ -458,7 +458,7 @@ void CStoreManager::onPluginExtractionDone(const QStringList& files, const QStri
         //Package file name could have been changed during upload
         //We have to check and correct this name if necessary
         QString validDstDir;
-        if(procInfo.m_language == CTaskInfo::PYTHON)
+        if(procInfo.m_language == ApiLanguage::PYTHON)
             validDstDir = checkPythonPluginDirectory(dstDir);
         else
             validDstDir = checkCppPluginDirectory(dstDir, QString::fromStdString(procInfo.m_name));
@@ -932,9 +932,9 @@ void CStoreManager::generateZipFile()
     QString zipFilePath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/" + Utils::String::httpFormat(name.toStdString()) + ".zip");
 
     QString pluginDir;
-    if(language == CTaskInfo::CPP)
+    if(language == ApiLanguage::CPP)
         pluginDir = Utils::CPluginTools::getCppPluginFolder(name);
-    else if(language == CTaskInfo::PYTHON)
+    else if(language == ApiLanguage::PYTHON)
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(name);
 
     if(pluginDir.isEmpty())
@@ -1149,7 +1149,7 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
     //Install dependencies into separate thread
     auto future = QtConcurrent::run([directory, info]
     {
-        if(info.m_language == CTaskInfo::CPP)
+        if(info.m_language == ApiLanguage::CPP)
             return;
 
         std::set<QString> requirements;

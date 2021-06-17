@@ -52,7 +52,7 @@ void CProcessDocWidget::setProcessInfo(const CTaskInfo& info)
 
 void CProcessDocWidget::onShowSourceCode()
 {
-    if(m_processInfo.m_language == CTaskInfo::PYTHON)
+    if(m_processInfo.m_language == ApiLanguage::PYTHON)
     {
         auto pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
         if(!pluginDir.isEmpty() && Utils::File::isFileExist(pluginDir.toStdString()))
@@ -67,7 +67,7 @@ void CProcessDocWidget::onShowSourceCode()
 void CProcessDocWidget::onExportDocumentation()
 {
     QString pluginDir;;
-    if(m_processInfo.m_language == CTaskInfo::CPP)
+    if(m_processInfo.m_language == ApiLanguage::CPP)
         pluginDir = Utils::CPluginTools::getCppPluginFolder(QString::fromStdString(m_processInfo.m_name));
     else
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
