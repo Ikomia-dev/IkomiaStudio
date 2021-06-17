@@ -247,6 +247,8 @@ void CMainModel::initPython()
     std::string pythonLib;
     std::string pythonDynload;
     std::string pythonSitePackages;
+    std::string ikomiaApi;
+    std::string pluginsPath = Utils::IkomiaApp::getQAppFolder().toStdString() + "/Plugins/Python";
 
     // Set program if existing
     QDir pythonDir(pythonPath);
@@ -281,6 +283,7 @@ void CMainModel::initPython()
         std::string modulePath = pythonPath.toStdString() + pythonLib;
         modulePath += pythonPath.toStdString() + pythonDynload;
         modulePath += pythonPath.toStdString() + pythonSitePackages;
+        modulePath += pluginsPath;
 
 #ifndef QT_DEBUG
         modulePath += Utils::IkomiaApp::getAppFolder() + "/Api";
@@ -309,13 +312,13 @@ void CMainModel::initPython()
         pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
         pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
         pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
-        std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
+        ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
 #elif defined(Q_OS_LINUX)
         pythonExe = "/usr/bin/python" + Utils::Python::getDevBinVersion();
         pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
         pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
         pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
-        std::string ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
+        ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
 #elif defined(Q_OS_WIN64)
         std::string programFilesPath = getenv("PROGRAMFILES");
         std::string pythonFolder = programFilesPath + "/Python" + Utils::Python::getDevBinVersion();
@@ -323,7 +326,7 @@ void CMainModel::initPython()
         pythonLib = ";" + pythonFolder + "/Lib;";
         pythonDynload = pythonFolder + "/DLLs;";
         pythonSitePackages = pythonFolder + "/Lib/site-packages;";
-        std::string ikomiaApi = "C:/Developpement/IkomiaApi/Build/Lib/Python;";
+        ikomiaApi = "C:/Developpement/IkomiaApi/Build/Lib/Python;";
 #endif
         auto s = pythonExe.size();
         Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &s));
@@ -334,6 +337,7 @@ void CMainModel::initPython()
         modulePath += pythonDynload;
         modulePath += pythonSitePackages;
         modulePath += ikomiaApi;
+        modulePath += pluginsPath;
         auto sp = modulePath.size();
         Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &sp));
     }

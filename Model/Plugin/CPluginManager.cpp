@@ -50,7 +50,7 @@ TaskFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int langua
 {
     assert(m_pRegistrator);
 
-    if(language == CTaskInfo::PYTHON)
+    if(language == ApiLanguage::PYTHON)
     {
         QString pluginDir = Utils::CPluginTools::getPythonPluginFolder(name);
         if(pluginDir.isEmpty() == false)
@@ -95,7 +95,7 @@ TaskFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
                 return nullptr;
             }
             taskFactoryPtr->getInfo().setInternal(false);
-            taskFactoryPtr->getInfo().setLanguage(CTaskInfo::CPP);
+            taskFactoryPtr->getInfo().setLanguage(ApiLanguage::CPP);
             taskFactoryPtr->getInfo().setOS(Utils::OS::getCurrent());
 
             auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
@@ -145,7 +145,7 @@ TaskFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
 
 TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
 {
-    std::string mainModuleName;
+    std::string pluginName;
 
     try
     {
@@ -157,15 +157,13 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
             auto pluginDirName = pluginDir.dirName();
             if(fileName == pluginDirName + ".py")
             {
-                //Add current plugin path to python sys.path if not exists
-                addToPythonPath(pluginDir.absolutePath());
-
                 //Module names
-                mainModuleName = pluginDirName.toStdString();
+                pluginName = pluginDirName.toStdString();
+                std::string mainModuleName = pluginName + "." + pluginName;
                 boost::python::object mainModule = loadPythonMainModule(directory.toStdString(), mainModuleName);
 
                 //Instantiate plugin factory
-                boost::python::object pyFactory = mainModule.attr(boost::python::str(mainModuleName))();
+                boost::python::object pyFactory = mainModule.attr(boost::python::str(pluginName))();
                 boost::python::extract<CPluginProcessInterface*> exFactory(pyFactory);
 
                 if(exFactory.check())
@@ -173,7 +171,7 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                     auto plugin = exFactory();
                     auto taskFactoryPtr = plugin->getProcessFactory();
                     taskFactoryPtr->getInfo().setInternal(false);
-                    taskFactoryPtr->getInfo().setLanguage(CTaskInfo::PYTHON);
+                    taskFactoryPtr->getInfo().setLanguage(ApiLanguage::PYTHON);
                     taskFactoryPtr->getInfo().setOS(OSType::ALL);
 
                     auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
@@ -200,7 +198,7 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                     if(m_pRegistrator)
                     {
                         m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
-                        qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(QString::fromStdString(mainModuleName));
+                        qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(pluginDirName);
                     }
                     return taskFactoryPtr;
                 }
@@ -211,13 +209,13 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
     }
     catch(boost::python::error_already_set&)
     {
-        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded:").arg(QString::fromStdString(mainModuleName));
+        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded:").arg(QString::fromStdString(pluginName));
         qCCritical(logPlugin).noquote() << QString::fromStdString(Utils::Python::handlePythonException());
         return nullptr;
     }
     catch(std::exception& e)
     {
-        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded:").arg(QString::fromStdString(mainModuleName));
+        qCCritical(logPlugin).noquote() << tr("Plugin %1 could not be loaded:").arg(QString::fromStdString(pluginName));
         qCCritical(logPlugin).noquote() << QString::fromStdString(e.what());
         return nullptr;
     }
@@ -285,7 +283,7 @@ void CPluginManager::onEditPythonPlugin(const QString &pluginName)
 void CPluginManager::onShowLocation(const QString &pluginName, int language)
 {
     QString pluginDir;
-    if(language == CTaskInfo::PYTHON)
+    if(language == ApiLanguage::PYTHON)
         pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
     else
         pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
