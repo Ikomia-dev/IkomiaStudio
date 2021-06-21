@@ -303,7 +303,7 @@ std::unique_ptr<CWorkflow> CWorkflowDBManager::load(QSqlDatabase& db, int protoc
 
     //Chargement des arcs
     if(!q.exec(QString("SELECT e.srcIndex, e.targetIndex, e.srcTaskId, e.targetTaskId\
-                        FROM protocol p INNER JOIN WorkflowEdge e ON p.id=e.protocolId WHERE p.id=%1;").arg(protocolId)))
+                        FROM protocol p INNER JOIN protocolEdge e ON p.id=e.protocolId WHERE p.id=%1;").arg(protocolId)))
     {
        throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
