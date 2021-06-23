@@ -115,7 +115,7 @@ class CWorkflowRunManager : public QObject
 
     private:
 
-        WorkflowPtr                 m_WorkflowPtr = nullptr;
+        WorkflowPtr                 m_workflowPtr = nullptr;
         CProjectManager*            m_pProjectMgr = nullptr;
         CMainDataManager*           m_pDataMgr = nullptr;
         CProgressBarManager*        m_pProgressMgr = nullptr;

@@ -45,10 +45,10 @@ void CWorkflowRunManager::setManagers(CProjectManager *pProjectMgr, CMainDataMan
 
 void CWorkflowRunManager::setWorkflow(WorkflowPtr WorkflowPtr)
 {
-    m_WorkflowPtr = WorkflowPtr;
-    if(m_WorkflowPtr)
+    m_workflowPtr = WorkflowPtr;
+    if(m_workflowPtr)
     {
-        auto pWorkflowSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
+        auto pWorkflowSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
         connect(pWorkflowSignal, &CWorkflowSignalHandler::doSetElapsedTime, this, &CWorkflowRunManager::onSetElapsedTime);
         connect(pWorkflowSignal, &CWorkflowSignalHandler::doFinishWorkflow, this, &CWorkflowRunManager::onWorkflowFinished);
     }
@@ -235,7 +235,7 @@ void CWorkflowRunManager::run()
     m_bRunning = true;
     m_bStop = false;
 
-    if(m_WorkflowPtr->isBatchMode())
+    if(m_workflowPtr->isBatchMode())
         runBatch();
     else
         runSingle();
@@ -243,7 +243,7 @@ void CWorkflowRunManager::run()
 
 void CWorkflowRunManager::runLive(size_t inputIndex)
 {
-    if(m_WorkflowPtr == nullptr)
+    if(m_workflowPtr == nullptr)
         return;
 
     if(!checkLiveInputs())
@@ -265,7 +265,7 @@ void CWorkflowRunManager::runLive(size_t inputIndex)
                     {
                         m_bRunning = true;
                         m_totalElapsedTime = 0;
-                        m_WorkflowPtr->run();
+                        m_workflowPtr->run();
                     }
 
                     if(m_bStopThread)
@@ -296,7 +296,7 @@ void CWorkflowRunManager::runFromActiveTask()
     m_bRunning = true;
     m_bStop = false;
 
-    if(m_WorkflowPtr->isBatchMode())
+    if(m_workflowPtr->isBatchMode())
         runFromBatch();
     else
         runFromSingle();
@@ -314,11 +314,11 @@ void CWorkflowRunManager::runToActiveTask()
     m_bStop = false;
 
     // Check if root and if so, don't do anything
-    auto taskId = m_WorkflowPtr->getActiveTaskId();
-    if(m_WorkflowPtr->isRoot(taskId))
+    auto taskId = m_workflowPtr->getActiveTaskId();
+    if(m_workflowPtr->isRoot(taskId))
         return;
 
-     if(m_WorkflowPtr->isBatchMode())
+     if(m_workflowPtr->isBatchMode())
          runToBatch();
      else
          runToSingle();
@@ -344,10 +344,10 @@ void CWorkflowRunManager::runSequentialTask(const WorkflowVertex &taskId)
     m_pSequentialRunWatcher = new QFutureWatcher<void>;
     connect(m_pSequentialRunWatcher, &QFutureWatcher<void>::finished, this, &CWorkflowRunManager::onSequentialRunFinished);
 
-    auto taskPtr = m_WorkflowPtr->getTask(taskId);
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
+    auto taskPtr = m_workflowPtr->getTask(taskId);
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
     m_pProgressMgr->launchProgress(pSignal, QString("The process %1 is running.").arg(QString::fromStdString(taskPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_WorkflowPtr->getProgressSteps());
+    pSignal->emitSetTotalSteps(m_workflowPtr->getProgressSteps());
 
     auto future = QtConcurrent::run([this, taskId]
     {
@@ -355,7 +355,7 @@ void CWorkflowRunManager::runSequentialTask(const WorkflowVertex &taskId)
         {
             //Run process
             m_totalElapsedTime = 0;
-            m_WorkflowPtr->runTo(taskId);
+            m_workflowPtr->runTo(taskId);
         }
         catch(std::exception& e)
         {
@@ -375,21 +375,21 @@ void CWorkflowRunManager::addSequentialRun(const WorkflowVertex& taskId)
 
 void CWorkflowRunManager::notifyGraphicsChanged()
 {
-    if(m_WorkflowPtr == nullptr)
+    if(m_workflowPtr == nullptr)
         return;
 
-    auto taskPtr = m_WorkflowPtr->getTask(m_WorkflowPtr->getActiveTaskId());
+    auto taskPtr = m_workflowPtr->getTask(m_workflowPtr->getActiveTaskId());
     if(taskPtr->isGraphicsChangedListening() == false)
         return;
 
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
 
     auto future = QtConcurrent::run([&]
     {
         try
         {
-            m_WorkflowPtr->notifyGraphicsChanged();
+            m_workflowPtr->notifyGraphicsChanged();
         }
         catch(std::exception& e)
         {
@@ -401,12 +401,12 @@ void CWorkflowRunManager::notifyGraphicsChanged()
 
 void CWorkflowRunManager::stop()
 {
-    if(m_WorkflowPtr && isRunning())
+    if(m_workflowPtr && isRunning())
     {
         try
         {
             m_bStop = true;
-            m_WorkflowPtr->stop();
+            m_workflowPtr->stop();
         }
         catch(const std::exception& e)
         {
@@ -471,8 +471,8 @@ void CWorkflowRunManager::protocolErrorHandling(const std::exception &e)
     }
     m_bRunning = false;
     emit doAbortProgressBar();
-    auto pWorkflowSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    emit pWorkflowSignal->doFinishTask(m_WorkflowPtr->getRunningTaskId(), CWorkflowTask::State::_ERROR, msg);
+    auto pWorkflowSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    emit pWorkflowSignal->doFinishTask(m_workflowPtr->getRunningTaskId(), CWorkflowTask::State::_ERROR, msg);
     qCCritical(logWorkflow).noquote() << msg;
 }
 
@@ -518,7 +518,7 @@ void CWorkflowRunManager::onSequentialRunFinished()
 
 void CWorkflowRunManager::onWorkflowFinished()
 {
-    if(!m_WorkflowPtr->isBatchMode() || m_batchIndex == m_batchCount - 1 || m_bStop)
+    if(!m_workflowPtr->isBatchMode() || m_batchIndex == m_batchCount - 1 || m_bStop)
     {
         m_bRunning = false;
         emit doWorkflowFinished();
@@ -531,24 +531,24 @@ void CWorkflowRunManager::setBatchInput(int index)
     {
         auto inputPtr = createTaskIO(i, index, true);
         if(inputPtr)
-            m_WorkflowPtr->setInput(inputPtr, i, true);
+            m_workflowPtr->setInput(inputPtr, i, true);
     }
 }
 
 std::set<IODataType> CWorkflowRunManager::getTargetDataTypes(size_t inputIndex) const
 {
-    assert(m_WorkflowPtr);
+    assert(m_workflowPtr);
     std::set<IODataType> types;
-    WorkflowVertex root = m_WorkflowPtr->getRootId();
-    auto outEdges = m_WorkflowPtr->getOutEdges(root);
+    WorkflowVertex root = m_workflowPtr->getRootId();
+    auto outEdges = m_workflowPtr->getOutEdges(root);
 
     for(auto it=outEdges.first; it!=outEdges.second; ++it)
     {
-        WorkflowEdgePtr edge = m_WorkflowPtr->getEdge(*it);
+        WorkflowEdgePtr edge = m_workflowPtr->getEdge(*it);
         if(edge->getSourceIndex() == inputIndex)
         {
-            WorkflowVertex target = m_WorkflowPtr->getEdgeTarget(*it);
-            WorkflowTaskPtr targetTask = m_WorkflowPtr->getTask(target);
+            WorkflowVertex target = m_workflowPtr->getEdgeTarget(*it);
+            WorkflowTaskPtr targetTask = m_workflowPtr->getTask(target);
             IODataType type = targetTask->getInputDataType(edge->getTargetIndex());
             types.insert(type);
         }
@@ -606,18 +606,18 @@ size_t CWorkflowRunManager::getBatchCount() const
 
 std::set<IODataType> CWorkflowRunManager::getOriginTargetDataTypes(size_t inputIndex) const
 {
-    assert(m_WorkflowPtr);
+    assert(m_workflowPtr);
     std::set<IODataType> types;
-    WorkflowVertex root = m_WorkflowPtr->getRootId();
-    auto outEdges = m_WorkflowPtr->getOutEdges(root);
+    WorkflowVertex root = m_workflowPtr->getRootId();
+    auto outEdges = m_workflowPtr->getOutEdges(root);
 
     for(auto it=outEdges.first; it!=outEdges.second; ++it)
     {
-        WorkflowEdgePtr edge = m_WorkflowPtr->getEdge(*it);
+        WorkflowEdgePtr edge = m_workflowPtr->getEdge(*it);
         if(edge->getSourceIndex() == inputIndex)
         {
-            WorkflowVertex target = m_WorkflowPtr->getEdgeTarget(*it);
-            WorkflowTaskPtr targetTask = m_WorkflowPtr->getTask(target);
+            WorkflowVertex target = m_workflowPtr->getEdgeTarget(*it);
+            WorkflowTaskPtr targetTask = m_workflowPtr->getTask(target);
             IODataType type = targetTask->getOriginalInputDataType(edge->getTargetIndex());
             types.insert(type);
         }
@@ -629,12 +629,12 @@ bool CWorkflowRunManager::checkInputs(std::string& err) const
 {
     // Get connected input indices
     std::set<size_t> connectedIndices;
-    WorkflowVertex root = m_WorkflowPtr->getRootId();
-    auto outEdges = m_WorkflowPtr->getOutEdges(root);
+    WorkflowVertex root = m_workflowPtr->getRootId();
+    auto outEdges = m_workflowPtr->getOutEdges(root);
 
     for(auto it=outEdges.first; it!=outEdges.second; ++it)
     {
-        WorkflowEdgePtr edge = m_WorkflowPtr->getEdge(*it);
+        WorkflowEdgePtr edge = m_workflowPtr->getEdge(*it);
         connectedIndices.insert(edge->getSourceIndex());
     }
 
@@ -705,12 +705,12 @@ bool CWorkflowRunManager::checkLiveInputs() const
 {
     // Get connected input indices
     std::set<size_t> connectedIndices;
-    WorkflowVertex root = m_WorkflowPtr->getRootId();
-    auto outEdges = m_WorkflowPtr->getOutEdges(root);
+    WorkflowVertex root = m_workflowPtr->getRootId();
+    auto outEdges = m_workflowPtr->getOutEdges(root);
 
     for(auto it=outEdges.first; it!=outEdges.second; ++it)
     {
-        WorkflowEdgePtr edge = m_WorkflowPtr->getEdge(*it);
+        WorkflowEdgePtr edge = m_workflowPtr->getEdge(*it);
         connectedIndices.insert(edge->getSourceIndex());
     }
 
@@ -1101,15 +1101,15 @@ void CWorkflowRunManager::runBatch()
         return;
     }
 
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_WorkflowPtr->getProgressSteps());
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressSteps());
 
     auto future = QtConcurrent::run([&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
-        m_WorkflowPtr->updateStartTime();
+        m_workflowPtr->updateStartTime();
 
         for(size_t i=0; i<m_batchCount && !m_bStop; ++i)
         {
@@ -1117,8 +1117,8 @@ void CWorkflowRunManager::runBatch()
             {
                 setBatchInput(i);
                 m_batchIndex = i;
-                m_WorkflowPtr->clearAllOutputData();
-                m_WorkflowPtr->run();
+                m_workflowPtr->clearAllOutputData();
+                m_workflowPtr->run();
             }
             catch(std::exception& e)
             {
@@ -1150,17 +1150,17 @@ void CWorkflowRunManager::runFromBatch()
         return;
     }
 
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_WorkflowPtr->getProgressStepsFrom(m_WorkflowPtr->getActiveTaskId()));
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressStepsFrom(m_workflowPtr->getActiveTaskId()));
 
     auto future = QtConcurrent::run([&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
-        auto id = m_WorkflowPtr->getActiveTaskId();
-        auto taskPtr = m_WorkflowPtr->getTask(id);
-        m_WorkflowPtr->updateStartTime();
+        auto id = m_workflowPtr->getActiveTaskId();
+        auto taskPtr = m_workflowPtr->getTask(id);
+        m_workflowPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {
@@ -1174,8 +1174,8 @@ void CWorkflowRunManager::runFromBatch()
             {
                 setBatchInput(i);
                 m_batchIndex = i;
-                m_WorkflowPtr->clearAllOutputData();
-                m_WorkflowPtr->runFrom(id);
+                m_workflowPtr->clearAllOutputData();
+                m_workflowPtr->runFrom(id);
             }
             catch(std::exception& e)
             {
@@ -1207,17 +1207,17 @@ void CWorkflowRunManager::runToBatch()
         return;
     }
 
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_WorkflowPtr->getProgressStepsTo(m_WorkflowPtr->getActiveTaskId()));
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressStepsTo(m_workflowPtr->getActiveTaskId()));
 
     auto future = QtConcurrent::run([&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
-        auto id = m_WorkflowPtr->getActiveTaskId();
-        auto taskPtr = m_WorkflowPtr->getTask(id);
-        m_WorkflowPtr->updateStartTime();
+        auto id = m_workflowPtr->getActiveTaskId();
+        auto taskPtr = m_workflowPtr->getTask(id);
+        m_workflowPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {
@@ -1231,8 +1231,8 @@ void CWorkflowRunManager::runToBatch()
             {
                 setBatchInput(i);
                 m_batchIndex = i;
-                m_WorkflowPtr->clearAllOutputData();
-                m_WorkflowPtr->runTo(id);
+                m_workflowPtr->clearAllOutputData();
+                m_workflowPtr->runTo(id);
             }
             catch(std::exception& e)
             {
@@ -1249,16 +1249,16 @@ void CWorkflowRunManager::runToBatch()
 
 void CWorkflowRunManager::runSingle()
 {    
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_WorkflowPtr->getProgressSteps());
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_workflowPtr->getProgressSteps());
 
     auto future = QtConcurrent::run([&]
     {
         try
         {
             m_totalElapsedTime = 0;
-            m_WorkflowPtr->run();
+            m_workflowPtr->run();
         }
         catch(std::exception& e)
         {
@@ -1271,14 +1271,14 @@ void CWorkflowRunManager::runSingle()
 
 void CWorkflowRunManager::runFromSingle()
 {
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_WorkflowPtr->getProgressStepsFrom(m_WorkflowPtr->getActiveTaskId()));
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_workflowPtr->getProgressStepsFrom(m_workflowPtr->getActiveTaskId()));
 
     auto future = QtConcurrent::run([this]
     {
-        auto id = m_WorkflowPtr->getActiveTaskId();
-        auto pTask = m_WorkflowPtr->getTask(id);
+        auto id = m_workflowPtr->getActiveTaskId();
+        auto pTask = m_workflowPtr->getTask(id);
 
         if(pTask == nullptr)
         {
@@ -1289,7 +1289,7 @@ void CWorkflowRunManager::runFromSingle()
         try
         {
             m_totalElapsedTime = 0;
-            m_WorkflowPtr->runFrom(id);
+            m_workflowPtr->runFrom(id);
         }
         catch(std::exception& e)
         {
@@ -1301,14 +1301,14 @@ void CWorkflowRunManager::runFromSingle()
 
 void CWorkflowRunManager::runToSingle()
 {
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_WorkflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_WorkflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_WorkflowPtr->getProgressStepsTo(m_WorkflowPtr->getActiveTaskId()));
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+    pSignal->emitSetTotalSteps(m_workflowPtr->getProgressStepsTo(m_workflowPtr->getActiveTaskId()));
 
     auto future = QtConcurrent::run([this]
     {
-        auto id = m_WorkflowPtr->getActiveTaskId();
-        auto pTask = m_WorkflowPtr->getTask(id);
+        auto id = m_workflowPtr->getActiveTaskId();
+        auto pTask = m_workflowPtr->getTask(id);
 
         if(pTask == nullptr)
         {
@@ -1319,7 +1319,7 @@ void CWorkflowRunManager::runToSingle()
         try
         {
             m_totalElapsedTime = 0;
-            m_WorkflowPtr->runTo(id);
+            m_workflowPtr->runTo(id);
         }
         catch(std::exception& e)
         {
