@@ -116,8 +116,11 @@ void CPythonPluginManagerWidget::onInstallDependency()
 {
     auto pDependencyModel = static_cast<CPluginPythonModel*>(m_pDependenciesView->model());
     QItemSelectionModel* pSelectionModel = m_pDependenciesView->selectionModel();
-    QModelIndexList indexes = pSelectionModel->selectedRows();
 
+    if(pSelectionModel == nullptr)
+        return;
+
+    QModelIndexList indexes = pSelectionModel->selectedRows();
     for(int i=0; i<indexes.size(); ++i)
     {
         QStandardItem* pItem = pDependencyModel->itemFromIndex(indexes[i]);
@@ -129,8 +132,11 @@ void CPythonPluginManagerWidget::onUpdateDependency()
 {
     auto pModel = static_cast<CPluginPythonModel*>(m_pDependenciesView->model());
     QItemSelectionModel* pSelectionModel = m_pDependenciesView->selectionModel();
-    QModelIndexList indexes = pSelectionModel->selectedRows();
 
+    if(pSelectionModel == nullptr)
+        return;
+
+    QModelIndexList indexes = pSelectionModel->selectedRows();
     for(int i=0; i<indexes.size(); ++i)
     {
         QStandardItem* pItem = pModel->itemFromIndex(indexes[i]);
