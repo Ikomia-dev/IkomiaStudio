@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsPolylineProperty;
+struct CGraphicsPolylineProperty;
 
 class CGraphicsPolylinePropWidget : public QWidget
 {
@@ -34,7 +34,7 @@ class CGraphicsPolylinePropWidget : public QWidget
 
         explicit CGraphicsPolylinePropWidget(QWidget *parent = nullptr);
 
-        void            setProperties(GraphicsPolylineProperty* pProp);
+        void            setProperties(CGraphicsPolylineProperty* pProp);
 
         void            propertyChanged();
 
@@ -51,7 +51,7 @@ class CGraphicsPolylinePropWidget : public QWidget
         QSpinBox*                   m_pSpinSize = nullptr;
         QSpinBox*                   m_pSpinOpacity = nullptr;
         QLineEdit*                  m_pEditCategory = nullptr;
-        GraphicsPolylineProperty*   m_pProperty = nullptr;
+        CGraphicsPolylineProperty*   m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSPOLYLINEPROPWIDGET_H

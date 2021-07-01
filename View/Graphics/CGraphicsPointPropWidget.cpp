@@ -28,7 +28,7 @@ CGraphicsPointPropWidget::CGraphicsPointPropWidget(QWidget *parent, Qt::WindowFl
     initConnections();
 }
 
-void CGraphicsPointPropWidget::setProperties(GraphicsPointProperty *pProp)
+void CGraphicsPointPropWidget::setProperties(CGraphicsPointProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

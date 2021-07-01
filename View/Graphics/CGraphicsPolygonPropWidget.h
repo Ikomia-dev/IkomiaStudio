@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsPolygonProperty;
+struct CGraphicsPolygonProperty;
 
 class CGraphicsPolygonPropWidget : public QWidget
 {
@@ -34,7 +34,7 @@ class CGraphicsPolygonPropWidget : public QWidget
 
         explicit CGraphicsPolygonPropWidget(QWidget *parent = nullptr);
 
-        void            setProperties(GraphicsPolygonProperty *pProp);
+        void            setProperties(CGraphicsPolygonProperty *pProp);
 
         void            propertyChanged();
 
@@ -52,7 +52,7 @@ class CGraphicsPolygonPropWidget : public QWidget
         QSpinBox*                   m_pSpinSize = nullptr;
         QSpinBox*                   m_pSpinOpacity = nullptr;
         QLineEdit*                  m_pEditCategory = nullptr;
-        GraphicsPolygonProperty*    m_pProperty = nullptr;
+        CGraphicsPolygonProperty*    m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSPOLYGONPROPWIDGET_H

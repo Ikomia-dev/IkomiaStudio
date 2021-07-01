@@ -26,7 +26,7 @@ CGraphicsPolygonPropWidget::CGraphicsPolygonPropWidget(QWidget *parent) : QWidge
     initConnections();
 }
 
-void CGraphicsPolygonPropWidget::setProperties(GraphicsPolygonProperty *pProp)
+void CGraphicsPolygonPropWidget::setProperties(CGraphicsPolygonProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

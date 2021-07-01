@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsEllipseProperty;
+struct CGraphicsEllipseProperty;
 
 class CGraphicsEllipsePropWidget : public QWidget
 {
@@ -34,7 +34,7 @@ class CGraphicsEllipsePropWidget : public QWidget
 
         explicit CGraphicsEllipsePropWidget(QWidget *parent = nullptr);
 
-        void            setProperties(GraphicsEllipseProperty* pProp);
+        void            setProperties(CGraphicsEllipseProperty* pProp);
 
         void            propertyChanged();
 
@@ -52,7 +52,7 @@ class CGraphicsEllipsePropWidget : public QWidget
         QSpinBox*                   m_pSpinSize = nullptr;
         QSpinBox*                   m_pSpinOpacity = nullptr;
         QLineEdit*                  m_pEditCategory = nullptr;
-        GraphicsEllipseProperty*    m_pProperty = nullptr;
+        CGraphicsEllipseProperty*    m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSELLIPSEPROPWIDGET_H

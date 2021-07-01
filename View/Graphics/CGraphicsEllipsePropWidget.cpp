@@ -26,7 +26,7 @@ CGraphicsEllipsePropWidget::CGraphicsEllipsePropWidget(QWidget *parent) : QWidge
     initConnections();
 }
 
-void CGraphicsEllipsePropWidget::setProperties(GraphicsEllipseProperty *pProp)
+void CGraphicsEllipsePropWidget::setProperties(CGraphicsEllipseProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

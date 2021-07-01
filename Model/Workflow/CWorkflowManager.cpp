@@ -19,6 +19,7 @@
  #include "CWorkflowManager.h"
 #include <QtConcurrent/QtConcurrent>
 #include "Main/AppTools.hpp"
+#include "Main/LogCategory.h"
 #include "Model/Process/CProcessManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
 #include "Model/Graphics/CGraphicsManager.h"

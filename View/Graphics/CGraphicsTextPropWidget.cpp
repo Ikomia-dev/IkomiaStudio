@@ -28,7 +28,7 @@ CGraphicsTextPropWidget::CGraphicsTextPropWidget(QWidget *parent) : QWidget(pare
     initConnections();
 }
 
-void CGraphicsTextPropWidget::setProperties(GraphicsTextProperty *pProp)
+void CGraphicsTextPropWidget::setProperties(CGraphicsTextProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

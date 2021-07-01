@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsRectProperty;
+struct CGraphicsRectProperty;
 
 class CGraphicsRectPropWidget : public QWidget
 {
@@ -34,7 +34,7 @@ class CGraphicsRectPropWidget : public QWidget
 
         explicit CGraphicsRectPropWidget(QWidget *parent = nullptr);
 
-        void            setProperties(GraphicsRectProperty *pProp);
+        void            setProperties(CGraphicsRectProperty *pProp);
 
         void            propertyChanged();
 
@@ -52,7 +52,7 @@ class CGraphicsRectPropWidget : public QWidget
         QSpinBox*               m_pSpinSize = nullptr;
         QSpinBox*               m_pSpinOpacity = nullptr;
         QLineEdit*              m_pEditCategory = nullptr;
-        GraphicsRectProperty*   m_pProperty = nullptr;
+        CGraphicsRectProperty*   m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSRECTPROPWIDGET_H

@@ -23,7 +23,7 @@
 
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsPointProperty;
+struct CGraphicsPointProperty;
 
 class CGraphicsPointPropWidget: public QWidget
 {
@@ -31,7 +31,7 @@ class CGraphicsPointPropWidget: public QWidget
 
         CGraphicsPointPropWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-        void            setProperties(GraphicsPointProperty* pProp);
+        void            setProperties(CGraphicsPointProperty* pProp);
 
         void            propertyChanged();
 
@@ -49,7 +49,7 @@ class CGraphicsPointPropWidget: public QWidget
         QSpinBox*               m_pSpinSize = nullptr;
         QSpinBox*               m_pSpinOpacity = nullptr;
         QLineEdit*              m_pEditCategory = nullptr;
-        GraphicsPointProperty*  m_pProperty = nullptr;
+        CGraphicsPointProperty*  m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSPOINTPROPERTYWIDGET_H

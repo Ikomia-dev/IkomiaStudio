@@ -18,6 +18,7 @@
 
 #include "CWorkflowRunManager.h"
 #include <QtConcurrent/QtConcurrent>
+#include "Main/LogCategory.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Data/CMainDataManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"

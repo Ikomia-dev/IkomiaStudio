@@ -26,7 +26,7 @@ CGraphicsRectPropWidget::CGraphicsRectPropWidget(QWidget *parent) : QWidget(pare
     initConnections();
 }
 
-void CGraphicsRectPropWidget::setProperties(GraphicsRectProperty *pProp)
+void CGraphicsRectPropWidget::setProperties(CGraphicsRectProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

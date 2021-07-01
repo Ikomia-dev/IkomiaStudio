@@ -26,7 +26,7 @@ CGraphicsPolylinePropWidget::CGraphicsPolylinePropWidget(QWidget *parent) : QWid
     initConnections();
 }
 
-void CGraphicsPolylinePropWidget::setProperties(GraphicsPolylineProperty *pProp)
+void CGraphicsPolylinePropWidget::setProperties(CGraphicsPolylineProperty *pProp)
 {
     m_pProperty = pProp;
     updateUI();

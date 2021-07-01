@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct GraphicsTextProperty;
+struct CGraphicsTextProperty;
 
 class CGraphicsTextPropWidget : public QWidget
 {
@@ -34,7 +34,7 @@ class CGraphicsTextPropWidget : public QWidget
 
         explicit CGraphicsTextPropWidget(QWidget *parent = nullptr);
 
-        void            setProperties(GraphicsTextProperty* pProp);
+        void            setProperties(CGraphicsTextProperty* pProp);
 
         void            propertyChanged();
 
@@ -56,7 +56,7 @@ class CGraphicsTextPropWidget : public QWidget
         QPushButton*            m_pStrikeOutBtn = nullptr;
         QFontComboBox*          m_pComboFont = nullptr;
         QSpinBox*               m_pSpinFontSize = nullptr;
-        GraphicsTextProperty*   m_pProperty = nullptr;
+        CGraphicsTextProperty*   m_pProperty = nullptr;
 };
 
 #endif // CGRAPHICSTEXTPROPWIDGET_H
