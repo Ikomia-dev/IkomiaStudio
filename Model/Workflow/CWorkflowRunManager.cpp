@@ -182,7 +182,7 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
                 throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid image.").toStdString(), __func__, __FILE__, __LINE__);
 
             inputName = pItem->getName();
-            inputPtr = std::make_shared<CImageIO>(image);
+            inputPtr = std::make_shared<CImageIO>(IODataType::IMAGE, image);
         }
     }
     else if(type == TreeItemType::VIDEO)
