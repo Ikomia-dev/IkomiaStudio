@@ -1314,7 +1314,7 @@ void CMainView::manageOpenFiles(const QStringList& files)
 
 void CMainView::clearTmpFolder()
 {
-    QString path = Utils::IkomiaApp::getQAppFolder() + "/tmp";
+    QString path = Utils::IkomiaApp::getQIkomiaFolder() + "/tmp";
     QDir dir(path);
     dir.setNameFilters(QStringList() << "*.*");
     dir.setFilter(QDir::Files);

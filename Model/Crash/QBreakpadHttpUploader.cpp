@@ -109,7 +109,7 @@ void QBreakpadHttpUploader::uploadDump(const QString& abs_file_path)
     QHttpPart logPart;
     logPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"log\"; filename=\"log.txt\""));
 
-    QFile* file = new QFile(Utils::IkomiaApp::getQAppFolder() + "/log.txt");
+    QFile* file = new QFile(Utils::IkomiaApp::getQIkomiaFolder() + "/log.txt");
     if(!file->open(QIODevice::ReadOnly)) return;
 
     logPart.setBodyDevice(file);

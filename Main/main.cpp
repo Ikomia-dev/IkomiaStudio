@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     CMainView view;
 
     // Manage if Ikomia has crashed during last session
-    QBreakpadInstance.setDumpPath(Utils::IkomiaApp::getQAppFolder() + "/BugReports");
+    QBreakpadInstance.setDumpPath(Utils::IkomiaApp::getQIkomiaFolder() + "/BugReports");
     QBreakpadInstance.setUploadUrl(QUrl(Utils::Network::getBreakPadServerUrl()));
 
     auto dumpList = QBreakpadInstance.dumpFileList();

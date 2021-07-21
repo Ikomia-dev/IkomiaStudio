@@ -1443,7 +1443,7 @@ void CResultManager::startRecordVideo()
 
     // Get active task for naming
     auto name = m_pWorkflowMgr->getWorkflowName();
-    m_currentVideoRecord = Utils::IkomiaApp::getAppFolder() + "/VideoRecord";
+    m_currentVideoRecord = Utils::IkomiaApp::getIkomiaFolder() + "/VideoRecord";
 
     try
     {

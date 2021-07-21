@@ -71,7 +71,7 @@ void CSettingsManager::initTutorialHelperOption()
 
 void CSettingsManager::initWorkflowOption()
 {
-    m_protocolSaveFolder = Utils::IkomiaApp::getAppFolder() + "/Workflows/";
+    m_protocolSaveFolder = Utils::IkomiaApp::getIkomiaFolder() + "/Workflows/";
     QJsonObject json = getSettings("protocol");
     if(!json.empty())
     {

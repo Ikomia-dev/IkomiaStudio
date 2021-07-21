@@ -154,7 +154,7 @@ void CMainModel::onSetCurrentUser(const CUser &user)
 
 void CMainModel::initLogFile()
 {
-    m_logFilePath = Utils::IkomiaApp::getAppFolder() + "/log.txt";
+    m_logFilePath = Utils::IkomiaApp::getIkomiaFolder() + "/log.txt";
 
     QFile file(QString::fromStdString(m_logFilePath));
     if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
@@ -163,8 +163,8 @@ void CMainModel::initLogFile()
     // Write all Qt Message in log file
     qInstallMessageHandler(logMessageOutput);
     CLogManager::instance().addOutputManager(std::bind(&CMainModel::writeLogMsg, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-    Utils::File::createDirectory(Utils::IkomiaApp::getAppFolder() + "/Resources/Tmp");
-    CLogManager::instance().setStdRedirection(Utils::IkomiaApp::getQAppFolder() + "/Resources/Tmp/stdout_err.txt");
+    Utils::File::createDirectory(Utils::IkomiaApp::getIkomiaFolder() + "/Resources/Tmp");
+    CLogManager::instance().setStdRedirection(Utils::IkomiaApp::getQIkomiaFolder() + "/Resources/Tmp/stdout_err.txt");
 }
 
 void CMainModel::initDb()
@@ -242,13 +242,13 @@ void CMainModel::initPython()
 
     emit doSetSplashMessage(tr("Configure Python environment..."), Qt::AlignCenter, qApp->palette().highlight().color());
     QCoreApplication::processEvents();
-    QString pythonPath = Utils::IkomiaApp::getQAppFolder() + "/Python";
+    QString pythonPath = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
     std::string pythonExe;
     std::string pythonLib;
     std::string pythonDynload;
     std::string pythonSitePackages;
     std::string ikomiaApi;
-    std::string pluginsPath = Utils::IkomiaApp::getQAppFolder().toStdString() + "/Plugins/Python";
+    std::string pluginsPath = Utils::IkomiaApp::getQIkomiaFolder().toStdString() + "/Plugins/Python";
 
     // Set program if existing
     QDir pythonDir(pythonPath);
@@ -425,7 +425,7 @@ void CMainModel::checkUserInstall()
 #endif
 
     //Python
-    QString appFolder = Utils::IkomiaApp::getQAppFolder();
+    QString appFolder = Utils::IkomiaApp::getQIkomiaFolder();
     QString userPythonFolder = appFolder + "/Python";
 
     if(QDir(userPythonFolder).exists() == false)
@@ -471,7 +471,7 @@ void CMainModel::installPythonRequirements()
     emit doSetSplashMessage(tr("Install Python packages...\n(Please be patient, this may take a while)"), Qt::AlignCenter, qApp->palette().highlight().color());
     QCoreApplication::processEvents();
 
-    QString userPythonFolder = Utils::IkomiaApp::getQAppFolder() + "/Python";
+    QString userPythonFolder = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
     QString requirementsPath = userPythonFolder + "/requirements.txt";
     Utils::Python::installRequirements(requirementsPath);
 }

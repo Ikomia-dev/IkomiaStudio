@@ -281,7 +281,7 @@ void CProcessDocFrame::updateLocalPath(QString &content, const QString& name)
         QRegularExpressionMatch match = matchIt.next();
         auto fullMatch = match.captured(0);
         auto homeDir = match.captured(1);
-        fullMatch.replace(homeDir, Utils::IkomiaApp::getQAppFolder());
+        fullMatch.replace(homeDir, Utils::IkomiaApp::getQIkomiaFolder());
         content.replace(match.captured(0), fullMatch);
     }
 }

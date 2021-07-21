@@ -216,7 +216,7 @@ namespace Ikomia
 
             inline void         prepareQCommand(QString& cmd, QStringList& args)
             {
-                QString userPythonFolder = Utils::IkomiaApp::getQAppFolder() + "/Python";
+                QString userPythonFolder = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
                 QDir pythonDir(userPythonFolder);
 
                 if(pythonDir.exists())
@@ -287,7 +287,7 @@ namespace Ikomia
     #if defined(Q_OS_LINUX)
                 // Some python packages need to be built with gcc and thus, they need to link with the bundled python library.
                 // That's why we pass the right path to our python environment
-                QString pythonLibPath = "LDFLAGS=-L" + Utils::IkomiaApp::getQAppFolder() + "/Python/lib";
+                QString pythonLibPath = "LDFLAGS=-L" + Utils::IkomiaApp::getQIkomiaFolder() + "/Python/lib";
                 QStringList env = QProcess::systemEnvironment();
                 env << pythonLibPath;
                 proc.setEnvironment(env);

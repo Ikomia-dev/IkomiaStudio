@@ -569,7 +569,7 @@ void CVideoManager::saveCurrentFrame(const QModelIndex& index)
     std::string newItemName = index.data(Qt::DisplayRole).toString().toStdString();
 
     if(originalPath.empty())
-        destPath = Utils::IkomiaApp::getAppFolder() + "/SavedData/" + newItemName;
+        destPath = Utils::IkomiaApp::getIkomiaFolder() + "/SavedData/" + newItemName;
     else
     {
         boost::filesystem::path boostOriginalPath(originalPath);
@@ -728,7 +728,7 @@ void CVideoManager::setVideoRecord(const QModelIndex& modelIndex, bool bEnable)
         try
         {
             //Création d'un sous-dossier du même nom
-            std::string folder = Utils::IkomiaApp::getAppFolder() + "/VideoRecord/";
+            std::string folder = Utils::IkomiaApp::getIkomiaFolder() + "/VideoRecord/";
             Utils::File::createDirectory(folder);
             std::string path = folder + "liveCamera.avi";
             path = Utils::File::getAvailablePath(path);

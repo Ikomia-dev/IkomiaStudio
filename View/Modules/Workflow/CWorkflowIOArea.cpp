@@ -417,8 +417,8 @@ QString CWorkflowIOArea::createSvgThumbnails(QPixmap pixmap, int index)
 {
     QSize pixSize(128, 128);
     QSvgGenerator generator;
-    QDir().mkpath(Utils::IkomiaApp::getQAppFolder() + "/tmp");
-    auto path = QString(Utils::IkomiaApp::getQAppFolder() + "/tmp/tmp%1.svg").arg(index);
+    QDir().mkpath(Utils::IkomiaApp::getQIkomiaFolder() + "/tmp");
+    auto path = QString(Utils::IkomiaApp::getQIkomiaFolder() + "/tmp/tmp%1.svg").arg(index);
     auto newPix = pixmap.scaled(pixSize, Qt::KeepAspectRatio);
     generator.setFileName(path);
     generator.setSize(pixSize);

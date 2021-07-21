@@ -27,7 +27,7 @@ Utils::CPluginTools::CPluginTools()
 
 std::string Utils::CPluginTools::getTransferPath()
 {
-    return IkomiaApp::getAppFolder() + "/Plugins/Transfer";
+    return IkomiaApp::getIkomiaFolder() + "/Plugins/Transfer";
 }
 
 std::string Utils::CPluginTools::getDirectory(const std::string& name, int language)

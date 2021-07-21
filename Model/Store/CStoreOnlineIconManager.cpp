@@ -100,7 +100,7 @@ void CStoreOnlineIconManager::setPluginIconPath(int index, const QString &path)
 
 QString CStoreOnlineIconManager::getPluginIconPath(const QString &name) const
 {
-    QString destDir = Utils::IkomiaApp::getQAppFolder() + "/Resources/Tmp/";
+    QString destDir = Utils::IkomiaApp::getQIkomiaFolder() + "/Resources/Tmp/";
     QString iconPath = destDir + QString::fromStdString(Utils::String::httpFormat(name.toStdString())) + ".png";
     return iconPath;
 }
@@ -244,7 +244,7 @@ void CStoreOnlineIconManager::onDownloadIconDone(QNetworkReply* pReply)
 
     QJsonObject plugin = (*m_pPlugins)[pluginIndex].toObject();
     QString pluginName = plugin["name"].toString();
-    QString destDir = Utils::IkomiaApp::getQAppFolder() + "/Resources/Tmp/";
+    QString destDir = Utils::IkomiaApp::getQIkomiaFolder() + "/Resources/Tmp/";
 
     try
     {
