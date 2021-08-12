@@ -112,5 +112,5 @@ void C_PluginName_Widget::init()
 
     //Build your custom layout here
 
-    connect(m_pApplyBtn, &QPushButton::pressed, [&]{ emit doApplyProcess(m_pParam); } );
+    connect(m_pApplyBtn, &QPushButton::clicked, [&]{ emit doApplyProcess(m_pParam); } );
 }

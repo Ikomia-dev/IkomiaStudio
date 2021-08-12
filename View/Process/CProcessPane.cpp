@@ -271,7 +271,7 @@ void CProcessPane::showProcessListWidget(const std::string& categoryName)
 
 void CProcessPane::adjustProcessWidget()
 {
-    //Show widget and adjust size
+    // Show widget and adjust size
     // Use Tool flag to ensure on top position when app is active
     // Must be set before every show()
     m_pParamsWidget->setWindowFlags(m_pParamsWidget->windowFlags() | Qt::Tool);
