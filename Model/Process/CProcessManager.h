@@ -150,12 +150,12 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         void                    setCurrentUser(const CUser& user);
 
         CProcessModel*          getProcessModel(CProcessManager::ID id);
-        CTaskInfo            getProcessInfo(const std::string& processName) const;
+        CTaskInfo               getProcessInfo(const std::string& processName) const;
 
         void                    notifyViewShow();
 
-        WorkflowTaskPtr         createObject(const std::string& processName, const WorkflowTaskParamPtr &pParam);
-        WorkflowTaskWidgetPtr   createWidget(const std::string& processName, const WorkflowTaskParamPtr &pParam);
+        WorkflowTaskPtr         createObject(const std::string& processName, const WorkflowTaskParamPtr &paramPtr);
+        WorkflowTaskWidgetPtr   createWidget(const std::string& processName, const WorkflowTaskParamPtr &paramPtr);
 
         bool                    reloadAll();
         bool                    reloadPlugin(const QString& pluginName, int language);

@@ -179,12 +179,12 @@ void CProcessManager::updateProcessInfo(const CTaskInfo &info)
     }
 }
 
-WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, const WorkflowTaskParamPtr& pParam)
+WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, const WorkflowTaskParamPtr& paramPtr)
 {
     WorkflowTaskPtr taskPtr = nullptr;
     try
     {
-        taskPtr = m_processRegistrator.createProcessObject(processName, pParam);
+        taskPtr = m_processRegistrator.createProcessObject(processName, paramPtr);
     }
     catch(std::exception& e)
     {
@@ -193,12 +193,12 @@ WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, co
     return taskPtr;
 }
 
-WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const WorkflowTaskParamPtr &pParam)
+WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const WorkflowTaskParamPtr &paramPtr)
 {
     WorkflowTaskWidgetPtr widgetPtr = nullptr;
     try
     {
-        widgetPtr = m_processRegistrator.createWidgetObject(processName, std::move(pParam));
+        widgetPtr = m_processRegistrator.createWidgetObject(processName, paramPtr);
     }
     catch(std::exception& e)
     {
