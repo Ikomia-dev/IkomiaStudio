@@ -158,7 +158,7 @@ void CProcessPopupDlg::onSetWidgetInstance(const std::string &processName, Workf
 
     QModelIndex listItemIndex = m_pProcessView->getListView()->currentIndex();
     if(!listItemIndex.isValid())
-        return;    
+        return;
 
     QString procName = QString::fromStdString(processName);
     m_widgets.insert(procName, widgetPtr);

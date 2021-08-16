@@ -71,19 +71,20 @@ QString Utils::CPluginTools::getPythonLoadedPluginFolder(const QString &name)
                 try
                 {
                     //Module names
-                    std::string mainModuleName = pluginDirName.toStdString();
+                    std::string pluginName = pluginDirName.toStdString();
+                    std::string moduleName = pluginName + "." + pluginName;
                     //Load main modules of plugin
-                    boost::python::object mainModule = loadPythonModule(mainModuleName);
+                    boost::python::object mainModule = boost::python::import(boost::python::str(moduleName));
                     //Instantiate plugin factory
-                    boost::python::object pyFactory = mainModule.attr(boost::python::str(mainModuleName))();
+                    boost::python::object pyFactory = mainModule.attr(boost::python::str(pluginName))();
                     boost::python::extract<CPluginProcessInterface*> exFactory(pyFactory);
 
                     if(exFactory.check())
                     {
                         auto plugin = exFactory();
-                        auto TaskFactoryPtr = plugin->getProcessFactory();
+                        auto taskFactoryPtr = plugin->getProcessFactory();
 
-                        if(QString::fromStdString(TaskFactoryPtr->getInfo().m_name) == name)
+                        if(QString::fromStdString(taskFactoryPtr->getInfo().m_name) == name)
                             return currentPluginDirPath;
                     }
                 }
@@ -120,10 +121,10 @@ QString Utils::CPluginTools::getCppPluginFolder(const QString &name)
                     auto pPlugin = qobject_cast<CPluginProcessInterface*>(pObject);
                     if(pPlugin)
                     {
-                        auto TaskFactoryPtr = pPlugin->getProcessFactory();
-                        if(TaskFactoryPtr)
+                        auto taskFactoryPtr = pPlugin->getProcessFactory();
+                        if(taskFactoryPtr)
                         {
-                            if(QString::fromStdString(TaskFactoryPtr->getInfo().m_name) == name)
+                            if(QString::fromStdString(taskFactoryPtr->getInfo().m_name) == name)
                                 return currentPluginDirPath;
                         }
                     }

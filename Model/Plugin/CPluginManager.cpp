@@ -173,6 +173,7 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                     taskFactoryPtr->getInfo().setLanguage(ApiLanguage::PYTHON);
                     taskFactoryPtr->getInfo().setOS(OSType::ALL);
 
+                    // Check compatibility
                     auto version = QString::fromStdString(taskFactoryPtr->getInfo().getIkomiaVersion());
                     auto state = Utils::Plugin::getPythonState(version);
 
@@ -193,9 +194,10 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                         qCWarning(logPlugin).noquote() << str;
                     }
 
-                    auto widgetFactoryPtr = plugin->getWidgetFactory();
+                    // Plugin registration
                     if(m_pRegistrator)
                     {
+                        auto widgetFactoryPtr = plugin->getWidgetFactory();
                         m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
                         qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(pluginDirName);
                     }

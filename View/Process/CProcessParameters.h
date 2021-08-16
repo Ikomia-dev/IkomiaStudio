@@ -72,7 +72,7 @@ class CProcessParameters : public CDialog
 
         QFrame*         createLine();
 
-        CTaskInfo    getProcessInfo() const;
+        CTaskInfo       getProcessInfo() const;
 
         void            updateWidgetPosition(QWidget* pWidget, int borderSize);
 

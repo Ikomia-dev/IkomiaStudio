@@ -74,7 +74,7 @@ class CProcessDocWidget : public QWidget
         QStackedWidget*         m_pStackWidget = nullptr;
         CProcessDocFrame*       m_pDocFrame = nullptr;
         CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
-        CTaskInfo            m_processInfo;
+        CTaskInfo               m_processInfo;
         QPushButton*            m_pExportDocBtn = nullptr;
 };
 
