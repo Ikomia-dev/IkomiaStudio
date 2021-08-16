@@ -159,8 +159,7 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
             {
                 //Module names
                 pluginName = pluginDirName.toStdString();
-                std::string mainModuleName = pluginName + "." + pluginName;
-                boost::python::object mainModule = loadPythonMainModule(directory.toStdString(), mainModuleName);
+                boost::python::object mainModule = loadPythonMainModule(directory.toStdString(), pluginName);
 
                 //Instantiate plugin factory
                 boost::python::object pyFactory = mainModule.attr(boost::python::str(pluginName))();
@@ -519,10 +518,11 @@ void CPluginManager::loadPythonProcessPlugins()
 
 boost::python::object CPluginManager::loadPythonMainModule(const std::string& folder, const std::string &name)
 {
-    std::string processName = name + "_process";
-    std::string widgetName = name + "_widget";
+    std::string mainModuleName = name + "." + name;
+    std::string processName = mainModuleName + "_process";
+    std::string widgetName = mainModuleName + "_widget";
 
-    if(Utils::Python::isModuleImported(name))
+    if(Utils::Python::isModuleImported(mainModuleName))
     {
         boost::filesystem::directory_iterator iter(folder), end;
         for(; iter != end; ++iter)
@@ -537,9 +537,9 @@ boost::python::object CPluginManager::loadPythonMainModule(const std::string& fo
             {
                 //Unload sibling modules
                 auto currentFile = iter->path().string();
-                auto moduleName = Utils::File::getFileNameWithoutExtension(currentFile);
+                auto moduleName = name + "." + Utils::File::getFileNameWithoutExtension(currentFile);
 
-                if(Utils::File::extension(currentFile) == ".py" && moduleName != processName && moduleName != widgetName && moduleName != name)
+                if(Utils::File::extension(currentFile) == ".py" && moduleName != processName && moduleName != widgetName && moduleName != mainModuleName)
                     Utils::Python::unloadModule(moduleName, true);
             }
         }
@@ -548,7 +548,7 @@ boost::python::object CPluginManager::loadPythonMainModule(const std::string& fo
     //Load mandatory plugin interface modules - order matters
     Utils::CPluginTools::loadPythonModule(processName);
     Utils::CPluginTools::loadPythonModule(widgetName);
-    return Utils::CPluginTools::loadPythonModule(name);
+    return Utils::CPluginTools::loadPythonModule(mainModuleName);
 }
 
 void CPluginManager::updatePythonQueryModel()
