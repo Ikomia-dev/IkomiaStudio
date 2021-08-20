@@ -1589,8 +1589,8 @@ void CWorkflowManager::setWorkflowInput(size_t inputIndex, bool bNewSequence)
 WorkflowVertex CWorkflowManager::addProcess(const std::string &name, const WorkflowTaskParamPtr &pParam)
 {
     //Get process object
-    auto pProcess = m_pProcessMgr->createObject(name, pParam);
-    if(pProcess == nullptr)
+    auto taskPtr = m_pProcessMgr->createObject(name, pParam);
+    if(taskPtr == nullptr)
     {
         std::string errorMsg = "Instanciation failed for object of type: " + name;
         throw CException(CoreExCode::CREATE_FAILED, errorMsg, __func__, __FILE__, __LINE__);
@@ -1598,21 +1598,24 @@ WorkflowVertex CWorkflowManager::addProcess(const std::string &name, const Workf
 
     //Add process to protocol
     auto parentTaskId = m_pWorkflow->getActiveTaskId();
-    auto newTaskId = m_pWorkflow->addTask(pProcess);
+    auto newTaskId = m_pWorkflow->addTask(taskPtr);
 
     //Connection
     std::vector<WorkflowEdge> newEdgeIds;
-    try
+    if(taskPtr->getInputCount() > 0)
     {
-        newEdgeIds = m_pWorkflow->connect(parentTaskId, newTaskId);
-    }
-    catch(std::exception& e)
-    {
-        qCritical(logWorkflow()).noquote() << QString::fromStdString(e.what());
+        try
+        {
+            newEdgeIds = m_pWorkflow->connect(parentTaskId, newTaskId);
+        }
+        catch(std::exception& e)
+        {
+            qCritical(logWorkflow()).noquote() << QString::fromStdString(e.what());
+        }
     }
 
     //Notify view
-    emit doAddCandidateTask(pProcess, newTaskId);
+    emit doAddCandidateTask(taskPtr, newTaskId);
     emit doNewWorkflowNotification(QString("A new process (%1) has been added to the workflow.").arg(QString::fromStdString(name)), Notification::INFO);
 
     for(size_t i=0; i<newEdgeIds.size(); ++i)
@@ -1621,7 +1624,7 @@ WorkflowVertex CWorkflowManager::addProcess(const std::string &name, const Workf
         emit doAddConnection(newEdgeIds[i], parentTaskId, edgePtr->getSourceIndex(), newTaskId, edgePtr->getTargetIndex());
     }
 
-    if(parentTaskId == m_pWorkflow->getRootId())
+    if(parentTaskId == m_pWorkflow->getRootId() && newEdgeIds.size() > 0)
         rootConnectionChanged();
 
     return newTaskId;
