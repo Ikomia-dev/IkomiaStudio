@@ -136,14 +136,14 @@ QString Utils::CPluginTools::getCppPluginFolder(const QString &name)
     return QString();
 }
 
-boost::python::object Utils::CPluginTools::loadPythonModule(const std::string &name)
+boost::python::object Utils::CPluginTools::loadPythonModule(const std::string &name, bool bReload)
 {
     CPyEnsureGIL gil;
     boost::python::object main_module = boost::python::import("__main__");
     boost::python::object main_namespace = main_module.attr("__dict__");
     boost::python::str moduleName(name);
 
-    if(Utils::Python::isModuleImported(name))
+    if(Utils::Python::isModuleImported(name) && bReload)
         return Utils::Python::reloadModule(name);
     else
     {

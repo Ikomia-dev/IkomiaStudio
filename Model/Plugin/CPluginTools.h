@@ -38,7 +38,7 @@ namespace Ikomia
                 static QString                  getCppPluginFolder(const QString& name);
                 static QString                  getPythonPluginFolder(const QString& name);
 
-                static boost::python::object    loadPythonModule(const std::string& name);
+                static boost::python::object    loadPythonModule(const std::string& name, bool bReload);
 
             private:
 
