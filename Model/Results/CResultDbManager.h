@@ -25,7 +25,7 @@
 #include "Model/Project/CProjectDbMgrInterface.hpp"
 #include "Model/Data/CMeasuresTableModel.h"
 #include "Main/CoreDefine.hpp"
-#include "IO/CMeasureIO.h"
+#include "IO/CBlobMeasureIO.h"
 
 //----------------------------------//
 //----- Class CResultDBManager -----//

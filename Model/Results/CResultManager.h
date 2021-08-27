@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include "Core/CWorkflow.h"
-#include "IO/CMeasureIO.h"
+#include "IO/CBlobMeasureIO.h"
 #include "CResultDbManager.h"
 #include "CResultItem.hpp"
 #include "View/DoubleView/Result/CResultsViewer.h"

@@ -21,8 +21,8 @@
 #include "Main/LogCategory.h"
 #include "IO/CImageIO.h"
 #include "IO/CGraphicsOutput.h"
-#include "IO/CMeasureIO.h"
-#include "IO/CFeatureIO.hpp"
+#include "IO/CBlobMeasureIO.h"
+#include "IO/CNumericIO.hpp"
 #include "IO/CVideoIO.h"
 #include "IO/CWidgetOutput.h"
 #include "IO/CDatasetIO.h"
@@ -914,7 +914,7 @@ void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const st
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CMeasureIO>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CBlobMeasureIO>(pOutput);
     if(!pOut)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -941,7 +941,7 @@ void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const
 {
     assert(pOutput);
 
-    auto pOut = std::dynamic_pointer_cast<CFeatureIOBase>(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CNumericIOBase>(pOutput);
     auto outType = pOut->getOutputType();
 
     if(outType == NumericOutputType::TABLE)
@@ -955,7 +955,7 @@ void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const
     }
     else if(outType == NumericOutputType::PLOT)
     {        
-        auto pOutPlot = std::dynamic_pointer_cast<CFeatureIO<double>>(pOutput);
+        auto pOutPlot = std::dynamic_pointer_cast<CNumericIO<double>>(pOutput);
         if(pOutPlot == nullptr)
         {
             qCritical(logResults).noquote() << tr("Wrong data format for plot output, type double expected");
@@ -1295,7 +1295,7 @@ void CResultManager::saveOutputMeasures()
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -1329,7 +1329,7 @@ void CResultManager::saveOutputMeasures(const std::string &path)
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
@@ -1347,7 +1347,7 @@ void CResultManager::saveOutputFeatures(const std::string &path)
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CFeatureIOBase>(pTask->getOutputFromType(IODataType::NUMERIC_VALUES));
+    auto pOutput = std::dynamic_pointer_cast<CNumericIOBase>(pTask->getOutputFromType(IODataType::NUMERIC_VALUES));
     if(!pOutput)
     {
         qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
