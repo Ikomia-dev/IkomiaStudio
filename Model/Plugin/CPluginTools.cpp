@@ -93,6 +93,11 @@ QString Utils::CPluginTools::getPythonLoadedPluginFolder(const QString &name)
                     //Plugin not loaded and considered invalid
                     continue;
                 }
+                catch(std::exception& e)
+                {
+                    //Plugin not loaded and considered invalid
+                    continue;
+                }
             }
         }
     }
