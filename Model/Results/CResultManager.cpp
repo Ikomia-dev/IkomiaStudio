@@ -1106,7 +1106,7 @@ void CResultManager::manageDatasetOutput(const WorkflowTaskIOPtr &pOutput, const
     for(size_t i=0; i<paths.size(); ++i)
     {
         CPyEnsureGIL gil;
-        auto graphics = pOut->getAnnotationGraphics(paths[i]);
+        auto graphics = pOut->getGraphicsAnnotations(paths[i]);
         auto maskPath = pOut->getMaskPath(paths[i]);
         m_pMultiImgModel->addImage(QString::fromStdString(paths[i]), QString::fromStdString(maskPath), graphics);
     }

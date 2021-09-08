@@ -20,6 +20,7 @@ from ikomia import core, dataprocess
 import copy
 # Your imports below
 
+
 # --------------------
 # - Class to handle the process parameters
 # - Inherits PyCore.CWorkflowTaskParam from Ikomia API
@@ -31,18 +32,18 @@ class _PluginName_Param(core.CWorkflowTaskParam):
         # Place default value initialization here
         # Example : self.windowSize = 25
 
-    def setParamMap(self, paramMap):
+    def setParamMap(self, param_map):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
-        # Example : self.windowSize = int(paramMap["windowSize"])
+        # Example : self.windowSize = int(param_map["windowSize"])
         pass
 
     def getParamMap(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        paramMap = core.ParamMap()
+        param_map = core.ParamMap()
         # Example : paramMap["windowSize"] = str(self.windowSize)
-        return paramMap
+        return param_map
 
 
 # --------------------
