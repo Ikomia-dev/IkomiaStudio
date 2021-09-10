@@ -452,7 +452,7 @@ void CStoreManager::onPluginExtractionDone(const QStringList& files, const QStri
         procInfo.m_ikomiaVersion = m_pServerPluginModel->record(row).value("ikomiaVersion").toString().toStdString();
         procInfo.m_license = m_pServerPluginModel->record(row).value("license").toString().toStdString();
         procInfo.m_repo = m_pServerPluginModel->record(row).value("repository").toString().toStdString();
-        procInfo.m_language = m_pServerPluginModel->record(row).value("language").toInt();
+        procInfo.m_language = m_pServerPluginModel->record(row).value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
         procInfo.m_os = m_pServerPluginModel->record(row).value("os").toInt();
 
         //Package file name could have been changed during upload

@@ -89,7 +89,7 @@ CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
         info.m_createdDate = q.value("createdDate").toString().toStdString();
         info.m_modifiedDate = q.value("modifiedDate").toString().toStdString();
         info.m_year = q.value("year").toInt();
-        info.m_language = q.value("language").toInt();
+        info.m_language = q.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
         info.m_bInternal = q.value("isInternal").toInt();
         info.m_userId = q.value("userId").toInt();
         info.m_os = q.value("os").toInt();

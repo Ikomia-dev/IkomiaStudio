@@ -252,7 +252,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     info.m_license = record.value("license").toString().toStdString();
     info.m_repo = record.value("repository").toString().toStdString();
     info.m_year = record.value("year").toInt();
-    info.m_language = record.value("language").toInt();
+    info.m_language = record.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
     info.m_bInternal = record.value("isInternal").toInt();
     info.m_userId = record.value("userId").toInt();
     info.m_os = record.value("os").toInt();
