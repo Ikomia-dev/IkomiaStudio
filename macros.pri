@@ -130,7 +130,7 @@ defineReplace(link_opencv) {
     unix:libs += -lopencv_dnn_superres
     unix:libs += -lopencv_dpm
     unix:libs += -lopencv_face
-    unix:libs += -lopencv_freetype
+    #unix:libs += -lopencv_freetype
     unix:libs += -lopencv_fuzzy
     macx:libs += -lopencv_hdf
     unix:libs += -lopencv_hfs
@@ -169,6 +169,8 @@ defineReplace(link_boost) {
     else:win32:CONFIG(debug, debug|release): libs += -lboost_filesystem-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_system-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_python$${PYTHON_VERSION_EXT}-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION}
     centos7 {
         unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python37
+    } else:ubuntu_20_04 {
+        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python$${PYTHON_VERSION_EXT}
     } else {
         unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python3
     }
@@ -252,6 +254,6 @@ defineReplace(link_qwt) {
 defineReplace(link_python) {
     win32:libs += -lpython$${PYTHON_VERSION_EXT}
     macx:libs += -lpython$${PYTHON_VERSION}
-    unix:!macx: libs += -lpython$${PYTHON_VERSION_EXT}
+    unix:!macx: libs += -lpython$${PYTHON_VERSION}
     return($$libs)
 }
