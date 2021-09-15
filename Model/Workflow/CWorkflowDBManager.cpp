@@ -187,7 +187,7 @@ int CWorkflowDBManager::save(QSqlDatabase& db, const WorkflowPtr &pWorkflow)
     auto edgeIt = pWorkflow->getEdges();
     if(edgeIt.first != edgeIt.second)
     {
-       q.prepare("INSERT INTO WorkflowEdge (srcIndex, targetIndex, protocolId, srcTaskId, targetTaskId) VALUES (?, ?, ?, ?, ?);");
+       q.prepare("INSERT INTO protocolEdge (srcIndex, targetIndex, protocolId, srcTaskId, targetTaskId) VALUES (?, ?, ?, ?, ?);");
        for(auto it=edgeIt.first; it!=edgeIt.second; ++it)
        {
            auto pEdge = pWorkflow->getEdge(*it);

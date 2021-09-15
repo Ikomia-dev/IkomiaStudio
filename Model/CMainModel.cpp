@@ -318,6 +318,8 @@ void CMainModel::initPython()
         pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
         pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
         pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
+        pythonSitePackages += "/usr/local/lib/python" + Utils::Python::getDevLibVersion() + "/dist-packages:";
+        pythonSitePackages += "/usr/lib/python3/dist-packages:";
         ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
 #elif defined(Q_OS_WIN64)
         std::string programFilesPath = getenv("PROGRAMFILES");
