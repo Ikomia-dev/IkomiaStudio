@@ -162,8 +162,8 @@ QString CPythonPluginMaker::getQtBinding() const
     QString bindingBlock;
     switch(m_qtBinding)
     {
-        case PYQT: bindingBlock = "#PyQt GUI framework\nfrom PyQt5.QtWidgets import *"; break;
-        case PYSIDE: bindingBlock = "#PySide GUI framwork\nfrom PySide2 import QtCore, QtGui, QtWidgets"; break;
+        case PYQT: bindingBlock = "# PyQt GUI framework\nfrom PyQt5.QtWidgets import *"; break;
+        case PYSIDE: bindingBlock = "# PySide GUI framwork\nfrom PySide2 import QtCore, QtGui, QtWidgets"; break;
     }
     return bindingBlock;
 }

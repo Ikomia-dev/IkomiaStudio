@@ -55,8 +55,8 @@ class _PluginName_Process(_ProcessBaseClass_):
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
         # Add input/output of the process here
-        # Example :  self.addInput(PyDataProcess.CImageIO())
-        #           self.addOutput(PyDataProcess.CImageIO())
+        # Example :  self.addInput(dataprocess.CImageIO())
+        #           self.addOutput(dataprocess.CImageIO())
 
         # Create parameters class
         if param is None:

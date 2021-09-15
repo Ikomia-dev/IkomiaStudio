@@ -260,6 +260,8 @@ void CWorkflowRunManager::runLive(size_t inputIndex)
             try
             {
                 std::unique_lock<std::mutex> lock(m_mutex);
+                m_workflowPtr->workflowStarted();
+
                 while(!m_bStopThread)
                 {
                     if(m_bRunning == false)
@@ -355,6 +357,7 @@ void CWorkflowRunManager::runSequentialTask(const WorkflowVertex &taskId)
         try
         {
             //Run process
+            m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->runTo(taskId);
         }
@@ -522,6 +525,7 @@ void CWorkflowRunManager::onWorkflowFinished()
     if(!m_workflowPtr->isBatchMode() || m_batchIndex == m_batchCount - 1 || m_bStop)
     {
         m_bRunning = false;
+        m_workflowPtr->workflowFinished();
         emit doWorkflowFinished();
     }
 }
@@ -1111,6 +1115,7 @@ void CWorkflowRunManager::runBatch()
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
         m_workflowPtr->updateStartTime();
+        m_workflowPtr->workflowStarted();
 
         for(size_t i=0; i<m_batchCount && !m_bStop; ++i)
         {
@@ -1161,13 +1166,15 @@ void CWorkflowRunManager::runFromBatch()
         m_totalElapsedTime = 0;
         auto id = m_workflowPtr->getActiveTaskId();
         auto taskPtr = m_workflowPtr->getTask(id);
-        m_workflowPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {
             qCCritical(logWorkflow).noquote() << tr("Invalid workflow current task");
             return;
         }
+
+        m_workflowPtr->workflowStarted();
+        m_workflowPtr->updateStartTime();
 
         for(size_t i=0; i<m_batchCount && !m_bStop; ++i)
         {
@@ -1218,13 +1225,15 @@ void CWorkflowRunManager::runToBatch()
         m_totalElapsedTime = 0;
         auto id = m_workflowPtr->getActiveTaskId();
         auto taskPtr = m_workflowPtr->getTask(id);
-        m_workflowPtr->updateStartTime();
 
         if(taskPtr == nullptr)
         {
             qCCritical(logWorkflow).noquote() << tr("Invalid workflow current task");
             return;
         }
+
+        m_workflowPtr->workflowStarted();
+        m_workflowPtr->updateStartTime();
 
         for(size_t i=0; i<m_batchCount && !m_bStop; ++i)
         {
@@ -1258,6 +1267,7 @@ void CWorkflowRunManager::runSingle()
     {
         try
         {
+            m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->run();
         }
@@ -1289,6 +1299,7 @@ void CWorkflowRunManager::runFromSingle()
 
         try
         {
+            m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->runFrom(id);
         }
@@ -1319,6 +1330,7 @@ void CWorkflowRunManager::runToSingle()
 
         try
         {
+            m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->runTo(id);
         }
