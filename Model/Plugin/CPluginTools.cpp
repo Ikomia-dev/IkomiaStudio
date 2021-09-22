@@ -70,13 +70,15 @@ QString Utils::CPluginTools::getPythonLoadedPluginFolder(const QString &name)
             {
                 try
                 {
+                    boost::python::object main_module = boost::python::import("__main__");
+                    boost::python::object main_namespace = main_module.attr("__dict__");
                     //Module names
                     std::string pluginName = pluginDirName.toStdString();
                     std::string moduleName = pluginName + "." + pluginName;
                     //Load main modules of plugin
-                    boost::python::object mainModule = boost::python::import(boost::python::str(moduleName));
+                    boost::python::object mainModule = main_namespace[moduleName];
                     //Instantiate plugin factory
-                    boost::python::object pyFactory = mainModule.attr(boost::python::str(pluginName))();
+                    boost::python::object pyFactory = mainModule.attr(boost::python::str("IkomiaPlugin"))();
                     boost::python::extract<CPluginProcessInterface*> exFactory(pyFactory);
 
                     if(exFactory.check())

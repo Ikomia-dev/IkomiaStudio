@@ -132,7 +132,6 @@ void CProcessPane::onSetWidgetInstance(const std::string& processName, WorkflowT
         {
             m_widgets.insert(std::make_pair(processName, widgetPtr));
             m_pParamsWidget->addWidget(widgetPtr.get(), QString::fromStdString(processName));
-            emit doQueryProcessInfo(processName);
             m_pParamsWidget->setCurrentWidget(QString::fromStdString(processName));
             adjustProcessWidget();
 
@@ -159,6 +158,8 @@ void CProcessPane::onSetWidgetInstance(const std::string& processName, WorkflowT
                 m_pProcessList->hide();
             };
             connect(widgetPtr.get(), &CWorkflowTaskWidget::doApplyProcess, pFunc);
+
+            emit doQueryProcessInfo(processName);
         }
     }
     catch(std::exception& e)
