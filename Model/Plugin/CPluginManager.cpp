@@ -162,7 +162,8 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                 boost::python::object mainModule = loadPythonMainModule(directory.toStdString(), pluginName);
 
                 //Instantiate plugin factory
-                boost::python::object pyFactory = mainModule.attr(boost::python::str(pluginName))();
+                auto pluginFactoryName = boost::python::str("IkomiaPlugin");
+                boost::python::object pyFactory = mainModule.attr(pluginFactoryName)();
                 boost::python::extract<CPluginProcessInterface*> exFactory(pyFactory);
 
                 if(exFactory.check())

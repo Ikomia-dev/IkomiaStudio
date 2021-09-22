@@ -18,7 +18,7 @@
 
 from ikomia import core, dataprocess
 from ikomia.utils import pyqtutils, qtconversion
-from _PluginName_._PluginName__process import _PluginName_Param
+from _PluginName_._PluginName__process import _PluginClassName_Param
 
 _QtBindingBlock_
 
@@ -27,13 +27,13 @@ _QtBindingBlock_
 # - Class which implements widget associated with the process
 # - Inherits PyCore.CWorkflowTaskWidget from Ikomia API
 # --------------------
-class _PluginName_Widget(_WidgetBaseClass_):
+class _PluginClassName_Widget(_WidgetBaseClass_):
 
     def __init__(self, param, parent):
         _WidgetBaseClass_.__init__(self, parent)
 
         if param is None:
-            self.parameters = _PluginName_Param()
+            self.parameters = _PluginClassName_Param()
         else:
             self.parameters = param
 
@@ -55,7 +55,7 @@ class _PluginName_Widget(_WidgetBaseClass_):
 # - Factory class to build process widget object
 # - Inherits PyDataProcess.CWidgetFactory from Ikomia API
 # --------------------
-class _PluginName_WidgetFactory(dataprocess.CWidgetFactory):
+class _PluginClassName_WidgetFactory(dataprocess.CWidgetFactory):
 
     def __init__(self):
         dataprocess.CWidgetFactory.__init__(self)
@@ -64,4 +64,4 @@ class _PluginName_WidgetFactory(dataprocess.CWidgetFactory):
 
     def create(self, param):
         # Create widget object
-        return _PluginName_Widget(param, None)
+        return _PluginClassName_Widget(param, None)

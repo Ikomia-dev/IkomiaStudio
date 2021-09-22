@@ -23,17 +23,17 @@ from ikomia import dataprocess
 # - Interface class to integrate the process with Ikomia application
 # - Inherits PyDataProcess.CPluginProcessInterface from Ikomia API
 # --------------------
-class _PluginName_(dataprocess.CPluginProcessInterface):
+class IkomiaPlugin(dataprocess.CPluginProcessInterface):
 
     def __init__(self):
         dataprocess.CPluginProcessInterface.__init__(self)
 
     def getProcessFactory(self):
         # Instantiate process object
-        from _PluginName_._PluginName__process import _PluginName_ProcessFactory
-        return _PluginName_ProcessFactory()
+        from _PluginName_._PluginName__process import _PluginClassName_Factory
+        return _PluginClassName_Factory()
 
     def getWidgetFactory(self):
         # Instantiate associated widget object
-        from _PluginName_._PluginName__widget import _PluginName_WidgetFactory
-        return _PluginName_WidgetFactory()
+        from _PluginName_._PluginName__widget import _PluginClassName_WidgetFactory
+        return _PluginClassName_WidgetFactory()

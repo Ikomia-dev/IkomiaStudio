@@ -78,7 +78,9 @@ void CPythonPluginMaker::createMainFile(const QString& folder)
 
     QTextStream txtStream(&templateFile);
     auto templateContent = txtStream.readAll();
+    auto className = Utils::String::toCamelCase(m_name);
     auto newContent = templateContent.replace("_PluginName_", m_name);
+    newContent = newContent.replace("_PluginClassName_", className);
     QString filePath = folder + "/" + m_name + ".py";
 
     QFile mainFile(filePath);
@@ -99,7 +101,9 @@ void CPythonPluginMaker::createProcessFile(const QString& folder)
 
     QTextStream txtStream(&templateFile);
     auto templateContent = txtStream.readAll();
+    auto className = Utils::String::toCamelCase(m_name);
     auto newContent = templateContent.replace("_PluginName_", m_name);
+    newContent = newContent.replace("_PluginClassName_", className);
     newContent = newContent.replace("_ProcessBaseClass_", getProcessBaseClass());
     QString filePath = folder + "/" + m_name + "_process.py";
 
@@ -121,7 +125,9 @@ void CPythonPluginMaker::createWidgetFile(const QString &folder)
 
     QTextStream txtStream(&templateFile);
     auto templateContent = txtStream.readAll();
+    auto className = Utils::String::toCamelCase(m_name);
     auto newContent = templateContent.replace("_PluginName_", m_name);
+    newContent = newContent.replace("_PluginClassName_", className);
     newContent = newContent.replace("_WidgetBaseClass_", getWidgetBaseClass());
     newContent = newContent.replace("_QtBindingBlock_", getQtBinding());
     newContent = newContent.replace("_InitQtLayout_", getQtLayout());

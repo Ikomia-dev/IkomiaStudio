@@ -25,7 +25,7 @@ import copy
 # - Class to handle the process parameters
 # - Inherits PyCore.CWorkflowTaskParam from Ikomia API
 # --------------------
-class _PluginName_Param(core.CWorkflowTaskParam):
+class _PluginClassName_Param(core.CWorkflowTaskParam):
 
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
@@ -50,7 +50,7 @@ class _PluginName_Param(core.CWorkflowTaskParam):
 # - Class which implements the process
 # - Inherits PyCore.CWorkflowTask or derived from Ikomia API
 # --------------------
-class _PluginName_Process(_ProcessBaseClass_):
+class _PluginClassName_(_ProcessBaseClass_):
 
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
@@ -60,7 +60,7 @@ class _PluginName_Process(_ProcessBaseClass_):
 
         # Create parameters class
         if param is None:
-            self.setParam(_PluginName_Param())
+            self.setParam(_PluginClassName_Param())
         else:
             self.setParam(copy.deepcopy(param))
 
@@ -104,7 +104,7 @@ class _PluginName_Process(_ProcessBaseClass_):
 # - Factory class to build process object
 # - Inherits PyDataProcess.CTaskFactory from Ikomia API
 # --------------------
-class _PluginName_ProcessFactory(dataprocess.CTaskFactory):
+class _PluginClassName_Factory(dataprocess.CTaskFactory):
 
     def __init__(self):
         dataprocess.CTaskFactory.__init__(self)
@@ -112,7 +112,6 @@ class _PluginName_ProcessFactory(dataprocess.CTaskFactory):
         self.info.name = "_PluginName_"
         self.info.shortDescription = "your short description"
         self.info.description = "your description"
-        self.info.authors = "Plugin authors"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python"
         self.info.version = "1.0.0"
@@ -131,4 +130,4 @@ class _PluginName_ProcessFactory(dataprocess.CTaskFactory):
 
     def create(self, param=None):
         # Create process object
-        return _PluginName_Process(self.info.name, param)
+        return _PluginClassName_(self.info.name, param)
