@@ -672,6 +672,7 @@ void CWorkflowManager::onAllProcessReloaded()
         return;
 
     assert(m_pProcessMgr);
+    CPyEnsureGIL gil;
     auto rangeIt = m_pWorkflow->getVertices();
 
     for(auto it=rangeIt.first; it!=rangeIt.second; ++it)
