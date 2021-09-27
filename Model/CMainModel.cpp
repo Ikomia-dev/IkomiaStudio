@@ -37,8 +37,6 @@ CMainModel::CMainModel()
 
 CMainModel::~CMainModel()
 {
-    m_pMlflowProcess->kill();
-    m_pTensorboardProc->kill();
     m_userMgr.beforeAppClose();
 }
 
@@ -484,9 +482,20 @@ void CMainModel::startLocalMLflowServer()
     QString cmd = "mlflow";
     QString backendStoreUri = QString::fromStdString(Utils::MLflow::getBackendStoreURI());
     QString artifactRootUri = QString::fromStdString(Utils::MLflow::getArtifactURI());
+    QString trackingUri = QString::fromStdString(Utils::MLflow::getTrackingURI());
 
     // Create local directory to store MLflow experiments and runs
     Utils::File::createDirectory(Utils::MLflow::getBackendStoreURI());
+
+    // Check if server is already running
+    auto pReply = m_networkMgr.get(QNetworkRequest(QUrl(trackingUri + "/health")));
+    QEventLoop loop;
+    connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+    auto statusCode = pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if(statusCode.toInt() == 200)
+        return;
 
     // Launch server
 #ifdef Q_OS_WIN
@@ -501,8 +510,8 @@ void CMainModel::startLocalMLflowServer()
     args << "--default-artifact-root" << artifactRootUri;
     args << "--host" << "0.0.0.0";
 
-    m_pMlflowProcess = new QProcess(this);
-    connect(m_pMlflowProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
+    auto pProcess = new QProcess(this);
+    connect(pProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
     {
         QString msg;
         switch(error)
@@ -524,11 +533,11 @@ void CMainModel::startLocalMLflowServer()
 
         qInfo().noquote() << msg;
     });
-    connect(m_pMlflowProcess, &QProcess::started, [&]
+    connect(pProcess, &QProcess::started, [&]
     {
         qInfo().noquote() << tr("MLflow server launched successfully.");
     });
-    m_pMlflowProcess->start(cmd, args);
+    pProcess->startDetached(cmd, args);
 }
 
 void CMainModel::startLocalTensorboard()
@@ -536,15 +545,26 @@ void CMainModel::startLocalTensorboard()
     QStringList args;
     QString cmd = "tensorboard";
     QString logDir = QString::fromStdString(Utils::Tensorboard::getLogDirUri());
+    QString trackingUri = QString::fromStdString(Utils::Tensorboard::getTrackingURI());
 
     // Create local directory to store MLflow experiments and runs
     Utils::File::createDirectory(logDir.toStdString());
 
+    // Check if server is already running
+    auto pReply = m_networkMgr.get(QNetworkRequest(QUrl(trackingUri)));
+    QEventLoop loop;
+    connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+    auto statusCode = pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if(statusCode.toInt() == 200)
+        return;
+
     // Launch server
     args << "--logdir" << logDir;
 
-    m_pTensorboardProc = new QProcess(this);
-    connect(m_pTensorboardProc, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
+    auto pProcess = new QProcess(this);
+    connect(pProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
     {
         QString msg;
         switch(error)
@@ -566,9 +586,9 @@ void CMainModel::startLocalTensorboard()
 
         qInfo().noquote() << msg;
     });
-    connect(m_pTensorboardProc, &QProcess::started, [&]
+    connect(pProcess, &QProcess::started, [&]
     {
         qInfo().noquote() << tr("Tensorboard server launched successfully.");
     });
-    m_pTensorboardProc->start(cmd, args);
+    pProcess->startDetached(cmd, args);
 }

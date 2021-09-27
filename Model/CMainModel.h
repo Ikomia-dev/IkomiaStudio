@@ -128,8 +128,6 @@ class CMainModel : public QObject
         CPluginManager          m_pluginMgr;
         QNetworkAccessManager   m_networkMgr;
         std::string             m_logFilePath;
-        QProcess*               m_pMlflowProcess = nullptr;
-        QProcess*               m_pTensorboardProc = nullptr;
 };
 
 #endif // CMAINMODEL_H
