@@ -41,15 +41,18 @@ class CResizeListView : public QListView
                 return QSize(width(), 0);
 
             int nToShow = m_nItemsToShow < model()->rowCount() ? m_nItemsToShow : model()->rowCount();
-            int height = sizeHintForRow(0);
-
-            return QSize(sizeHintForColumn(1)+10, nToShow*height);
+            // Get height of name column
+            int height = sizeHintForIndex(model()->index(0, 1)).height();
+            return QSize(sizeHintForColumn(1) + 10, nToShow * height);
         }
+
         QSize minimumSizeHint() const override
         {
             return QListView::minimumSizeHint();
         }
+
     private:
+
         int m_nItemsToShow = 100;
 };
 

@@ -37,46 +37,46 @@ class CProcessPopupDlg : public CDialog
         CProcessPopupDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
         ~CProcessPopupDlg();
 
-        void            initLayout();
-        void            initConnections();
+        void        initLayout();
+        void        initConnections();
 
-        void            setCurrentUser(const CUser& user);
+        void        setCurrentUser(const CUser& user);
 
-        int             exec() override;
+        int         exec() override;
 
     signals:
 
-        void            doTreeViewClicked(const QModelIndex& index);
-        void            doTextChanged(const QString& text);
-        void            doListViewDoubleClicked(const QString& processName);
-        void            doAddProcess(const std::string& processName, const WorkflowTaskParamPtr& pParam);
-        void            doQueryWidgetInstance(const std::string& processName);
-        void            doUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
+        void        doTreeViewClicked(const QModelIndex& index);
+        void        doTextChanged(const QString& text);
+        void        doListViewDoubleClicked(const QString& processName);
+        void        doAddProcess(const std::string& processName, const WorkflowTaskParamPtr& pParam);
+        void        doQueryWidgetInstance(const std::string& processName);
+        void        doUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
 
     public slots:
 
-        void            onSetProcessListModel(QSortFilterProxyModel* pModel);
-        void            onSetProcessTreeModel(QSortFilterProxyModel* pModel);
-        void            onSetWidgetInstance(const std::string &processName, WorkflowTaskWidgetPtr& widgetPtr);
-        void            onTreeViewClicked(const QModelIndex& index);
-        void            onTextChanged(const QString& text);
-        void            onActivateScrollBar();
-        void            onListViewDoubleClicked(const QString& processName);
-        void            onListViewClicked(const QModelIndex& index);
-        void            onCurrentChanged(const QModelIndex& current, const QModelIndex& previous);
-        void            onAddProcess(const QString& processName);
-        void            onShowProcessInfo(const QModelIndex &index);
-        void            done(int r) override;
-        void            reject() override;
+        void        onSetProcessListModel(QSortFilterProxyModel* pModel);
+        void        onSetProcessTreeModel(QSortFilterProxyModel* pModel);
+        void        onSetWidgetInstance(const std::string &processName, WorkflowTaskWidgetPtr& widgetPtr);
+        void        onTreeViewClicked(const QModelIndex& index);
+        void        onTextChanged(const QString& text);
+        void        onActivateScrollBar();
+        void        onListViewDoubleClicked(const QString& processName);
+        void        onListViewClicked(const QModelIndex& index);
+        void        onCurrentChanged(const QModelIndex& current, const QModelIndex& previous);
+        void        onAddProcess(const QString& processName);
+        void        onShowProcessInfo(const QModelIndex &index);
+        void        done(int r) override;
+        void        reject() override;
 
     private:
 
-        QWidget*        createLeftWidget();
-        QWidget*        createRightWidget();
+        QWidget*    createLeftWidget();
+        QWidget*    createRightWidget();
 
-        CTaskInfo    getProcessInfo(const QModelIndex& index) const;
+        CTaskInfo   getProcessInfo(const QModelIndex& index) const;
 
-        void            adjustParamsWidget(const QModelIndex &index);
+        void        adjustParamsWidget(const QModelIndex &index);
 
     private:
 

@@ -369,7 +369,6 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         QString                     m_searchReq;
         int                         m_processCount = 0;
         MapString                   m_iconMap;
-
 };
 
 #endif // CPROCESSMANAGER_H

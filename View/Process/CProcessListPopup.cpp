@@ -89,6 +89,7 @@ void CProcessListPopup::initLayout()
     m_pProcessList = new CResizeListView;
     m_pProcessList->setIconSize(QSize(16, 16));
     m_pProcessList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_pProcessList->setUniformItemSizes(true);
 
     //Label with line underneath
     m_pLabel = new QLabel(tr("Process list"));

@@ -109,7 +109,7 @@ void CProcessListView::onTreeViewClicked(const QModelIndex& index)
         auto pProxyTable = static_cast<const CProcessTableProxyModel*>(m_pListView->model());
         if(pProxyTable)
         {
-            // Fied (column) 1 is process name
+            // Field (column) 1 is process name
             auto currentIndex = pProxyTable->index(index.row(), 1);
             m_pListView->setCurrentIndex(currentIndex);
         }
