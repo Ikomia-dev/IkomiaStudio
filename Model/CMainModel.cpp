@@ -284,7 +284,7 @@ void CMainModel::initPython()
         modulePath += pluginsPath;
 
 #ifndef QT_DEBUG
-        modulePath += Utils::IkomiaApp::getAppFolder() + "/Api";
+        modulePath += Utils::IkomiaApp::getIkomiaFolder() + "/Api";
 #else
     #ifdef Q_OS_WIN64
         modulePath += "C:/Developpement/Ikomia/Build/Lib/Python;";
