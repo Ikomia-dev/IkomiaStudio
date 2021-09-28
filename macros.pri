@@ -96,11 +96,13 @@ defineReplace(link_opencv) {
     # Main modules
     unix:libs += -lopencv_core -lopencv_imgcodecs -lopencv_imgproc
     #Not used but necessary for python
+    unix:libs += -lopencv_alphamat
     unix:libs += -lopencv_videoio
     unix:libs += -lopencv_highgui
     unix:libs += -lopencv_video
     unix:libs += -lopencv_calib3d
     unix:libs += -lopencv_features2d
+    unix:libs += -lopencv_freetype
     unix:libs += -lopencv_objdetect
     unix:libs += -lopencv_dnn
     unix:libs += -lopencv_ml
@@ -108,6 +110,7 @@ defineReplace(link_opencv) {
     unix:libs += -lopencv_photo
     unix:libs += -lopencv_stitching
     unix:libs += -lopencv_gapi
+    unix:libs += -lopencv_wechat_qrcode
     # Extra modules
     unix:libs += -lopencv_aruco
     unix:libs += -lopencv_bgsegm
@@ -130,7 +133,6 @@ defineReplace(link_opencv) {
     unix:libs += -lopencv_dnn_superres
     unix:libs += -lopencv_dpm
     unix:libs += -lopencv_face
-    #unix:libs += -lopencv_freetype
     unix:libs += -lopencv_fuzzy
     macx:libs += -lopencv_hdf
     unix:libs += -lopencv_hfs
