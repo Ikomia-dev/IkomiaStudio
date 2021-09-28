@@ -132,7 +132,7 @@ void CCppNewPluginWidget::initApiFolder()
         m_pEditCppApiFolder->setText(QDir::homePath() + "/Developpement/Ikomia/Install/Api");
     #endif
 #else
-    m_pEditCppApiFolder->setText(Utils::IkomiaApp::getQAppFolder() + "/Api");
+    m_pEditCppApiFolder->setText(Utils::IkomiaApp::getQIkomiaFolder() + "/Api");
 #endif
 }
 
