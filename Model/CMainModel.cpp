@@ -246,7 +246,7 @@ void CMainModel::initPython()
     std::string pythonDynload;
     std::string pythonSitePackages;
     std::string ikomiaApi;
-    std::string pluginsPath = Utils::IkomiaApp::getQIkomiaFolder().toStdString() + "/Plugins/Python";
+    std::string pluginsPath = Utils::IkomiaApp::getIkomiaFolder() + "/Plugins/Python";
 
     // Set program if existing
     QDir pythonDir(pythonPath);
@@ -259,18 +259,21 @@ void CMainModel::initPython()
         pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
         pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
         pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pluginsPath += ":";
 #elif defined(Q_OS_LINUX)
         QString delimiter = ":";
         pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
         pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
         pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
         pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pluginsPath += ":";
 #elif defined(Q_OS_WIN64)
         QString delimiter = ";";
         pythonExe = "/python.exe";
         pythonLib = "/lib;";
         pythonDynload = "/DLLs;";
         pythonSitePackages = "/lib/site-packages;";
+        pluginsPath += ";";
 #endif
         //Embedded Python executable
         auto filepath = pythonPath.toStdString() + pythonExe;
