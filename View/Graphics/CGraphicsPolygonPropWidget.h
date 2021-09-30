@@ -24,7 +24,7 @@
 #include <QWidget>
 #include "Widgets/CColorPushButton.h"
 
-struct CGraphicsPolygonProperty;
+class CGraphicsPolygonProperty;
 
 class CGraphicsPolygonPropWidget : public QWidget
 {
