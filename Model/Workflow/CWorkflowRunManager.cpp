@@ -268,6 +268,7 @@ void CWorkflowRunManager::runLive(size_t inputIndex)
                     {
                         m_bRunning = true;
                         m_totalElapsedTime = 0;
+                        CPyEnsureGIL gil;
                         m_workflowPtr->run();
                     }
 
