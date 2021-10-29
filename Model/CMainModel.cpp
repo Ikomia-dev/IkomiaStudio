@@ -255,35 +255,34 @@ void CMainModel::initPython()
         //Define embedded Python paths
 #if defined(Q_OS_MACOS)
         QString delimiter = ":";
-        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pythonExe = pythonPath.toStdString() + "/bin/python" + Utils::Python::_python_bin_prod_version;
+        pythonLib = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
+        pythonDynload = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
+        pythonSitePackages = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
         pluginsPath += ":";
 #elif defined(Q_OS_LINUX)
         QString delimiter = ":";
-        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
+        pythonExe = pythonPath.toStdString() + "/bin/python" + Utils::Python::_python_bin_prod_version;
+        pythonLib = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
+        pythonDynload = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
+        pythonSitePackages = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
         pluginsPath += ":";
 #elif defined(Q_OS_WIN64)
         QString delimiter = ";";
-        pythonExe = "/python.exe";
-        pythonLib = "/lib;";
-        pythonDynload = "/DLLs;";
-        pythonSitePackages = "/lib/site-packages;";
+        pythonExe = pythonPath.toStdString() + "/python.exe";
+        pythonLib = pythonPath.toStdString() + "/lib;";
+        pythonDynload = pythonPath.toStdString() + "/DLLs;";
+        pythonSitePackages = pythonPath.toStdString() + "/lib/site-packages;";
         pluginsPath += ";";
 #endif
         //Embedded Python executable
-        auto filepath = pythonPath.toStdString() + pythonExe;
-        auto s = filepath.size();
-        Py_SetProgramName(Py_DecodeLocale(filepath.c_str(), &s));
+        auto s = pythonExe.size();
+        Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &s));
 
         //Set Python path
-        std::string modulePath = pythonPath.toStdString() + pythonLib;
-        modulePath += pythonPath.toStdString() + pythonDynload;
-        modulePath += pythonPath.toStdString() + pythonSitePackages;
+        std::string modulePath = pythonLib;
+        modulePath += pythonDynload;
+        modulePath += pythonSitePackages;
         modulePath += pluginsPath;
 
 #ifndef QT_DEBUG
