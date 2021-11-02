@@ -552,7 +552,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Veuillez vérifier votre installation d&apos;OpenGL svp. Aucun contexte OpenGL disponible.</translation>
     </message>
     <message>
-        <location filename="../View/Common/CGLWidget.cpp" line="265"/>
+        <location filename="../View/Common/CGLWidget.cpp" line="262"/>
         <source>GPU initialization failed. Please see the log file for more details.</source>
         <translation>L&apos;initialisation du GPU a échoué. Veuillez consulter le fichier log pour plus de détails svp.</translation>
     </message>
@@ -1198,12 +1198,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CMainModel</name>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="182"/>
+        <location filename="../Model/CMainModel.cpp" line="180"/>
         <source>Load process library and plugins...</source>
         <translation>Chargement de la bibliothèque et des plugins...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="243"/>
+        <location filename="../Model/CMainModel.cpp" line="241"/>
         <source>Configure Python environment...</source>
         <translation>Configuration de l&apos;environment Python...</translation>
     </message>
@@ -1212,7 +1212,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation de l&apos;environment Python...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="429"/>
+        <location filename="../Model/CMainModel.cpp" line="435"/>
         <source>Install Python environment...
 (Please be patient, this may take a while)</source>
         <translation>Installation de l&apos;environment Python...
@@ -1223,74 +1223,74 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation du SDK Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="442"/>
+        <location filename="../Model/CMainModel.cpp" line="448"/>
         <source>Install Ikomia API...</source>
         <translation>Installation de l&apos;API Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="451"/>
+        <location filename="../Model/CMainModel.cpp" line="457"/>
         <source>Install Ikomia Resources...</source>
         <translation>Installation des ressources Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="459"/>
+        <location filename="../Model/CMainModel.cpp" line="465"/>
         <source>Install Gmic resources...</source>
         <translation>Installation des ressources Gmic...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="467"/>
+        <location filename="../Model/CMainModel.cpp" line="473"/>
         <source>Install Python packages...
 (Please be patient, this may take a while)</source>
         <translation>Installation des paquets Python...
 (Cette opération peut prendre quelques instants, merci de patienter)</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="505"/>
+        <location filename="../Model/CMainModel.cpp" line="522"/>
         <source>Failed to launch MLflow server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
         <translation>Echec du lancement du serveur MLflow. Vérifier que le paquet Python est correctement installé.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="508"/>
+        <location filename="../Model/CMainModel.cpp" line="525"/>
         <source>MLflow server crashed.</source>
         <translation>Le serveur MLflow s&apos;est arrêté.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="511"/>
+        <location filename="../Model/CMainModel.cpp" line="528"/>
         <source>MLflow server do not respond. Process is waiting...</source>
         <translation>Le serveur MLflow ne répond pas. Le processus est en attente...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="514"/>
+        <location filename="../Model/CMainModel.cpp" line="531"/>
         <source>MLflow server encountered an unknown error...</source>
         <translation>Le serveur MLflow a rencontré une erreur inconnue...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="523"/>
+        <location filename="../Model/CMainModel.cpp" line="540"/>
         <source>MLflow server launched successfully.</source>
         <translation>Serveur MLflow demarré avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="547"/>
+        <location filename="../Model/CMainModel.cpp" line="575"/>
         <source>Failed to launch Tensorboard server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
         <translation>Echec du lancement du serveur Tensorboard. Merci de vérifier que le paquet Python est correctement installé.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="550"/>
+        <location filename="../Model/CMainModel.cpp" line="578"/>
         <source>Tensorboard server crashed.</source>
         <translation>Le serveur Tensorboard s&apos;est arrêté.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="553"/>
+        <location filename="../Model/CMainModel.cpp" line="581"/>
         <source>Tensorboard server do not respond. Process is waiting...</source>
         <translation>Le serveur Tensorboard ne répond pas. Le processus est en attente...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="556"/>
+        <location filename="../Model/CMainModel.cpp" line="584"/>
         <source>Tensorboard server encountered an unknown error...</source>
         <translation>Le serveur Tensorboard a rencontré une erreur inconnue...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="565"/>
+        <location filename="../Model/CMainModel.cpp" line="593"/>
         <source>Tensorboard server launched successfully.</source>
         <translation>Serveur Tensorboard démarré avec succès.</translation>
     </message>
@@ -1499,10 +1499,6 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Process</translation>
     </message>
     <message>
-        <source>Workflows</source>
-        <translation type="vanished">Workflowes</translation>
-    </message>
-    <message>
         <location filename="../View/Main/CMainView.cpp" line="623"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
@@ -1673,13 +1669,9 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation></translation>
     </message>
     <message>
-        <source>Workflow</source>
-        <translation type="vanished">Workflowe</translation>
-    </message>
-    <message>
         <location filename="../View/Notifications/CNotificationPane.cpp" line="168"/>
         <source>Workflow</source>
-        <translation>Workflow</translation>
+        <translation>Workflowe</translation>
     </message>
     <message>
         <location filename="../View/Notifications/CNotificationPane.cpp" line="169"/>
@@ -1928,7 +1920,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
     <message>
         <location filename="../Model/Plugin/CPluginManager.cpp" line="106"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="184"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="183"/>
         <source>Plugin %1 is deprecated: based on Ikomia %2 while the current version is %3.</source>
         <translation>Le plugin %1 est déprécié: basé sur Ia version Ikomia %2, alors que la version courante est %3.</translation>
     </message>
@@ -1959,7 +1951,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Le plugin %1 a échoué au chargement:</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="193"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="192"/>
         <source>Plugin %1 is based on Ikomia %2 while the current version is %3. You should consider updating Ikomia Studio.</source>
         <translation>Le plugin %1 repose sur Ikomia version %2 alors que la version courante est %3. Vous êtes invités à mettre à jour Ikomia Studio.</translation>
     </message>
@@ -2021,12 +2013,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
     <message>
         <location filename="../Model/Plugin/CPluginManager.cpp" line="419"/>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="577"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="587"/>
         <source>Error while gathering outdated Python package list.</source>
         <translation>Erreur pendant la récupération des paquets Python dépassé.</translation>
     </message>
     <message>
-        <location filename="../Model/Plugin/CPluginManager.cpp" line="606"/>
+        <location filename="../Model/Plugin/CPluginManager.cpp" line="616"/>
         <source>Error while gathering Python package list.</source>
         <translation>Erreur pendant la récupération de la liste des paquets Python.</translation>
     </message>
@@ -2301,7 +2293,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessListPopup</name>
     <message>
-        <location filename="../View/Process/CProcessListPopup.cpp" line="94"/>
+        <location filename="../View/Process/CProcessListPopup.cpp" line="95"/>
         <source>Process list</source>
         <translation>Liste des traitements</translation>
     </message>
@@ -2322,12 +2314,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CProcessPane</name>
     <message>
-        <location filename="../View/Process/CProcessPane.cpp" line="308"/>
+        <location filename="../View/Process/CProcessPane.cpp" line="309"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessPane.cpp" line="325"/>
+        <location filename="../View/Process/CProcessPane.cpp" line="326"/>
         <source>Process library</source>
         <translation>Bibliothèque de traitements</translation>
     </message>
@@ -2353,7 +2345,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Store</translation>
     </message>
     <message>
-        <location filename="../View/Process/CProcessPopupDlg.cpp" line="306"/>
+        <location filename="../View/Process/CProcessPopupDlg.cpp" line="312"/>
         <source>&lt;Search by keywords&gt;</source>
         <translation>&lt;Recherche par mots-clés&gt;</translation>
     </message>
@@ -2679,703 +2671,6 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
 </context>
 <context>
-    <name>CWorkflowConnection</name>
-    <message>
-        <source>Delete connection</source>
-        <translation type="vanished">Supprimer la connexion</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowIOArea</name>
-    <message>
-        <source>Undefined</source>
-        <translation type="vanished">Undéfini</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowIOArea.cpp" line="470"/>
-        <source>Add new input</source>
-        <translation>Ajouter une nouvelle entrée</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowInfoDlg</name>
-    <message>
-        <source>No description available</source>
-        <translation type="vanished">Pas de description disponible</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="48"/>
-        <source>Process parameters</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="56"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowInputTypeDlg</name>
-    <message>
-        <source>Select input data from current project</source>
-        <translation type="vanished">Sélectionner une entrée dans le projet courant</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="23"/>
-        <source>Select source of input data</source>
-        <translation>Sélectionner la source des données d&apos;entrée</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="111"/>
-        <source>Back</source>
-        <translation>Retour</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="115"/>
-        <source>Next</source>
-        <translation>Suivant</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="119"/>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="142"/>
-        <source>Image(s)</source>
-        <translation>Image(s)</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="145"/>
-        <source>Video(s)</source>
-        <translation>Vidéo(s)</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="148"/>
-        <source>Dataset(s)</source>
-        <translation>Dataset(s)</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="151"/>
-        <source>Folder(s)</source>
-        <translation>Répertoire(s)</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="157"/>
-        <source>Select the type of data you want to process</source>
-        <translation>Sélectionner le type de données à traiter</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="158"/>
-        <source>Simple dataset</source>
-        <translation>Dataset simple</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="160"/>
-        <source>Volume dataset</source>
-        <translation>Volume</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="162"/>
-        <source>Time dataset</source>
-        <translation>Vidéo ou séquence temporelle</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowInputViewManager</name>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="213"/>
-        <source>Process input management : invalid image</source>
-        <translation>Gestionnaire des entrées: image invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="232"/>
-        <source>Process input management: invalid image</source>
-        <translation>Gestionnaire des entrées: image invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="261"/>
-        <source>Process input management : invalid volume</source>
-        <translation>Gestionnaire des entrées: volume invalide</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowManager</name>
-    <message>
-        <source>Invalid protocol current task</source>
-        <translation type="vanished">Tâche courant du protocole invalide</translation>
-    </message>
-    <message>
-        <source>Workflow has been saved.</source>
-        <translation type="vanished">Le protocole a été sauvegardé avec succès.</translation>
-    </message>
-    <message>
-        <source>Workflow has been exported.</source>
-        <translation type="vanished">Le protocole a été exporté avec succès.</translation>
-    </message>
-    <message>
-        <source>Workflow is already running...</source>
-        <translation type="vanished">Le workflow est déjà en cours d&apos;exécution...</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="919"/>
-        <source>Invalid workflow current task</source>
-        <translation>La tâche courante du workflow est invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="489"/>
-        <source>Workflow has been saved.</source>
-        <translation>Le workflow a été sauvegardé avec succès.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="505"/>
-        <source>Workflow has been exported.</source>
-        <translation>Le workflow a été exporté avec succès.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="539"/>
-        <source>Invalid image index</source>
-        <translation>ModelIndex de l&apos;image invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="543"/>
-        <source>Invalid image item</source>
-        <translation>Element du projet invalide (image)</translation>
-    </message>
-    <message>
-        <source>Apply process error : invalid item</source>
-        <translation type="vanished">Erreur d&apos;exécution du traitement: élément invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="778"/>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1272"/>
-        <source>New workflow</source>
-        <translation>Nouveau workflow</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1037"/>
-        <source>Load workflow error: invalid item index</source>
-        <translation>Erreur de chargement du workflow: index de l&apos;item invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1066"/>
-        <source>Delete workflow error: invalid item index</source>
-        <translation>Erreur de suppression du workflow: index de l&apos;item invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1165"/>
-        <source>Invalid task: folder path can&apos;t be set.</source>
-        <translation>Tâche invalide: le répertoire ne peut pas être défini.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1236"/>
-        <source>Retrieve workflow information failed: invalid item index</source>
-        <translation>Echec de la récupération des données du workflow: index de l&apos;élément invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1541"/>
-        <source>Input index overflow.</source>
-        <translation>Indice de l&apos;entrée invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1545"/>
-        <source>Invalid input type.</source>
-        <translation>Type d&apos;entrée invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1569"/>
-        <source>Workflow input cannot be set: invalid item.</source>
-        <translation>L&apos;entrée du workflow ne peut pas être ajoutée: l&apos;item est invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1841"/>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1859"/>
-        <source>No valid image data for input #%1 of task %2.</source>
-        <translation>Aucune image disponible pour l&apos;entrée #%1 de la tâche %2.</translation>
-    </message>
-    <message>
-        <source>Workflow inputs error : invalid image</source>
-        <translation type="vanished">Erreur d&apos;entrée du workflow: image invalide</translation>
-    </message>
-    <message>
-        <source>Workflow inputs error : invalid item type</source>
-        <translation type="vanished">Erreur d&apos;entrée du workflow: type invalide</translation>
-    </message>
-    <message>
-        <source>Workflow time limit reached. You should think about upgrading your Ikomia plan</source>
-        <translation type="vanished">La limite du temps d&apos;exécution d&apos;un workflow a été atteinte. Veuillez consulter les formules d&apos;abonnement pour une utilisation sans limite</translation>
-    </message>
-    <message>
-        <source>New protocol</source>
-        <translation type="vanished">Nouveau protocole</translation>
-    </message>
-    <message>
-        <source>Load protocol error: invalid item index</source>
-        <translation type="vanished">Erreur de chargement du protocole: index de l&apos;élément invalide</translation>
-    </message>
-    <message>
-        <source>Delete protocol error: invalid item index</source>
-        <translation type="vanished">Erreur de suppression du protocole: index de l&apos;élément invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1127"/>
-        <source>Invalid task: graphics layer input can&apos;t be set.</source>
-        <translation>La couche graphique ne peut pas être ajoutée comme entrée: tâche invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1141"/>
-        <source>Invalid graphics layer: input can&apos;t be set.</source>
-        <translation>L&apos;entrée ne peut pas être ajoutée: couche graphique invalide.</translation>
-    </message>
-    <message>
-        <source>Retrieve protocol information failed: invalid item index</source>
-        <translation type="vanished">Echec de la récupération des données sur le protocole: index de l&apos;élément invalide</translation>
-    </message>
-    <message>
-        <source>Invalid input type: can be image only</source>
-        <translation type="vanished">Type d&apos;entrée invalide: image requise</translation>
-    </message>
-    <message>
-        <source>Workflow inputs error : invalid image</source>
-        <translation type="vanished">Entrée image invalide</translation>
-    </message>
-    <message>
-        <source>Workflow inputs error : invalid item type</source>
-        <translation type="vanished">Type d&apos;entrée invalide</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1685"/>
-        <source>%1 min %2 sec %3 ms</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Workflow time limit reached. You should think about upgrading your Ikomia plan</source>
-        <translation type="vanished">La limite du temps d&apos;exécution d&apos;un protocole a été atteinte. Veuillez consulter les formules d&apos;abonnement pour utilisation sans limite</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowModuleWidget</name>
-    <message>
-        <source>Export protocol</source>
-        <translation type="vanished">Exporter le protocole</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="183"/>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="196"/>
-        <source>Pcl Files (*.pcl)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Load protocol</source>
-        <translation type="vanished">Charger un protocole</translation>
-    </message>
-    <message>
-        <source>The protocol is running. Please wait before closing it.</source>
-        <translation type="vanished">Le protocole est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
-    </message>
-    <message>
-        <source>The protocol has been modified.</source>
-        <translation type="vanished">Le protocole a été modifié.</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="222"/>
-        <source>Do you want to save the changes?</source>
-        <translation>Voulez-vous sauver les changements?</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="328"/>
-        <source>Documentation</source>
-        <translation>Documentation</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="334"/>
-        <source>Parameters</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="335"/>
-        <source>Info</source>
-        <translation>Info</translation>
-    </message>
-    <message>
-        <source>New protocol</source>
-        <translation type="vanished">Nouveau protocole</translation>
-    </message>
-    <message>
-        <source>Save protocol</source>
-        <translation type="vanished">Sauver le protocole</translation>
-    </message>
-    <message>
-        <source>Close protocol</source>
-        <translation type="vanished">Fermer le protocole</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="421"/>
-        <source>Visualize origin inputs</source>
-        <translation>Visualisation des entrées originales</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="425"/>
-        <source>Visualize current inputs</source>
-        <translation>Visualisation des entrées courantes</translation>
-    </message>
-    <message>
-        <source>Run protocol</source>
-        <translation type="vanished">Exécuter le protocole</translation>
-    </message>
-    <message>
-        <source>Run protocol from current task</source>
-        <translation type="vanished">Exécuter le protocole depuis la tâche courante</translation>
-    </message>
-    <message>
-        <source>Run protocol from start to current task</source>
-        <translation type="vanished">Exécuter le protocole jusqu&apos;à la tâche courante</translation>
-    </message>
-    <message>
-        <source>Stop protocol</source>
-        <translation type="vanished">Arrêter le protocole</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="39"/>
-        <source>Workflow Creator</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="183"/>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="404"/>
-        <source>Export workflow</source>
-        <translation>Exporter le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="196"/>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="390"/>
-        <source>Load workflow</source>
-        <translation>Charger le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="213"/>
-        <source>The workflow is running. Please wait before closing it.</source>
-        <translation>Le workflow est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="221"/>
-        <source>The workflow has been modified.</source>
-        <translation>Le workflow a été modifié.</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="336"/>
-        <source>I/O</source>
-        <translation>E/S</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="383"/>
-        <source>New workflow</source>
-        <translation>Nouveau workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="397"/>
-        <source>Save workflow</source>
-        <translation>Sauver le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="411"/>
-        <source>Close workflow</source>
-        <translation>Fermer le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="430"/>
-        <source>Reload plugins of current workflow</source>
-        <translation>Rechargement des plugins du worflow courant</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="439"/>
-        <source>Run workflow</source>
-        <translation>Exécuter le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="443"/>
-        <source>Run workflow from current task</source>
-        <translation>Exécuter le workflow depuis la tâche courante</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="447"/>
-        <source>Run workflow from start to current task</source>
-        <translation>Exécuter le workflow jusqu&apos;à la tâche courante</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="451"/>
-        <source>Stop workflow</source>
-        <translation>Arrêter le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="456"/>
-        <source>Original size</source>
-        <translation>Taille originale</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="459"/>
-        <source>Zoom in</source>
-        <translation>Zoomer</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="462"/>
-        <source>Zoom out</source>
-        <translation>Dézoomer</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="635"/>
-        <source>Inputs</source>
-        <translation>Entrées</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="653"/>
-        <source>Outputs</source>
-        <translation>Sorties</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="668"/>
-        <source>Description</source>
-        <translation>Description</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="674"/>
-        <source>Auto save</source>
-        <translation>Sauvegarde auto</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="697"/>
-        <source>Save format</source>
-        <translation>Format de sauvegarde</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="710"/>
-        <source>Save options</source>
-        <translation>Options de sauvegarde</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="713"/>
-        <source>Folder</source>
-        <translation>Répertoire</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="727"/>
-        <source>Process benchmark</source>
-        <translation>Analyse du traitement</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="728"/>
-        <source>Custom process information</source>
-        <translation>Information personnalisée du process</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowNewDlg</name>
-    <message>
-        <source>Workflow information</source>
-        <translation type="vanished">Informations sur le protocole</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="27"/>
-        <source>Workflow information</source>
-        <translation>Informations sur le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="52"/>
-        <source>Name</source>
-        <translation>Nom</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="57"/>
-        <source>Keywords</source>
-        <translation>Mots-clés</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="60"/>
-        <source>Description</source>
-        <translation>Description</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="71"/>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="74"/>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="100"/>
-        <source>You must at least set the workflow name please.</source>
-        <translation>Vous devez entrer un nom de workflow svp.</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="107"/>
-        <source>This workflow already exists. Please enter another name.</source>
-        <translation>Ce workflow existe déjà. Veuillez entrer un nouveau nom svp.</translation>
-    </message>
-    <message>
-        <source>You must at least set the protocol name please.</source>
-        <translation type="vanished">Vous devez entrer un nom de protocole svp.</translation>
-    </message>
-    <message>
-        <source>This protocol already exists. Please enter another name.</source>
-        <translation type="vanished">Ce protocole existe déjà. Veuillez entrer un nouveau nom svp.</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowPane</name>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="58"/>
-        <source>No description available</source>
-        <translation>Pas de description disponible</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="145"/>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="210"/>
-        <source>Load workflow</source>
-        <translation>Charger un workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="146"/>
-        <source>Load selected workflow</source>
-        <translation>Charger le workflow sélectionné</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="149"/>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="213"/>
-        <source>Delete workflow</source>
-        <translation>Supprimer le workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="150"/>
-        <source>Delete selected workflow</source>
-        <translation>Supprimer le workflow sélectionné</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="177"/>
-        <source>Workflow description</source>
-        <translation>Description du workflow</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="201"/>
-        <source>Workflow</source>
-        <translation>Workflow</translation>
-    </message>
-    <message>
-        <source>Load selected protocol</source>
-        <translation type="vanished">Charger le protocole sélectionné</translation>
-    </message>
-    <message>
-        <source>Delete selected protocol</source>
-        <translation type="vanished">Supprimer le protocole sélectionné</translation>
-    </message>
-    <message>
-        <location filename="../View/Workflow/CWorkflowPane.cpp" line="161"/>
-        <source>&lt;Search by keywords&gt;</source>
-        <translation>&lt;Recherche par mots-clés&gt;</translation>
-    </message>
-    <message>
-        <source>Workflow description</source>
-        <translation type="vanished">Description</translation>
-    </message>
-    <message>
-        <source>Used with current image</source>
-        <translation type="vanished">Utiliser sur l&apos;image courante</translation>
-    </message>
-    <message>
-        <source>Workflows</source>
-        <translation type="vanished">Workflowes</translation>
-    </message>
-    <message>
-        <source>Load protocol</source>
-        <translation type="vanished">Charger un protocole</translation>
-    </message>
-    <message>
-        <source>Delete protocol</source>
-        <translation type="vanished">Supprimer le protocole</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowRunManager</name>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="128"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="136"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="145"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="214"/>
-        <source>Workflow inputs error : invalid item type.</source>
-        <translation>Erreur d&apos;entrée du workflow: type de données invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="156"/>
-        <source>Workflow inputs error : invalid volume.</source>
-        <translation>Erreur d&apos;entrée du workflow: volume invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="169"/>
-        <source>Workflow inputs error : invalid video frame.</source>
-        <translation>Erreur d&apos;entrée du workflow: frame vidéo invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="181"/>
-        <source>Workflow inputs error : invalid image.</source>
-        <translation>Erreur d&apos;entrée du workflow: image invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="192"/>
-        <source>Workflow inputs error : invalid video.</source>
-        <translation>Erreur d&apos;entrée du workflow: vidéo invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="208"/>
-        <source>Workflow inputs error : invalid camera stream.</source>
-        <translation>Erreur d&apos;entrée du workflow: flux vidéo invalide.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="250"/>
-        <source>Invalid input: workflow can only manage one video or stream input for now.</source>
-        <translation>Entrée invalide: le workflow ne peut traiter qu&apos;une source vidéo pour le moment.</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="338"/>
-        <source>Workflow is already running...</source>
-        <translation>Le workflow est déjà en cours d&apos;exécution...</translation>
-    </message>
-    <message>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1167"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1224"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1285"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1315"/>
-        <source>Invalid workflow current task</source>
-        <translation>La tâche courante du workflow est invalide</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowScene</name>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="537"/>
-        <source>Inputs</source>
-        <translation>Entrées</translation>
-    </message>
-    <message>
-        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="901"/>
-        <source>Choose folder</source>
-        <translation>Choisir un dossier</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkflowSettingsWidget</name>
-    <message>
-        <location filename="../View/Preferences/CWorkflowSettingsWidget.cpp" line="35"/>
-        <source>Auto-save folder</source>
-        <translation>Répertoire de sauvegarde auto</translation>
-    </message>
-</context>
-<context>
     <name>CPythonNewPluginDlg</name>
     <message>
         <location filename="../View/Modules/PluginManager/CPythonNewPluginDlg.cpp" line="25"/>
@@ -3451,37 +2746,37 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CPythonPluginManagerWidget</name>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="146"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="152"/>
         <source>Create new plugin...</source>
         <translation>Créer un nouveau plugin...</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="147"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="153"/>
         <source>Reload selected plugin</source>
         <translation>Recharger le plugin sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="148"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="154"/>
         <source>Reload all plugins</source>
         <translation>Recharger tous les plugins</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="149"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="155"/>
         <source>Edit plugin</source>
         <translation>Ouvrir le fichier source</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="150"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="156"/>
         <source>Show location</source>
         <translation>Ouvrir l&apos;emplacement</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="163"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="169"/>
         <source>Install selected plugin</source>
         <translation>Installer le plugin sélectionné</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="164"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginManagerWidget.cpp" line="170"/>
         <source>Update selected plugin</source>
         <translation>Mettre à jour le plugin sélectionné</translation>
     </message>
@@ -3585,9 +2880,9 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
     </message>
     <message>
         <location filename="../Model/Results/CResultManager.cpp" line="920"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1296"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1330"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1348"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1301"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1335"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1353"/>
         <source>Process output management : invalid measures</source>
         <translation>Gestionnaire des sorties: mesures invalides</translation>
     </message>
@@ -3612,12 +2907,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Le workflow est en cours d&apos;exécution et de création de votre vidéo, merci d&apos;attendre la fin du traitement.</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1449"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1454"/>
         <source>Error while recording video:</source>
         <translation>Erreur pendant l&apos;enregistrement de la vidéo:</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1479"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1482"/>
         <source>Video record has been added to the current project.</source>
         <translation>L&apos;enregistrement vidéo a été ajouté au projet courant.</translation>
     </message>
@@ -3655,19 +2950,19 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Index de sortie invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1289"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1323"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1341"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1294"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1328"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1346"/>
         <source>Error while saving measures: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des mesures: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1359"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1364"/>
         <source>Error while saving graphics: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des graphiques: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1399"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1404"/>
         <source>Error while loading results: invalid item index</source>
         <translation>Erreur lors du chargement des résultats: index invalide</translation>
     </message>
@@ -4230,7 +3525,7 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
     </message>
     <message>
         <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="120"/>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="431"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="438"/>
         <source>Export video</source>
         <translation>Exporter la vidéo</translation>
     </message>
@@ -4247,12 +3542,12 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Exporter</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="408"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="415"/>
         <source>Record video</source>
         <translation>Enregistrer la vidéo</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="415"/>
+        <location filename="../View/DoubleView/Video/CVideoDisplay.cpp" line="422"/>
         <source>Stop record</source>
         <translation>Stopper l&apos;enregistrement</translation>
     </message>
@@ -4443,6 +3738,675 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
     </message>
 </context>
 <context>
+    <name>CWorkflowConnection</name>
+    <message>
+        <source>Delete connection</source>
+        <translation type="vanished">Supprimer la connexion</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowIOArea</name>
+    <message>
+        <source>Undefined</source>
+        <translation type="vanished">Undéfini</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowIOArea.cpp" line="470"/>
+        <source>Add new input</source>
+        <translation>Ajouter une nouvelle entrée</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowInfoDlg</name>
+    <message>
+        <source>No description available</source>
+        <translation type="vanished">Pas de description disponible</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="48"/>
+        <source>Process parameters</source>
+        <translation>Paramètres</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowInfoDlg.cpp" line="56"/>
+        <source>Load</source>
+        <translation>Charger</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowInputTypeDlg</name>
+    <message>
+        <source>Select input data from current project</source>
+        <translation type="vanished">Sélectionner une entrée dans le projet courant</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="vanished">OK</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="23"/>
+        <source>Select source of input data</source>
+        <translation>Sélectionner la source des données d&apos;entrée</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="111"/>
+        <source>Back</source>
+        <translation>Retour</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="115"/>
+        <source>Next</source>
+        <translation>Suivant</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="119"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="142"/>
+        <source>Image(s)</source>
+        <translation>Image(s)</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="145"/>
+        <source>Video(s)</source>
+        <translation>Vidéo(s)</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="148"/>
+        <source>Dataset(s)</source>
+        <translation>Dataset(s)</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="151"/>
+        <source>Folder(s)</source>
+        <translation>Répertoire(s)</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="157"/>
+        <source>Select the type of data you want to process</source>
+        <translation>Sélectionner le type de données à traiter</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="158"/>
+        <source>Simple dataset</source>
+        <translation>Dataset simple</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="160"/>
+        <source>Volume dataset</source>
+        <translation>Volume</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowInputTypeDlg.cpp" line="162"/>
+        <source>Time dataset</source>
+        <translation>Vidéo ou séquence temporelle</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowInputViewManager</name>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="213"/>
+        <source>Process input management : invalid image</source>
+        <translation>Gestionnaire des entrées: image invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="232"/>
+        <source>Process input management: invalid image</source>
+        <translation>Gestionnaire des entrées: image invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowInputViewManager.cpp" line="261"/>
+        <source>Process input management : invalid volume</source>
+        <translation>Gestionnaire des entrées: volume invalide</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowManager</name>
+    <message>
+        <source>Invalid protocol current task</source>
+        <translation type="vanished">Tâche courant du protocole invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="490"/>
+        <source>Workflow has been saved.</source>
+        <translation>Le protocole a été sauvegardé avec succès.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="511"/>
+        <source>Workflow has been exported.</source>
+        <translation>Le protocole a été exporté avec succès.</translation>
+    </message>
+    <message>
+        <source>Workflow is already running...</source>
+        <translation type="vanished">Le workflow est déjà en cours d&apos;exécution...</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="934"/>
+        <source>Invalid workflow current task</source>
+        <translation>La tâche courante du workflow est invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="553"/>
+        <source>Invalid image index</source>
+        <translation>ModelIndex de l&apos;image invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="557"/>
+        <source>Invalid image item</source>
+        <translation>Element du projet invalide (image)</translation>
+    </message>
+    <message>
+        <source>Apply process error : invalid item</source>
+        <translation type="vanished">Erreur d&apos;exécution du traitement: élément invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="793"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1287"/>
+        <source>New workflow</source>
+        <translation>Nouveau workflow</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1052"/>
+        <source>Load workflow error: invalid item index</source>
+        <translation>Erreur de chargement du workflow: index de l&apos;item invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1081"/>
+        <source>Delete workflow error: invalid item index</source>
+        <translation>Erreur de suppression du workflow: index de l&apos;item invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1180"/>
+        <source>Invalid task: folder path can&apos;t be set.</source>
+        <translation>Tâche invalide: le répertoire ne peut pas être défini.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1251"/>
+        <source>Retrieve workflow information failed: invalid item index</source>
+        <translation>Echec de la récupération des données du workflow: index de l&apos;élément invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1554"/>
+        <source>Input index overflow.</source>
+        <translation>Indice de l&apos;entrée invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1558"/>
+        <source>Invalid input type.</source>
+        <translation>Type d&apos;entrée invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1582"/>
+        <source>Workflow input cannot be set: invalid item.</source>
+        <translation>L&apos;entrée du workflow ne peut pas être ajoutée: l&apos;item est invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1856"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1874"/>
+        <source>No valid image data for input #%1 of task %2.</source>
+        <translation>Aucune image disponible pour l&apos;entrée #%1 de la tâche %2.</translation>
+    </message>
+    <message>
+        <source>Workflow inputs error : invalid image</source>
+        <translation type="vanished">Erreur d&apos;entrée du workflow: image invalide</translation>
+    </message>
+    <message>
+        <source>Workflow inputs error : invalid item type</source>
+        <translation type="vanished">Erreur d&apos;entrée du workflow: type invalide</translation>
+    </message>
+    <message>
+        <source>Workflow time limit reached. You should think about upgrading your Ikomia plan</source>
+        <translation type="vanished">La limite du temps d&apos;exécution d&apos;un workflow a été atteinte. Veuillez consulter les formules d&apos;abonnement pour une utilisation sans limite</translation>
+    </message>
+    <message>
+        <source>New protocol</source>
+        <translation type="vanished">Nouveau protocole</translation>
+    </message>
+    <message>
+        <source>Load protocol error: invalid item index</source>
+        <translation type="vanished">Erreur de chargement du protocole: index de l&apos;élément invalide</translation>
+    </message>
+    <message>
+        <source>Delete protocol error: invalid item index</source>
+        <translation type="vanished">Erreur de suppression du protocole: index de l&apos;élément invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1142"/>
+        <source>Invalid task: graphics layer input can&apos;t be set.</source>
+        <translation>La couche graphique ne peut pas être ajoutée comme entrée: tâche invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1156"/>
+        <source>Invalid graphics layer: input can&apos;t be set.</source>
+        <translation>L&apos;entrée ne peut pas être ajoutée: couche graphique invalide.</translation>
+    </message>
+    <message>
+        <source>Retrieve protocol information failed: invalid item index</source>
+        <translation type="vanished">Echec de la récupération des données sur le protocole: index de l&apos;élément invalide</translation>
+    </message>
+    <message>
+        <source>Invalid input type: can be image only</source>
+        <translation type="vanished">Type d&apos;entrée invalide: image requise</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1700"/>
+        <source>%1 min %2 sec %3 ms</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowModuleWidget</name>
+    <message>
+        <source>Export protocol</source>
+        <translation type="vanished">Exporter le protocole</translation>
+    </message>
+    <message>
+        <source>Load protocol</source>
+        <translation type="vanished">Charger un protocole</translation>
+    </message>
+    <message>
+        <source>The protocol is running. Please wait before closing it.</source>
+        <translation type="vanished">Le protocole est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
+    </message>
+    <message>
+        <source>The protocol has been modified.</source>
+        <translation type="vanished">Le protocole a été modifié.</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="223"/>
+        <source>Do you want to save the changes?</source>
+        <translation>Voulez-vous sauver les changements?</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="329"/>
+        <source>Documentation</source>
+        <translation>Documentation</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="335"/>
+        <source>Parameters</source>
+        <translation>Paramètres</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="336"/>
+        <source>Info</source>
+        <translation>Info</translation>
+    </message>
+    <message>
+        <source>New protocol</source>
+        <translation type="vanished">Nouveau protocole</translation>
+    </message>
+    <message>
+        <source>Save protocol</source>
+        <translation type="vanished">Sauver le protocole</translation>
+    </message>
+    <message>
+        <source>Close protocol</source>
+        <translation type="vanished">Fermer le protocole</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="422"/>
+        <source>Visualize origin inputs</source>
+        <translation>Visualisation des entrées originales</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="426"/>
+        <source>Visualize current inputs</source>
+        <translation>Visualisation des entrées courantes</translation>
+    </message>
+    <message>
+        <source>Run protocol</source>
+        <translation type="vanished">Exécuter le protocole</translation>
+    </message>
+    <message>
+        <source>Run protocol from current task</source>
+        <translation type="vanished">Exécuter le protocole depuis la tâche courante</translation>
+    </message>
+    <message>
+        <source>Run protocol from start to current task</source>
+        <translation type="vanished">Exécuter le protocole jusqu&apos;à la tâche courante</translation>
+    </message>
+    <message>
+        <source>Stop protocol</source>
+        <translation type="vanished">Arrêter le protocole</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="39"/>
+        <source>Workflow Creator</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="184"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="405"/>
+        <source>Export workflow</source>
+        <translation>Exporter le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="184"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="197"/>
+        <source>Workflow (*.json *.pcl)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="197"/>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="391"/>
+        <source>Load workflow</source>
+        <translation>Charger le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="214"/>
+        <source>The workflow is running. Please wait before closing it.</source>
+        <translation>Le workflow est en cours d&apos;exécution. Veuillez patienter avant de le fermer.</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="222"/>
+        <source>The workflow has been modified.</source>
+        <translation>Le workflow a été modifié.</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="337"/>
+        <source>I/O</source>
+        <translation>E/S</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="384"/>
+        <source>New workflow</source>
+        <translation>Nouveau workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="398"/>
+        <source>Save workflow</source>
+        <translation>Sauver le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="412"/>
+        <source>Close workflow</source>
+        <translation>Fermer le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="431"/>
+        <source>Reload plugins of current workflow</source>
+        <translation>Rechargement des plugins du worflow courant</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="440"/>
+        <source>Run workflow</source>
+        <translation>Exécuter le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="444"/>
+        <source>Run workflow from current task</source>
+        <translation>Exécuter le workflow depuis la tâche courante</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="448"/>
+        <source>Run workflow from start to current task</source>
+        <translation>Exécuter le workflow jusqu&apos;à la tâche courante</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="452"/>
+        <source>Stop workflow</source>
+        <translation>Arrêter le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="457"/>
+        <source>Original size</source>
+        <translation>Taille originale</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="460"/>
+        <source>Zoom in</source>
+        <translation>Zoomer</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="463"/>
+        <source>Zoom out</source>
+        <translation>Dézoomer</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="636"/>
+        <source>Inputs</source>
+        <translation>Entrées</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="654"/>
+        <source>Outputs</source>
+        <translation>Sorties</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="669"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="675"/>
+        <source>Auto save</source>
+        <translation>Sauvegarde auto</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="698"/>
+        <source>Save format</source>
+        <translation>Format de sauvegarde</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="711"/>
+        <source>Save options</source>
+        <translation>Options de sauvegarde</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="714"/>
+        <source>Folder</source>
+        <translation>Répertoire</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="728"/>
+        <source>Process benchmark</source>
+        <translation>Analyse du traitement</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowModuleWidget.cpp" line="729"/>
+        <source>Custom process information</source>
+        <translation>Information personnalisée du process</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowNewDlg</name>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="27"/>
+        <source>Workflow information</source>
+        <translation>Informations sur le protocole</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="52"/>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="57"/>
+        <source>Keywords</source>
+        <translation>Mots-clés</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="60"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="71"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="74"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="100"/>
+        <source>You must at least set the workflow name please.</source>
+        <translation>Vous devez entrer un nom de workflow svp.</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowNewDlg.cpp" line="107"/>
+        <source>This workflow already exists. Please enter another name.</source>
+        <translation>Ce workflow existe déjà. Veuillez entrer un nouveau nom svp.</translation>
+    </message>
+    <message>
+        <source>You must at least set the protocol name please.</source>
+        <translation type="vanished">Vous devez entrer un nom de protocole svp.</translation>
+    </message>
+    <message>
+        <source>This protocol already exists. Please enter another name.</source>
+        <translation type="vanished">Ce protocole existe déjà. Veuillez entrer un nouveau nom svp.</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowPane</name>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="58"/>
+        <source>No description available</source>
+        <translation>Pas de description disponible</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="145"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="210"/>
+        <source>Load workflow</source>
+        <translation>Charger un workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="146"/>
+        <source>Load selected workflow</source>
+        <translation>Charger le workflow sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="149"/>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="213"/>
+        <source>Delete workflow</source>
+        <translation>Supprimer le workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="150"/>
+        <source>Delete selected workflow</source>
+        <translation>Supprimer le workflow sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="177"/>
+        <source>Workflow description</source>
+        <translation>Description du workflow</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="201"/>
+        <source>Workflow</source>
+        <translation>Workflow</translation>
+    </message>
+    <message>
+        <source>Load selected protocol</source>
+        <translation type="vanished">Charger le protocole sélectionné</translation>
+    </message>
+    <message>
+        <source>Delete selected protocol</source>
+        <translation type="vanished">Supprimer le protocole sélectionné</translation>
+    </message>
+    <message>
+        <location filename="../View/Workflow/CWorkflowPane.cpp" line="161"/>
+        <source>&lt;Search by keywords&gt;</source>
+        <translation>&lt;Recherche par mots-clés&gt;</translation>
+    </message>
+    <message>
+        <source>Used with current image</source>
+        <translation type="vanished">Utiliser sur l&apos;image courante</translation>
+    </message>
+    <message>
+        <source>Workflows</source>
+        <translation type="vanished">Workflowes</translation>
+    </message>
+    <message>
+        <source>Load protocol</source>
+        <translation type="vanished">Charger un protocole</translation>
+    </message>
+    <message>
+        <source>Delete protocol</source>
+        <translation type="vanished">Supprimer le protocole</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowRunManager</name>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="129"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="137"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="146"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="215"/>
+        <source>Workflow inputs error : invalid item type.</source>
+        <translation>Erreur d&apos;entrée du workflow: type de données invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="157"/>
+        <source>Workflow inputs error : invalid volume.</source>
+        <translation>Erreur d&apos;entrée du workflow: volume invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="170"/>
+        <source>Workflow inputs error : invalid video frame.</source>
+        <translation>Erreur d&apos;entrée du workflow: frame vidéo invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="182"/>
+        <source>Workflow inputs error : invalid image.</source>
+        <translation>Erreur d&apos;entrée du workflow: image invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="193"/>
+        <source>Workflow inputs error : invalid video.</source>
+        <translation>Erreur d&apos;entrée du workflow: vidéo invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="209"/>
+        <source>Workflow inputs error : invalid camera stream.</source>
+        <translation>Erreur d&apos;entrée du workflow: flux vidéo invalide.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="251"/>
+        <source>Invalid input: workflow can only manage one video or stream input for now.</source>
+        <translation>Entrée invalide: le workflow ne peut traiter qu&apos;une source vidéo pour le moment.</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="342"/>
+        <source>Workflow is already running...</source>
+        <translation>Le workflow est déjà en cours d&apos;exécution...</translation>
+    </message>
+    <message>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1173"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1232"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1297"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1328"/>
+        <source>Invalid workflow current task</source>
+        <translation>La tâche courante du workflow est invalide</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowScene</name>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="537"/>
+        <source>Inputs</source>
+        <translation>Entrées</translation>
+    </message>
+    <message>
+        <location filename="../View/Modules/Workflow/CWorkflowScene.cpp" line="901"/>
+        <source>Choose folder</source>
+        <translation>Choisir un dossier</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkflowSettingsWidget</name>
+    <message>
+        <location filename="../View/Preferences/CWorkflowSettingsWidget.cpp" line="35"/>
+        <source>Auto-save folder</source>
+        <translation>Répertoire de sauvegarde auto</translation>
+    </message>
+</context>
+<context>
     <name>QBreakpadHttpUploader</name>
     <message>
         <location filename="../Model/Crash/QBreakpadHttpUploader.cpp" line="169"/>
@@ -4468,67 +4432,67 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation>Utilisateur</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="487"/>
+        <location filename="../Main/AppTools.hpp" line="471"/>
         <source>Text file(*.txt)</source>
         <translation>Fichier texte(*.txt)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="488"/>
+        <location filename="../Main/AppTools.hpp" line="472"/>
         <source>JSON file(*.json)</source>
         <translation>Fichier JSON(*.json)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="489"/>
+        <location filename="../Main/AppTools.hpp" line="473"/>
         <source>XML file(*.xml)</source>
         <translation>Fichier XML(*.xml)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="490"/>
+        <location filename="../Main/AppTools.hpp" line="474"/>
         <source>YAML file(*.yml)</source>
         <translation>Fichier YAML(*.yml)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="491"/>
+        <location filename="../Main/AppTools.hpp" line="475"/>
         <source>CSV file(*.csv)</source>
         <translation>Fichier CSV(*.csv)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="492"/>
+        <location filename="../Main/AppTools.hpp" line="476"/>
         <source>Bitmap image file(*.bmp)</source>
         <translation>Image Bitmap(*.bmp)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="493"/>
+        <location filename="../Main/AppTools.hpp" line="477"/>
         <source>JPEG image file(*.jpg)</source>
         <translation>Image JPEG(*.jpg)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="494"/>
+        <location filename="../Main/AppTools.hpp" line="478"/>
         <source>JP2K image file(*.jp2)</source>
         <translation>Image JPEG2000(*.jp2)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="495"/>
+        <location filename="../Main/AppTools.hpp" line="479"/>
         <source>PNG image file(*.png)</source>
         <translation>Image PNG(*.png)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="496"/>
+        <location filename="../Main/AppTools.hpp" line="480"/>
         <source>TIFF image file(*.tif)</source>
         <translation>Image TIFF(*.tif)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="497"/>
+        <location filename="../Main/AppTools.hpp" line="481"/>
         <source>WebP image file(*.webp)</source>
         <translation>Image WebP(*.webp)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="498"/>
+        <location filename="../Main/AppTools.hpp" line="482"/>
         <source>AVI video file(*.avi)</source>
         <translation>Vidéo AVI(*.avi)</translation>
     </message>
     <message>
-        <location filename="../Main/AppTools.hpp" line="499"/>
+        <location filename="../Main/AppTools.hpp" line="483"/>
         <source>MPEG video file(*.mp4)</source>
         <translation>Vidéo MPEG4(*.mp4)</translation>
     </message>
@@ -4628,32 +4592,32 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation>L&apos;écriture du fichier d&apos;initialisation de module %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="87"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="89"/>
         <source>Write main file to %1 failed</source>
         <translation>L&apos;écriture du fichier principal %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="98"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="100"/>
         <source>Read process template failed</source>
         <translation>La lecture du template de traitement a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="109"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="113"/>
         <source>Write process file to %1 failed</source>
         <translation>L&apos;écriture du fichier source du traitement %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="120"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="124"/>
         <source>Read widget template failed</source>
         <translation>La lecture du template de fenêtre a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="134"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="140"/>
         <source>Write widget file to %1 failed</source>
         <translation>L&apos;écriture du fichier source de fenêtre %1 a échoué</translation>
     </message>
     <message>
-        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="182"/>
+        <location filename="../View/Modules/PluginManager/CPythonPluginMaker.cpp" line="188"/>
         <source>Read Qt layout template failed</source>
         <translation>La lecture du template de layout Qt a échoué</translation>
     </message>
