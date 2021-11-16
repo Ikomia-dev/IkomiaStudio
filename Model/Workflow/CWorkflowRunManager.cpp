@@ -1268,6 +1268,7 @@ void CWorkflowRunManager::runSingle()
     {
         try
         {
+            CPyEnsureGIL gil;
             m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->run();
@@ -1300,6 +1301,7 @@ void CWorkflowRunManager::runFromSingle()
 
         try
         {
+            CPyEnsureGIL gil;
             m_workflowPtr->workflowStarted();
             m_totalElapsedTime = 0;
             m_workflowPtr->runFrom(id);
