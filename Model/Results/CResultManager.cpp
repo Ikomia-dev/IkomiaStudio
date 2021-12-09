@@ -22,7 +22,7 @@
 #include "IO/CImageIO.h"
 #include "IO/CGraphicsOutput.h"
 #include "IO/CBlobMeasureIO.h"
-#include "IO/CNumericIO.hpp"
+#include "IO/CNumericIO.h"
 #include "IO/CVideoIO.h"
 #include "IO/CWidgetOutput.h"
 #include "IO/CDatasetIO.h"
