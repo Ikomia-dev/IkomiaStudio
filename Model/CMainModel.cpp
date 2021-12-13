@@ -37,6 +37,7 @@ CMainModel::CMainModel()
 
 CMainModel::~CMainModel()
 {
+    CPyEnsureGIL gil;
     m_userMgr.beforeAppClose();
 }
 

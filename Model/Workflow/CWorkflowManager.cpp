@@ -524,6 +524,7 @@ void CWorkflowManager::loadWorkflow(const QString &path)
 
     try
     {
+        CPyEnsureGIL gil;
         if(m_pWorkflow)
             emit doCloseWorkflow();
 
