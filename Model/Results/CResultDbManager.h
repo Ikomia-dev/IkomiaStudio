@@ -60,11 +60,11 @@ class CResultDbManager : public CProjectItemBaseDbMgr
         void                    createTables();
 
         int                     getMeasureCount(const QSqlDatabase& db, int resultId);
-        QMap<int,QString>       getMeasureNames(const QSqlDatabase& db, int resultId);
+        QVector<QString>        getMeasureNames(const QSqlDatabase& db, int resultId);
 
         void                    updateProjectId(int oldId, int newId);
 
-        QString                 buildMeasureQuery(int resultId, const QMap<int,QString>& mapMeasureNames);
+        QString                 buildMeasureQuery(int resultId, const QVector<QString> &measureNames);
 
         QString                 encodeValues(const std::vector<double>& values);
         std::vector<double>     decodeValues(const QString &strValues);

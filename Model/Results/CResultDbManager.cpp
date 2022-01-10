@@ -192,8 +192,8 @@ CMeasuresTableModel *CResultDbManager::createMeasureModel(int resultId)
     if(!db.isValid())
         throw CException(DatabaseExCode::INVALID_QUERY, "Invalid database connection", __func__, __FILE__, __LINE__);
 
-    auto mapNames = getMeasureNames(db, resultId);
-    auto strQuery = buildMeasureQuery(resultId, mapNames);
+    auto names = getMeasureNames(db, resultId);
+    auto strQuery = buildMeasureQuery(resultId, names);
     auto pModel = new CMeasuresTableModel(nullptr);
     pModel->setQuery(strQuery, db);
     pModel->setHeaderData(0, Qt::Horizontal, QObject::tr("Id"));
@@ -201,8 +201,8 @@ CMeasuresTableModel *CResultDbManager::createMeasureModel(int resultId)
     pModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Category"));
 
     int index = 3;
-    for(auto it=mapNames.begin(); it!=mapNames.end(); ++it)
-        pModel->setHeaderData(index++, Qt::Horizontal, it.value());
+    for(int i=0; i<names.size(); ++i)
+        pModel->setHeaderData(index++, Qt::Horizontal, names[i]);
 
     return pModel;
 }
@@ -312,7 +312,7 @@ int CResultDbManager::getMeasureCount(const QSqlDatabase &db, int resultId)
         return 0;
 
     QSqlQuery q(db);
-    if(!q.exec(QString("SELECT COUNT(DISTINCT measureId) FROM measures WHERE projectResultId=%1;").arg(resultId)))
+    if(!q.exec(QString("SELECT COUNT(measureName) FROM measures WHERE projectResultId=%1;").arg(resultId)))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     if(q.first())
@@ -321,34 +321,34 @@ int CResultDbManager::getMeasureCount(const QSqlDatabase &db, int resultId)
         return 0;
 }
 
-QMap<int, QString> CResultDbManager::getMeasureNames(const QSqlDatabase &db, int resultId)
+QVector<QString> CResultDbManager::getMeasureNames(const QSqlDatabase &db, int resultId)
 {
     if(!db.isValid())
-        return QMap<int, QString>();
+        return QVector<QString>();
 
     QSqlQuery q(db);
-    if(!q.exec(QString("SELECT DISTINCT measureId, measureName FROM measures WHERE projectResultId=%1;").arg(resultId)))
+    if(!q.exec(QString("SELECT DISTINCT measureName FROM measures WHERE projectResultId=%1;").arg(resultId)))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
-    QMap<int, QString> names;
+    QVector<QString> names;
     while(q.next())
-        names.insert(q.value(0).toInt(), q.value(1).toString());
+        names.push_back(q.value(0).toString());
 
     return names;
 }
 
-QString CResultDbManager::buildMeasureQuery(int resultId, const QMap<int, QString> &mapMeasureNames)
+QString CResultDbManager::buildMeasureQuery(int resultId, const QVector<QString> &measureNames)
 {
     QString strQuery = "SELECT id, blobId, label";
 
-    for(auto it=mapMeasureNames.begin(); it!=mapMeasureNames.end(); ++it)
+    for(int i=0; i<measureNames.size(); ++i)
     {
         strQuery += ",";
-        QString measureNameNoSpace = it.value();
+        QString measureNameNoSpace = measureNames[i];
         measureNameNoSpace.remove(' ');
-        strQuery += QString("MAX(CASE WHEN (measureId=%1 AND value is not null) THEN value\
-                                      WHEN (measureId=%1 AND valueList is not null) THEN valueList\
-                                 END) AS %2").arg(it.key()).arg(measureNameNoSpace);
+        strQuery += QString("MAX(CASE WHEN (measureName='%1' AND value is not null) THEN value\
+                                      WHEN (measureName='%1' AND valueList is not null) THEN valueList\
+                                 END) AS %2").arg(measureNames[i]).arg(measureNameNoSpace);
     }
     strQuery += QString(" FROM measures WHERE projectResultId=%1 GROUP BY blobId;").arg(resultId);
     return strQuery;
