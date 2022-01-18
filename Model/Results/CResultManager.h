@@ -62,7 +62,7 @@ class CResultManager : public QObject
 
         QModelIndex         getRootIndex() const;
 
-        void                manageOutputs(const WorkflowTaskPtr& pTask, const WorkflowVertex &taskId, const QModelIndex &itemIndex);
+        void                manageOutputs(const WorkflowTaskPtr& taskPtr, const WorkflowVertex &taskId, const QModelIndex &itemIndex);
 
         void                loadImageResults(const QModelIndex& index);
 
@@ -155,9 +155,9 @@ class CResultManager : public QObject
         void                manageGraphicsOutput(const WorkflowTaskIOPtr& pOutput);
         void                manageBlobOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
         void                manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO *pViewProp);
-        void                manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO *pViewProp);
+        void                manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO *pViewProp);
         void                manageWidgetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, size_t index, CViewPropertyIO *pViewProp);
-        void                manageVideoRecord(size_t index, const CMat& image);
+        void                manageVideoRecord(const WorkflowTaskPtr &taskPtr, size_t index, const CMat& image);
         void                manageDatasetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
 
         QModelIndex         findResultFromName(const QString& name, QModelIndex startIndex=QModelIndex()) const;

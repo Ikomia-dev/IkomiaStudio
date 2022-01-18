@@ -120,20 +120,20 @@ QModelIndex CResultManager::getRootIndex() const
     return m_pProjectMgr->getImageSubTreeRootIndex(TreeItemType::RESULT);
 }
 
-void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowVertex& taskId, const QModelIndex& itemIndex)
+void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const WorkflowVertex& taskId, const QModelIndex& itemIndex)
 {
     m_bWorkflowInProgress = true;
-    size_t outputCount = pTask->getOutputCount();
+    size_t outputCount = taskPtr->getOutputCount();
 
-    if(m_pCurrentTask != pTask || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
+    if(m_pCurrentTask != taskPtr || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
     {
         CPyEnsureGIL gil;
         clearPreviousOutputs();
-        m_pCurrentTask = pTask;
+        m_pCurrentTask = taskPtr;
         m_currentInputIndex = itemIndex;
         m_currentOutputCount = (int)outputCount;
         //Prepare view according to output data types
-        auto outDisplays = getOutputDisplays(pTask);
+        auto outDisplays = getOutputDisplays(taskPtr);
         emit doInitDisplay(outDisplays);
     }
 
@@ -143,13 +143,13 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowV
         size_t videoIndex = 0;
         size_t volumeIndex = 0;
         size_t widgetIndex = 0;
-        auto globalViewMode = getViewMode(pTask);
+        auto globalViewMode = getViewMode(taskPtr);
 
         //Handle each output
         for(size_t i=0; i<outputCount; ++i)
         {
-            auto outputPtr = pTask->getOutput(i);
-            auto pOutputViewProp = pTask->getOutputViewProperty(i);
+            auto outputPtr = taskPtr->getOutput(i);
+            auto pOutputViewProp = taskPtr->getOutputViewProperty(i);
             pOutputViewProp->setViewMode(globalViewMode);
 
             if(outputPtr->isDataAvailable() && outputPtr->isDisplayable())
@@ -159,7 +159,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowV
                     case IODataType::IMAGE:
                     case IODataType::IMAGE_BINARY:                        
                     case IODataType::IMAGE_LABEL:
-                        manageImageOutput(outputPtr, pTask->getName(), imageIndex++, pOutputViewProp);
+                        manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::VIDEO:
@@ -172,23 +172,23 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowV
                         //Get video inputs index to synchronize views
                         std::set<IODataType> types = {IODataType::VIDEO, IODataType::VIDEO_BINARY, IODataType::VIDEO_LABEL,
                                                       IODataType::LIVE_STREAM, IODataType::LIVE_STREAM_BINARY, IODataType::LIVE_STREAM_LABEL};
-                        std::vector<int> videoInputIndices = m_pWorkflowMgr->getDisplayedInputIndices(pTask, types);
-                        manageVideoOutput(outputPtr, pTask->getName(), videoIndex++, videoInputIndices, pOutputViewProp);
+                        std::vector<int> videoInputIndices = m_pWorkflowMgr->getDisplayedInputIndices(taskPtr, types);
+                        manageVideoOutput(taskPtr, outputPtr, videoIndex++, videoInputIndices, pOutputViewProp);
                         break;
                     }
 
                     case IODataType::VOLUME:
                     case IODataType::VOLUME_BINARY:
                     case IODataType::VOLUME_LABEL:
-                        manageVolumeOutput(outputPtr, pTask->getName(), volumeIndex++, pOutputViewProp);
+                        manageVolumeOutput(outputPtr, taskPtr->getName(), volumeIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::BLOB_VALUES:                        
-                        manageBlobOutput(outputPtr, pTask->getName(), pOutputViewProp);
+                        manageBlobOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
                         break;
 
                     case IODataType::NUMERIC_VALUES:
-                        manageNumericOutput(outputPtr, pTask->getName(), pOutputViewProp);
+                        manageNumericOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
                         break;
 
                     case IODataType::OUTPUT_GRAPHICS:
@@ -197,11 +197,11 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &pTask, const WorkflowV
                         break;
 
                     case IODataType::WIDGET:
-                        manageWidgetOutput(outputPtr, pTask->getName(), widgetIndex++, pOutputViewProp);
+                        manageWidgetOutput(outputPtr, taskPtr->getName(), widgetIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::DNN_DATASET:
-                        manageDatasetOutput(outputPtr, pTask->getName(), pOutputViewProp);
+                        manageDatasetOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
                         break;
 
                     default: break;
@@ -981,7 +981,7 @@ void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const
     }
 }
 
-void CResultManager::manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
+void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
@@ -1006,7 +1006,7 @@ void CResultManager::manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const s
 
     try
     {
-        manageVideoRecord(index, image);
+        manageVideoRecord(taskPtr, index, image);
     }
     catch (std::exception& e)
     {
@@ -1014,7 +1014,7 @@ void CResultManager::manageVideoOutput(const WorkflowTaskIOPtr& pOutput, const s
     }
 
     //Emit signal to display result
-    emit doDisplayVideo(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), videoInputIndices, pViewProp);
+    emit doDisplayVideo(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskPtr->getName()), videoInputIndices, pViewProp);
     //Get source video info
     auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
     auto srcType = m_pDataMgr->getVideoMgr()->getSourceType(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
@@ -1062,7 +1062,7 @@ void CResultManager::manageWidgetOutput(const WorkflowTaskIOPtr &pOutput, const 
     emit doAddResultWidget(index, pOut->getWidget(), false, pViewProp);
 }
 
-void CResultManager::manageVideoRecord(size_t index, const CMat& image)
+void CResultManager::manageVideoRecord(const WorkflowTaskPtr &taskPtr, size_t index, const CMat& image)
 {
     if(m_recordVideoMap.empty() || index >= m_recordVideoMap.size())
         return;
@@ -1075,6 +1075,20 @@ void CResultManager::manageVideoRecord(size_t index, const CMat& image)
         else
             cv::cvtColor(image, tmp, cv::COLOR_RGB2BGR);
 
+        auto graphicsOutputs = taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS});
+        if(graphicsOutputs.size() > 0)
+        {
+            for(size_t i=0; i<graphicsOutputs.size(); ++i)
+            {
+                auto graphicsOutPtr = std::static_pointer_cast<CGraphicsOutput>(graphicsOutputs[i]);
+                if(graphicsOutPtr->getImageIndex() == (int)index)
+                {
+                    CGraphicsConversion graphicsConv((int)tmp.getNbCols(), (int)tmp.getNbRows());
+                    for(auto it : graphicsOutPtr->getItems())
+                        it->insertToImage(tmp, graphicsConv, false, false, true);
+                }
+            }
+        }
         m_pVideoMgr->write(tmp);
     }
 }
