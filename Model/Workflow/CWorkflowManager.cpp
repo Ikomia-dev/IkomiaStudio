@@ -1743,10 +1743,7 @@ void CWorkflowManager::clearTo(const WorkflowVertex &taskId)
     vertexList.push_back(taskId);
 
     for(const auto& it : vertexList)
-    {
-        if(it != m_pWorkflow->getRootId())
-            clearTask(it);
-    }
+        clearTask(it);
 }
 
 void CWorkflowManager::clearTask(const WorkflowVertex& taskId)
