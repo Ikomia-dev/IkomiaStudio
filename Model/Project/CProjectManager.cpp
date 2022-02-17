@@ -1625,30 +1625,6 @@ QModelIndex CProjectManager::addStream(const QModelIndex& itemIndex, const QStri
 {
     if(itemIndex.isValid())
     {
-        /*// Following procedure detects, how many webcams are accessible from 0 on upwards.
-        int numberOfDevices = 0;
-        bool noError = true;
-        while (noError)
-        {
-            try
-            {
-                // Check if camera is available.
-                cv::VideoCapture capture;
-                // Only for LINUX
-                std::string path = "/dev/video"+std::to_string(numberOfDevices);
-                if(!capture.open(path, cv::CAP_V4L)) // Will crash if not available, hence try/catch.
-                    throw CException();
-
-                // If above call worked, we have found another camera.
-                numberOfDevices++;
-            }
-            catch (...)
-            {
-                noError = false;
-            }
-        }
-        qDebug() << "Number of cameras: " << numberOfDevices;*/
-
         // Add dataset de type video
         auto datasetIndex = addDataset(itemIndex, "Live", IODataType::VIDEO);
         // Add dimension TIME to dataset
