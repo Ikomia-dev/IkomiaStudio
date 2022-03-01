@@ -358,8 +358,8 @@ void CMainCtrl::initResultsConnections()
     //Result viewer -> manager
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doSaveCurrentResultImage, m_pModel->getResultManager(), &CResultManager::onSaveCurrentImage);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentResultImage, m_pModel->getResultManager(), &CResultManager::onExportCurrentImage);
-    connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doSaveCurrentTableData, m_pModel->getResultManager(), &CResultManager::onSaveCurrentTableData);
-    connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentTableData, m_pModel->getResultManager(), &CResultManager::onExportCurrentTableData);
+    connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doSaveTableData, m_pModel->getResultManager(), &CResultManager::onSaveTableData);
+    connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportTableData, m_pModel->getResultManager(), &CResultManager::onExportTableData);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doSaveCurrentResultVideo, m_pModel->getResultManager(), &CResultManager::onSaveCurrentVideo);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportCurrentResultVideo, m_pModel->getResultManager(), &CResultManager::onExportCurrentVideo);
     connect(m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::doExportDatasetImage, m_pModel->getResultManager(), &CResultManager::onExportDatasetImage);

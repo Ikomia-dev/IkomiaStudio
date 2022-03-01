@@ -107,7 +107,7 @@ void CResultsViewer::initDisplay(const OutputDisplays& displaysProp)
     }
 }
 
-CImageDisplay *CResultsViewer::displayImage(size_t index, QImage image, const QString &name)
+CImageDisplay *CResultsViewer::displayImage(int index, QImage image, const QString &name)
 {
     if(hasTab(DisplayType::IMAGE_DISPLAY) == false)
         addTabToResults(DisplayType::IMAGE_DISPLAY);
@@ -115,7 +115,7 @@ CImageDisplay *CResultsViewer::displayImage(size_t index, QImage image, const QS
     CImageDisplay* pDisplay = nullptr;
     auto displays = getDataViews(DisplayType::IMAGE_DISPLAY);
 
-    if((int)index >= displays.size())
+    if(index >= displays.size())
     {
         if((index - displays.size()) > 0)
         {
@@ -136,7 +136,7 @@ CImageDisplay *CResultsViewer::displayImage(size_t index, QImage image, const QS
     return pDisplay;
 }
 
-CVideoDisplay *CResultsViewer::displayVideo(size_t index, QImage image, const QString &name)
+CVideoDisplay *CResultsViewer::displayVideo(int index, QImage image, const QString &name)
 {
     if(hasTab(DisplayType::VIDEO_DISPLAY) == false)
         addTabToResults(DisplayType::VIDEO_DISPLAY);
@@ -144,7 +144,7 @@ CVideoDisplay *CResultsViewer::displayVideo(size_t index, QImage image, const QS
     CVideoDisplay* pDisplay = nullptr;
     auto displays = getDataViews(DisplayType::VIDEO_DISPLAY);
 
-    if((int)index >= displays.size())
+    if(index >= displays.size())
     {
         if((index - displays.size()) > 0)
         {
@@ -164,19 +164,17 @@ CVideoDisplay *CResultsViewer::displayVideo(size_t index, QImage image, const QS
     return pDisplay;
 }
 
-CResultTableDisplay *CResultsViewer::displayTable(const QString name, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty)
+CResultTableDisplay *CResultsViewer::displayTable(int index, const QString name, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty)
 {
-    CResultTableDisplay* pResultDisplay = createTableDisplay(pViewProperty);
-    pResultDisplay->setName(name);
+    CResultTableDisplay* pResultDisplay = createTableDisplay(index, name, pViewProperty);
     pResultDisplay->setModel(pModel);
     pResultDisplay->show();
     return pResultDisplay;
 }
 
-CResultTableDisplay *CResultsViewer::displayTable(const QString name, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty)
+CResultTableDisplay *CResultsViewer::displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty)
 {
-    CResultTableDisplay* pResultDisplay = createTableDisplay(pViewProperty);
-    pResultDisplay->setName(name);
+    CResultTableDisplay* pResultDisplay = createTableDisplay(index, name, pViewProperty);
     pResultDisplay->setModel(pModel);
     pResultDisplay->show();
     return pResultDisplay;
@@ -227,7 +225,7 @@ CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, 
     return pDisplay;
 }
 
-CWidgetDataDisplay *CResultsViewer::addWidgetDisplay(size_t index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty)
+CWidgetDataDisplay *CResultsViewer::addWidgetDisplay(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty)
 {
     if(hasTab(DisplayType::WIDGET_DISPLAY) == false)
         addTabToResults(DisplayType::WIDGET_DISPLAY);
@@ -235,7 +233,7 @@ CWidgetDataDisplay *CResultsViewer::addWidgetDisplay(size_t index, QWidget *pWid
     CWidgetDataDisplay* pDisplay = nullptr;
     auto displays = getDataViews(DisplayType::WIDGET_DISPLAY);
 
-    if((int)index >= displays.size())
+    if(index >= displays.size())
     {
         if((index - displays.size()) > 0)
         {
@@ -758,8 +756,16 @@ void CResultsViewer::initVideoConnections(CVideoDisplay* pDisplay)
 
 void CResultsViewer::initTableConnections(CResultTableDisplay *pDisplay)
 {
-    connect(pDisplay, &CResultTableDisplay::doSave, [&]{ emit doSaveCurrentTableData(); });
-    connect(pDisplay, &CResultTableDisplay::doExport, [&](const QString& path){ emit doExportCurrentTableData(path); });
+    connect(pDisplay, &CResultTableDisplay::doSave, [this, pDisplay]
+    {
+        int index = getDataViewIndex(pDisplay);
+        emit doSaveTableData(index);
+    });
+    connect(pDisplay, &CResultTableDisplay::doExport, [this, pDisplay](const QString& path)
+    {
+        int index = getDataViewIndex(pDisplay);
+        emit doExportTableData(index, path);
+    });
 }
 
 void CResultsViewer::initMultiImageConnections(CMultiImageDisplay *pDisplay)
@@ -822,29 +828,32 @@ CVideoDisplay* CResultsViewer::createVideoDisplay()
     return pVideoDisplay;
 }
 
-CResultTableDisplay *CResultsViewer::createTableDisplay(CViewPropertyIO *pViewProperty)
+CResultTableDisplay *CResultsViewer::createTableDisplay(int index, const QString& name, CViewPropertyIO *pViewProperty)
 {
-    CResultTableDisplay* pResultDisplay;
     if(hasTab(DisplayType::TABLE_DISPLAY) == false)
-    {
         addTabToResults(DisplayType::TABLE_DISPLAY);
-        pResultDisplay = new CResultTableDisplay;
-        pResultDisplay->setViewProperty(pViewProperty);
-        addDataViewToTab(DisplayType::TABLE_DISPLAY, pResultDisplay);
+
+    CResultTableDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::TABLE_DISPLAY);
+
+    if((int)index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating table display : invalid index");
+            return nullptr;
+        }
+
+        //Create new one
+        pDisplay = new CResultTableDisplay;
+        pDisplay->setViewProperty(pViewProperty);
+        addDataViewToTab(DisplayType::TABLE_DISPLAY, pDisplay);
     }
     else
-    {
-        int ind = getTabIndex(DisplayType::TABLE_DISPLAY);
-        pResultDisplay = static_cast<CResultTableDisplay*>(getDataViewFromTabIndex(ind, 0, 0));
+        pDisplay = static_cast<CResultTableDisplay*>(displays[index]);
 
-        // If not present, create it
-        if(pResultDisplay == nullptr)
-        {
-            pResultDisplay = new CResultTableDisplay;
-            addDataViewToTab(DisplayType::TABLE_DISPLAY, pResultDisplay);
-        }
-    }
-    return pResultDisplay;
+    pDisplay->setName(name);
+    return pDisplay;
 }
 
 void CResultsViewer::addDefaultDisplay(int tabIndex)

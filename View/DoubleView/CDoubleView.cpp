@@ -235,7 +235,7 @@ void CDoubleView::onDisplayResultImage(int index, QImage image, const QString &i
     applyViewModeProperty(pViewProperty);
 }
 
-void CDoubleView::onAddResultWidget(size_t index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty)
+void CDoubleView::onAddResultWidget(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty)
 {
     m_pResultsViewer->addWidgetDisplay(index, pWidget, bDeleteOnClose, pViewProperty);
     applyViewModeProperty(pViewProperty);
@@ -251,15 +251,15 @@ void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& i
     applyViewModeProperty(pViewProperty);
 }
 
-void CDoubleView::onDisplayResultMeasuresTable(const QString taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty)
+void CDoubleView::onDisplayResultMeasuresTable(int index, const QString taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty)
 {
-    m_pResultsViewer->displayTable(taskName, pModel, pViewProperty);
+    m_pResultsViewer->displayTable(index, taskName, pModel, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 
-void CDoubleView::onDisplayResultFeaturesTable(const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty)
+void CDoubleView::onDisplayResultFeaturesTable(int index, const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty)
 {
-    m_pResultsViewer->displayTable(taskName, pModel, pViewProperty);
+    m_pResultsViewer->displayTable(index, taskName, pModel, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 

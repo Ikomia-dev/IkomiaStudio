@@ -61,14 +61,14 @@ class CResultsViewer : public QWidget
 
         void                    initDisplay(const OutputDisplays& displaysProp);
 
-        CImageDisplay*          displayImage(size_t index, QImage image, const QString &name);
-        CVideoDisplay*          displayVideo(size_t index, QImage image, const QString& name);
-        CResultTableDisplay*    displayTable(const QString name, CMeasuresTableModel *pModel, CViewPropertyIO* pViewProperty);
-        CResultTableDisplay*    displayTable(const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
+        CImageDisplay*          displayImage(int index, QImage image, const QString &name);
+        CVideoDisplay*          displayVideo(int index, QImage image, const QString& name);
+        CResultTableDisplay*    displayTable(int index, const QString name, CMeasuresTableModel *pModel, CViewPropertyIO* pViewProperty);
+        CResultTableDisplay*    displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
         CPlotDisplay*           displayPlot(const QString& name, CDataPlot* pPlot);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
 
-        CWidgetDataDisplay*     addWidgetDisplay(size_t index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
+        CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
 
         int                     addTabToResults(DisplayType type);
         int                     addTabToResults(DisplayType type, const QString& name, const QIcon& icon);
@@ -102,8 +102,8 @@ class CResultsViewer : public QWidget
         void                    doExportCurrentResultVideo(size_t id, const QString& path, bool bWithGraphics);
         void                    doRecordVideo(size_t id, bool bRecord);
 
-        void                    doSaveCurrentTableData();
-        void                    doExportCurrentTableData(const QString& path);
+        void                    doSaveTableData(int index);
+        void                    doExportTableData(int index, const QString& path);
 
         void                    doBeforeDisplayRemoved(CDataDisplay* pDisplay);
 
@@ -147,7 +147,7 @@ class CResultsViewer : public QWidget
         CDataDisplay*           createDisplay(DisplayType type);
         CImageDisplay*          createImageDisplay();
         CVideoDisplay*          createVideoDisplay();
-        CResultTableDisplay*    createTableDisplay(CViewPropertyIO *pViewProperty);
+        CResultTableDisplay*    createTableDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
 
         void                    addDefaultDisplay(int tabIndex);
 

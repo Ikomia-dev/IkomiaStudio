@@ -81,13 +81,13 @@ class CDoubleView : public QWidget
         void            onDisplayVolume(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty);
 
         void            onDisplayResultImage(int index, QImage image, const QString& imageName, CViewPropertyIO *pViewProperty);
-        void            onDisplayResultMeasuresTable(const QString taskName, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty);
-        void            onDisplayResultFeaturesTable(const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty);
+        void            onDisplayResultMeasuresTable(int index, const QString taskName, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty);
+        void            onDisplayResultFeaturesTable(int index, const QString taskName, CFeaturesTableModel *pModel, CViewPropertyIO *pViewProperty);
         void            onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         void            onDisplayMultiImage(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void            onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int> &syncToIndices, CViewPropertyIO *pViewProperty);
 
-        void            onAddResultWidget(size_t index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
+        void            onAddResultWidget(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
 
         void            onUpdateIndex(const QModelIndex& index);
 

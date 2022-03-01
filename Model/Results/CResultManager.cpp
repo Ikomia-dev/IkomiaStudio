@@ -44,8 +44,7 @@ CResultManager::CResultManager()
 
 CResultManager::~CResultManager()
 {
-    if(m_pCurrentTableModel)
-        delete m_pCurrentTableModel;
+    clearTableModels();
 }
 
 void CResultManager::init()
@@ -139,10 +138,12 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
 
     try
     {
-        size_t imageIndex = 0;
-        size_t videoIndex = 0;
-        size_t volumeIndex = 0;
-        size_t widgetIndex = 0;
+        int imageIndex = 0;
+        int videoIndex = 0;
+        int volumeIndex = 0;
+        int widgetIndex = 0;
+        int tableIndex = 0;
+        clearTableModels();
         auto globalViewMode = getViewMode(taskPtr);
 
         //Handle each output
@@ -184,11 +185,11 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         break;
 
                     case IODataType::BLOB_VALUES:                        
-                        manageBlobOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
+                        manageBlobOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::NUMERIC_VALUES:
-                        manageNumericOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
+                        manageNumericOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::OUTPUT_GRAPHICS:
@@ -507,24 +508,38 @@ void CResultManager::onExportCurrentVideo(size_t id, const QString& path, bool b
     }
 }
 
-void CResultManager::onSaveCurrentTableData()
+void CResultManager::onSaveTableData(int index)
 {
-    if(typeid(*m_pCurrentTableModel) == typeid(CMeasuresTableModel))
+    if(index < 0 || index >= (int)m_tableModels.size())
     {
-        saveOutputMeasures();
+        qCCritical(logResults).noquote() << "Table data cannot be saved: invalid index";
+        return;
+    }
+
+    auto pModel = m_tableModels[index];
+    if(typeid(*pModel) == typeid(CMeasuresTableModel))
+    {
+        saveOutputMeasures(index);
         saveOutputGraphics();
         emit doNewResultNotification(QString("Result table has been saved."), Notification::INFO);
     }
 }
 
-void CResultManager::onExportCurrentTableData(const QString &path)
+void CResultManager::onExportTableData(int index, const QString &path)
 {
+    if(index < 0 || index >= (int)m_tableModels.size())
+    {
+        qCCritical(logResults).noquote() << "Table data cannot be exported: invalid index";
+        return;
+    }
+
     try
     {
-        if(typeid(*m_pCurrentTableModel) == typeid(CMeasuresTableModel))
-            saveOutputMeasures(path.toStdString());
-        else if(typeid(*m_pCurrentTableModel) == typeid(CFeaturesTableModel))
-            saveOutputFeatures(path.toStdString());
+        auto pModel = m_tableModels[index];
+        if(typeid(*pModel) == typeid(CMeasuresTableModel))
+            saveOutputMeasures(index, path.toStdString());
+        else if(typeid(*pModel) == typeid(CFeaturesTableModel))
+            saveOutputFeatures(index, path.toStdString());
         emit doNewResultNotification(QString("Result table has been exported."), Notification::INFO);
     }
     catch(std::exception& e)
@@ -813,7 +828,15 @@ void CResultManager::clearPreviousOutputs()
     }
 }
 
-void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const std::string& taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::clearTableModels()
+{
+    for(size_t i=0; i<m_tableModels.size(); ++i)
+        m_tableModels[i]->deleteLater();
+
+    m_tableModels.clear();
+}
+
+void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const std::string& taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
@@ -842,12 +865,12 @@ void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const s
     //Emit signal to display overlay binary
     if(pOut->isOverlayAvailable() == true)
     {
-        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), static_cast<int>(index));
+        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index);
         m_bImageOverlay = true;
     }
 }
 
-void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(m_pRenderMgr);
     assert(outputPtr);
@@ -878,7 +901,7 @@ void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, cons
         if(index == 0)
         {
             updateVolumeRender(outputPtr);
-            m_selectedIndex = static_cast<int>(index);
+            m_selectedIndex = index;
         }
     }
     catch(std::exception& e)
@@ -910,7 +933,7 @@ void CResultManager::manageGraphicsOutput(const WorkflowTaskIOPtr &pOutput)
     m_pGraphicsMgr->addTemporaryLayer(m_tempGraphicsLayerInfo);
 }
 
-void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, CViewPropertyIO* pViewProp)
+void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
@@ -921,15 +944,13 @@ void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const st
         return;
     }
 
-    if(m_pCurrentTableModel)
-        m_pCurrentTableModel->deleteLater();
-
     try
     {
         CResultDbManager resultDb;
         resultDb.setMeasures(pOut->getMeasures());
-        m_pCurrentTableModel = resultDb.createMeasureModel();
-        emit doDisplayMeasuresTable(QString::fromStdString(taskName), static_cast<CMeasuresTableModel*>(m_pCurrentTableModel), pViewProp);
+        auto pModel = resultDb.createMeasureModel();
+        m_tableModels.push_back(pModel);
+        emit doDisplayMeasuresTable(index, QString::fromStdString(taskName), pModel, pViewProp);
     }
     catch(std::exception& e)
     {
@@ -937,7 +958,7 @@ void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const st
     }
 }
 
-void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, CViewPropertyIO* pViewProp)
+void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
@@ -946,12 +967,10 @@ void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const
 
     if(outType == NumericOutputType::TABLE)
     {
-        if(m_pCurrentTableModel)
-            m_pCurrentTableModel->deleteLater();
-
-        m_pCurrentTableModel = new CFeaturesTableModel(this);
-        static_cast<CFeaturesTableModel*>(m_pCurrentTableModel)->insertData(pOut->getAllValuesAsString(), pOut->getAllValueLabels(), pOut->getAllHeaderLabels());
-        emit doDisplayFeaturesTable(QString::fromStdString(taskName), static_cast<CFeaturesTableModel*>(m_pCurrentTableModel), pViewProp);
+        auto pModel = new CFeaturesTableModel(this);
+        m_tableModels.push_back(pModel);
+        pModel->insertData(pOut->getAllValuesAsString(), pOut->getAllValueLabels(), pOut->getAllHeaderLabels());
+        emit doDisplayFeaturesTable(index, QString::fromStdString(taskName), pModel, pViewProp);
     }
     else if(outType == NumericOutputType::PLOT)
     {        
@@ -981,7 +1000,7 @@ void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const
     }
 }
 
-void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, size_t index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
+void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, int index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
 
@@ -1037,12 +1056,12 @@ void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const Wor
     //Emit signal to display overlay binary
     if(pOut->isOverlayAvailable() == true)
     {
-        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), static_cast<int>(index));
+        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index);
         m_bImageOverlay = true;
     }
 }
 
-void CResultManager::manageWidgetOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, size_t index, CViewPropertyIO* pViewProp)
+void CResultManager::manageWidgetOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
     Q_UNUSED(taskName);
@@ -1297,7 +1316,7 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
     //mapWorkflowToImage();
 }
 
-void CResultManager::saveOutputMeasures()
+void CResultManager::saveOutputMeasures(int index)
 {
     auto pMultiProject = m_pProjectMgr->getMultiModel();
     assert(pMultiProject);
@@ -1309,10 +1328,18 @@ void CResultManager::saveOutputMeasures()
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    //Get all outputs displayed as table
+    auto outputs = pTask->getOutputs({IODataType::BLOB_VALUES, IODataType::NUMERIC_VALUES});
+    if(index >= (int)outputs.size())
+    {
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid index");
+        return;
+    }
+
+    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(outputs[index]);
     if(!pOutput)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid output type");
         return;
     }
 
@@ -1334,7 +1361,7 @@ void CResultManager::saveOutputMeasures()
     pMultiProject->addItem(protocolResultIndex, pResultItem);
 }
 
-void CResultManager::saveOutputMeasures(const std::string &path)
+void CResultManager::saveOutputMeasures(int index, const std::string &path)
 {
     auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
@@ -1343,16 +1370,24 @@ void CResultManager::saveOutputMeasures(const std::string &path)
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(pTask->getOutputFromType(IODataType::BLOB_VALUES));
+    //Get all outputs displayed as table
+    auto outputs = pTask->getOutputs({IODataType::BLOB_VALUES, IODataType::NUMERIC_VALUES});
+    if(index >= (int)outputs.size())
+    {
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid index");
+        return;
+    }
+
+    auto pOutput = std::dynamic_pointer_cast<CBlobMeasureIO>(outputs[index]);
     if(!pOutput)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid output type");
         return;
     }
     pOutput->save(path);
 }
 
-void CResultManager::saveOutputFeatures(const std::string &path)
+void CResultManager::saveOutputFeatures(int index, const std::string &path)
 {
     auto pTask = m_pWorkflowMgr->getActiveTask();
     if(!pTask)
@@ -1361,10 +1396,18 @@ void CResultManager::saveOutputFeatures(const std::string &path)
         return;
     }
 
-    auto pOutput = std::dynamic_pointer_cast<CNumericIOBase>(pTask->getOutputFromType(IODataType::NUMERIC_VALUES));
+    //Get all outputs displayed as table
+    auto outputs = pTask->getOutputs({IODataType::BLOB_VALUES, IODataType::NUMERIC_VALUES});
+    if(index >= (int)outputs.size())
+    {
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid index");
+        return;
+    }
+
+    auto pOutput = std::dynamic_pointer_cast<CNumericIOBase>(outputs[index]);
     if(!pOutput)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
+        qCCritical(logResults).noquote() << tr("Error while saving measures: invalid output type");
         return;
     }
     pOutput->save(path);
@@ -1423,26 +1466,29 @@ void CResultManager::loadResults(const QModelIndex &index)
     if(pResultItem->getNodeType() != CResultItem::NodeType::TASK)
         return;
 
+    clearTableModels();
+    CMeasuresTableModel* pModel = nullptr;
+
     try
     {
         if(pResultItem->isLoaded())
         {
             CResultDbManager resultDB;
             resultDB.setMeasures(pResultItem->getMeasures());
-            m_pCurrentTableModel = resultDB.createMeasureModel();
+            m_tableModels.push_back(resultDB.createMeasureModel());
         }
         else
         {
             CProjectDbManager projectDB(m_pProjectMgr->getModel(index));
             CResultDbManager resultDB(projectDB.getPath(), projectDB.getConnectionName());
             pResultItem->setMeasures(resultDB.getMeasures(pResultItem->getDbId()));
-            m_pCurrentTableModel = resultDB.createMeasureModel(pResultItem->getDbId());
+            m_tableModels.push_back(resultDB.createMeasureModel(pResultItem->getDbId()));
         }
 
         //Prepare view according to output data types
         OutputDisplays outDisplay = {{DisplayType::TABLE_DISPLAY, {nullptr}}};
         emit doInitDisplay(outDisplay);
-        emit doDisplayMeasuresTable(QString::fromStdString(pResultItem->getName()), static_cast<CMeasuresTableModel*>(m_pCurrentTableModel), nullptr);
+        emit doDisplayMeasuresTable(0, QString::fromStdString(pResultItem->getName()), static_cast<CMeasuresTableModel*>(m_tableModels[0]), nullptr);
         setCurrentResult(index);
     }
     catch(std::exception& e)
