@@ -946,7 +946,6 @@ void CWorkflowManager::onRunWorkflowFinished()
 {
     assert(m_pWorkflow && m_pProjectMgr);
 
-    emit m_pWorkflow->getSignalRawPtr()->doFinish();
     emit doSetElapsedTime(m_runMgr.getTotalElapsedTime());
     updateProcessingFPS();
     emit m_pWorkflow->getSignalRawPtr()->doFinish();
