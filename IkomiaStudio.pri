@@ -16,8 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # default path on arch, win32, mac and centos7
 IKOMIA_EXT_LIB_PATH = $$PWD/..
 # Global path for Ikomia API libs
-IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaApi/cpp
-IKOMIA_LIB_PATH = $$PWD/../IkomiaApi/cpp/Build/Lib
+IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaCore
+IKOMIA_LIB_PATH = $$PWD/../IkomiaCore/Build/Lib
 
 # Include some useful macros
 include(macros.pri)
@@ -93,7 +93,6 @@ unix:!macx: INCLUDEPATH += /usr/local/include/opencv4
 macx: INCLUDEPATH += /usr/local/include/opencv4
 
 #OpenCL
-unix: INCLUDEPATH += $$PWD/../../..
 win32: INCLUDEPATH += '$$(ProgramW6432)/NVIDIA GPU Computing Toolkit/CUDA/v$${CUDA_VERSION}/include'
 
 #Cuda
