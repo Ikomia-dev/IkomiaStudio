@@ -16,9 +16,7 @@ Key features:
 
 ## Installation
 
-We provide GUI installers of the latest version in our website for Linux, Windows and Mac*. Please visit the [download page](https://ikomia.com/en/download) to install the latest version (free registration required).
-
-*At the time of writting, Ikomia Studio 0.3 is not available yet on Mac OS*.
+We provide GUI installers of the latest version in our website for Linux and Windows. Please visit the [download page](https://ikomia.com/en/download) to install the latest version (free registration required).
 
 ## Compilation
 
