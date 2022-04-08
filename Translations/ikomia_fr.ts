@@ -1198,12 +1198,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CMainModel</name>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="180"/>
+        <location filename="../Model/CMainModel.cpp" line="181"/>
         <source>Load process library and plugins...</source>
         <translation>Chargement de la bibliothèque et des plugins...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="241"/>
+        <location filename="../Model/CMainModel.cpp" line="242"/>
         <source>Configure Python environment...</source>
         <translation>Configuration de l&apos;environment Python...</translation>
     </message>
@@ -1212,7 +1212,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation de l&apos;environment Python...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="435"/>
+        <location filename="../Model/CMainModel.cpp" line="436"/>
         <source>Install Python environment...
 (Please be patient, this may take a while)</source>
         <translation>Installation de l&apos;environment Python...
@@ -1223,74 +1223,74 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation du SDK Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="448"/>
+        <location filename="../Model/CMainModel.cpp" line="449"/>
         <source>Install Ikomia API...</source>
         <translation>Installation de l&apos;API Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="457"/>
+        <location filename="../Model/CMainModel.cpp" line="458"/>
         <source>Install Ikomia Resources...</source>
         <translation>Installation des ressources Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="465"/>
+        <location filename="../Model/CMainModel.cpp" line="466"/>
         <source>Install Gmic resources...</source>
         <translation>Installation des ressources Gmic...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="473"/>
+        <location filename="../Model/CMainModel.cpp" line="474"/>
         <source>Install Python packages...
 (Please be patient, this may take a while)</source>
         <translation>Installation des paquets Python...
 (Cette opération peut prendre quelques instants, merci de patienter)</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="522"/>
+        <location filename="../Model/CMainModel.cpp" line="523"/>
         <source>Failed to launch MLflow server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
         <translation>Echec du lancement du serveur MLflow. Vérifier que le paquet Python est correctement installé.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="525"/>
+        <location filename="../Model/CMainModel.cpp" line="526"/>
         <source>MLflow server crashed.</source>
         <translation>Le serveur MLflow s&apos;est arrêté.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="528"/>
+        <location filename="../Model/CMainModel.cpp" line="529"/>
         <source>MLflow server do not respond. Process is waiting...</source>
         <translation>Le serveur MLflow ne répond pas. Le processus est en attente...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="531"/>
+        <location filename="../Model/CMainModel.cpp" line="532"/>
         <source>MLflow server encountered an unknown error...</source>
         <translation>Le serveur MLflow a rencontré une erreur inconnue...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="540"/>
+        <location filename="../Model/CMainModel.cpp" line="541"/>
         <source>MLflow server launched successfully.</source>
         <translation>Serveur MLflow demarré avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="575"/>
+        <location filename="../Model/CMainModel.cpp" line="576"/>
         <source>Failed to launch Tensorboard server. Check if the process is already running or if mlflow Python package is correctly installed.</source>
         <translation>Echec du lancement du serveur Tensorboard. Merci de vérifier que le paquet Python est correctement installé.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="578"/>
+        <location filename="../Model/CMainModel.cpp" line="579"/>
         <source>Tensorboard server crashed.</source>
         <translation>Le serveur Tensorboard s&apos;est arrêté.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="581"/>
+        <location filename="../Model/CMainModel.cpp" line="582"/>
         <source>Tensorboard server do not respond. Process is waiting...</source>
         <translation>Le serveur Tensorboard ne répond pas. Le processus est en attente...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="584"/>
+        <location filename="../Model/CMainModel.cpp" line="585"/>
         <source>Tensorboard server encountered an unknown error...</source>
         <translation>Le serveur Tensorboard a rencontré une erreur inconnue...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="593"/>
+        <location filename="../Model/CMainModel.cpp" line="594"/>
         <source>Tensorboard server launched successfully.</source>
         <translation>Serveur Tensorboard démarré avec succès.</translation>
     </message>
@@ -1348,9 +1348,13 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Sélectionner vos vidéos</translation>
     </message>
     <message>
-        <location filename="../View/Main/CMainView.cpp" line="431"/>
         <source>All videos (*.avi *.mp4 *.webm)</source>
-        <translation>Vidéos compatibles (*.avi *.mp4 *.webm)</translation>
+        <translation type="vanished">Vidéos compatibles (*.avi *.mp4 *.webm)</translation>
+    </message>
+    <message>
+        <location filename="../View/Main/CMainView.cpp" line="431"/>
+        <source>All videos (*.avi *.mp4 *.webm *.mxf)</source>
+        <translation>Vidéos (*.avi *.mp4 *.webm *.mxf)</translation>
     </message>
     <message>
         <location filename="../View/Main/CMainView.cpp" line="457"/>
@@ -2792,7 +2796,7 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
 <context>
     <name>CResultManager</name>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="78"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="77"/>
         <source>Current result not set: invalid index</source>
         <translation>Impossible modifier le résultat courant: index invalide</translation>
     </message>
@@ -2809,12 +2813,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur lors de la sauvegarde de l&apos;image résultat: impossible de créer le dossier </translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="415"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="416"/>
         <source>Error while saving result image: invalid current task</source>
         <translation>Erreur lors de la sauvegarde de l&apos;image résultat: tâche courant invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="371"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="372"/>
         <source>Error while saving result video: invalid index</source>
         <translation>Erreur lors de la sauvegarde de la vidéo résultat: index invalide</translation>
     </message>
@@ -2831,88 +2835,99 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Erreur lors de la sauvegarde de la vidéo résultat: impossible de créer le dossier </translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="424"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="483"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="425"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="484"/>
         <source>Error while saving result image: invalid output #%1</source>
         <translation>Erreur lors de la sauvegarde de l&apos;image résultat: sortie #%1 invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="474"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="475"/>
         <source>Error while saving result video: invalid current task</source>
         <translation>Erreur lors de la sauvegarde de la vidéo résultat: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="551"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="566"/>
         <source>Error while loading results: image index not valid</source>
         <translation>Erreur lors du chargements des résultats: index invalide (image)</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="598"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="613"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="823"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="991"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="846"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1010"/>
         <source>Process output management: invalid image</source>
         <translation>Gestionnaire des sorties: image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="829"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="997"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="852"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1016"/>
         <source>Process output management: invalid image buffer</source>
         <translation>Gestionnaire des sorties: données de l&apos;image invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="858"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="881"/>
         <source>Process output management : invalid volume</source>
         <translation>Gestionnaire des sorties: volume invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="864"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="887"/>
         <source>Process output management : invalid volume buffer</source>
         <translation>Gestionnaire des sorties: données du volume invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="897"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="920"/>
         <source>Process output management : invalid graphics</source>
         <translation>Gestionnaire des sorties: graphiques invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="920"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1301"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1335"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1353"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="943"/>
         <source>Process output management : invalid measures</source>
         <translation>Gestionnaire des sorties: mesures invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="961"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="980"/>
         <source>Wrong data format for plot output, type double expected</source>
         <translation>Format de données invalide, type double attendu</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1089"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1122"/>
         <source>Process output management: invalid dataset</source>
         <translation>Gestionnaire des sorties: dataset invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1095"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1128"/>
         <source>Process output management: no data available</source>
         <translation>Gestionnaire des sorties: aucune donnée disponible</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1148"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1181"/>
         <source>The workflow is running in order to generate your video, please wait until it finishes.</source>
         <translation>Le workflow est en cours d&apos;exécution et de création de votre vidéo, merci d&apos;attendre la fin du traitement.</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1454"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1335"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1377"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1403"/>
+        <source>Error while saving measures: invalid index</source>
+        <translation>Erreur lors de la sauvegarde des mesures: index invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Results/CResultManager.cpp" line="1342"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1384"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1410"/>
+        <source>Error while saving measures: invalid output type</source>
+        <translation>Erreur lors de la sauvegarde des mesures: type de sortie invalide</translation>
+    </message>
+    <message>
+        <location filename="../Model/Results/CResultManager.cpp" line="1514"/>
         <source>Error while recording video:</source>
         <translation>Erreur pendant l&apos;enregistrement de la vidéo:</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1482"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1542"/>
         <source>Video record has been added to the current project.</source>
         <translation>L&apos;enregistrement vidéo a été ajouté au projet courant.</translation>
     </message>
@@ -2921,12 +2936,12 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Gestionnaire des sorties: valeurs numériques invalides</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1053"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1072"/>
         <source>Process output management: invalid output type</source>
         <translation>Gestionnaire des sorties: type de données invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1059"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1078"/>
         <source>Process output management: invalid widget</source>
         <translation>Gestionnaire des sorties: fenêtre invalide</translation>
     </message>
@@ -2935,34 +2950,34 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Le protocole est en cours d&apos;exécution et de création de votre vidéo, merci d&apos;attendre la fin du traitement.</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1149"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1182"/>
         <source>Abort exporting</source>
         <translation>Annuler l&apos;export</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1215"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1248"/>
         <source>Invalid current task</source>
         <translation>Tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1219"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1252"/>
         <source>Invalid output index</source>
         <translation>Index de sortie invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1294"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1328"/>
-        <location filename="../Model/Results/CResultManager.cpp" line="1346"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1327"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1369"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1395"/>
         <source>Error while saving measures: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des mesures: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1364"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1421"/>
         <source>Error while saving graphics: invalid current task</source>
         <translation>Erreur lors de la sauvegarde des graphiques: tâche courante invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Results/CResultManager.cpp" line="1404"/>
+        <location filename="../Model/Results/CResultManager.cpp" line="1461"/>
         <source>Error while loading results: invalid item index</source>
         <translation>Erreur lors du chargement des résultats: index invalide</translation>
     </message>
@@ -2997,57 +3012,62 @@ Utiliser les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Erreur pendant la création de l&apos;affichage: index invalide</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="242"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="240"/>
         <source>Error while creating widget display : invalid index</source>
         <translation>Erreur pendant la création de l&apos;affichage: index invalide</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="276"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="274"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="282"/>
         <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="284"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="286"/>
         <source>Image Results</source>
         <translation>Image résultat</translation>
     </message>
     <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="289"/>
         <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="291"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="293"/>
         <source>Table Results</source>
         <translation>Tableau de résultats</translation>
     </message>
     <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="296"/>
         <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="298"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="300"/>
         <source>Plot Results</source>
         <translation>Courbes et diagrammes</translation>
     </message>
     <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="303"/>
         <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="305"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="307"/>
         <source>Video Results</source>
         <translation>Vidéo résultat</translation>
     </message>
     <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="310"/>
         <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="312"/>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="314"/>
         <source>Custom Results</source>
         <translation>Résultats personnalisés</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="319"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="317"/>
         <source>Dataset Results</source>
         <translation>Dataset</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="321"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="319"/>
         <source>Dnn Datatset Results</source>
         <translation>DNN Dataset</translation>
     </message>
     <message>
-        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="852"/>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="843"/>
+        <source>Error while creating table display : invalid index</source>
+        <translation>Erreur pendant la création du tableau de résultats: index invalide</translation>
+    </message>
+    <message>
+        <location filename="../View/DoubleView/Result/CResultsViewer.cpp" line="861"/>
         <source>No result to show</source>
         <translation>Aucun résultat</translation>
     </message>
@@ -3883,17 +3903,17 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Le workflow est déjà en cours d&apos;exécution...</translation>
     </message>
     <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="934"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="935"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="553"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="554"/>
         <source>Invalid image index</source>
         <translation>ModelIndex de l&apos;image invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="557"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="558"/>
         <source>Invalid image item</source>
         <translation>Element du projet invalide (image)</translation>
     </message>
@@ -3902,7 +3922,7 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation type="vanished">Erreur d&apos;exécution du traitement: élément invalide</translation>
     </message>
     <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="793"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="794"/>
         <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1287"/>
         <source>New workflow</source>
         <translation>Nouveau workflow</translation>
@@ -3943,8 +3963,8 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
         <translation>L&apos;entrée du workflow ne peut pas être ajoutée: l&apos;item est invalide.</translation>
     </message>
     <message>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1856"/>
-        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1874"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1853"/>
+        <location filename="../Model/Workflow/CWorkflowManager.cpp" line="1871"/>
         <source>No valid image data for input #%1 of task %2.</source>
         <translation>Aucune image disponible pour l&apos;entrée #%1 de la tâche %2.</translation>
     </message>
@@ -4379,8 +4399,8 @@ Les raisons les plus probables sont les problèmes de connexion internet ou les 
     <message>
         <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1173"/>
         <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1232"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1297"/>
-        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1328"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1298"/>
+        <location filename="../Model/Workflow/CWorkflowRunManager.cpp" line="1330"/>
         <source>Invalid workflow current task</source>
         <translation>La tâche courante du workflow est invalide</translation>
     </message>
