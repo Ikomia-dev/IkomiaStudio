@@ -16,8 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # default path on arch, win32, mac and centos7
 IKOMIA_EXT_LIB_PATH = $$PWD/..
 # Global path for Ikomia API libs
-IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaApi/cpp
-IKOMIA_LIB_PATH = $$PWD/../IkomiaApi/cpp/Build/Lib
+IKOMIA_API_ROOT_PATH = $$PWD/../IkomiaCore
+IKOMIA_LIB_PATH = $$PWD/../IkomiaCore/Build/Lib
 
 # Include some useful macros
 include(macros.pri)
@@ -62,15 +62,15 @@ else {
         unix:!macx: INCLUDEPATH += /usr/local/include/python3.7m
         unix:!macx: INCLUDEPATH += /usr/local/lib/python3.7/site-packages/numpy/core/include/                   # NUMPY path for CENTOS 6
     } else {
-            win32: INCLUDEPATH += $$(ProgramW6432)/Python$${PYTHON_VERSION_EXT}/include
+            win32: INCLUDEPATH += $$(ProgramW6432)/Python$${PYTHON_VERSION_NO_DOT}/include
             win32: INCLUDEPATH += $$PWD/../numpy/numpy/core/include                                                 #NUMPY path for Windows
-            macx: pythonPath = /usr/local/python$${PYTHON_VERSION}                                              #/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7
-            macx: INCLUDEPATH += $$pythonPath/include/python$${PYTHON_VERSION}m
-            macx: INCLUDEPATH += $$pythonPath/lib/python$${PYTHON_VERSION}/site-packages/numpy/core/include
-            unix:!macx: INCLUDEPATH += /usr/include/python$${PYTHON_VERSION}
-            unix:!macx: INCLUDEPATH += /usr/local/include/python$${PYTHON_VERSION}
-            unix:!macx: INCLUDEPATH += /usr/lib/python$${PYTHON_VERSION}/site-packages/numpy/core/include/    # NUMPY path for Arch
-            unix:!macx: INCLUDEPATH += /usr/local/lib/python$${PYTHON_VERSION}/dist-packages/numpy/core/include/  # NUMPY path for Ubuntu
+            macx: pythonPath = /usr/local/python$${PYTHON_VERSION_DOT}                                              #/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7
+            macx: INCLUDEPATH += $$pythonPath/include/python$${PYTHON_VERSION_DOT}m
+            macx: INCLUDEPATH += $$pythonPath/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include
+            unix:!macx: INCLUDEPATH += /usr/include/python$${PYTHON_VERSION_DOT}
+            unix:!macx: INCLUDEPATH += /usr/local/include/python$${PYTHON_VERSION_DOT}
+            unix:!macx: INCLUDEPATH += /usr/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include/    # NUMPY path for Arch
+            unix:!macx: INCLUDEPATH += /usr/local/lib/python$${PYTHON_VERSION_DOT}/dist-packages/numpy/core/include/  # NUMPY path for Ubuntu
     }
 }
 
@@ -93,7 +93,6 @@ unix:!macx: INCLUDEPATH += /usr/local/include/opencv4
 macx: INCLUDEPATH += /usr/local/include/opencv4
 
 #OpenCL
-unix: INCLUDEPATH += $$PWD/../../..
 win32: INCLUDEPATH += '$$(ProgramW6432)/NVIDIA GPU Computing Toolkit/CUDA/v$${CUDA_VERSION}/include'
 
 #Cuda
@@ -106,7 +105,7 @@ unix: INCLUDEPATH += $$PWD/../gmic/src
 #####################################################################################
 #                       LIB                                                         #
 #####################################################################################
-IKOMIA_LIB_VERSION = 0.6.1.0
+IKOMIA_LIB_VERSION = 0.7.0.0
 
 # Global lib directory for:
 # Linux
@@ -123,8 +122,8 @@ macx: LIBS += -L/usr/local/lib/
 win32: LIBS += -L$$(ProgramW6432)/Boost/lib
 
 # Python3
-win32: LIBS += -L$$(ProgramW6432)/Python$${PYTHON_VERSION_EXT}/libs
-win32: LIBS += -L$$(ProgramW6432)/Python$${PYTHON_VERSION_EXT}/
+win32: LIBS += -L$$(ProgramW6432)/Python$${PYTHON_VERSION_NO_DOT}/libs
+win32: LIBS += -L$$(ProgramW6432)/Python$${PYTHON_VERSION_NO_DOT}/
 macx: LIBS += -L$$pythonPath/lib
 
 LIBS += $$link_python()

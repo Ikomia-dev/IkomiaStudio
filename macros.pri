@@ -167,14 +167,14 @@ defineReplace(link_opencv) {
 
 defineReplace(link_boost) {
     #Dynamic link to Boost
-    win32:CONFIG(release, debug|release): libs += -lboost_filesystem-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION} -lboost_system-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION} -lboost_python$${PYTHON_VERSION_EXT}-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION}
-    else:win32:CONFIG(debug, debug|release): libs += -lboost_filesystem-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_system-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_python$${PYTHON_VERSION_EXT}-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION}
+    win32:CONFIG(release, debug|release): libs += -lboost_filesystem-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION} -lboost_system-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION} -lboost_python$${PYTHON_VERSION_NO_DOT}-vc$${BOOST_VC_VERSION}-mt-x64-$${BOOST_VERSION}
+    else:win32:CONFIG(debug, debug|release): libs += -lboost_filesystem-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_system-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION} -lboost_python$${PYTHON_VERSION_NO_DOT}-vc$${BOOST_VC_VERSION}-mt-gd-x64-$${BOOST_VERSION}
     centos7 {
-        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python37
+        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python$${PYTHON_VERSION_NO_DOT}
     } else:ubuntu_20_04 {
-        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python$${PYTHON_VERSION_EXT}
+        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python$${PYTHON_VERSION_NO_DOT}
     } else {
-        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python3
+        unix:!macx: libs += -lboost_filesystem -lboost_system -lboost_python$${PYTHON_VERSION_NO_DOT}
     }
     macx:libs += -lboost_filesystem -lboost_system -lboost_python37
     return($$libs)
@@ -254,8 +254,8 @@ defineReplace(link_qwt) {
 }
 
 defineReplace(link_python) {
-    win32:libs += -lpython$${PYTHON_VERSION_EXT}
-    macx:libs += -lpython$${PYTHON_VERSION}
-    unix:!macx: libs += -lpython$${PYTHON_VERSION}
+    win32:libs += -lpython$${PYTHON_VERSION_NO_DOT}
+    macx:libs += -lpython$${PYTHON_VERSION_DOT}
+    unix:!macx: libs += -lpython$${PYTHON_VERSION_DOT}
     return($$libs)
 }
