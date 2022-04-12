@@ -349,6 +349,7 @@ void CMainView::initBottomView()
     m_pModuleDock = new CModuleDockWidget(tr("Modules"), this);
     initWorkflowModule();
     initPluginMakerModule();
+    initJupyterLauncher();
     addDockWidget(Qt::BottomDockWidgetArea, m_pModuleDock);
 }
 
@@ -382,6 +383,13 @@ void CMainView::initPluginMakerModule()
 
         emit doGetPythonQueryModel();
     }
+}
+
+void CMainView::initJupyterLauncher()
+{
+    //Jupyter Lab launcher
+    auto action = [&](){ emit doStartJupyterLab(); };
+    m_pModuleDock->addModuleAction(action, QIcon(":/Images/jupyter.png"), tr("Open Jupyter Lab"));
 }
 
 void CMainView::initConnections()

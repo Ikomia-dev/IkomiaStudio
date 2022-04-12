@@ -219,6 +219,7 @@
         <file>Images/protocols-white.png</file>
         <file>Migrations/migration0001.sql</file>
         <file>Images/code.png</file>
+        <file>Images/jupyter.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

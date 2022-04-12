@@ -81,6 +81,7 @@ class CMainModel : public QObject
 
         void                    onOpenImage(const QModelIndex& index);
         void                    onSetCurrentUser(const CUser& user);
+        void                    onStartJupyterLab();
 
     private:
 

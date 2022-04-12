@@ -159,6 +159,8 @@ class CMainView : public QMainWindow
 
         void                    doDisplayLogMsg(int type, const QString& msg, const QString& categoryName);
 
+        void                    doStartJupyterLab();
+
         //Plugin manager module
         void                    doGetPythonQueryModel();
         void                    doReloadAllPlugins();
@@ -209,6 +211,7 @@ class CMainView : public QMainWindow
         void                    initBottomView();
         void                    initWorkflowModule();
         void                    initPluginMakerModule();
+        void                    initJupyterLauncher();
         void                    initConnections();
         void                    initMainToolBar();
         void                    initLeftTab();

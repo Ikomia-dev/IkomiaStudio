@@ -32,6 +32,7 @@ class CModuleDockWidget : public QDockWidget
         CModuleDockWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
 
         void                addModuleWidget(QWidget* pWidget, const QIcon &icon);
+        void                addModuleAction(std::function<void()> processAction, const QIcon& icon, const QString &tooltip);
 
         void                removeModuleWidget(QWidget* pWidget);
 

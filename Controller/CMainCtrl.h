@@ -65,6 +65,7 @@ class CMainCtrl : public QObject
         void    initWizardConnections();
         void    initSettingsConnections();
         void    initPluginConnections();
+        void    initActionConnections();
 
     private:
 

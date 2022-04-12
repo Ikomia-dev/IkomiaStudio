@@ -151,6 +151,63 @@ void CMainModel::onSetCurrentUser(const CUser &user)
     m_protocolMgr.setCurrentUser(user);
 }
 
+void CMainModel::onStartJupyterLab()
+{
+    QStringList args;
+    QString cmd = "jupyter-lab";
+    QString notebookDir = QString::fromStdString(Utils::Jupyter::getNotebookDir());
+    QString url = QString::fromStdString(Utils::Jupyter::getServerUri());
+    auto redirectPolicy = m_networkMgr.redirectPolicy();
+    m_networkMgr.setRedirectPolicy(QNetworkRequest::NoLessSafeRedirectPolicy);
+
+    // Check if server is already running
+    auto pReply = m_networkMgr.get(QNetworkRequest(QUrl(url)));
+    QEventLoop loop;
+    connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+    auto statusCode = pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if(statusCode.toInt() == 200)
+    {
+        m_networkMgr.setRedirectPolicy(redirectPolicy);
+        Utils::OS::openUrl(url.toStdString());
+        return;
+    }
+
+    // Launch server
+    args << "--notebook-dir" << notebookDir;
+
+    auto pProcess = new QProcess(this);
+    connect(pProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
+    {
+        QString msg;
+        switch(error)
+        {
+            case QProcess::FailedToStart:
+                msg = tr("Failed to start Jupyter server. Check if the process is already running or if jupyterlab Python package is correctly installed.");
+                break;
+            case QProcess::Crashed:
+                msg = tr("JupyterLab server crashed.");
+                break;
+            case QProcess::Timedout:
+                msg = tr("JupyterLab server do not respond. Process is waiting...");
+                break;
+            case QProcess::UnknownError:
+                msg = tr("JupyterLab server encountered an unknown error...");
+                break;
+            default: break;
+        }
+
+        qInfo().noquote() << msg;
+    });
+    connect(pProcess, &QProcess::started, [&]
+    {
+        qInfo().noquote() << tr("JupyterLab server started successfully.");
+    });
+    pProcess->startDetached(cmd, args);
+    m_networkMgr.setRedirectPolicy(redirectPolicy);
+}
+
 void CMainModel::initLogFile()
 {
     m_logFilePath = Utils::IkomiaApp::getIkomiaFolder() + "/log.txt";
@@ -538,7 +595,7 @@ void CMainModel::startLocalMLflowServer()
     });
     connect(pProcess, &QProcess::started, [&]
     {
-        qInfo().noquote() << tr("MLflow server launched successfully.");
+        qInfo().noquote() << tr("MLflow server started successfully.");
     });
     pProcess->startDetached(cmd, args);
 }
@@ -573,7 +630,7 @@ void CMainModel::startLocalTensorboard()
         switch(error)
         {
             case QProcess::FailedToStart:
-                msg = tr("Failed to launch Tensorboard server. Check if the process is already running or if mlflow Python package is correctly installed.");
+                msg = tr("Failed to launch Tensorboard server. Check if the process is already running or if tensorboard Python package is correctly installed.");
                 break;
             case QProcess::Crashed:
                 msg = tr("Tensorboard server crashed.");
@@ -591,7 +648,7 @@ void CMainModel::startLocalTensorboard()
     });
     connect(pProcess, &QProcess::started, [&]
     {
-        qInfo().noquote() << tr("Tensorboard server launched successfully.");
+        qInfo().noquote() << tr("Tensorboard server started successfully.");
     });
     pProcess->startDetached(cmd, args);
 }

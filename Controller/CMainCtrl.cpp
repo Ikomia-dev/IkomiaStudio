@@ -60,40 +60,40 @@ void CMainCtrl::initConnections()
 {
     assert(m_pView != nullptr && m_pModel != nullptr);
 
-    //Project connections
+    // Project connections
     initProjectConnections();
 
     // Data connections
     initDataConnections();
 
-    //Process connections
+    // Process connections
     initProcessConnections();
 
-    //ApplyProcess connections
+    // ApplyProcess connections
     initWorkflowConnections();
 
-    //Image information connections
+    // Image information connections
     initInfoConnections();
 
-    //Render connections
+    // Render connections
     initRenderConnections();
 
-    //Progress bar connections
+    // Progress bar connections
     initProgressConnections();
 
-    //Graphics connections
+    // Graphics connections
     initGraphicsConnections();
 
-    //Results connections
+    // Results connections
     initResultsConnections();
 
-    //Video Connections
+    // Video Connections
     initVideoConnections();
 
-    //User connections
+    // User connections
     initUserConnections();
 
-    //Plugins store connections
+    // Plugins store connections
     initStoreConnections();
 
     // Wizard connections
@@ -104,6 +104,8 @@ void CMainCtrl::initConnections()
 
     // Plugin connections
     initPluginConnections();
+
+    initActionConnections();
 }
 
 void CMainCtrl::initProjectConnections()
@@ -507,6 +509,11 @@ void CMainCtrl::initPluginConnections()
 
     //Model -> main view
     connect(m_pModel->getPluginManager(), &CPluginManager::doShowNotification, m_pView, &CMainView::onNewNotification);
+}
+
+void CMainCtrl::initActionConnections()
+{
+    connect(m_pView, &CMainView::doStartJupyterLab, m_pModel, &CMainModel::onStartJupyterLab);
 }
 
 void CMainCtrl::initDataConnections()

@@ -184,6 +184,15 @@ void CModuleDockWidget::addModuleWidget(QWidget *pWidget, const QIcon& icon)
     connect(pBtn, &QToolButton::clicked, [this, index, pBtn, icon]{ toggleModule(index);  pBtn->setIcon(icon); });
 }
 
+void CModuleDockWidget::addModuleAction(std::function<void()> processAction, const QIcon &icon, const QString& tooltip)
+{
+    auto pBtn = m_pLayout->addButtonToBottom("", QSize(40,40), icon);
+    assert(pBtn != nullptr);
+    pBtn->setToolTip(tooltip);
+    m_moduleBtnList.push_back(pBtn);
+    connect(pBtn, &QToolButton::clicked, [this, processAction]{ processAction(); });
+}
+
 void CModuleDockWidget::removeModuleWidget(QWidget *pWidget)
 {
     assert(pWidget);
