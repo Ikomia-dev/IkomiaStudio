@@ -131,7 +131,7 @@ WorkflowTaskIOPtr CWorkflowRunManager::createTaskIO(size_t inputIndex, size_t da
     return nullptr;
 }
 
-WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &index, bool bNewSequence)
+WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &index, bool bNewSequence) const
 {
     if(!index.isValid())
         throw CException(CoreExCode::INVALID_USAGE, tr("Workflow inputs error : invalid item type.").toStdString(), __func__, __FILE__, __LINE__);

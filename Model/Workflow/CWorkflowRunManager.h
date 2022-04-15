@@ -104,7 +104,7 @@ class CWorkflowRunManager : public QObject
         bool                    checkDatasetFolderInputs(size_t index1, size_t index2, std::string &err) const;
         bool                    checkFolderInputs(size_t index1, size_t index2, std::string &err) const;
 
-        WorkflowTaskIOPtr       createIOFromDataItem(const QModelIndex& index, bool bNewSequence);
+        WorkflowTaskIOPtr       createIOFromDataItem(const QModelIndex& index, bool bNewSequence) const;
 
         void                    runBatch();
         void                    runFromBatch();
