@@ -243,6 +243,12 @@ void CWorkflowManager::enableSaveWithGraphics(bool bEnable)
         m_pWorkflow->setCfgEntry("GraphicsEmbedded", std::to_string(bEnable));
 }
 
+void CWorkflowManager::enableWholeVideo(bool bEnable)
+{
+    if(m_pWorkflow)
+        m_pWorkflow->setCfgEntry("WholeVideo", std::to_string(bEnable));
+}
+
 void CWorkflowManager::beforeProjectClose(bool bWithCurrentImage)
 {
     if(bWithCurrentImage == true)

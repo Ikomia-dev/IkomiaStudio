@@ -1185,7 +1185,6 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
     {
         m_pWorkflowMgr->stopWorkflow();
     });
-
     pDlg->show();
 
     // Create a single shot connection between protocol manager finish and video saving
@@ -1194,9 +1193,10 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
     {
         try
         {
+            WorkflowTaskPtr taskPtr = m_pWorkflowMgr->getActiveTask();
+            taskPtr->setAutoSave(false);
             // Reset process on whole video to go back on live processing
-            m_pWorkflowMgr->forceBatchMode(false);
-            m_pWorkflowMgr->enableAutoLoadBatchResults(true);
+            m_pWorkflowMgr->enableWholeVideo(false);
             m_pWorkflowMgr->enableSaveWithGraphics(false);
             // Move file to appropriate place
             saveOutputVideo(id, path);
@@ -1214,8 +1214,9 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
     });
 
     // Set processing on whole video
-    m_pWorkflowMgr->forceBatchMode(true);
-    m_pWorkflowMgr->enableAutoLoadBatchResults(false);
+    WorkflowTaskPtr taskPtr = m_pWorkflowMgr->getActiveTask();
+    taskPtr->setAutoSave(true);
+    m_pWorkflowMgr->enableWholeVideo(true);
     m_pWorkflowMgr->enableSaveWithGraphics(bWithGraphics);
     // Run protocol to current active task
     m_pWorkflowMgr->runWorkflowToActiveTask();

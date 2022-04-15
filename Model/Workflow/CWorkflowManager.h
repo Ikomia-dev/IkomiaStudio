@@ -82,6 +82,7 @@ class CWorkflowManager : public QObject
 
         void                        enableAutoLoadBatchResults(bool bEnable);
         void                        enableSaveWithGraphics(bool bEnable);
+        void                        enableWholeVideo(bool bEnable);
 
         void                        beforeProjectClose(bool bWithCurrentImage);
         void                        beforeDataDeleted(const QModelIndex& index);
