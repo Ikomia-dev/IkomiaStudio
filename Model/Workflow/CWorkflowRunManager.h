@@ -65,7 +65,7 @@ class CWorkflowRunManager : public QObject
 
         void                    waitForWorkflow();
 
-        void                    protocolErrorHandling(const std::exception& e);
+        void                    workflowErrorHandling(const std::exception& e);
         void                    batchErrorHandling(const std::exception& e);
 
     signals:
@@ -74,6 +74,7 @@ class CWorkflowRunManager : public QObject
         void                    doAbortProgressBar();
         void                    doWorkflowLive(int inputIndex, bool bNewSequence);
         void                    doWorkflowFinished();
+        void                    doWorkflowFailed();
 
     public slots:
 
@@ -89,6 +90,7 @@ class CWorkflowRunManager : public QObject
         void                    setBatchInput(int index);
 
         size_t                  getBatchCount() const;
+        std::vector<std::string> getVideoInputPaths() const;
 
         bool                    checkInputs(std::string &err) const;
         bool                    checkInputs(size_t index1, size_t index2, std::string &err) const;
@@ -109,9 +111,14 @@ class CWorkflowRunManager : public QObject
         void                    runBatch();
         void                    runFromBatch();
         void                    runToBatch();
+        void                    runBatchGeneric(std::function<void(void)> runFunc);
         void                    runSingle();
         void                    runFromSingle();
         void                    runToSingle();
+
+        void                    prepareBatchConfig();
+
+        void                    restoreBatchConfig();
 
     private:
 
@@ -139,6 +146,7 @@ class CWorkflowRunManager : public QObject
         size_t                      m_batchIndex = 0;
         size_t                      m_batchCount = 0;
         double                      m_totalElapsedTime = 0;
+        MapString                   m_workflowConfig;
 };
 
 #endif // CWORKFLOWRUNMANAGER_H

@@ -65,6 +65,70 @@ bool CWorkflowRunManager::isRunning() const
     return m_bRunning;
 }
 
+std::vector<std::string> CWorkflowRunManager::getVideoInputPaths() const
+{
+    std::vector<std::string> paths;
+
+    for (size_t i=0; i<m_pInputs->size(); ++i)
+    {
+        auto input = m_pInputs->at(i);
+        if (!m_workflowPtr->isInputConnected(i))
+            continue;
+
+        for (size_t j=0; j<input.getModelIndicesCount(); ++j)
+        {
+            QModelIndex dataModelIndex;
+            TreeItemType type = input.getType();
+
+            if (type == TreeItemType::FOLDER)
+            {
+                size_t folderIndex = input.getContainerIndex(j);
+                if (folderIndex == SIZE_MAX)
+                    continue;
+
+                QModelIndex itemIndex = input.getModelIndex(folderIndex);
+                if (!itemIndex.isValid())
+                    continue;
+
+                auto types = getOriginTargetDataTypes(j);
+                if (types.empty() || types.find(IODataType::PROJECT_FOLDER) != types.end() || types.find(IODataType::FOLDER_PATH) != types.end())
+                    continue;
+
+                size_t realDataIndex = input.getDataIndexInContainer(folderIndex, j);
+                if (realDataIndex == SIZE_MAX)
+                    continue;
+
+                dataModelIndex = m_pProjectMgr->getFolderDataIndex(itemIndex, realDataIndex);
+            }
+            else if (type == TreeItemType::DATASET)
+            {
+                size_t datasetIndex = input.getContainerIndex(j);
+                if (datasetIndex == SIZE_MAX)
+                    continue;
+
+                size_t realDataIndex = input.getDataIndexInContainer(datasetIndex, j);
+                if (realDataIndex == SIZE_MAX)
+                    continue;
+
+                QModelIndex datasetModelIndex = input.getModelIndex(datasetIndex);
+                if (!datasetModelIndex.isValid())
+                    continue;
+
+                dataModelIndex = m_pProjectMgr->getDatasetDataIndex(datasetModelIndex, realDataIndex);
+            }
+            else if (type == TreeItemType::IMAGE || type == TreeItemType::VIDEO)
+                dataModelIndex = input.getModelIndex(j);
+
+            if (!dataModelIndex.isValid())
+                continue;
+
+            if (m_pProjectMgr->isTimeDataItem(dataModelIndex))
+                paths.push_back(m_pProjectMgr->getItemPath(dataModelIndex));
+        }
+    }
+    return paths;
+}
+
 WorkflowTaskIOPtr CWorkflowRunManager::createTaskIO(size_t inputIndex, size_t dataIndex, bool bNewSequence)
 {
     assert(m_pProjectMgr);
@@ -280,7 +344,7 @@ void CWorkflowRunManager::runLive(size_t inputIndex)
             }
             catch(std::exception& e)
             {
-                protocolErrorHandling(e);
+                workflowErrorHandling(e);
             }
         });
         m_liveWatcher.setFuture(protocolThread);
@@ -366,7 +430,7 @@ void CWorkflowRunManager::runSequentialTask(const WorkflowVertex &taskId)
         {
             m_pSequentialRunWatcher->disconnect();
             m_sequentialRuns.clear();
-            protocolErrorHandling(e);
+            workflowErrorHandling(e);
         }
     });
     m_pSequentialRunWatcher->setFuture(future);
@@ -398,7 +462,7 @@ void CWorkflowRunManager::notifyGraphicsChanged()
         }
         catch(std::exception& e)
         {
-            protocolErrorHandling(e);
+            workflowErrorHandling(e);
         }
     });
     m_sync.setFuture(future);
@@ -457,7 +521,7 @@ void CWorkflowRunManager::manageWaitThread(bool bNewSequence)
         m_threadCond.notify_one();
 }
 
-void CWorkflowRunManager::protocolErrorHandling(const std::exception &e)
+void CWorkflowRunManager::workflowErrorHandling(const std::exception &e)
 {
     QString msg = "";
     try
@@ -478,6 +542,7 @@ void CWorkflowRunManager::protocolErrorHandling(const std::exception &e)
     emit doAbortProgressBar();
     auto pWorkflowSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
     emit pWorkflowSignal->doFinishTask(m_workflowPtr->getRunningTaskId(), CWorkflowTask::State::_ERROR, msg);
+    emit doWorkflowFailed();
     qCCritical(logWorkflow).noquote() << msg;
 }
 
@@ -499,6 +564,7 @@ void CWorkflowRunManager::batchErrorHandling(const std::exception &e)
         msg = QString(e.what());
     }
     qCCritical(logWorkflow).noquote() << msg;
+    restoreBatchConfig();
     m_bStop = true;
 }
 
@@ -528,15 +594,16 @@ void CWorkflowRunManager::onWorkflowFinished()
         m_bRunning = false;
         m_workflowPtr->workflowFinished();
         emit doWorkflowFinished();
+        restoreBatchConfig();
     }
 }
 
 void CWorkflowRunManager::setBatchInput(int index)
 {
-    for(size_t i=0; i<m_pInputs->size(); ++i)
+    for (size_t i=0; i<m_pInputs->size(); ++i)
     {
         auto inputPtr = createTaskIO(i, index, true);
-        if(inputPtr)
+        if (inputPtr)
             m_workflowPtr->setInput(inputPtr, i, true);
     }
 }
@@ -1092,26 +1159,7 @@ bool CWorkflowRunManager::checkFolderInputs(size_t index1, size_t index2, std::s
 
 void CWorkflowRunManager::runBatch()
 {
-    std::string erroMsg;
-    if(!checkInputs(erroMsg))
-    {
-        m_bRunning = false;
-        qCCritical(logWorkflow) << QString::fromStdString(erroMsg);
-        return;
-    }
-
-    m_batchCount = getBatchCount();
-    if(m_batchCount == 0)
-    {
-        m_bRunning = false;
-        return;
-    }
-
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressSteps());
-
-    auto future = QtConcurrent::run([&]
+    auto lambdaRun = [&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
@@ -1135,33 +1183,14 @@ void CWorkflowRunManager::runBatch()
 
         if(m_bStop)
             onWorkflowFinished();
-    });
-    m_processWatcher.setFuture(future);
-    m_sync.setFuture(future);
+    };
+
+    runBatchGeneric(lambdaRun);
 }
 
 void CWorkflowRunManager::runFromBatch()
 {
-    std::string errorMsg;
-    if(!checkInputs(errorMsg))
-    {
-        m_bRunning = false;
-        qCCritical(logWorkflow) << QString::fromStdString(errorMsg);
-        return;
-    }
-
-    m_batchCount = getBatchCount();
-    if(m_batchCount == 0)
-    {
-        m_bRunning = false;
-        return;
-    }
-
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressStepsFrom(m_workflowPtr->getActiveTaskId()));
-
-    auto future = QtConcurrent::run([&]
+    auto lambdaRun = [&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
@@ -1194,33 +1223,14 @@ void CWorkflowRunManager::runFromBatch()
 
         if(m_bStop)
             onWorkflowFinished();
-    });
-    m_processWatcher.setFuture(future);
-    m_sync.setFuture(future);
+    };
+
+    runBatchGeneric(lambdaRun);
 }
 
 void CWorkflowRunManager::runToBatch()
 {
-    std::string errorMsg;
-    if(!checkInputs(errorMsg))
-    {
-        m_bRunning = false;
-        qCCritical(logWorkflow) << QString::fromStdString(errorMsg);
-        return;
-    }
-
-    m_batchCount = getBatchCount();
-    if(m_batchCount == 0)
-    {
-        m_bRunning = false;
-        return;
-    }
-
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
-    pSignal->emitSetTotalSteps(m_batchCount * m_workflowPtr->getProgressStepsTo(m_workflowPtr->getActiveTaskId()));
-
-    auto future = QtConcurrent::run([&]
+    auto lambdaRun = [&]
     {
         m_batchIndex = 0;
         m_totalElapsedTime = 0;
@@ -1253,7 +1263,30 @@ void CWorkflowRunManager::runToBatch()
 
         if(m_bStop)
             onWorkflowFinished();
-    });
+    };
+
+    runBatchGeneric(lambdaRun);
+}
+
+void CWorkflowRunManager::runBatchGeneric(std::function<void(void)> runFunc)
+{
+    std::string erroMsg;
+    if(!checkInputs(erroMsg))
+    {
+        m_bRunning = false;
+        qCCritical(logWorkflow) << QString::fromStdString(erroMsg);
+        return;
+    }
+
+    m_batchCount = getBatchCount();
+    if(m_batchCount == 0)
+    {
+        m_bRunning = false;
+        return;
+    }
+
+    prepareBatchConfig();
+    auto future = QtConcurrent::run(runFunc);
     m_processWatcher.setFuture(future);
     m_sync.setFuture(future);
 }
@@ -1270,12 +1303,13 @@ void CWorkflowRunManager::runSingle()
         {
             CPyEnsureGIL gil;
             m_workflowPtr->workflowStarted();
+            m_workflowPtr->updateStartTime();
             m_totalElapsedTime = 0;
             m_workflowPtr->run();
         }
         catch(std::exception& e)
         {
-            protocolErrorHandling(e);
+            workflowErrorHandling(e);
         }
     });
     m_processWatcher.setFuture(future);
@@ -1303,12 +1337,13 @@ void CWorkflowRunManager::runFromSingle()
         {
             CPyEnsureGIL gil;
             m_workflowPtr->workflowStarted();
+            m_workflowPtr->updateStartTime();
             m_totalElapsedTime = 0;
             m_workflowPtr->runFrom(id);
         }
         catch(std::exception& e)
         {
-            protocolErrorHandling(e);
+            workflowErrorHandling(e);
         }
     });
     m_sync.setFuture(future);
@@ -1334,15 +1369,53 @@ void CWorkflowRunManager::runToSingle()
         try
         {
             m_workflowPtr->workflowStarted();
+            m_workflowPtr->updateStartTime();
             m_totalElapsedTime = 0;
             m_workflowPtr->runTo(id);
         }
         catch(std::exception& e)
         {
-            protocolErrorHandling(e);
+            workflowErrorHandling(e);
         }
     });
     m_sync.setFuture(future);
+}
+
+void CWorkflowRunManager::prepareBatchConfig()
+{
+    // Save workflow current config
+    m_workflowConfig = m_workflowPtr->getConfig();
+    // Initialize progress bar
+    int steps = 0;
+    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
+    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+
+    auto videoPaths = getVideoInputPaths();
+    if (videoPaths.size() > 0)
+    {
+        m_workflowPtr->setCfgEntry("GraphicsEmbedded", std::to_string(true));
+        m_workflowPtr->setCfgEntry("WholeVideo", std::to_string(true));
+
+        for (size_t i=0; i<videoPaths.size(); ++i)
+        {
+            CDataVideoBuffer videoReader(videoPaths[i]);
+            steps += videoReader.getFrameCount();
+        }
+        steps *= m_workflowPtr->getProgressSteps();
+    }
+    else
+        steps = m_batchCount * m_workflowPtr->getProgressSteps();
+
+    pSignal->emitSetTotalSteps(steps);
+}
+
+void CWorkflowRunManager::restoreBatchConfig()
+{
+    if (m_workflowPtr && m_workflowConfig.size() > 0)
+    {
+        m_workflowPtr->setConfig(m_workflowConfig);
+        m_workflowConfig.clear();
+    }
 }
 
 void CWorkflowRunManager::waitForWorkflow()

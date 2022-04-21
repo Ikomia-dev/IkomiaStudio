@@ -1185,19 +1185,18 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
     {
         m_pWorkflowMgr->stopWorkflow();
     });
-
     pDlg->show();
 
-    // Create a single shot connection between protocol manager finish and video saving
-    QMetaObject::Connection* pConn = new QMetaObject::Connection();
-    *pConn = connect(m_pWorkflowMgr, &CWorkflowManager::doFinishedWorkflow, [this, path, pDlg, id, pConn]
+    // Create a single shot connection between workflow manager finish and video saving
+    QMetaObject::Connection* pConnSuccess = new QMetaObject::Connection();
+    *pConnSuccess = connect(m_pWorkflowMgr, &CWorkflowManager::doWorkflowFinished, [this, path, pDlg, id, pConnSuccess]
     {
         try
         {
             // Reset process on whole video to go back on live processing
-            m_pWorkflowMgr->forceBatchMode(false);
-            m_pWorkflowMgr->enableAutoLoadBatchResults(true);
-            m_pWorkflowMgr->enableSaveWithGraphics(false);
+            m_pWorkflowMgr->setWorkflowConfig("GraphicsEmbedded", std::to_string(false));
+            m_pWorkflowMgr->enableWholeVideo(false);
+            m_pWorkflowMgr->setCurrentTaskAutoSave(id, false);
             // Move file to appropriate place
             saveOutputVideo(id, path);
         }
@@ -1209,14 +1208,31 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
         pDlg->close();
 
         //Disconnect one shot connection
-        QObject::disconnect(*pConn);
-        delete pConn;
+        QObject::disconnect(*pConnSuccess);
+        delete pConnSuccess;
+    });
+
+    // Create a single shot connection to handle workflow failures
+    QMetaObject::Connection* pConnFailure = new QMetaObject::Connection();
+    *pConnFailure = connect(m_pWorkflowMgr, &CWorkflowManager::doWorkflowFailed, [this, pDlg, id, pConnFailure, pConnSuccess]
+    {
+        // Reset process on whole video to go back on live processing
+        m_pWorkflowMgr->setWorkflowConfig("GraphicsEmbedded", std::to_string(false));
+        m_pWorkflowMgr->enableWholeVideo(false);
+        m_pWorkflowMgr->setCurrentTaskAutoSave(id, false);
+        // automatic close message box
+        pDlg->close();
+        //Disconnect one shot connections
+        QObject::disconnect(*pConnSuccess);
+        QObject::disconnect(*pConnFailure);
+        delete pConnSuccess;
+        delete pConnFailure;
     });
 
     // Set processing on whole video
-    m_pWorkflowMgr->forceBatchMode(true);
-    m_pWorkflowMgr->enableAutoLoadBatchResults(false);
-    m_pWorkflowMgr->enableSaveWithGraphics(bWithGraphics);
+    m_pWorkflowMgr->setWorkflowConfig("GraphicsEmbedded", std::to_string(bWithGraphics));
+    m_pWorkflowMgr->setCurrentTaskAutoSave(id, true);
+    m_pWorkflowMgr->enableWholeVideo(true);
     // Run protocol to current active task
     m_pWorkflowMgr->runWorkflowToActiveTask();
 }

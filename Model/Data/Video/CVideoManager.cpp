@@ -42,7 +42,7 @@ CVideoPlayer::CVideoPlayer(const QModelIndex &wrapIndex)
 CVideoPlayer::~CVideoPlayer()
 {
     stop();
-    m_mgrPtr->closeCamera();
+    m_mgrPtr->close();
 }
 
 void CVideoPlayer::setStream(bool bStream)
@@ -88,7 +88,7 @@ CMat CVideoPlayer::getImage()
         return CMat();
 
     std::lock_guard<std::mutex> lock(m_imgMutex);
-    m_currentImage = m_mgrPtr->playVideo(*pDataset);
+    m_currentImage = m_mgrPtr->playVideo(*pDataset, m_readTimeout);
     return m_currentImage;
 }
 
@@ -100,7 +100,7 @@ CMat CVideoPlayer::getImage(int pos)
     Utils::Data::setSubsetBounds(bounds, DataDimension::IMAGE, pos, pos);
     // Play video at this position and get it
     std::lock_guard<std::mutex> lock(m_imgMutex);
-    m_currentImage = m_mgrPtr->playVideo(*pDataset, bounds);
+    m_currentImage = m_mgrPtr->playVideo(*pDataset, bounds, m_readTimeout);
     return m_currentImage;
 }
 
@@ -224,7 +224,7 @@ void CVideoPlayer::stop()
 
 void CVideoPlayer::stopRecord()
 {
-    m_mgrPtr->waitWriteFinished();
+    m_mgrPtr->waitWriteFinished(m_writeTimeout);
     m_bRecord = false;
     m_recordPath.clear();
 }

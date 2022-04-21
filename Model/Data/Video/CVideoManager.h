@@ -96,6 +96,8 @@ class CVideoPlayer : public QObject
         std::mutex              m_imgMutex;
         QFutureWatcher<void>    m_readWatcher;
         std::condition_variable m_threadCond;
+        const int               m_readTimeout = 5000; //in milliseconds
+        const int               m_writeTimeout = 60000; //in milliseconds
 };
 
 //-------------------------//

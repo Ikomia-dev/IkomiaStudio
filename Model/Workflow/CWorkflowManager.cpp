@@ -181,6 +181,12 @@ void CWorkflowManager::setCurrentTaskSaveFormat(size_t outputIndex, size_t forma
     }
 }
 
+void CWorkflowManager::setWorkflowConfig(const std::string &key, const std::string &value)
+{
+    if(m_pWorkflow)
+        m_pWorkflow->setCfgEntry(key, value);
+}
+
 int CWorkflowManager::getCurrentFPS() const
 {
     return m_currentFPS;
@@ -226,21 +232,19 @@ void CWorkflowManager::notifyGraphicsChanged()
     m_runMgr.notifyGraphicsChanged();
 }
 
-void CWorkflowManager::forceBatchMode(bool bEnable)
-{
-    if(m_pWorkflow)
-        m_pWorkflow->forceBatchMode(bEnable);
-}
-
 void CWorkflowManager::enableAutoLoadBatchResults(bool bEnable)
 {
     m_bAutoLoadBatchResult = bEnable;
 }
 
-void CWorkflowManager::enableSaveWithGraphics(bool bEnable)
+void CWorkflowManager::enableWholeVideo(bool bEnable)
 {
-    if(m_pWorkflow)
-        m_pWorkflow->setCfgEntry("GraphicsEmbedded", std::to_string(bEnable));
+    if (m_pWorkflow)
+    {
+        m_pWorkflow->setCfgEntry("WholeVideo", std::to_string(bEnable));
+        if (bEnable)
+            rootConnectionChanged();
+    }
 }
 
 void CWorkflowManager::beforeProjectClose(bool bWithCurrentImage)
@@ -658,7 +662,7 @@ void CWorkflowManager::onSendProcessAction(const WorkflowTaskPtr& pTask, int fla
     }
     catch (std::exception& e)
     {
-        m_runMgr.protocolErrorHandling(e);
+        m_runMgr.workflowErrorHandling(e);
     }
 }
 
@@ -956,7 +960,7 @@ void CWorkflowManager::onRunWorkflowFinished()
     if(m_pWorkflow->isBatchMode())
     {
         if(m_bAutoLoadBatchResult)
-            m_pProjectMgr->onLoadFolder(QString::fromStdString(m_pWorkflow->getOutputFolder()), currentModelIndex);
+            m_pProjectMgr->onLoadFolder(QString::fromStdString(m_pWorkflow->getLastRunFolder()), currentModelIndex);
     }
     else if(pTask && m_pResultsMgr)
     {
@@ -970,7 +974,12 @@ void CWorkflowManager::onRunWorkflowFinished()
         updateDataInfo();
         m_pResultsMgr->manageOutputs(pTask, taskId, currentModelIndex);
     }
-    emit doFinishedWorkflow();
+    emit doWorkflowFinished();
+}
+
+void CWorkflowManager::onRunWorkflowFailed()
+{
+    emit doWorkflowFailed();
 }
 
 void CWorkflowManager::onInputDataChanged(const QModelIndex& itemIndex, int inputIndex, bool bNewSequence)
@@ -1407,6 +1416,7 @@ void CWorkflowManager::initConnections()
 {
     //Workflow run manager -> protocol manager
     connect(&m_runMgr, &CWorkflowRunManager::doWorkflowFinished, this, &CWorkflowManager::onRunWorkflowFinished);
+    connect(&m_runMgr, &CWorkflowRunManager::doWorkflowFailed, this, &CWorkflowManager::onRunWorkflowFailed);
 
     //Workflow -> Workflow manager
     auto pHandler = static_cast<CWorkflowSignalHandler*>(m_pWorkflow->getSignalRawPtr());
@@ -1763,10 +1773,7 @@ void CWorkflowManager::clearTask(const WorkflowVertex& taskId)
 void CWorkflowManager::rootConnectionChanged()
 {
     for(size_t i=0; i<m_inputs.size(); ++i)
-    {
-        if(m_inputs[i].getType() == TreeItemType::FOLDER)
-            setWorkflowInput(i, true);
-    }
+        setWorkflowInput(i, true);
 }
 
 void CWorkflowManager::updateDataInfo()

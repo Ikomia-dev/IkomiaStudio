@@ -62,6 +62,7 @@ class CWorkflowManager : public QObject
         int                         getCurrentFPS() const;
         QModelIndex                 getCurrentVideoInputModelIndex() const;
         std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
+
         //Setters
         void                        setManagers(CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
                                                 CResultManager* pResultsMgr, CMainDataManager* pDataMgr, CProgressBarManager* pProgressMgr,
@@ -74,14 +75,13 @@ class CWorkflowManager : public QObject
         void                        setCurrentTaskAutoSave(size_t outputIndex, bool bAutoSave);
         void                        setCurrentTaskSaveFolder(const std::string& path);
         void                        setCurrentTaskSaveFormat(size_t outputIndex, size_t formatIndex);
+        void                        setWorkflowConfig(const std::string& key, const std::string& value);
 
         void                        notifyViewShow();
         void                        notifyGraphicsChanged();
 
-        void                        forceBatchMode(bool bEnable);
-
         void                        enableAutoLoadBatchResults(bool bEnable);
-        void                        enableSaveWithGraphics(bool bEnable);
+        void                        enableWholeVideo(bool bEnable);
 
         void                        beforeProjectClose(bool bWithCurrentImage);
         void                        beforeDataDeleted(const QModelIndex& index);
@@ -134,6 +134,7 @@ class CWorkflowManager : public QObject
 
         void                        onRunFromActiveTask(const WorkflowTaskParamPtr& pParam);
         void                        onRunWorkflowFinished();
+        void                        onRunWorkflowFailed();
 
         void                        onLoadWorkflow(const QModelIndex& itemIndex);
 
@@ -211,6 +212,8 @@ class CWorkflowManager : public QObject
         void                        doUpdateImageInfo(const VectorPairString& infoList);
 
         void                        doWorkflowCreated();
+        void                        doWorkflowFinished();
+        void                        doWorkflowFailed();
 
         void                        doInputChanged(int index);
         void                        doInputRemoved(int index);
@@ -226,8 +229,6 @@ class CWorkflowManager : public QObject
         void                        doDeleteConnection(const WorkflowEdge& id);
 
         void                        doNotifyWorkflowSaved();
-
-        void                        doFinishedWorkflow();
 
         void                        doStopVideo();
 
