@@ -16,11 +16,14 @@ CONFIG += centos centos7
 # Python
 # Arch
 #unix:!macx:PYTHON_VERSION_DOT = 3.9
+#unix:!macx:PYTHON_VERSION_DOT_M = 3.9
 #unix:!macx:PYTHON_VERSION_NO_DOT = 39
 # Centos7
-unix:!macx:PYTHON_VERSION_DOT = 3.7m
+unix:!macx:PYTHON_VERSION_DOT = 3.7
+unix:!macx:PYTHON_VERSION_DOT_M = 3.7m
 unix:!macx:PYTHON_VERSION_NO_DOT = 37
 win32: PYTHON_VERSION_DOT = 3.8
+win32: PYTHON_VERSION_DOT_M = 3.8
 win32: PYTHON_VERSION_NO_DOT = 38
 macx: PYTHON_VERSION_DOT = 3.7
 

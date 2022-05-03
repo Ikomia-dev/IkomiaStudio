@@ -54,24 +54,19 @@ centos7 {
     # Global include
     unix:!macx: INCLUDEPATH += /work/shared/local/include
     # Python include
-    unix:!macx: INCLUDEPATH += /work/shared/local/include/python3.7m
-    unix:!macx: INCLUDEPATH += /work/shared/local/lib/python3.7/site-packages/numpy/core/include/                   # NUMPY path for CENTOS 7
+    unix:!macx: INCLUDEPATH += /work/shared/local/include/python$${PYTHON_VERSION_DOT_M}
+    unix:!macx: INCLUDEPATH += /work/shared/local/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include/    # NUMPY path for CENTOS 7
 }
 else {
-    centos6 {
-        unix:!macx: INCLUDEPATH += /usr/local/include/python3.7m
-        unix:!macx: INCLUDEPATH += /usr/local/lib/python3.7/site-packages/numpy/core/include/                   # NUMPY path for CENTOS 6
-    } else {
-            win32: INCLUDEPATH += $$(ProgramW6432)/Python$${PYTHON_VERSION_NO_DOT}/include
-            win32: INCLUDEPATH += $$PWD/../numpy/numpy/core/include                                                 #NUMPY path for Windows
-            macx: pythonPath = /usr/local/python$${PYTHON_VERSION_DOT}                                              #/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7
-            macx: INCLUDEPATH += $$pythonPath/include/python$${PYTHON_VERSION_DOT}m
-            macx: INCLUDEPATH += $$pythonPath/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include
-            unix:!macx: INCLUDEPATH += /usr/include/python$${PYTHON_VERSION_DOT}
-            unix:!macx: INCLUDEPATH += /usr/local/include/python$${PYTHON_VERSION_DOT}
-            unix:!macx: INCLUDEPATH += /usr/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include/    # NUMPY path for Arch
-            unix:!macx: INCLUDEPATH += /usr/local/lib/python$${PYTHON_VERSION_DOT}/dist-packages/numpy/core/include/  # NUMPY path for Ubuntu
-    }
+    win32: INCLUDEPATH += $$(ProgramW6432)/Python$${PYTHON_VERSION_NO_DOT}/include
+    win32: INCLUDEPATH += $$PWD/../numpy/numpy/core/include                                                     #NUMPY path for Windows
+    macx: pythonPath = /usr/local/python$${PYTHON_VERSION_DOT}                                                  #/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7
+    macx: INCLUDEPATH += $$pythonPath/include/python$${PYTHON_VERSION_DOT}m
+    macx: INCLUDEPATH += $$pythonPath/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include
+    unix:!macx: INCLUDEPATH += /usr/include/python$${PYTHON_VERSION_DOT}
+    unix:!macx: INCLUDEPATH += /usr/local/include/python$${PYTHON_VERSION_DOT}
+    unix:!macx: INCLUDEPATH += /usr/lib/python$${PYTHON_VERSION_DOT}/site-packages/numpy/core/include/          # NUMPY path for Arch
+    unix:!macx: INCLUDEPATH += /usr/local/lib/python$${PYTHON_VERSION_DOT}/dist-packages/numpy/core/include/    # NUMPY path for Ubuntu
 }
 
 # VTK

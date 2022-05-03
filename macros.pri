@@ -256,6 +256,6 @@ defineReplace(link_qwt) {
 defineReplace(link_python) {
     win32:libs += -lpython$${PYTHON_VERSION_NO_DOT}
     macx:libs += -lpython$${PYTHON_VERSION_DOT}
-    unix:!macx: libs += -lpython$${PYTHON_VERSION_DOT}
+    unix:!macx: libs += -lpython$${PYTHON_VERSION_DOT_M}
     return($$libs)
 }
