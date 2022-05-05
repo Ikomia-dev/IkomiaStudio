@@ -21,6 +21,7 @@
 #include "Main/AppTools.hpp"
 #include "Model/Matomo/piwiktracker.h"
 #include "CLogManager.h"
+#include "CTrainingMonitoring.h"
 
 #define TYTI_PYLOGHOOK_USE_BOOST
 #include "Main/PyLogHook.hpp"
@@ -245,8 +246,10 @@ void CMainModel::initWorkflowManager()
 {
     m_protocolMgr.setManagers(&m_processMgr, &m_projectMgr, &m_graphicsMgr,
                               &m_resultsMgr, &m_dataMgr, &m_progressMgr, &m_settingsMgr);
-    startLocalMLflowServer();
-    startLocalTensorboard();
+
+    CTrainingMonitoring monitor(&m_networkMgr);
+    monitor.checkMLflowServer();
+    monitor.checkTensorboardServer();
 }
 
 void CMainModel::initGraphicsManager()
@@ -534,121 +537,4 @@ void CMainModel::installPythonRequirements()
     QString userPythonFolder = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
     QString requirementsPath = userPythonFolder + "/requirements.txt";
     Utils::Python::installRequirements(requirementsPath);
-}
-
-void CMainModel::startLocalMLflowServer()
-{
-    QStringList args;
-    QString cmd = "mlflow";
-    QString backendStoreUri = QString::fromStdString(Utils::MLflow::getBackendStoreURI());
-    QString artifactRootUri = QString::fromStdString(Utils::MLflow::getArtifactURI());
-    QString trackingUri = QString::fromStdString(Utils::MLflow::getTrackingURI());
-
-    // Create local directory to store MLflow experiments and runs
-    Utils::File::createDirectory(Utils::MLflow::getBackendStoreURI());
-
-    // Check if server is already running
-    auto pReply = m_networkMgr.get(QNetworkRequest(QUrl(trackingUri + "/health")));
-    QEventLoop loop;
-    connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-    auto statusCode = pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-
-    if(statusCode.toInt() == 200)
-        return;
-
-    // Launch server
-#ifdef Q_OS_WIN
-    backendStoreUri.remove(":");
-    artifactRootUri.remove(":");
-    backendStoreUri = "file://" + backendStoreUri;
-    artifactRootUri = "file://" + artifactRootUri;
-#endif
-
-    args << "server";
-    args << "--backend-store-uri" << backendStoreUri;
-    args << "--default-artifact-root" << artifactRootUri;
-    args << "--host" << "0.0.0.0";
-
-    auto pProcess = new QProcess(this);
-    connect(pProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
-    {
-        QString msg;
-        switch(error)
-        {
-            case QProcess::FailedToStart:
-                msg = tr("Failed to launch MLflow server. Check if the process is already running or if mlflow Python package is correctly installed.");
-                break;
-            case QProcess::Crashed:
-                msg = tr("MLflow server crashed.");
-                break;
-            case QProcess::Timedout:
-                msg = tr("MLflow server do not respond. Process is waiting...");
-                break;
-            case QProcess::UnknownError:
-                msg = tr("MLflow server encountered an unknown error...");
-                break;
-            default: break;
-        }
-
-        qInfo().noquote() << msg;
-    });
-    connect(pProcess, &QProcess::started, [&]
-    {
-        qInfo().noquote() << tr("MLflow server started successfully.");
-    });
-    pProcess->startDetached(cmd, args);
-}
-
-void CMainModel::startLocalTensorboard()
-{
-    QStringList args;
-    QString cmd = "tensorboard";
-    QString logDir = QString::fromStdString(Utils::Tensorboard::getLogDirUri());
-    QString trackingUri = QString::fromStdString(Utils::Tensorboard::getTrackingURI());
-
-    // Create local directory to store MLflow experiments and runs
-    Utils::File::createDirectory(logDir.toStdString());
-
-    // Check if server is already running
-    auto pReply = m_networkMgr.get(QNetworkRequest(QUrl(trackingUri)));
-    QEventLoop loop;
-    connect(pReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-    auto statusCode = pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-
-    if(statusCode.toInt() == 200)
-        return;
-
-    // Launch server
-    args << "--logdir" << logDir;
-
-    auto pProcess = new QProcess(this);
-    connect(pProcess, &QProcess::errorOccurred, [&](QProcess::ProcessError error)
-    {
-        QString msg;
-        switch(error)
-        {
-            case QProcess::FailedToStart:
-                msg = tr("Failed to launch Tensorboard server. Check if the process is already running or if tensorboard Python package is correctly installed.");
-                break;
-            case QProcess::Crashed:
-                msg = tr("Tensorboard server crashed.");
-                break;
-            case QProcess::Timedout:
-                msg = tr("Tensorboard server do not respond. Process is waiting...");
-                break;
-            case QProcess::UnknownError:
-                msg = tr("Tensorboard server encountered an unknown error...");
-                break;
-            default: break;
-        }
-
-        qInfo().noquote() << msg;
-    });
-    connect(pProcess, &QProcess::started, [&]
-    {
-        qInfo().noquote() << tr("Tensorboard server started successfully.");
-    });
-    pProcess->startDetached(cmd, args);
 }

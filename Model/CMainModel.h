@@ -109,9 +109,6 @@ class CMainModel : public QObject
 
         void                    installPythonRequirements();
 
-        void                    startLocalMLflowServer();
-        void                    startLocalTensorboard();
-
     private:
 
         CDbManager              m_dbMgr;

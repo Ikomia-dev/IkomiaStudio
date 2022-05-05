@@ -35,6 +35,7 @@ SOURCES += \
         Model/CDbManager.cpp \
         Model/CMainModel.cpp \
         Model/CMultiModel.cpp \
+        Model/CTrainingMonitoring.cpp \
         Model/Crash/QBreakpadHandler.cpp \
         Model/Crash/QBreakpadHttpUploader.cpp \
         Model/Data/CMultiImageModel.cpp \
@@ -210,6 +211,7 @@ SOURCES += \
 HEADERS += \
         Model/CDbManager.h \
         Model/CMainModel.h \
+        Model/CTrainingMonitoring.h \
         Model/CTreeItem.hpp \
         Model/CItem.hpp \
         Model/CMultiModel.h \
