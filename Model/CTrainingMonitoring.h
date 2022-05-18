@@ -8,7 +8,7 @@
 #include "UtilsGlobal.hpp"
 
 
-class UTILSSHARED_EXPORT CTrainingMonitoring: public QObject
+class CTrainingMonitoring: public QObject
 {
     Q_OBJECT
 
