@@ -54,7 +54,7 @@ class CVideoPlayer : public QObject
         QModelIndex         getWrapIndex() const;
         CMat                getCurrentImage() const;
         CMat                getImage();
-        CMat                getImage(int pos);
+        CMat                getImage(size_t pos);
         CMat                getSequenceImage(const QModelIndex& wrapIndex);
         std::string         getRecordPath() const;
         CDataVideoBuffer::Type  getSourceType() const;
@@ -69,9 +69,6 @@ class CVideoPlayer : public QObject
 
         void                stop();
         void                stopRecord();
-
-        CMat                readImage();
-        CMat                readImage(int index);
 
         void                recordImage(const CMat &image);
 
@@ -118,9 +115,9 @@ class CVideoManager : public QObject
         void                setProgressSignalHandler(CProgressSignalHandler* pHandler);
         void                setSelectedImageFromWorkflow(const CMat& image);
 
-        int                 getCurrentPos(const QModelIndex &index);
+        size_t              getCurrentPos(const QModelIndex &index);
         CMat                getVideoImage(const QModelIndex& index);
-        CMat                getVideoImage(const QModelIndex& index, int pos);
+        CMat                getVideoImage(const QModelIndex& index, size_t pos);
         CMat                getSequenceImage(const QModelIndex& datasetIndex, const QModelIndex &imgWrapIndex);
         CMat                getCurrentImage(const QModelIndex& index);
         CDataVideoInfoPtr   getVideoInfo(const QModelIndex& index);
@@ -132,7 +129,7 @@ class CVideoManager : public QObject
         void                displayImageSequence(const QModelIndex& modelIndex, size_t imageIndex, size_t index, bool bNewSequence);
         void                displayCurrentVideoImage(const QModelIndex& modelIndex, int index);
 
-        void                updateVideoPos(const QModelIndex& modelIndex, size_t index, int pos);
+        void                updateVideoPos(const QModelIndex& modelIndex, size_t index, size_t pos);
         void                updateInfo(const QModelIndex& modelIndex, int index);
 
         bool                isPlaying(const QModelIndex& index);
@@ -160,13 +157,13 @@ class CVideoManager : public QObject
 
     signals:
 
-        void                doUpdateVideoPos(int index, int pos);
+        void                doUpdateVideoPos(int index, size_t pos);
         void                doUpdateImgSequenceIndex(const QModelIndex& index);
 
-        void                doSetFPS(int index, int fps);
-        void                doSetVideoLength(int index, int length);
-        void                doSetTotalTime(int index, int totalTime);
-        void                doSetCurrentTime(int index, int currentTime);
+        void                doSetFPS(int index, size_t fps);
+        void                doSetVideoLength(int index, size_t length);
+        void                doSetTotalTime(int index, size_t totalTime);
+        void                doSetCurrentTime(int index, size_t currentTime);
         void                doSetSourceType(int index, CDataVideoBuffer::Type type);
 
         void                doDisplayVideoImage(const QModelIndex& index, int inputIndex, QImage image, QString imgName);
@@ -178,7 +175,7 @@ class CVideoManager : public QObject
 
         void                doCurrentDataChanged(const QModelIndex& index, bool bNewSequence);
 
-        void                doNotifyVideoStart(int frameCount);
+        void                doNotifyVideoStart(size_t frameCount);
 
         void                doStopWorkflowThread();
         void                doStopRecording(const QModelIndex& index);

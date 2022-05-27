@@ -273,8 +273,8 @@ bool CProcessManager::reloadPlugin(const QString &pluginName, int language)
     catch(std::exception& e)
     {
         qCCritical(logProcess).noquote() << e.what();
-        return false;
     }
+    return false;
 }
 
 void CProcessManager::onReloadAllPlugins()

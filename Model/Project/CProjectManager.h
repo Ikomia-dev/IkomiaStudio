@@ -93,15 +93,15 @@ class CProjectManager : public QObject
     signals:
 
         void                doSetModel(CMultiProjectModel* pMultiProject);
-        void                doSetFPS(int fps);
-        void                doSetVideoLength(int length);
-        void                doSetTotalTime(int totalTime);
-        void                doSetCurrentTime(int currentTime);
+        void                doSetFPS(size_t fps);
+        void                doSetVideoLength(size_t length);
+        void                doSetTotalTime(size_t totalTime);
+        void                doSetCurrentTime(size_t currentTime);
 
         void                doUpdateImgZ(const QModelIndex& index);
         void                doUpdateIndex(const QModelIndex& index);
         void                doUpdateSelectedIndex(const QModelIndex& index);
-        void                doUpdateVideoPos(int pos);
+        void                doUpdateVideoPos(size_t pos);
 
         void                doDisplayVideo(const QModelIndex &modelIndex, int displayIndex, CImageScene *pScene, QImage image, QString name, bool bVideoChanged, CViewPropertyIO *pViewProperty);
         void                doDisplayResults(QWidget* pWidget);
@@ -112,7 +112,7 @@ class CProjectManager : public QObject
 
         void                doAfterCurrentImageDeleted();
 
-        void                doNotifyVideoStart(int frameCount);
+        void                doNotifyVideoStart(size_t frameCount);
 
     public slots:
 
@@ -148,7 +148,7 @@ class CProjectManager : public QObject
 
         void                onDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles);
 
-        void                onUpdateVideoPos(const QModelIndex& modelIndex, int index, int pos);
+        void                onUpdateVideoPos(const QModelIndex& modelIndex, int index, size_t pos);
         void                onUpdateIndex(const QPersistentModelIndex& index);
 
         void                onRecordVideo(const QModelIndex &modelIndex, bool bRecord);

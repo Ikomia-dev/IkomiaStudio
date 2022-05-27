@@ -98,7 +98,7 @@ void CVideoViewSync::unsyncView(CVideoDisplay* pVideoDisplay1, CVideoDisplay* pV
     setConnected(pVideoDisplay1, pVideoDisplay2, false);
 }
 
-void CVideoViewSync::syncSliderLength(CVideoDisplay *pSrcDisplay, int length)
+void CVideoViewSync::syncSliderLength(CVideoDisplay *pSrcDisplay, size_t length)
 {
     for(auto it=m_connections.begin(); it!=m_connections.end(); ++it)
     {
@@ -112,7 +112,7 @@ void CVideoViewSync::syncSliderLength(CVideoDisplay *pSrcDisplay, int length)
     }
 }
 
-void CVideoViewSync::syncSliderPos(CVideoDisplay *pSrcDisplay, int pos)
+void CVideoViewSync::syncSliderPos(CVideoDisplay *pSrcDisplay, size_t pos)
 {
     for(auto it=m_connections.begin(); it!=m_connections.end(); ++it)
     {
@@ -126,7 +126,7 @@ void CVideoViewSync::syncSliderPos(CVideoDisplay *pSrcDisplay, int pos)
     }
 }
 
-void CVideoViewSync::syncTotalTime(CVideoDisplay *pSrcDisplay, int time)
+void CVideoViewSync::syncTotalTime(CVideoDisplay *pSrcDisplay, size_t time)
 {
     for(auto it=m_connections.begin(); it!=m_connections.end(); ++it)
     {
@@ -140,7 +140,7 @@ void CVideoViewSync::syncTotalTime(CVideoDisplay *pSrcDisplay, int time)
     }
 }
 
-void CVideoViewSync::syncCurrentTime(CVideoDisplay *pSrcDisplay, int time)
+void CVideoViewSync::syncCurrentTime(CVideoDisplay *pSrcDisplay, size_t time)
 {
     for(auto it=m_connections.begin(); it!=m_connections.end(); ++it)
     {

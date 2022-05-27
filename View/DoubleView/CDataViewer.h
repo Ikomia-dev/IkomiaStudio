@@ -115,7 +115,7 @@ class CDataViewer : public QWidget
         //Video signals from CVideoDisplay
         void                    doPlayVideo(int index);
         void                    doStopVideo(const QModelIndex& modelIndex);
-        void                    doUpdateVideoPos(const QModelIndex& modelIndex, int index, int pos);
+        void                    doUpdateVideoPos(const QModelIndex& modelIndex, int index, size_t pos);
         void                    doRecordVideo(const QModelIndex& modelIndex, bool bRecord);
         void                    doNotifyVideoStart(const QModelIndex& modelIndex);
         void                    doSaveCurrentVideoFrame(const QModelIndex& modelIndex, int index);
@@ -154,11 +154,11 @@ class CDataViewer : public QWidget
         void                    onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo);
 
         //Video
-        void                    onSetVideoSliderLength(int index, int length);
-        void                    onSetVideoSliderPos(int index, int pos);
+        void                    onSetVideoSliderLength(int index, size_t length);
+        void                    onSetVideoSliderPos(int index, size_t pos);
         void                    onSetVideoFPS(int index, double fps);
-        void                    onSetVideoTotalTime(int index, int totalTime);
-        void                    onSetVideoCurrentTime(int index, int currentTime);
+        void                    onSetVideoTotalTime(int index, size_t totalTime);
+        void                    onSetVideoCurrentTime(int index, size_t currentTime);
         void                    onSetVideoSourceType(int index, CDataVideoBuffer::Type srcType);
 
         void                    onStopVideo();

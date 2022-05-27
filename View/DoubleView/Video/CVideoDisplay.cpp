@@ -258,7 +258,7 @@ bool CVideoDisplay::isPlaying() const
     return m_pTimer->isActive();
 }
 
-void CVideoDisplay::onSetSliderLength(int length)
+void CVideoDisplay::onSetSliderLength(size_t length)
 {
     m_length = length;
     m_pSliderPos->setRange(0, length-1);
@@ -266,7 +266,7 @@ void CVideoDisplay::onSetSliderLength(int length)
     emit doSetSliderLength(length);
 }
 
-void CVideoDisplay::onSetSliderPos(int pos)
+void CVideoDisplay::onSetSliderPos(size_t pos)
 {
     if(m_bIsPaused == false && m_bLastFrame == true)
     {
@@ -277,7 +277,7 @@ void CVideoDisplay::onSetSliderPos(int pos)
     {
         m_currentPos = pos;
         setSliderPos(pos);
-        int maxPos = m_pSliderPos->maximum();
+        size_t maxPos = m_pSliderPos->maximum();
         m_bLastFrame = (maxPos > 0 && pos == maxPos);
         // For synchronization
         emit doSetSliderPos(pos);
@@ -291,7 +291,7 @@ void CVideoDisplay::onSetFPS(double fps)
     emit doSetFPS(fps);
 }
 
-void CVideoDisplay::onSetTotalTime(int totalTime)
+void CVideoDisplay::onSetTotalTime(size_t totalTime)
 {
     QString timePattern;
     if(totalTime < 3600)
@@ -306,7 +306,7 @@ void CVideoDisplay::onSetTotalTime(int totalTime)
     emit doSetTotalTime(totalTime);
 }
 
-void CVideoDisplay::onSetCurrentTime(int currentTime)
+void CVideoDisplay::onSetCurrentTime(size_t currentTime)
 {
     QString timePattern;
     if(m_totalTime < 3600)
@@ -326,13 +326,13 @@ bool CVideoDisplay::hasStreamOptions() const
     return m_bIsStream;
 }
 
-void CVideoDisplay::onSetSliderPosSync(int pos)
+void CVideoDisplay::onSetSliderPosSync(size_t pos)
 {
     m_currentPos = pos;
     setSliderPos(pos);
 }
 
-void CVideoDisplay::onUpdateVideoPos(int pos)
+void CVideoDisplay::onUpdateVideoPos(size_t pos)
 {
     emit doUpdateVideoPos(pos);
 }
@@ -487,7 +487,7 @@ void CVideoDisplay::stopVideo()
     emit doSyncStop();
 }
 
-void CVideoDisplay::setSliderPos(int pos)
+void CVideoDisplay::setSliderPos(size_t pos)
 {
     bool bState = m_pSliderPos->blockSignals(true);
     m_pSliderPos->setValue(pos);

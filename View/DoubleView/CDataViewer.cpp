@@ -155,7 +155,7 @@ void CDataViewer::initVideoConnections(CVideoDisplay *pDisplay)
     //Video display signals
     connect(pDisplay, &CVideoDisplay::doToggleMaximize, this, &CDataViewer::onDataViewToggleMaximize);
 
-    connect(pDisplay, &CVideoDisplay::doUpdateVideoPos, [&, pDisplay](int pos)
+    connect(pDisplay, &CVideoDisplay::doUpdateVideoPos, [&, pDisplay](size_t pos)
     {
         int index = getDisplayIndex(pDisplay);
         emit doUpdateVideoPos(m_displayIndexToModelIndex[index], index, pos);
@@ -879,7 +879,7 @@ void CDataViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
         imageViews[i]->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
 }
 
-void CDataViewer::onSetVideoSliderLength(int index, int length)
+void CDataViewer::onSetVideoSliderLength(int index, size_t length)
 {
     auto views = m_pDataDisplay->getDataViews();
     if(index < views.size() && views[index]->getTypeId() == DisplayType::VIDEO_DISPLAY)
@@ -890,7 +890,7 @@ void CDataViewer::onSetVideoSliderLength(int index, int length)
     }
 }
 
-void CDataViewer::onSetVideoSliderPos(int index, int pos)
+void CDataViewer::onSetVideoSliderPos(int index, size_t pos)
 {
     auto views = m_pDataDisplay->getDataViews();
     if(index < views.size() && views[index]->getTypeId() == DisplayType::VIDEO_DISPLAY)
@@ -912,7 +912,7 @@ void CDataViewer::onSetVideoFPS(int index, double fps)
     }
 }
 
-void CDataViewer::onSetVideoTotalTime(int index, int totalTime)
+void CDataViewer::onSetVideoTotalTime(int index, size_t totalTime)
 {
     auto views = m_pDataDisplay->getDataViews();
     if(index < views.size() && views[index]->getTypeId() == DisplayType::VIDEO_DISPLAY)
@@ -923,7 +923,7 @@ void CDataViewer::onSetVideoTotalTime(int index, int totalTime)
     }
 }
 
-void CDataViewer::onSetVideoCurrentTime(int index, int currentTime)
+void CDataViewer::onSetVideoCurrentTime(int index, size_t currentTime)
 {
     auto views = m_pDataDisplay->getDataViews();
     if(index < views.size() && views[index]->getTypeId() == DisplayType::VIDEO_DISPLAY)

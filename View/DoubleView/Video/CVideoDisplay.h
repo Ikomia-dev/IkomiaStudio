@@ -78,7 +78,7 @@ class CVideoDisplay : public CDataDisplay
         void            doStopVideo();
         void            doStopTimer();
 
-        void            doUpdateVideoPos(int pos);
+        void            doUpdateVideoPos(size_t pos);
 
         void            doStartTimer(int msec);
 
@@ -99,23 +99,23 @@ class CVideoDisplay : public CDataDisplay
         // Sync signals
         void            doSyncPlay();
         void            doSyncStop();
-        void            doSetTotalTime(int totalTime);
-        void            doSetCurrentTime(int currentTime);
-        void            doSetSliderLength(int length);
-        void            doSetSliderPos(int pos);
+        void            doSetTotalTime(size_t totalTime);
+        void            doSetCurrentTime(size_t currentTime);
+        void            doSetSliderLength(size_t length);
+        void            doSetSliderPos(size_t pos);
         void            doSetFPS(double fps);
         void            doSetPlayVideo(bool bPlay);
 
     public slots:
 
-        void            onSetSliderLength(int length);
-        void            onSetSliderPos(int pos);
+        void            onSetSliderLength(size_t length);
+        void            onSetSliderPos(size_t pos);
         void            onSetFPS(double fps);
-        void            onSetTotalTime(int totalTime);
-        void            onSetCurrentTime(int currentTime);
-        void            onSetSliderPosSync(int pos);
+        void            onSetTotalTime(size_t totalTime);
+        void            onSetCurrentTime(size_t currentTime);
+        void            onSetSliderPosSync(size_t pos);
 
-        void            onUpdateVideoPos(int pos);
+        void            onUpdateVideoPos(size_t pos);
 
         void            onSyncPlayVideo();
         void            onSyncSetPlayVideo(bool bPlay);
@@ -142,7 +142,7 @@ class CVideoDisplay : public CDataDisplay
         void            pauseVideo();
         void            stopVideo();
 
-        void            setSliderPos(int pos);
+        void            setSliderPos(size_t pos);
 
     private:
 
@@ -163,10 +163,10 @@ class CVideoDisplay : public CDataDisplay
         bool                    m_bLastFrame = false;
         double                  m_fps = 0;
         CDataVideoBuffer::Type  m_sourceType = CDataVideoBuffer::NONE;
-        int                     m_currentTime = 0;
-        int                     m_totalTime = 0;
-        int                     m_length = 0;
-        int                     m_currentPos = 0;
+        size_t                  m_currentTime = 0;
+        size_t                  m_totalTime = 0;
+        size_t                  m_length = 0;
+        size_t                  m_currentPos = 0;
 };
 
 #endif // CVIDEODISPLAY_H

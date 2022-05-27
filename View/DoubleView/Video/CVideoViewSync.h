@@ -39,10 +39,10 @@ class CVideoViewSync : public QObject
         void    unsyncView(CVideoDisplay* pVideoDisplay);
         void    unsyncView(CVideoDisplay* pVideoDisplay1, CVideoDisplay* pVideoDisplay2);
 
-        void    syncSliderLength(CVideoDisplay* pSrcDisplay, int length);
-        void    syncSliderPos(CVideoDisplay* pSrcDisplay, int pos);
-        void    syncTotalTime(CVideoDisplay* pSrcDisplay, int time);
-        void    syncCurrentTime(CVideoDisplay* pSrcDisplay, int time);
+        void    syncSliderLength(CVideoDisplay* pSrcDisplay, size_t length);
+        void    syncSliderPos(CVideoDisplay* pSrcDisplay, size_t pos);
+        void    syncTotalTime(CVideoDisplay* pSrcDisplay, size_t time);
+        void    syncCurrentTime(CVideoDisplay* pSrcDisplay, size_t time);
         void    syncFps(CVideoDisplay* pSrcDisplay, double fps);
         void    syncSourceType(CVideoDisplay* pSrcDisplay, CDataVideoBuffer::Type srcType);
 

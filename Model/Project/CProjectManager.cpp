@@ -640,7 +640,7 @@ void CProjectManager::onDataChanged(const QModelIndex &topLeft, const QModelInde
     }
 }
 
-void CProjectManager::onUpdateVideoPos(const QModelIndex &modelIndex, int index, int pos)
+void CProjectManager::onUpdateVideoPos(const QModelIndex &modelIndex, int index, size_t pos)
 {
     auto pVideoMgr = m_pDataMgr->getVideoMgr();
     if(pVideoMgr->getCurrentPos(modelIndex) == pos)
