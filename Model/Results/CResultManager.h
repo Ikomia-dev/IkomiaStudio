@@ -82,7 +82,7 @@ class CResultManager : public QObject
         void                doDisplayVideo(int index, QImage image, const QString& imageName, const std::vector<int>& syncToIndices, CViewPropertyIO* pViewProperty);
         void                doDisplayMeasuresTable(int index, const QString& taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty);
         void                doDisplayFeaturesTable(int index, const QString& taskName, CFeaturesTableModel* pModel, CViewPropertyIO* pViewProperty);
-        void                doDisplayPlot(const QString& taskName, CDataPlot* pPlot, CViewPropertyIO* pViewProperty);
+        void                doDisplayPlot(int index, const QString& taskName, CDataPlot* pPlot, CViewPropertyIO* pViewProperty);
         void                doDisplayDnnDataset(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void                doNewResultNotification(const QString& message, Notification type, CProgressCircle* pItem=nullptr, int duration=Ikomia::_NotifDefaultDuration);
@@ -101,11 +101,11 @@ class CResultManager : public QObject
         void                doAddRecordVideo(const QString& path);
 
         void                doSetVideoSourceType(int index, CDataVideoBuffer::Type type);
-        void                doSetVideoFPS(int index, int fps);
-        void                doSetVideoLength(int index, int frameCount);
-        void                doSetVideoPos(int index, int pos);
-        void                doSetVideoTotalTime(int index, int time);
-        void                doSetVideoCurrentTime(int index, int time);
+        void                doSetVideoFPS(int index, size_t fps);
+        void                doSetVideoLength(int index, size_t frameCount);
+        void                doSetVideoPos(int index, size_t pos);
+        void                doSetVideoTotalTime(int index, size_t time);
+        void                doSetVideoCurrentTime(int index, size_t time);
 
         void                doStopRecording(size_t id);
 
@@ -155,7 +155,8 @@ class CResultManager : public QObject
         void                manageVolumeOutput(const WorkflowTaskIOPtr& outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp);
         void                manageGraphicsOutput(const WorkflowTaskIOPtr& pOutput);
         void                manageBlobOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO* pViewProp);
-        void                manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
+        void                manageTableOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
+        void                managePlotOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
         void                manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, int index, const std::vector<int>& videoInputIndices, CViewPropertyIO *pViewProp);
         void                manageWidgetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
         void                manageVideoRecord(const WorkflowTaskPtr &taskPtr, size_t index, const CMat& image);

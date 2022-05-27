@@ -263,9 +263,9 @@ void CDoubleView::onDisplayResultFeaturesTable(int index, const QString taskName
     applyViewModeProperty(pViewProperty);
 }
 
-void CDoubleView::onDisplayResultPlot(const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty)
+void CDoubleView::onDisplayResultPlot(int index, const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty)
 {
-    m_pResultsViewer->displayPlot(taskName, pPlot);
+    m_pResultsViewer->displayPlot(index, taskName, pPlot, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 

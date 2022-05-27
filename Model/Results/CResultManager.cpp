@@ -143,6 +143,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
         int volumeIndex = 0;
         int widgetIndex = 0;
         int tableIndex = 0;
+        int plotIndex = 0;
         clearTableModels();
         auto globalViewMode = getViewMode(taskPtr);
 
@@ -184,13 +185,22 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         manageVolumeOutput(outputPtr, taskPtr->getName(), volumeIndex++, pOutputViewProp);
                         break;
 
-                    case IODataType::BLOB_VALUES:                        
+                    case IODataType::BLOB_VALUES:
                         manageBlobOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
                         break;
 
                     case IODataType::NUMERIC_VALUES:
-                        manageNumericOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CNumericIOBase>(outputPtr);
+                        assert(outPtr);
+                        auto outType = outPtr->getOutputType();
+
+                        if(outType == NumericOutputType::TABLE)
+                            manageTableOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        else if (outType == NumericOutputType::PLOT)
+                            managePlotOutput(outputPtr, taskPtr->getName(), plotIndex++, pOutputViewProp);
                         break;
+                    }
 
                     case IODataType::OUTPUT_GRAPHICS:
                         if(m_pWorkflowMgr->isRoot(taskId) == false)
@@ -958,46 +968,43 @@ void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const st
     }
 }
 
-void CResultManager::manageNumericOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, int index, CViewPropertyIO* pViewProp)
+void CResultManager::manageTableOutput(const WorkflowTaskIOPtr& pOutput, const std::string& taskName, int index, CViewPropertyIO* pViewProp)
 {
     assert(pOutput);
-
     auto pOut = std::dynamic_pointer_cast<CNumericIOBase>(pOutput);
-    auto outType = pOut->getOutputType();
+    auto pModel = new CFeaturesTableModel(this);
+    m_tableModels.push_back(pModel);
+    pModel->insertData(pOut->getAllValuesAsString(), pOut->getAllValueLabels(), pOut->getAllHeaderLabels());
+    emit doDisplayFeaturesTable(index, QString::fromStdString(taskName), pModel, pViewProp);
+}
 
-    if(outType == NumericOutputType::TABLE)
+void CResultManager::managePlotOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp)
+{
+    assert(pOutput);
+    auto pOut = std::dynamic_pointer_cast<CNumericIO<double>>(pOutput);
+
+    if(pOut == nullptr)
     {
-        auto pModel = new CFeaturesTableModel(this);
-        m_tableModels.push_back(pModel);
-        pModel->insertData(pOut->getAllValuesAsString(), pOut->getAllValueLabels(), pOut->getAllHeaderLabels());
-        emit doDisplayFeaturesTable(index, QString::fromStdString(taskName), pModel, pViewProp);
+        qCritical(logResults).noquote() << tr("Wrong data format for plot output, type double expected");
+        return;
     }
-    else if(outType == NumericOutputType::PLOT)
-    {        
-        auto pOutPlot = std::dynamic_pointer_cast<CNumericIO<double>>(pOutput);
-        if(pOutPlot == nullptr)
-        {
-            qCritical(logResults).noquote() << tr("Wrong data format for plot output, type double expected");
-            return;
-        }
 
-        CDataPlot::Type plotType;
-        auto type = pOutPlot->getPlotType();
-        switch(type)
-        {
-            case PlotType::CURVE: plotType = CDataPlot::Type::Curve; break;
-            case PlotType::BAR: plotType = CDataPlot::Type::Bar; break;
-            case PlotType::MULTIBAR: plotType = CDataPlot::Type::MultiBar; break;
-            case PlotType::HISTOGRAM: plotType = CDataPlot::Type::Histogram; break;
-            case PlotType::PIE: plotType = CDataPlot::Type::Pie; break;
-            default: plotType = CDataPlot::Type::Curve; break;
-        }
-        CDataPlot* pPlot = new CDataPlot;
-        pPlot->setType(plotType);
-        pPlot->setValueList(pOutPlot->getAllValues());
-        pPlot->setStringList(pOutPlot->getAllValueLabels());
-        emit doDisplayPlot(QString::fromStdString(taskName), pPlot, pViewProp);
+    CDataPlot::Type plotType;
+    auto type = pOut->getPlotType();
+    switch(type)
+    {
+        case PlotType::CURVE: plotType = CDataPlot::Type::Curve; break;
+        case PlotType::BAR: plotType = CDataPlot::Type::Bar; break;
+        case PlotType::MULTIBAR: plotType = CDataPlot::Type::MultiBar; break;
+        case PlotType::HISTOGRAM: plotType = CDataPlot::Type::Histogram; break;
+        case PlotType::PIE: plotType = CDataPlot::Type::Pie; break;
+        default: plotType = CDataPlot::Type::Curve; break;
     }
+    CDataPlot* pPlot = new CDataPlot;
+    pPlot->setType(plotType);
+    pPlot->setValueList(pOut->getAllValues());
+    pPlot->setStringList(pOut->getAllValueLabels());
+    emit doDisplayPlot(index, QString::fromStdString(taskName), pPlot, pViewProp);
 }
 
 void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr& pOutput, int index, const std::vector<int>& videoInputIndices, CViewPropertyIO* pViewProp)
@@ -1312,9 +1319,9 @@ void CResultManager::saveOutputVideo(size_t id, const std::string& path)
 
         if(infoPtr && infoPtr->m_sourceType == CDataVideoBuffer::IMAGE_SEQUENCE)
         {
-            for(int i=0; i<infoPtr->m_frameCount; ++i)
+            for(size_t i=0; i<infoPtr->m_frameCount; ++i)
             {
-                auto pathFrom = Utils::File::getPathFromPattern(resultPath, i);
+                auto pathFrom = Utils::File::getPathFromPattern(resultPath, (int)i);
                 auto imgPath = path + "/" + Utils::File::getFileName(pathFrom);
                 Utils::File::moveFile(pathFrom, imgPath);
                 paths.push_back(QString::fromStdString(imgPath));
@@ -1483,7 +1490,6 @@ void CResultManager::loadResults(const QModelIndex &index)
         return;
 
     clearTableModels();
-    CMeasuresTableModel* pModel = nullptr;
 
     try
     {
@@ -1540,7 +1546,7 @@ void CResultManager::startRecordVideo()
         m_pVideoMgr = new CDataVideoBuffer(m_currentVideoRecord);
 
     // Get info from source video manager and copy information to video manager
-    int fps = 25;
+    size_t fps = 25;
     auto pInfo = m_pDataMgr->getVideoMgr()->getVideoInfo(m_pWorkflowMgr->getCurrentVideoInputModelIndex());
 
     if(pInfo)

@@ -65,7 +65,7 @@ class CResultsViewer : public QWidget
         CVideoDisplay*          displayVideo(int index, QImage image, const QString& name);
         CResultTableDisplay*    displayTable(int index, const QString name, CMeasuresTableModel *pModel, CViewPropertyIO* pViewProperty);
         CResultTableDisplay*    displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
-        CPlotDisplay*           displayPlot(const QString& name, CDataPlot* pPlot);
+        CPlotDisplay*           displayPlot(int index, const QString& name, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
 
         CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
@@ -118,11 +118,11 @@ class CResultsViewer : public QWidget
         void                    onClearOverlay();
 
         //Video
-        void                    onSetVideoLength(int index, int length);
-        void                    onSetVideoPos(int index, int pos);
+        void                    onSetVideoLength(int index, size_t length);
+        void                    onSetVideoPos(int index, size_t pos);
         void                    onSetVideoFPS(int index, double fps);
-        void                    onSetVideoTotalTime(int index, int totalTime);
-        void                    onSetVideoCurrentTime(int index, int currentTime);
+        void                    onSetVideoTotalTime(int index, size_t totalTime);
+        void                    onSetVideoCurrentTime(int index, size_t currentTime);
         void                    onSetVideoSourceType(int index, CDataVideoBuffer::Type srcType);
         void                    onStopRecordingVideo(int index);
 
@@ -148,6 +148,7 @@ class CResultsViewer : public QWidget
         CImageDisplay*          createImageDisplay();
         CVideoDisplay*          createVideoDisplay();
         CResultTableDisplay*    createTableDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
+        CPlotDisplay*           createPlotDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
 
         void                    addDefaultDisplay(int tabIndex);
 

@@ -180,26 +180,12 @@ CResultTableDisplay *CResultsViewer::displayTable(int index, const QString name,
     return pResultDisplay;
 }
 
-CPlotDisplay *CResultsViewer::displayPlot(const QString &name, CDataPlot *pPlot)
+CPlotDisplay *CResultsViewer::displayPlot(int index, const QString &name, CDataPlot *pPlot, CViewPropertyIO *pViewProperty)
 {
-    if(hasTab(DisplayType::PLOT_DISPLAY) == false)
-        addTabToResults(DisplayType::PLOT_DISPLAY);
-
-    CPlotDisplay* pDisplay = nullptr;
-    auto displays = getDataViews(DisplayType::PLOT_DISPLAY);
-
-    if(displays.size() == 0)
-    {
-        pDisplay = new CPlotDisplay;
-        addDataViewToTab(DisplayType::PLOT_DISPLAY, pDisplay);
-    }
-    else
-        pDisplay = static_cast<CPlotDisplay*>(displays[0]);
-
-    pDisplay->setName(name);
-    pDisplay->setDataPlot(pPlot);
-    pDisplay->show();
-    return pDisplay;
+    CPlotDisplay* pResultDisplay = createPlotDisplay(index, name, pViewProperty);
+    pResultDisplay->setDataPlot(pPlot);
+    pResultDisplay->show();
+    return pResultDisplay;
 }
 
 CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty)
@@ -613,7 +599,7 @@ void CResultsViewer::onClearOverlay()
         static_cast<CVideoDisplay*>(videoViews[i])->getImageDisplay()->getView()->clearOverlay();
 }
 
-void CResultsViewer::onSetVideoLength(int index, int length)
+void CResultsViewer::onSetVideoLength(int index, size_t length)
 {
     auto views = getDataViews(DisplayType::VIDEO_DISPLAY);
     if(index < views.size())
@@ -624,7 +610,7 @@ void CResultsViewer::onSetVideoLength(int index, int length)
     }
 }
 
-void CResultsViewer::onSetVideoPos(int index, int pos)
+void CResultsViewer::onSetVideoPos(int index, size_t pos)
 {
     auto views = getDataViews(DisplayType::VIDEO_DISPLAY);
     if(index < views.size())
@@ -646,7 +632,7 @@ void CResultsViewer::onSetVideoFPS(int index, double fps)
     }
 }
 
-void CResultsViewer::onSetVideoTotalTime(int index, int totalTime)
+void CResultsViewer::onSetVideoTotalTime(int index, size_t totalTime)
 {
     auto views = getDataViews(DisplayType::VIDEO_DISPLAY);
     if(index < views.size())
@@ -657,7 +643,7 @@ void CResultsViewer::onSetVideoTotalTime(int index, int totalTime)
     }
 }
 
-void CResultsViewer::onSetVideoCurrentTime(int index, int currentTime)
+void CResultsViewer::onSetVideoCurrentTime(int index, size_t currentTime)
 {
     auto views = getDataViews(DisplayType::VIDEO_DISPLAY);
     if(index < views.size())
@@ -851,6 +837,34 @@ CResultTableDisplay *CResultsViewer::createTableDisplay(int index, const QString
     }
     else
         pDisplay = static_cast<CResultTableDisplay*>(displays[index]);
+
+    pDisplay->setName(name);
+    return pDisplay;
+}
+
+CPlotDisplay *CResultsViewer::createPlotDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::PLOT_DISPLAY) == false)
+        addTabToResults(DisplayType::PLOT_DISPLAY);
+
+    CPlotDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::PLOT_DISPLAY);
+
+    if((int)index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating plot display : invalid index");
+            return nullptr;
+        }
+
+        //Create new one
+        pDisplay = new CPlotDisplay;
+        pDisplay->setViewProperty(pViewProperty);
+        addDataViewToTab(DisplayType::PLOT_DISPLAY, pDisplay);
+    }
+    else
+        pDisplay = static_cast<CPlotDisplay*>(displays[index]);
 
     pDisplay->setName(name);
     return pDisplay;
