@@ -47,16 +47,16 @@ class CStorePluginListViewDelegate: public CListViewDelegate
 
         void                paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
-        virtual bool        editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+        bool                editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
 
-        virtual int         getBtnAction(int index) const override;
-        virtual QString     getActionIconPath(int action) const override;
+        int                 getBtnAction(int index) const override;
+        QString             getActionIconPath(int action) const override;
 
-        virtual bool        isBtnEnabled(const QModelIndex& itemIndex, int index) const override;
+        bool                isBtnEnabled(const QModelIndex& itemIndex, int index) const override;
 
-        virtual void        executeAction(int action, const QModelIndex& index) override;
+        void                executeAction(int action, const QModelIndex& index) override;
 
-        virtual void        showTooltip(const QModelIndex& modelIndex, const QPoint& pos, int index) const override;
+        void                showTooltip(const QModelIndex& modelIndex, const QPoint& pos, int index) const override;
 
     private:
 

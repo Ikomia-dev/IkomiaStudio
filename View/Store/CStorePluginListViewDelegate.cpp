@@ -154,7 +154,12 @@ int CStorePluginListViewDelegate::getBtnAction(int index) const
 
 QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem& option) const
 {
-    QRect rcCertification(option.rect.right()-m_ribbonSize+9, option.rect.top()-9, m_ribbonSize, m_ribbonSize);
+    //QRect rcCertification(option.rect.right()-m_ribbonSize+9, option.rect.top()-9, m_ribbonSize, m_ribbonSize);
+    QRect rcCertification(option.rect.right() - m_contentMargins.left() - m_btnSize.width(),
+                          option.rect.top() + m_contentMargins.top(),
+                          m_headerHeight,
+                          m_headerHeight);
+
     QPolygon poly;
     poly << rcCertification.topLeft() << rcCertification.topRight() << rcCertification.bottomRight();
     return poly;
@@ -401,17 +406,18 @@ QRect CStorePluginListViewDelegate::paintShortDescription(QPainter* painter, int
 
 QRect CStorePluginListViewDelegate::paintContributor(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
 {
-    QBrush brushHighlight = qApp->palette().highlight();
-    QColor colorHighlight = brushHighlight.color();
+    //QBrush brushHighlight = qApp->palette().highlight();
+    //QColor colorHighlight = brushHighlight.color();
 
     auto user = pModel->record(index.row()).value("user").toString();
-    auto userReputation = pModel->record(index.row()).value("userReputation").toString();
+    //auto userReputation = pModel->record(index.row()).value("userReputation").toString();
 
     if(user.isEmpty())
         user = "Unknown";
 
-    user = QString("%1 (%2)").arg(user).arg(userReputation);
-    auto displayUser = QString("<b>Contributor : <font color=%2>%1</font></b>").arg(user).arg(colorHighlight.name());
+    //user = QString("%1 (%2)").arg(user).arg(userReputation);
+    //auto displayUser = QString("<b>Contributor : <font color=%2>%1</font></b>").arg(user).arg(colorHighlight.name());
+    auto displayUser = QString("<b>Contributor : %1</b>").arg(user);
     auto userSize = paintStaticText(painter, left, top + m_contentMargins.top()*8, width, displayUser, font, color);
     QRect rcUser(left, top, width, userSize.height());
     return rcUser;
@@ -422,11 +428,25 @@ void CStorePluginListViewDelegate::paintCertification(QPainter* painter, const Q
     auto certification = pModel->record(index.row()).value("certification").toInt();
     if(certification != 0)
     {
+        /* Certification displayed as ribbon
         QRect rcCertification(option.rect.right()-m_ribbonSize+9, option.rect.top()-9, m_ribbonSize, m_ribbonSize);
         // Choix de l'image à gérer en fonction du type de label (tested, quality...)
         QPixmap certiIcon(QString(":/Images/quality%1.png").arg(certification));
         // Draw ribbon corner at the top right corner
         painter->drawPixmap(rcCertification, certiIcon.scaled(m_ribbonSize, m_ribbonSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        */
+
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+
+        QRect rc(option.rect.right() - m_contentMargins.left() - m_btnSize.width(),
+                 option.rect.top() + m_contentMargins.top(),
+                 m_headerHeight,
+                 m_headerHeight);
+
+        QPixmap pixmap = QPixmap(":/Images/approved.png").scaled(m_headerHeight, m_headerHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        painter->drawPixmap(rc, pixmap);
+        painter->restore();
     }
 }
 

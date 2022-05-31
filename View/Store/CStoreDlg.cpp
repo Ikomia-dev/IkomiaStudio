@@ -24,7 +24,7 @@
 #include "View/Process/CProcessDocWidget.h"
 
 CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
-    : CDialog(tr("Ikomia Store"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
+    : CDialog(tr("Ikomia Marketplace"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
     //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
@@ -50,15 +50,15 @@ void CStoreDlg::onSetServerPluginModel(CStoreQueryModel *pModel)
     m_pServerPluginsView->setModel(pModel);
 
     if(pModel == nullptr)
-        m_pLabelMsgServer->setText(tr("You have to be registered to display online plugins"));
+        m_pLabelMsgServer->setText(tr("You have to be registered to display online algorithms"));
     else
     {
         auto updateLabelMsg = [this, pModel]
         {
             if(pModel->rowCount() == 0)
-                m_pLabelMsgServer->setText(tr("No plugin found"));
+                m_pLabelMsgServer->setText(tr("No algorithm found"));
             else
-                m_pLabelMsgServer->setText(tr("%1 plugin(s) available").arg(pModel->rowCount()));
+                m_pLabelMsgServer->setText(tr("%1 algorithms(s) available").arg(pModel->rowCount()));
         };
 
         connect(pModel, &CStoreQueryModel::modelReset, updateLabelMsg);
@@ -71,15 +71,15 @@ void CStoreDlg::onSetLocalPluginModel(CStoreQueryModel *pModel)
     m_pLocalPluginsView->setModel(pModel);
 
     if(pModel == nullptr)
-        m_pLabelMsgLocal->setText(tr("No plugins loaded"));
+        m_pLabelMsgLocal->setText(tr("No algorithm loaded"));
     else
     {
         auto updateLabelMsg = [this, pModel]
         {
             if(pModel->rowCount() == 0)
-                m_pLabelMsgLocal->setText(tr("No plugin found"));
+                m_pLabelMsgLocal->setText(tr("No algorithm found"));
             else
-                m_pLabelMsgLocal->setText(tr("%1 plugin(s) available").arg(pModel->rowCount()));
+                m_pLabelMsgLocal->setText(tr("%1 algorithm(s) available").arg(pModel->rowCount()));
         };
 
         connect(pModel, &CStoreQueryModel::modelReset, updateLabelMsg);
@@ -137,8 +137,8 @@ void CStoreDlg::initConnections()
 
 QWidget *CStoreDlg::createLeftWidget()
 {
-    m_pBtnServerPlugins = new QPushButton(tr("Online store"));
-    m_pBtnLocalPlugins = new QPushButton(tr("Installed plugins"));
+    m_pBtnServerPlugins = new QPushButton(tr("Ikomia Marketplace"));
+    m_pBtnLocalPlugins = new QPushButton(tr("Installed algorithms"));
 
     QVBoxLayout* pLayout = new QVBoxLayout;
     pLayout->addWidget(m_pBtnServerPlugins);
@@ -188,7 +188,7 @@ QWidget *CStoreDlg::createRightWidget()
     m_pLocalPluginsView = new CStorePluginListView(CStorePluginListViewDelegate::LOCAL);
 
     //Message label
-    m_pLabelMsgLocal = createMessageLabel(tr("No plugins loaded"));
+    m_pLabelMsgLocal = createMessageLabel(tr("No algorithm loaded"));
 
     auto pLocalVLayout = new QVBoxLayout;
     pLocalVLayout->addWidget(m_pEditLocalSearch);

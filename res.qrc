@@ -220,6 +220,7 @@
         <file>Migrations/migration0001.sql</file>
         <file>Images/code.png</file>
         <file>Images/jupyter.png</file>
+        <file>Images/approved.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

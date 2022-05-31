@@ -64,7 +64,6 @@ CMainView::CMainView(QWidget *parent) : QMainWindow(parent), ui(new Ui::CMainVie
         emit doDisplayLogMsg(type, msg, categoryName);
     });
 
-
     /*QTimer::singleShot(0, this, SLOT(showMaximized()));
     m_oldGeometry = QRect(geometry().topLeft(), QSize(geometry().width()/2, geometry().height()/2));*/
 

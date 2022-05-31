@@ -39,23 +39,13 @@ class CTutoStartingHelper : public CWizardScenario
         {
             // Show authentication
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_LOGIN),
-                    tr("Please click here and connect to your account."),
+                    tr("Click here to sign into your account."),
                     "",
                     "",
                     m_pView->getBtn(CMainView::BTN_OPEN_LOGIN),
                     SIGNAL(clicked(bool)),
                     nullptr,
                     CBubbleTip::Close | CBubbleTip::Check);
-
-            // Open Login dlg
-            addStep(m_pView->getUserLoginDlg(),
-                    tr("Please enter your credentials or subscribe online."),
-                    "",
-                    "QLabel{border: 2px solid green; border-radius: 5px}",
-                    m_pView->getUserLoginDlg(),
-                    SIGNAL(doHide()),
-                    nullptr,
-                    CBubbleTip::Close | CBubbleTip::Check | CBubbleTip::Next);
 
             // Open Project
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_PROJECT),
@@ -69,7 +59,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Open Image
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_IMG),
-                    tr("Open your image."),
+                    tr("Open your image(s)."),
                     "",
                     "",
                     m_pView->getBtn(CMainView::BTN_OPEN_IMG),
@@ -79,7 +69,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Open Video
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_VIDEO),
-                    tr("Open your video."),
+                    tr("Open your video(s)."),
                     "",
                     "",
                     m_pView->getBtn(CMainView::BTN_OPEN_VIDEO),
@@ -99,7 +89,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Project Pane
             addStep(m_pView->getBtn(CMainView::BTN_PROJECT_PANE),
-                    tr("Navigate in your projects."),
+                    tr("Browse through your projects."),
                     "",
                     "",
                     m_pView->getBtn(CMainView::BTN_PROJECT_PANE),
@@ -109,7 +99,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Process Pane
             addStep(m_pView->getBtn(CMainView::BTN_PROCESS_PANE),
-                    tr("Please click here to see all available algorithms."),
+                    tr("Click here to see all available algorithms."),
                     "",
                     "",
                     m_pView->getBtn(CMainView::BTN_PROCESS_PANE),
@@ -119,7 +109,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Process List
             addStep(m_pView->getProcessPane()->getTreeView(),
-                    tr("All algorithms are listed here (OpenCV, G'MIC and every plugins)."),
+                    tr("All algorithms are listed here (OpenCV, G'MIC, plugins and algorithms installed from the Ikomia MarketPlace)."),
                     "",
                     "QTreeView{border: 2px solid green; border-radius: 5px}",
                     m_pView->getProcessPane()->getTreeView(),
@@ -137,25 +127,25 @@ class CTutoStartingHelper : public CWizardScenario
                     nullptr,
                     CBubbleTip::Close | CBubbleTip::Check | CBubbleTip::Next);
 
-            // Workflow Pane
-            addStep(m_pView->getBtn(CMainView::BTN_MODULE_WORKFLOW),
-                    tr("Open the workflow creator. Test, chain or compare your algorithms."),
-                    "",
-                    "",
-                    m_pView->getBtn(CMainView::BTN_MODULE_WORKFLOW),
-                    SIGNAL(clicked(bool)),
-                    nullptr,
-                    CBubbleTip::Close | CBubbleTip::Check | CBubbleTip::Next);
-
             // Open Store
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_STORE),
-                    tr("Open Ikomia Store and download what you need. Enjoy Ikomia!"),
+                    tr("Open Ikomia Marketplace and leverage state of the art algorithms."),
                     "",
                     "",
                     m_pView->getStoreView(),
                     SIGNAL(doClose()),
                     nullptr,
                     CBubbleTip::Close | CBubbleTip::Check);
+
+            // Workflow Pane
+            addStep(m_pView->getBtn(CMainView::BTN_MODULE_WORKFLOW),
+                    tr("Open the workflow creator. Test, chain or compare your algorithms. Enjoy Ikomia!"),
+                    "",
+                    "",
+                    m_pView->getBtn(CMainView::BTN_MODULE_WORKFLOW),
+                    SIGNAL(clicked(bool)),
+                    nullptr,
+                    CBubbleTip::Close | CBubbleTip::Check | CBubbleTip::Next);
         }
 };
 
