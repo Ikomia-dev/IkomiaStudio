@@ -61,7 +61,6 @@ SOURCES += \
         Model/Render/C3dAnimation.cpp \
         Model/ProgressBar/CProgressBarManager.cpp \
         Model/Graphics/CGraphicsManager.cpp \
-        Model/Graphics/CGraphicsRegistration.cpp \
         Model/Graphics/CGraphicsDbManager.cpp \
         Model/Results/CResultManager.cpp \
         Model/Results/CResultDbManager.cpp \
@@ -255,7 +254,6 @@ HEADERS += \
         Model/ProgressBar/CProgressBarManager.h \
         Model/Graphics/CGraphicsManager.h \
         Model/Graphics/CGraphicsLayerItem.hpp \
-        Model/Graphics/CGraphicsRegistration.h \
         Model/Graphics/CGraphicsDbManager.h \
         Model/Graphics/CGraphicsLayerInfo.hpp \
         Model/Graphics/CGraphicsLayerInfo.hpp \

@@ -621,7 +621,7 @@ void CGraphicsManager::loadLayer(CGraphicsLayer* pParentLayer, const QModelIndex
 
     //Add all child items (CGraphicsItem)
     CGraphicsJSON jsonMgr;
-    auto pFactory = m_registration.getFactory();
+    auto pFactory = m_registration.getQtBasedFactory();
     auto itRange = layersInfo.equal_range(pLayerItem->getDbId());
 
     for(auto it=itRange.first; it!=itRange.second; ++it)

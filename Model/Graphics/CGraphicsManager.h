@@ -24,11 +24,11 @@
 #include <QObject>
 #include "Main/AppDefine.hpp"
 #include "Graphics/CGraphicsContext.h"
+#include "Graphics/CGraphicsRegistration.h"
 #include "Model/Project/CProjectDbManager.hpp"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
-#include "CGraphicsRegistration.h"
 #include "CGraphicsDbManager.h"
 
 class CGraphicsLayer;
