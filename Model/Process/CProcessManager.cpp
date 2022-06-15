@@ -529,16 +529,19 @@ void CProcessManager::updateModelFromSearch(const QString& text)
 
     if(text.isEmpty() == false)
     {
-        bSearch = true;
         QString txtKey = Utils::Database::getFTSKeywords(text);
-
-        if(!q.exec(QString("SELECT id FROM processFTS WHERE processFTS MATCH '%1';").arg(txtKey)))
-            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-        while (q.next())
+        if (!txtKey.isEmpty())
         {
-            int id = q.value(0).toInt();
-            idList.append(id);
+            bSearch = true;
+
+            if(!q.exec(QString("SELECT id FROM processFTS WHERE processFTS MATCH '%1';").arg(txtKey)))
+                throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+
+            while (q.next())
+            {
+                int id = q.value(0).toInt();
+                idList.append(id);
+            }
         }
     }   
 
