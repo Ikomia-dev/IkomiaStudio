@@ -1463,7 +1463,10 @@ void CWorkflowManager::initWorkflow()
     initInputs();
 
     for(size_t i=0; i<m_inputs.size(); ++i)
-        setWorkflowInput(i, true);
+    {
+        if (m_inputs[i].getType() != TreeItemType::NONE)
+            setWorkflowInput(i, true);
+    }
 
     //Create signals/slots connections
     initConnections();
