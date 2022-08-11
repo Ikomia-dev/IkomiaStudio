@@ -1236,9 +1236,14 @@ void CResultManager::runWorkflowAndSaveVideo(size_t id, const std::string& path,
         delete pConnFailure;
     });
 
+    //Get save format
+    std::string ext = Utils::File::extension(path);
+    auto format = Utils::Data::getFileFormatFromExtension(ext);
+
     // Set processing on whole video
     m_pWorkflowMgr->setWorkflowConfig("GraphicsEmbedded", std::to_string(bWithGraphics));
     m_pWorkflowMgr->setCurrentTaskAutoSave(id, true);
+    m_pWorkflowMgr->setCurrentTaskSaveFormat(id, format);
     m_pWorkflowMgr->enableWholeVideo(true);
     // Run protocol to current active task
     m_pWorkflowMgr->runWorkflowToActiveTask();

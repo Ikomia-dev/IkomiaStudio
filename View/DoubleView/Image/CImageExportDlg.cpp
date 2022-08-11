@@ -102,8 +102,8 @@ void CImageExportDlg::onBrowse()
         case DataType::VIDEO:
             path = Utils::File::saveFile(this, tr("Save Video"),
                                          IkomiaSettings.value(_DefaultDirVideoExport).toString(),
-                                         tr("avi Files (*.avi)"),
-                                         QStringList("avi"), ".avi");
+                                         tr("Videos (*.avi *.mp4)"),
+                                         QStringList({"avi", "mp4"}), ".avi");
             if(path.isEmpty())
                 return;
 

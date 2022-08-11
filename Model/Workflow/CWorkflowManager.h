@@ -75,6 +75,7 @@ class CWorkflowManager : public QObject
         void                        setCurrentTaskAutoSave(size_t outputIndex, bool bAutoSave);
         void                        setCurrentTaskSaveFolder(const std::string& path);
         void                        setCurrentTaskSaveFormat(size_t outputIndex, size_t formatIndex);
+        void                        setCurrentTaskSaveFormat(size_t outputIndex, DataFileFormat format);
         void                        setWorkflowConfig(const std::string& key, const std::string& value);
 
         void                        notifyViewShow();

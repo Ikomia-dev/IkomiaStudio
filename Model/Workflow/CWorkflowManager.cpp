@@ -181,6 +181,17 @@ void CWorkflowManager::setCurrentTaskSaveFormat(size_t outputIndex, size_t forma
     }
 }
 
+void CWorkflowManager::setCurrentTaskSaveFormat(size_t outputIndex, DataFileFormat format)
+{
+    auto taskPtr = getActiveTask();
+    if(!taskPtr)
+        return;
+
+    auto outputPtr = taskPtr->getOutput(outputIndex);
+    if(outputPtr)
+        outputPtr->setSaveFormat(format);
+}
+
 void CWorkflowManager::setWorkflowConfig(const std::string &key, const std::string &value)
 {
     if(m_pWorkflow)
