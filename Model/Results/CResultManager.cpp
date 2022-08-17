@@ -729,6 +729,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::FILE_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::DNN_DATASET: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::ARRAY: viewType = DisplayType::EMPTY_DISPLAY; break;
+        case IODataType::DATA_DICT: viewType = DisplayType::EMPTY_DISPLAY; break;
     }
     return viewType;
 }

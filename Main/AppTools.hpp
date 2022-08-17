@@ -105,6 +105,10 @@ namespace Ikomia
                         color = QColor(255,255,255);
                         break;
 
+                    case IODataType::DATA_DICT:
+                        color = QColor(128,128,128);
+                        break;
+
                     case IODataType::ARRAY:
                         color = QColor(45,180,255);
                         break;
@@ -141,6 +145,7 @@ namespace Ikomia
                     case IODataType::PROJECT_FOLDER:
                     case IODataType::DNN_DATASET:
                     case IODataType::ARRAY:
+                    case IODataType::DATA_DICT:
                         bClickable = false;
                         break;
 
