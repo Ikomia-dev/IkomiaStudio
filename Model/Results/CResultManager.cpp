@@ -144,6 +144,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
         int widgetIndex = 0;
         int tableIndex = 0;
         int plotIndex = 0;
+        int textIndex = 0;
         clearTableModels();
         auto globalViewMode = getViewMode(taskPtr);
 
@@ -214,6 +215,9 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                     case IODataType::DNN_DATASET:
                         manageDatasetOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
                         break;
+
+                    case IODataType::DATA_DICT:
+                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
 
                     default: break;
                 }
@@ -729,7 +733,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::FILE_PATH: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::DNN_DATASET: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::ARRAY: viewType = DisplayType::EMPTY_DISPLAY; break;
-        case IODataType::DATA_DICT: viewType = DisplayType::EMPTY_DISPLAY; break;
+        case IODataType::DATA_DICT: viewType = DisplayType::TEXT_DISPLAY; break;
     }
     return viewType;
 }
@@ -1152,6 +1156,17 @@ void CResultManager::manageDatasetOutput(const WorkflowTaskIOPtr &pOutput, const
         m_pMultiImgModel->addImage(QString::fromStdString(paths[i]), QString::fromStdString(maskPath), graphics);
     }
     emit doDisplayDnnDataset(m_pMultiImgModel, QString::fromStdString(taskName), pViewProp);
+}
+
+void CResultManager::manageTextOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp)
+{
+    if(pOutput->isDataAvailable() == false)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: no data available");
+        return;
+    }
+    std::vector<std::string> options =   {"json_format", "indented"};
+    emit doDisplayText(index, QString::fromStdString(pOutput->toJson(options)), QString::fromStdString(taskName), pViewProp);
 }
 
 QModelIndex CResultManager::findResultFromName(const QString &name, QModelIndex startIndex) const

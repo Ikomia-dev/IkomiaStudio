@@ -46,6 +46,7 @@ class CPlotDisplay;
 class CDataPlot;
 class CMultiImageDisplay;
 class CMultiImageModel;
+class CTextDisplay;
 
 /**
  * @brief
@@ -66,6 +67,7 @@ class CResultsViewer : public QWidget
         CResultTableDisplay*    displayTable(int index, const QString name, CMeasuresTableModel *pModel, CViewPropertyIO* pViewProperty);
         CResultTableDisplay*    displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
         CPlotDisplay*           displayPlot(int index, const QString& name, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
+        CTextDisplay*           displayText(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
 
         CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
@@ -149,6 +151,7 @@ class CResultsViewer : public QWidget
         CVideoDisplay*          createVideoDisplay();
         CResultTableDisplay*    createTableDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
         CPlotDisplay*           createPlotDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
+        CTextDisplay*           createTextDisplay(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
 
         void                    addDefaultDisplay(int tabIndex);
 

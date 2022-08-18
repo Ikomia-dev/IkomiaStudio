@@ -86,6 +86,7 @@ class CDoubleView : public QWidget
         void            onDisplayResultPlot(int index, const QString& taskName, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         void            onDisplayMultiImage(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void            onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int> &syncToIndices, CViewPropertyIO *pViewProperty);
+        void            onDisplayResultText(int index, const QString& text, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void            onAddResultWidget(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
 

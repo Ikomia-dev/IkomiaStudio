@@ -84,6 +84,7 @@ class CResultManager : public QObject
         void                doDisplayFeaturesTable(int index, const QString& taskName, CFeaturesTableModel* pModel, CViewPropertyIO* pViewProperty);
         void                doDisplayPlot(int index, const QString& taskName, CDataPlot* pPlot, CViewPropertyIO* pViewProperty);
         void                doDisplayDnnDataset(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void                doDisplayText(int index, const QString& text, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void                doNewResultNotification(const QString& message, Notification type, CProgressCircle* pItem=nullptr, int duration=Ikomia::_NotifDefaultDuration);
 
@@ -161,6 +162,7 @@ class CResultManager : public QObject
         void                manageWidgetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
         void                manageVideoRecord(const WorkflowTaskPtr &taskPtr, size_t index, const CMat& image);
         void                manageDatasetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
+        void                manageTextOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
 
         QModelIndex         findResultFromName(const QString& name, QModelIndex startIndex=QModelIndex()) const;
 

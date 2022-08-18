@@ -90,7 +90,8 @@ namespace Ikomia
         VOLUME_DISPLAY,
         TABLE_DISPLAY,
         PLOT_DISPLAY,
-        WIDGET_DISPLAY
+        WIDGET_DISPLAY,
+        TEXT_DISPLAY,
     };
 
     enum DisplayCategory

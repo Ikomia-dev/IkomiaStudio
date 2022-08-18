@@ -94,6 +94,7 @@ SOURCES += \
         View/Common/CImageListView.cpp \
         View/Common/CSvgButton.cpp \
         View/DoubleView/3D/CVolumeViewSync.cpp \
+        View/DoubleView/CTextDisplay.cpp \
         View/DoubleView/Image/CMultiImageDisplay.cpp \
         View/Modules/PluginManager/CCppNewPluginWidget.cpp \
         View/Modules/PluginManager/CPythonNewPluginDlg.cpp \
@@ -294,6 +295,7 @@ HEADERS += \
         View/Common/CImageListView.h \
         View/Common/CSvgButton.h \
         View/DoubleView/3D/CVolumeViewSync.h \
+        View/DoubleView/CTextDisplay.h \
         View/DoubleView/Image/CMultiImageDisplay.h \
         View/Modules/CModuleDockWidget.h \
         View/Modules/PluginManager/CCppNewPluginWidget.h \

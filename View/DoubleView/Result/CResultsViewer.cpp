@@ -43,6 +43,7 @@
 #include "View/DoubleView/Result/CResultTableDisplay.h"
 #include "View/DoubleView/Video/CVideoDisplay.h"
 #include "View/DoubleView/CWidgetDataDisplay.h"
+#include "View/DoubleView/CTextDisplay.h"
 #include "Workflow/CViewPropertyIO.h"
 
 CResultsViewer::CResultsViewer(CImageViewSync* pViewSync, CVideoViewSync* pVideoViewSync, QWidget* parent) : QWidget(parent)
@@ -188,6 +189,13 @@ CPlotDisplay *CResultsViewer::displayPlot(int index, const QString &name, CDataP
     return pResultDisplay;
 }
 
+CTextDisplay *CResultsViewer::displayText(int index, const QString &text, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    CTextDisplay* pTextDisplay = createTextDisplay(index, text, name, pViewProperty);
+    pTextDisplay->show();
+    return pTextDisplay;
+}
+
 CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty)
 {
     if(hasTab(DisplayType::MULTI_IMAGE_DISPLAY) == false)
@@ -303,6 +311,13 @@ int CResultsViewer::addTabToResults(DisplayType type)
             indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/view-image-color.png"), tr("Dataset Results"));
             m_pTabWidget->setIconSize(QSize(16,16));
             m_pTabWidget->setTabToolTip(indTab, tr("Dnn Datatset Results"));
+            m_mapTypeIndex.insert(type, indTab);
+            break;
+
+        case DisplayType::TEXT_DISPLAY:
+            indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/text-editor.png"), tr("Text Results"));
+            m_pTabWidget->setIconSize(QSize(16,16));
+            m_pTabWidget->setTabToolTip(indTab, tr("Text Results"));
             m_mapTypeIndex.insert(type, indTab);
             break;
 
@@ -867,6 +882,36 @@ CPlotDisplay *CResultsViewer::createPlotDisplay(int index, const QString &name, 
         pDisplay = static_cast<CPlotDisplay*>(displays[index]);
 
     pDisplay->setName(name);
+    return pDisplay;
+}
+
+CTextDisplay *CResultsViewer::createTextDisplay(int index, const QString &text, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::TEXT_DISPLAY) == false)
+        addTabToResults(DisplayType::TEXT_DISPLAY);
+
+    CTextDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::TEXT_DISPLAY);
+
+    if((int)index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating text display : invalid index");
+            return nullptr;
+        }
+
+        //Create new one
+        pDisplay = new CTextDisplay(name, text);
+        pDisplay->setViewProperty(pViewProperty);
+        addDataViewToTab(DisplayType::TEXT_DISPLAY, pDisplay);
+    }
+    else
+    {
+        pDisplay = static_cast<CTextDisplay*>(displays[index]);
+        pDisplay->setName(name);
+        pDisplay->setText(text);
+    }
     return pDisplay;
 }
 

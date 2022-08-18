@@ -251,6 +251,12 @@ void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& i
     applyViewModeProperty(pViewProperty);
 }
 
+void CDoubleView::onDisplayResultText(int index, const QString &text, const QString &taskName, CViewPropertyIO *pViewProperty)
+{
+    m_pResultsViewer->displayText(index, text, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
+}
+
 void CDoubleView::onDisplayResultMeasuresTable(int index, const QString taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty)
 {
     m_pResultsViewer->displayTable(index, taskName, pModel, pViewProperty);

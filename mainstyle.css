@@ -660,6 +660,12 @@ QProgressBar
     border-radius: 5px;
 }
 
+#CTextDisplay
+{
+    background-color: %2;
+    border-radius: 5px;
+}
+
 #MainSplitter
 {
     background-color: %2;

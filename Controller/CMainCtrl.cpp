@@ -345,6 +345,7 @@ void CMainCtrl::initResultsConnections()
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayVideo, m_pView->getDoubleView(), &CDoubleView::onDisplayResultVideo);
     connect(m_pModel->getResultManager(), &CResultManager::doAddResultWidget, m_pView->getDoubleView(), &CDoubleView::onAddResultWidget);
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayDnnDataset, m_pView->getDoubleView(), &CDoubleView::onDisplayMultiImage);
+    connect(m_pModel->getResultManager(), &CResultManager::doDisplayText, m_pView->getDoubleView(), &CDoubleView::onDisplayResultText);
 
     //Result manager -> result viewer
     connect(m_pModel->getResultManager(), &CResultManager::doApplyViewProperty, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onApplyViewProperty); 
