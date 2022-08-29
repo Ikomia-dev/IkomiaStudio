@@ -29,6 +29,7 @@
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
 #include "JlCompress.h"
+#include "Core/CIkomiaRegistry.h"
 
 CStoreManager::CStoreManager()
 {
@@ -1152,6 +1153,7 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
         if(info.m_language == ApiLanguage::CPP)
             return;
 
+        //Requirements files
         std::set<QString> requirements;
         QDir dir(directory);
         QRegularExpression re("[rR]equirements[0-9]*.txt");
@@ -1167,6 +1169,27 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
             QString requirementFile = directory + "/" + name;
             qCInfo(logStore()).noquote() << "Plugin dependencies installation from " + requirementFile;
             Utils::Python::installRequirements(requirementFile);
+        }
+
+        //Remove global blacklisted packages
+        auto to_remove = CIkomiaRegistry::getBlackListedPackages();
+        for (auto&& name : to_remove)
+            Utils::Python::uninstallPackage(QString::fromStdString(name));
+
+        //Remove plugin specific blacklisted packages
+        QString needlessFilePath = directory + "/needless.txt";
+        if (QFile::exists(needlessFilePath))
+        {
+            QFile needlessFile(needlessFilePath);
+            if (needlessFile.open(QIODevice::ReadOnly))
+            {
+                QTextStream in(&needlessFile);
+                while (!in.atEnd())
+                {
+                    QString package = in.readLine();
+                    Utils::Python::uninstallPackage(package);
+                }
+            }
         }
     });
     pWatcher->setFuture(future);

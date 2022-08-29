@@ -408,6 +408,13 @@ namespace Ikomia
                 args << txtFile;
                 runQCommand(args);
             }
+
+            inline void         uninstallPackage(const QString& package)
+            {
+                QStringList args = {"-m", "pip", "uninstall", "-y"};
+                args << package;
+                runQCommand(args);
+            }
         }
 
         namespace User

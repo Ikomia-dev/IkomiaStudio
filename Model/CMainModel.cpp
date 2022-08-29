@@ -536,5 +536,7 @@ void CMainModel::installPythonRequirements()
 
     QString userPythonFolder = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
     QString requirementsPath = userPythonFolder + "/requirements.txt";
-    Utils::Python::installRequirements(requirementsPath);
+
+    if (QFile::exists(requirementsPath))
+        Utils::Python::installRequirements(requirementsPath);
 }
