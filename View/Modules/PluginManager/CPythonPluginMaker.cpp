@@ -68,6 +68,10 @@ void CPythonPluginMaker::generate()
     createMainFile(pluginFolder);
     createProcessFile(pluginFolder);
     createWidgetFile(pluginFolder);
+
+    //Requirements files
+    QFile requirementsFile(pluginFolder + "/requirements.txt");
+    requirementsFile.open(QIODevice::WriteOnly | QFile::Text);
 }
 
 void CPythonPluginMaker::createMainFile(const QString& folder)
