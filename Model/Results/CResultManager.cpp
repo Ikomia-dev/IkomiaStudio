@@ -26,6 +26,8 @@
 #include "IO/CVideoIO.h"
 #include "IO/CWidgetOutput.h"
 #include "IO/CDatasetIO.h"
+#include "IO/CObjectDetectionIO.h"
+#include "IO/CInstanceSegIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -218,6 +220,25 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
 
                     case IODataType::DATA_DICT:
                         manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                        break;
+
+                    case IODataType::OBJECT_DETECTION:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CObjectDetectionIO>(outputPtr);
+                        assert(outPtr);
+                        manageGraphicsOutput(outPtr->getGraphicsIO());
+                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
+                    }
+
+                    case IODataType::INSTANCE_SEGMENTATION:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CInstanceSegIO>(outputPtr);
+                        assert(outPtr);
+                        manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                        manageGraphicsOutput(outPtr->getGraphicsIO());
+                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                    }
 
                     default: break;
                 }

@@ -62,7 +62,7 @@ namespace Ikomia
 
                     case IODataType::INPUT_GRAPHICS:
                     case IODataType::OUTPUT_GRAPHICS:
-                        color = QColor(35, 60, 170);
+                        color = QColor(65, 80, 200);
                         break;
 
                     case IODataType::BLOB_VALUES:
@@ -111,6 +111,14 @@ namespace Ikomia
 
                     case IODataType::ARRAY:
                         color = QColor(45,180,255);
+                        break;
+
+                    case IODataType::OBJECT_DETECTION:
+                        color = QColor(40, 5, 110);
+                        break;
+
+                    case IODataType::INSTANCE_SEGMENTATION:
+                        color = QColor(60, 25, 130);
                         break;
                 }
                 return color;
