@@ -449,7 +449,7 @@ namespace Ikomia
 
                 if(baseURL.isEmpty())
                 {
-                    baseURL = "https://ikomia.com";
+                    baseURL = "https://members.ikomia.com";
                     ikomiaSettings.setValue(DEFAULT_BASE_URL, baseURL);
                 }
                 return baseURL;
