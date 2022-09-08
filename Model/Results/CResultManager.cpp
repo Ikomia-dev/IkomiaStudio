@@ -28,6 +28,7 @@
 #include "IO/CDatasetIO.h"
 #include "IO/CObjectDetectionIO.h"
 #include "IO/CInstanceSegIO.h"
+#include "IO/CSemanticSegIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -238,6 +239,14 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                         manageGraphicsOutput(outPtr->getGraphicsIO());
                         manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                    }
+
+                    case IODataType::SEMANTIC_SEGMENTATION:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CSemanticSegIO>(outputPtr);
+                        assert(outPtr);
+                        manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                        manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                     }
 
                     default: break;

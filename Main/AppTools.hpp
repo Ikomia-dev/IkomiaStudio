@@ -120,6 +120,10 @@ namespace Ikomia
                     case IODataType::INSTANCE_SEGMENTATION:
                         color = QColor(60, 25, 130);
                         break;
+
+                    case IODataType::SEMANTIC_SEGMENTATION:
+                        color = QColor(80, 45, 150);
+                        break;
                 }
                 return color;
             }
@@ -154,6 +158,9 @@ namespace Ikomia
                     case IODataType::DNN_DATASET:
                     case IODataType::ARRAY:
                     case IODataType::DATA_DICT:
+                    case IODataType::OBJECT_DETECTION:
+                    case IODataType::INSTANCE_SEGMENTATION:
+                    case IODataType::SEMANTIC_SEGMENTATION:
                         bClickable = false;
                         break;
 
