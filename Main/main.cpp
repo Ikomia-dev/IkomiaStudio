@@ -24,7 +24,6 @@
 #include <QTextBlock>
 #include <clocale>
 #include <QtOpenGL>
-
 #include "Main/AppTools.hpp"
 #include "View/Common/CCrashReporDlg.h"
 #include "Model/Crash/QBreakpadHandler.h"
@@ -49,7 +48,7 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 #endif
 
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
     QApplication app(argc, argv);
 
     // Set thread pool stack size to 8Mb for OpenBlas compatibility (Python module)

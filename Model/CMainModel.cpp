@@ -346,15 +346,22 @@ void CMainModel::initPython()
         modulePath += pythonSitePackages;
         modulePath += pluginsPath;
 
-#ifndef QT_DEBUG
-        modulePath += Utils::IkomiaApp::getIkomiaFolder() + "/Api";
+        // Ikomia API
+        std::string ikomiaApiDir = Utils::IkomiaApp::getIkomiaFolder() + "/Api";
+        QDir ikomiaApiQDir(QString::fromStdString(ikomiaApiDir));
+
+        if (ikomiaApiQDir.exists())
+            modulePath += ikomiaApiDir;
+        else
+        {
+            //Developpment configuration
+#ifdef Q_OS_WIN64
+            modulePath += "C:/Developpement/IkomiaApi;";
 #else
-    #ifdef Q_OS_WIN64
-        modulePath += "C:/Developpement/Ikomia/Build/Lib/Python;";
-    #else
-        modulePath += QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
-    #endif
+            modulePath += QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
 #endif
+        }
+        qInfo().noquote() << "Python path:" << QString::fromStdString(modulePath);
 
         auto sp = modulePath.size();
         Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &sp));
@@ -389,7 +396,7 @@ void CMainModel::initPython()
         pythonLib = ";" + pythonFolder + "/Lib;";
         pythonDynload = pythonFolder + "/DLLs;";
         pythonSitePackages = pythonFolder + "/Lib/site-packages;";
-        ikomiaApi = "C:/Developpement/IkomiaApi/Build/Lib/Python;";
+        ikomiaApi = "C:/Developpement/IkomiaApi;";
 #endif
         auto s = pythonExe.size();
         Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &s));
