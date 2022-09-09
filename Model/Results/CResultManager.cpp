@@ -208,7 +208,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
 
                     case IODataType::OUTPUT_GRAPHICS:
                         if(m_pWorkflowMgr->isRoot(taskId) == false)
-                            manageGraphicsOutput(outputPtr);
+                            manageGraphicsOutput(taskPtr, outputPtr);
                         break;
 
                     case IODataType::WIDGET:
@@ -227,7 +227,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                     {
                         auto outPtr = std::dynamic_pointer_cast<CObjectDetectionIO>(outputPtr);
                         assert(outPtr);
-                        manageGraphicsOutput(outPtr->getGraphicsIO());
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
                         break;
                     }
@@ -237,7 +237,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         auto outPtr = std::dynamic_pointer_cast<CInstanceSegIO>(outputPtr);
                         assert(outPtr);
                         manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        manageGraphicsOutput(outPtr->getGraphicsIO());
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
                         break;
                     }
@@ -766,6 +766,9 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::DNN_DATASET: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::ARRAY: viewType = DisplayType::EMPTY_DISPLAY; break;
         case IODataType::DATA_DICT: viewType = DisplayType::TEXT_DISPLAY; break;
+        case IODataType::OBJECT_DETECTION: viewType = DisplayType::EMPTY_DISPLAY; break;        //Composite
+        case IODataType::INSTANCE_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
+        case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
     }
     return viewType;
 }
@@ -912,7 +915,7 @@ void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const s
     //Emit signal to display overlay binary
     if(pOut->isOverlayAvailable() == true)
     {
-        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index);
+        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index, DisplayType::IMAGE_DISPLAY);
         m_bImageOverlay = true;
     }
 }
@@ -957,7 +960,7 @@ void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, cons
     }
 }
 
-void CResultManager::manageGraphicsOutput(const WorkflowTaskIOPtr &pOutput)
+void CResultManager::manageGraphicsOutput(const WorkflowTaskPtr &taskPtr, const WorkflowTaskIOPtr &pOutput)
 {
     assert(m_pGraphicsMgr && pOutput);
 
@@ -974,7 +977,8 @@ void CResultManager::manageGraphicsOutput(const WorkflowTaskIOPtr &pOutput)
 
     //Display graphics layer
     m_tempGraphicsLayerInfo.m_pLayer = pOut->createLayer(m_pGraphicsMgr->getContext());
-    m_tempGraphicsLayerInfo.m_imageIndex = pOut->getImageIndex();
+    m_tempGraphicsLayerInfo.m_refImageIndex = pOut->getImageIndex();
+    m_tempGraphicsLayerInfo.m_refImageType = getResultViewType(taskPtr->getOutputDataType(pOut->getImageIndex()));
     m_tempGraphicsLayerInfo.m_displayTarget = CGraphicsLayerInfo::RESULT;
     m_tempGraphicsLayerInfo.m_bTopMost = false;
     m_pGraphicsMgr->addTemporaryLayer(m_tempGraphicsLayerInfo);
@@ -1100,7 +1104,7 @@ void CResultManager::manageVideoOutput(const WorkflowTaskPtr &taskPtr, const Wor
     //Emit signal to display overlay binary
     if(pOut->isOverlayAvailable() == true)
     {
-        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index);
+        emit doDisplayOverlay(CDataConversion::CMatToQImage(pOut->getOverlayMask()), index, DisplayType::VIDEO_DISPLAY);
         m_bImageOverlay = true;
     }
 }

@@ -19,6 +19,7 @@
 #include "CGraphicsManager.h"
 #include <QDebug>
 #include "Main/LogCategory.h"
+#include "Main/AppTools.hpp"
 #include "Graphics/CGraphicsLayer.h"
 
 CGraphicsManager::CGraphicsManager()
@@ -365,8 +366,10 @@ void CGraphicsManager::removeLayer(const QModelIndex &itemIndex)
 
     if(pLayer)
     {
+        QModelIndex refDataIndex = m_pProjectMgr->getCurrentDataItemIndex();
+        DisplayType refDataType = Utils::Data::treeItemTypeToDisplayType(m_pProjectMgr->getItemType(refDataIndex));
         m_pWorkflowMgr->beforeGraphicsLayerRemoved(pLayer);
-        CGraphicsLayerInfo info(pLayer, 0, CGraphicsLayerInfo::SOURCE);
+        CGraphicsLayerInfo info(pLayer, 0, refDataType, CGraphicsLayerInfo::SOURCE);
         emit doRemoveGraphicsLayerToSource(info, true);
         emit doGraphicsSceneChanged();
     }

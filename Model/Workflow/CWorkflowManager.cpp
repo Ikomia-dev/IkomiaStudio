@@ -1215,7 +1215,12 @@ void CWorkflowManager::onSetFolderPathInput(const WorkflowVertex &id, int index,
 void CWorkflowManager::onSetInteractionGraphicsLayer(CGraphicsLayer *pLayer)
 {
     assert(m_pGraphicsMgr);
-    m_interactionLayerInfo = CGraphicsLayerInfo(pLayer, 0, CGraphicsLayerInfo::SOURCE, true);
+    size_t refInputIndex = 0;
+    if (refInputIndex >= m_inputs.size())
+        return;
+
+    DisplayType refImgType = Utils::Data::treeItemTypeToDisplayType(m_inputs[refInputIndex].getType());
+    m_interactionLayerInfo = CGraphicsLayerInfo(pLayer, refInputIndex, refImgType, CGraphicsLayerInfo::SOURCE, true);
     m_pGraphicsMgr->addTemporaryLayer(m_interactionLayerInfo);
     m_pGraphicsMgr->setCurrentLayer(pLayer);
 }

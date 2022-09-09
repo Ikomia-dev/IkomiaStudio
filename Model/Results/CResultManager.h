@@ -77,7 +77,7 @@ class CResultManager : public QObject
 
     signals:
 
-        void                doDisplayOverlay(QImage image, int imageIndex);
+        void                doDisplayOverlay(QImage image, int imageIndex, DisplayType refImageType);
         void                doDisplayImage(int index, QImage image, const QString& imageName, CViewPropertyIO* pViewProperty);
         void                doDisplayVideo(int index, QImage image, const QString& imageName, const std::vector<int>& syncToIndices, CViewPropertyIO* pViewProperty);
         void                doDisplayMeasuresTable(int index, const QString& taskName, CMeasuresTableModel* pModel, CViewPropertyIO* pViewProperty);
@@ -154,7 +154,7 @@ class CResultManager : public QObject
 
         void                manageImageOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
         void                manageVolumeOutput(const WorkflowTaskIOPtr& outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp);
-        void                manageGraphicsOutput(const WorkflowTaskIOPtr& pOutput);
+        void                manageGraphicsOutput(const WorkflowTaskPtr& taskPtr, const WorkflowTaskIOPtr& pOutput);
         void                manageBlobOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO* pViewProp);
         void                manageTableOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
         void                managePlotOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);

@@ -511,6 +511,33 @@ namespace Ikomia
                 }
                 return "";
             }
+            inline DisplayType treeItemTypeToDisplayType(TreeItemType type)
+            {
+                DisplayType displayType = DisplayType::EMPTY_DISPLAY;
+                switch(type)
+                {
+                    case TreeItemType::NONE:
+                    case TreeItemType::PROJECT:
+                    case TreeItemType::FOLDER:
+                    case TreeItemType::DATASET:
+                    case TreeItemType::DIMENSION:
+                    case TreeItemType::PROCESS:
+                    case TreeItemType::RESULT:
+                    case TreeItemType::GRAPHICS_LAYER:
+                        displayType = DisplayType::EMPTY_DISPLAY;
+                        break;
+
+                    case TreeItemType::IMAGE:
+                        displayType = DisplayType::IMAGE_DISPLAY;
+                        break;
+
+                    case TreeItemType::VIDEO:
+                    case TreeItemType::LIVE_STREAM:
+                        displayType = DisplayType::VIDEO_DISPLAY;
+                        break;
+                }
+                return displayType;
+            }
         }
 
         namespace Image
