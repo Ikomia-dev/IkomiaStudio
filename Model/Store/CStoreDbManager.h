@@ -59,6 +59,8 @@ class CStoreDbManager
 
         int             getLocalIdFromServerId(const QSqlDatabase& db, int serverId) const;
 
+        bool            checkPluginCompatibility(const QJsonObject& plugin) const;
+
     private:
 
         QString m_serverConnectionName = "ServerStoreConnection";

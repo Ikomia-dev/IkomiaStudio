@@ -9,6 +9,14 @@
 # LINUX deployment (CENTOS 7)
 CONFIG += centos centos7
 
+##########################
+# Preprocessor variables #
+##########################
+# Compute acceleration: CPU or CUDA10 or CUDA11
+DEFINES += CUDA11
+# Python version: PY37 or PY38 or PY39 or PY310
+DEFINES += PY37
+
 ########################
 # Dependencies version #
 ########################

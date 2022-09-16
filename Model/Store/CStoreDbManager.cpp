@@ -135,6 +135,22 @@ void CStoreDbManager::setLocalPluginServerInfo(int pluginId, const QString name,
     }
 }
 
+bool CStoreDbManager::checkPluginCompatibility(const QJsonObject &plugin) const
+{
+    // Check OS compatibility
+    int pluginOS = plugin["os"].toInt();
+    if (pluginOS != OSType::ALL && m_currentOS != pluginOS)
+        return false;
+
+    int language = plugin["language"].toInt();
+    if (language == ApiLanguage::CPP)
+    {
+        std::string keywords = plugin["keywords"].toString().toStdString();
+        return Utils::Plugin::checkArchitectureKeywords(keywords);
+    }
+    return true;
+}
+
 void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
 {
     auto db = Utils::Database::connect(m_name, m_serverConnectionName);
@@ -149,10 +165,7 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
     for(int i=0; i<plugins.size(); ++i)
     {
         QJsonObject plugin = plugins[i].toObject();
-
-        // Check OS compatibility
-        int pluginOS = plugin["os"].toInt();
-        if(pluginOS != OSType::ALL && m_currentOS != pluginOS)
+        if (checkPluginCompatibility(plugin) == false)
             continue;
 
         ids << plugin["id"].toInt();
@@ -172,7 +185,7 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
         languages << plugin["language"].toInt();
         licenses << plugin["license"].toString();
         repositories << plugin["repository"].toString();
-        os << pluginOS;
+        os << plugin["os"].toInt();
         iconPaths << plugin["iconPath"].toString();
         certifications << plugin["certification"].toInt();
         votes << plugin["votes_count"].toInt();
