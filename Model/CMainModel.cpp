@@ -490,8 +490,8 @@ void CMainModel::checkUserInstall()
     QString srcResourcesFolder = QCoreApplication::applicationDirPath() + "/Resources";
 #elif defined(Q_OS_LINUX)
     QString srcPythonFolder = "/opt/Ikomia/Python";
-    QString srcSitePackagesFolder = "/opt/Ikomia/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
-    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
+    QString srcSitePackagesFolder = "/opt/Ikomia/Python/lib/python" + QString::fromStdString(Utils::Python::_python_lib_prod_version) + "/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + QString::fromStdString(Utils::Python::_python_lib_prod_version) + "/site-packages";
     QString srcApiFolder = "/opt/Ikomia/Api";
     QString srcResourcesFolder = "/opt/Resources";
 #elif defined(Q_OS_MACOS)

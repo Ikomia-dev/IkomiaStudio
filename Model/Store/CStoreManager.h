@@ -96,6 +96,7 @@ class CStoreManager : public QObject
         QString         checkPythonPluginDirectory(const QString &directory);
         QString         checkCppPluginDirectory(const QString &directory, const QString& name);
         void            checkPendingUpdates();
+        void            checkInstalledModules(const QString &pluginDir);
 
         void            updateServerPlugin();
         void            updateLocalPlugin();

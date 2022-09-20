@@ -387,7 +387,6 @@ namespace Ikomia
                 exec(pyScript, main_namespace, main_namespace);
                 return main_namespace[name];
             }
-
             inline void         unloadModule(const std::string& name, bool bStrictCompare)
             {
                 CPyEnsureGIL gil;
@@ -423,12 +422,47 @@ namespace Ikomia
                 args << txtFile;
                 runQCommand(args);
             }
-
+            inline void         installPackage(const QString& package, const QString& version)
+            {
+                QStringList args = {"-m", "pip", "install"};
+                QString packageWithVersion = package + "==" + version;
+                args << packageWithVersion;
+                runQCommand(args);
+            }
             inline void         uninstallPackage(const QString& package)
             {
                 QStringList args = {"-m", "pip", "uninstall", "-y"};
                 args << package;
                 runQCommand(args);
+            }
+
+            inline std::vector<std::pair<std::string, std::string>>    getInstalledModules()
+            {
+                QString cmd;
+                QStringList args;
+                std::vector<std::pair<std::string, std::string>> modules;
+
+                prepareQCommand(cmd, args);
+                args << "-m" << "pip" << "list" << "--format" << "json";
+
+                QProcess proc;
+                proc.start(cmd, args);
+                proc.waitForFinished();
+                QByteArray out = proc.readAllStandardOutput();
+                auto jsonDoc = QJsonDocument::fromJson(out);
+
+                if(jsonDoc.isNull() || jsonDoc.isEmpty() || !jsonDoc.isArray())
+                    qWarning() << QObject::tr("Error while gathering Python package list.");
+
+                QJsonArray packages = jsonDoc.array();
+                for(int i=0; i<packages.size(); ++i)
+                {
+                    auto package = packages[i].toObject();
+                    auto name = package["name"].toString().toStdString();
+                    auto version = package["version"].toString().toStdString();
+                    modules.push_back(std::make_pair(name, version));
+                }
+                return modules;
             }
         }
 

@@ -824,6 +824,51 @@ void CStoreManager::checkPendingUpdates()
     ikomiaSettings.setValue(settingKey, "");
 }
 
+void CStoreManager::checkInstalledModules(const QString &pluginDir)
+{
+    auto modules = Utils::Python::getInstalledModules();
+
+    //Remove global blacklisted packages
+    auto to_remove = CIkomiaRegistry::getBlackListedPackages();
+    for (auto&& name : to_remove)
+    {
+        auto it = std::find_if(modules.begin(), modules.end(),
+                               [&](const std::pair<std::string, std::string>& mod){ return mod.first == name; });
+        if (it != modules.end())
+        {
+            if (name == "tb-nightly")
+            {
+                Utils::Python::uninstallPackage(QString::fromStdString(name));
+                auto itTb = std::find_if(modules.begin(), modules.end(),
+                                         [&](const std::pair<std::string, std::string>& mod){ return mod.first == "tensorboard"; });
+                if (itTb != modules.end())
+                {
+                    Utils::Python::uninstallPackage("tensorboard");
+                    Utils::Python::installPackage("tensorboard", QString::fromStdString(itTb->second));
+                }
+            }
+            else
+                Utils::Python::uninstallPackage(QString::fromStdString(name));
+        }
+    }
+
+    //Remove plugin specific blacklisted packages
+    QString needlessFilePath = pluginDir + "/needless.txt";
+    if (QFile::exists(needlessFilePath))
+    {
+        QFile needlessFile(needlessFilePath);
+        if (needlessFile.open(QIODevice::ReadOnly))
+        {
+            QTextStream in(&needlessFile);
+            while (!in.atEnd())
+            {
+                QString package = in.readLine();
+                Utils::Python::uninstallPackage(package);
+            }
+        }
+    }
+}
+
 void CStoreManager::updateServerPlugin()
 {
     //Http request to update plugin
@@ -1141,9 +1186,10 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
     m_pProgressMgr->launchInfiniteProgress(tr("Plugin dependencies installation..."), false);
 
     QFutureWatcher<void>* pWatcher = new QFutureWatcher<void>(this);
-    connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, info, user]
+    connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, directory, info, user]
     {
         m_pProgressMgr->endInfiniteProgress();
+        checkInstalledModules(directory);
         finalizePluginInstall(info, user);
     });
 
@@ -1169,27 +1215,6 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
             QString requirementFile = directory + "/" + name;
             qCInfo(logStore()).noquote() << "Plugin dependencies installation from " + requirementFile;
             Utils::Python::installRequirements(requirementFile);
-        }
-
-        //Remove global blacklisted packages
-        auto to_remove = CIkomiaRegistry::getBlackListedPackages();
-        for (auto&& name : to_remove)
-            Utils::Python::uninstallPackage(QString::fromStdString(name));
-
-        //Remove plugin specific blacklisted packages
-        QString needlessFilePath = directory + "/needless.txt";
-        if (QFile::exists(needlessFilePath))
-        {
-            QFile needlessFile(needlessFilePath);
-            if (needlessFile.open(QIODevice::ReadOnly))
-            {
-                QTextStream in(&needlessFile);
-                while (!in.atEnd())
-                {
-                    QString package = in.readLine();
-                    Utils::Python::uninstallPackage(package);
-                }
-            }
         }
     });
     pWatcher->setFuture(future);

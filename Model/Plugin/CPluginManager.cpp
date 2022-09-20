@@ -600,29 +600,11 @@ void CPluginManager::updateOutdatedPackages()
 
 void CPluginManager::fillPythonPackages()
 {
-    QString cmd;
-    QStringList args;
-    Utils::Python::prepareQCommand(cmd, args);
-    args << "-m" << "pip" << "list" << "--format" << "json";
-
-    QProcess proc;
-    proc.start(cmd, args);
-    proc.waitForFinished();
-    QByteArray out = proc.readAllStandardOutput();
-    auto jsonDoc = QJsonDocument::fromJson(out);
-
-    if(jsonDoc.isNull() || jsonDoc.isEmpty() || !jsonDoc.isArray())
+    auto modules = Utils::Python::getInstalledModules();
+    for (size_t i=0; i<modules.size(); ++i)
     {
-        qCWarning(logPlugin) << tr("Error while gathering Python package list.");
-        return;
-    }
-
-    QJsonArray packages = jsonDoc.array();
-    for(int i=0; i<packages.size(); ++i)
-    {
-        auto package = packages[i].toObject();
-        auto name = package["name"].toString();
-        auto version = package["version"].toString();
+        auto name = QString::fromStdString(modules[i].first);
+        auto version = QString::fromStdString(modules[i].second);
         m_pythonPackages.insert(name, QPair<QString,QString>(version, version));
     }
 }
