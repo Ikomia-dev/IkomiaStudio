@@ -608,7 +608,7 @@ void CPluginManager::fillPythonPackages()
     QProcess proc;
     proc.start(cmd, args);
     proc.waitForFinished();
-    QByteArray out =proc.readAllStandardOutput();
+    QByteArray out = proc.readAllStandardOutput();
     auto jsonDoc = QJsonDocument::fromJson(out);
 
     if(jsonDoc.isNull() || jsonDoc.isEmpty() || !jsonDoc.isArray())

@@ -480,24 +480,30 @@ void CMainModel::writeLogMsg(int type, const QString& msg, const QString& catego
 
 void CMainModel::checkUserInstall()
 {
+    QString appFolder = Utils::IkomiaApp::getQIkomiaFolder();
+
 #if defined(Q_OS_WIN64)
     QString srcPythonFolder = QCoreApplication::applicationDirPath() + "/Python";
+    QString srcSitePackagesFolder = QCoreApplication::applicationDirPath() + "/Python/lib/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/site-packages";
     QString srcApiFolder = QCoreApplication::applicationDirPath() + "/Api";
     QString srcResourcesFolder = QCoreApplication::applicationDirPath() + "/Resources";
 #elif defined(Q_OS_LINUX)
     QString srcPythonFolder = "/opt/Ikomia/Python";
+    QString srcSitePackagesFolder = "/opt/Ikomia/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
     QString srcApiFolder = "/opt/Ikomia/Api";
     QString srcResourcesFolder = "/opt/Resources";
 #elif defined(Q_OS_MACOS)
     QString srcPythonFolder = "/usr/local/Ikomia/Python";
+    QString srcSitePackagesFolder = "/usr/local/Ikomia/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
     QString srcApiFolder = "/usr/local/Ikomia/Api";
     QString srcResourcesFolder = "/usr/local/Resources";
 #endif
 
     //Python
-    QString appFolder = Utils::IkomiaApp::getQIkomiaFolder();
     QString userPythonFolder = appFolder + "/Python";
-
     if(QDir(userPythonFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Python environment...\n(Please be patient, this may take a while)"), Qt::AlignCenter, qApp->palette().highlight().color());
@@ -505,6 +511,16 @@ void CMainModel::checkUserInstall()
 
         //Copy Python directory
         Utils::File::copyDirectory(srcPythonFolder, userPythonFolder, true);
+        //Install Python required packages
+        installPythonRequirements();
+    }
+    else if (QDir(userSitePackagesFolder).exists() == false)
+    {
+        emit doSetSplashMessage(tr("Install Python environment...\n(Please be patient, this may take a while)"), Qt::AlignCenter, qApp->palette().highlight().color());
+        QCoreApplication::processEvents();
+
+        //Copy Python directory
+        Utils::File::copyDirectory(srcSitePackagesFolder, userSitePackagesFolder, true);
         //Install Python required packages
         installPythonRequirements();
     }
