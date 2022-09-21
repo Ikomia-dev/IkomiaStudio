@@ -249,7 +249,12 @@ void CMainModel::initWorkflowManager()
 
     CTrainingMonitoring monitor(&m_networkMgr);
     monitor.checkMLflowServer();
-    monitor.checkTensorboardServer();
+    // Disable Tensorboard launch at startup as it causes failure on
+    // plugin installation with Tensorboard or tb-nightly dependency.
+    // Moreover there is no impact since no C++ train algorithm use
+    // Tensorboard for logging. Python-based training algorithm manage
+    // server lifecycle thanks to TrainProcess class implementation
+    //monitor.checkTensorboardServer();
 }
 
 void CMainModel::initGraphicsManager()
@@ -485,7 +490,7 @@ void CMainModel::checkUserInstall()
 #if defined(Q_OS_WIN64)
     QString srcPythonFolder = QCoreApplication::applicationDirPath() + "/Python";
     QString srcSitePackagesFolder = QCoreApplication::applicationDirPath() + "/Python/lib/site-packages";
-    QString userSitePackagesFolder = appFolder + "/Python/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/lib/site-packages";
     QString srcApiFolder = QCoreApplication::applicationDirPath() + "/Api";
     QString srcResourcesFolder = QCoreApplication::applicationDirPath() + "/Resources";
 #elif defined(Q_OS_LINUX)
