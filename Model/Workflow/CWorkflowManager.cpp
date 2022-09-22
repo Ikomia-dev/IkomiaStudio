@@ -1401,7 +1401,9 @@ void CWorkflowManager::onQueryGraphicsProxyModel()
 void CWorkflowManager::onQueryProjectDataProxyModel(const std::vector<TreeItemType>& dataTypes, const std::vector<DataDimension>& filters)
 {
     assert(m_pProjectMgr);
-    assert(m_inputs.size() > 0);
+
+    if (m_inputs.size() == 0)
+        return;
 
     // Case where there are no data loaded + a protocol has been loaded + someone clicked on graphics port
     auto currentModelIndex = m_pProjectMgr->getCurrentDataItemIndex();
