@@ -435,7 +435,7 @@ void CMainView::initConnections()
     {
         QSettings IkomiaSettings;
         QStringList files = QFileDialog::getOpenFileNames(  this, tr("Choose video files"), IkomiaSettings.value(_DefaultDirVideo).toString(),
-                                                            tr("All videos (*.avi *.mp4 *.webm *.mxf *.ts)"), nullptr,
+                                                            tr("All videos (*.avi *.mp4 *.webm *.mxf *.mxg *.ts)"), nullptr,
                                                             CSettingsManager::dialogOptions() );
         if(files.size() > 0)
         {
