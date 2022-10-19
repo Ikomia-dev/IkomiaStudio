@@ -8,7 +8,7 @@ Ikomia Studio is an Open Source desktop application that aims to simplify use, r
 
 Key features:
 - No-code image processing workflows
-- State of the art Plug'n Play algorithms from [Ikomia marketplace](https://ikomia.com/en/plugins)
+- State of the art Plug'n Play algorithms from [Ikomia HUB](https://ikomia.com/en/plugins)
 - Almost full integration of [OpenCV](https://opencv.org/)
 - Comprehensive [Python API](https://ikomia-dev.github.io/python-api-documentation/) to plug your algorithms
 - [MLflow](https://github.com/mlflow/mlflow) integration for Deep Learning experiments
@@ -30,3 +30,4 @@ Coming soon...
 - [API source code](https://github.com/Ikomia-dev/IkomiaApi)
 - [Tutorials](https://blog.ikomia.com/): consult our blog to find tutorials and useful information around Ikomia platform.
 - [Plugin examples](https://github.com/Ikomia-dev): browse plugin repositories to help you implement your own.
+- Ikomia HUB algorithms [repositories](https://github.com/Ikomia-hub).
