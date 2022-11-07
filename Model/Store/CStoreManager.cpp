@@ -162,7 +162,8 @@ void CStoreManager::onServerSearchChanged(const QString &text)
     else
         query = m_dbMgr.getServerSearchQuery(text);
 
-    m_pServerPluginModel->setQuery(query, m_dbMgr.getServerPluginsDatabase());
+    if (m_pServerPluginModel)
+        m_pServerPluginModel->setQuery(query, m_dbMgr.getServerPluginsDatabase());
 }
 
 void CStoreManager::onLocalSearchChanged(const QString &text)
@@ -173,7 +174,8 @@ void CStoreManager::onLocalSearchChanged(const QString &text)
     else
         query = m_dbMgr.getLocalSearchQuery(text);
 
-    m_pLocalPluginModel->setQuery(query, m_dbMgr.getLocalPluginsDatabase());
+    if (m_pLocalPluginModel)
+        m_pLocalPluginModel->setQuery(query, m_dbMgr.getLocalPluginsDatabase());
 }
 
 void CStoreManager::onGetPlugins()
