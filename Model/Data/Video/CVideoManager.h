@@ -94,7 +94,7 @@ class CVideoPlayer : public QObject
         QFutureWatcher<void>    m_readWatcher;
         std::condition_variable m_threadCond;
         const int               m_readTimeout = 5000; //in milliseconds
-        const int               m_writeTimeout = 60000; //in milliseconds
+        const int               m_writeTimeout = 5000; //in milliseconds
 };
 
 //-------------------------//

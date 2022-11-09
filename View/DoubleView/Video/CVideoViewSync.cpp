@@ -49,6 +49,9 @@ void CVideoViewSync::syncView(CVideoDisplay* pVideoDisplay1, CVideoDisplay* pVid
     connect(pVideoDisplay1, &CVideoDisplay::doSetPlayVideo, pVideoDisplay2, &CVideoDisplay::onSyncSetPlayVideo);
 
     setConnected(pVideoDisplay1, pVideoDisplay2, true);
+
+    //Set initial play state
+    pVideoDisplay2->onSyncSetPlayVideo(pVideoDisplay1->isPlaying());
 }
 
 void CVideoViewSync::unsyncView(CVideoDisplay *pVideoDisplay)

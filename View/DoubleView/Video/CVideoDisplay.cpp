@@ -255,7 +255,7 @@ void CVideoDisplay::setActive(bool bActive)
 
 bool CVideoDisplay::isPlaying() const
 {
-    return m_pTimer->isActive();
+    return m_pTimer && m_pTimer->isActive();
 }
 
 void CVideoDisplay::onSetSliderLength(size_t length)

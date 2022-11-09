@@ -224,7 +224,7 @@ void CVideoPlayer::stop()
 
 void CVideoPlayer::stopRecord()
 {
-    m_mgrPtr->waitWriteFinished(m_writeTimeout);
+    m_mgrPtr->stopWriteVideo(m_writeTimeout);
     m_bRecord = false;
     m_recordPath.clear();
 }

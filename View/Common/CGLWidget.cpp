@@ -294,7 +294,7 @@ void CGLWidget::onAddAnimationVideoFrame()
 
     if(m_currentAnimationSequence >= m_animation.m_sequences.size())
     {
-        m_pVideoWriter->stopWrite();
+        m_pVideoWriter->stopWrite(0);
         m_pAnimationTimer->stop();
         delete m_pAnimationTimer;
         m_pAnimationTimer = nullptr;
