@@ -204,6 +204,7 @@ void CWorkflowScene::deleteInput(int index)
 void CWorkflowScene::deleteConnection(CWorkflowConnection *pConnection, bool bLater, bool bNotifyView, bool bNotifyModel)
 {
     assert(pConnection);
+    m_pCurWorkflowItem = nullptr;
 
     if(bNotifyView)
         emit doDeleteConnection(pConnection->getId(), bNotifyModel);
