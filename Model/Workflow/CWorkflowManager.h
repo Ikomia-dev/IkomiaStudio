@@ -181,6 +181,8 @@ class CWorkflowManager : public QObject
         void                        onAllProcessReloaded();
         void                        onProcessReloaded(const QString& name);
 
+        void                        onCloseApp();
+
     private slots:
 
         void                        onWorkflowLive(int inputIndex, bool bNewSequence);

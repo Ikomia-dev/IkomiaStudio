@@ -217,10 +217,10 @@ void CMainCtrl::initWorkflowConnections()
     //Process view -> project view
     connect(m_pView->getProcessPane(), &CProcessPane::doApplyProcess, m_pView->getProjectPane(), &CProjectPane::onApplyProcess);
 
-    //Project view -> protocol manager
+    //Project view -> workflow manager
     connect(m_pView->getProjectPane(), &CProjectPane::doApplyProcess, m_pModel->getWorkflowManager(), &CWorkflowManager::onApplyProcess);
 
-    //Workflow pane -> protocol manager
+    //Workflow pane -> workflow manager
     connect(m_pView->getWorkflowPane(), &CWorkflowPane::doLoadWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onLoadWorkflow);
     connect(m_pView->getWorkflowPane(), &CWorkflowPane::doDeleteWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onDeleteWorkflow);
     connect(m_pView->getWorkflowPane(), &CWorkflowPane::doSearchWorkflow, m_pModel->getWorkflowManager(), &CWorkflowManager::onSearchWorkflow);
@@ -229,10 +229,10 @@ void CMainCtrl::initWorkflowConnections()
     //Workflow module -> manager
     connect(m_pView->getWorkflowModule(), &CWorkflowModuleWidget::doNotifyWorkflowClosed, m_pModel->getWorkflowManager(), &CWorkflowManager::onWorkflowClosed);
 
-    //Workflow manager -> protocol module
+    //Workflow manager -> workflow module
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetManager, m_pView->getWorkflowModule(), &CWorkflowModuleWidget::onSetModel);
 
-    //Workflow manager -> protocol pane
+    //Workflow manager -> workflow pane
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetModel);
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesFromImageModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetFromImageModel);
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetDescription, m_pView->getWorkflowPane(), &CWorkflowPane::onSetDescription);
@@ -253,8 +253,11 @@ void CMainCtrl::initWorkflowConnections()
     connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doInitVideoInfo, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onInitInfo);
     connect(m_pModel->getWorkflowManager()->getInputViewManager(), &CWorkflowInputViewManager::doDisplayVideoImage, m_pModel->getDataManager()->getVideoMgr(), &CVideoManager::onDisplayCurrentVideoImage);
 
-    //Double view -> protocol manager
+    //Double view -> workflow manager
     connect(m_pView->getDoubleView(), &CDoubleView::doSetSelectedDisplay, m_pModel->getWorkflowManager(), &CWorkflowManager::onIODisplaysSelected);
+
+    //Main view -> workflow manager
+    connect(m_pView, &CMainView::doCloseApp, m_pModel->getWorkflowManager(), &CWorkflowManager::onCloseApp);
 }
 
 void CMainCtrl::initInfoConnections()

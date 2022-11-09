@@ -740,6 +740,12 @@ void CWorkflowManager::onProcessReloaded(const QString &name)
     }
 }
 
+void CWorkflowManager::onCloseApp()
+{
+    m_runMgr.stop();
+    m_runMgr.stopWaitThread();
+}
+
 void CWorkflowManager::onWorkflowLive(int inputIndex, bool bNewSequence)
 {
     if(m_pWorkflow == nullptr)
