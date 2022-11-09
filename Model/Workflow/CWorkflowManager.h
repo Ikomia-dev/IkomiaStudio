@@ -270,6 +270,7 @@ class CWorkflowManager : public QObject
 
     private:
 
+        const int                   m_maxFps = 25;
         std::mutex                  m_mutex;
         QStringListModel*           m_pModel = nullptr;
         QStringListModel*           m_pImageModel = nullptr;

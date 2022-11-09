@@ -1666,7 +1666,7 @@ void CWorkflowManager::updateProcessingFPS()
 {
     auto time = m_runMgr.getTotalElapsedTime();
     if(time != 0)
-        m_currentFPS = (int)(1000.0/time);
+        m_currentFPS = std::min(m_maxFps, (int)(1000.0/time));
     else
         m_currentFPS = 25;
 }
