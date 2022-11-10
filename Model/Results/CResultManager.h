@@ -43,7 +43,6 @@ class CFeaturesTableModel;
 class CMultiImageModel;
 class CProgressCircle;
 
-
 class CResultManager : public QObject
 {
     Q_OBJECT
@@ -138,11 +137,15 @@ class CResultManager : public QObject
         void                setResultHighlighted(const QModelIndex &index, bool bHighlighted);
         void                setRecordVideoState(size_t id, bool bRecord);
 
-        ResultItemPtr               getResultItem(const QModelIndex& index) const;
-        OutputDisplays              getOutputDisplays(const WorkflowTaskPtr& pTask) const;
-        DisplayType                 getResultViewType(IODataType type) const;
+        ResultItemPtr       getResultItem(const QModelIndex& index) const;
+        OutputDisplays      getOutputDisplays(const WorkflowTaskPtr& pTask) const;
+        DisplayType         getResultViewType(IODataType type) const;
         std::set<IODataType>        getImageBasedDataTypes() const;
         CViewPropertyIO::ViewMode   getViewMode(const WorkflowTaskPtr& taskPtr);
+        InputOutputVect     getImageOutputsFromComposite(const std::shared_ptr<CWorkflowTaskIO>& ioPtr);
+        InputOutputVect     getImageOutputs(const WorkflowTaskPtr &taskPtr);
+        InputOutputVect     getGraphicsOutputsFromComposite(const std::shared_ptr<CWorkflowTaskIO>& ioPtr);
+        InputOutputVect     getGraphicsOutputs(const WorkflowTaskPtr &taskPtr);
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;
