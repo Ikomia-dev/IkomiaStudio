@@ -30,7 +30,7 @@
 #include "CPluginPythonDependencyModel.h"
 #include "Model/User/CUser.h"
 
-class CProcessRegistration;
+class CIkomiaRegistry;
 class CProgressCircle;
 
 class CPluginManager : public QObject
@@ -46,7 +46,7 @@ class CPluginManager : public QObject
         TaskFactoryPtr      loadCppProcessPlugin(const QString& fileName);
         TaskFactoryPtr      loadPythonProcessPlugin(const QString& directory);
 
-        void                setRegistrator(CProcessRegistration* pRegistrator);
+        void                setRegistry(CIkomiaRegistry *pRegistry);
         void                setCurrentUser(const CUser& user);
 
         bool                isProcessExists(const QString& name) const;
@@ -90,7 +90,7 @@ class CPluginManager : public QObject
 
     private:
 
-        CProcessRegistration*                   m_pRegistrator = nullptr;
+        CIkomiaRegistry*                        m_pRegistry = nullptr;
         CPluginPythonModel*                     m_pPythonModel = nullptr;
         CPluginPythonDependencyModel*           m_pPythonDependencyModel = nullptr;
         CUser                                   m_currentUser;

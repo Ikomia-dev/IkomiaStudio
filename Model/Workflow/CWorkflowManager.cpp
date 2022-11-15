@@ -376,7 +376,7 @@ void CWorkflowManager::createWorkflow(const std::string &name, const std::string
     assert(m_pGraphicsMgr);
     try
     {
-        m_pWorkflow = std::make_unique<CWorkflow>(name, &m_pProcessMgr->m_processRegistrator, &m_pProcessMgr->m_ioRegistrator, m_pGraphicsMgr->getContext());
+        m_pWorkflow = std::make_unique<CWorkflow>(name, &m_pProcessMgr->m_registry, m_pGraphicsMgr->getContext());
         m_pWorkflow->setKeywords(keywords);
         m_pWorkflow->setDescription(description);
         m_pWorkflow->setOutputFolder(m_pSettingsMgr->getWorkflowSaveFolder() + name + "/");
@@ -548,7 +548,7 @@ void CWorkflowManager::loadWorkflow(const QString &path)
             m_pWorkflow = m_dbMgr.load(path, m_pProcessMgr, m_pGraphicsMgr->getContext());
         else
         {
-            m_pWorkflow = std::make_unique<CWorkflow>("", &m_pProcessMgr->m_processRegistrator, &m_pProcessMgr->m_ioRegistrator, m_pGraphicsMgr->getContext());
+            m_pWorkflow = std::make_unique<CWorkflow>("", &m_pProcessMgr->m_registry, m_pGraphicsMgr->getContext());
             m_pWorkflow->load(path.toStdString());
         }
 

@@ -184,7 +184,7 @@ WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, co
     WorkflowTaskPtr taskPtr = nullptr;
     try
     {
-        taskPtr = m_processRegistrator.createProcessObject(processName, paramPtr);
+        taskPtr = m_registry.createInstance(processName, paramPtr);
     }
     catch(std::exception& e)
     {
@@ -198,7 +198,7 @@ WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processNa
     WorkflowTaskWidgetPtr widgetPtr = nullptr;
     try
     {
-        widgetPtr = m_processRegistrator.createWidgetObject(processName, paramPtr);
+        widgetPtr = m_registry.createWidgetInstance(processName, paramPtr);
     }
     catch(std::exception& e)
     {
@@ -210,8 +210,7 @@ WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processNa
 void CProcessManager::resetModel()
 {
     m_id = 0;
-    m_processRegistrator.reset();
-    m_ioRegistrator.reset();
+    m_registry.clear();
 
     for(const auto& id : m_viewIds)
     {
@@ -690,7 +689,7 @@ void CProcessManager::createModel()
         createCustomTreeFolders();
 
         // Fill database with processes and plugins
-        auto factory = m_processRegistrator.getProcessFactory();
+        auto factory = m_registry.getTaskRegistrator()->getProcessFactory();
         m_processCount = static_cast<int>(factory.getList().size());
 
         for(auto&& it : factory.getList())

@@ -24,8 +24,7 @@
 #include <QObject>
 #include "CProcessModel.hpp"
 #include "CTreeDbManager.hpp"
-#include "CProcessRegistration.h"
-#include "IO/CTaskIORegistration.h"
+#include "Core/CIkomiaRegistry.h"
 #include "Model/User/CUser.h"
 
 
@@ -344,8 +343,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
     public:
 
-        CProcessRegistration        m_processRegistrator;
-        CTaskIORegistration         m_ioRegistrator;
+        CIkomiaRegistry         m_registry;
 
     private:
 

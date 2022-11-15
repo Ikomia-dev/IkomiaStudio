@@ -297,7 +297,7 @@ void CMainModel::initSettingsManager()
 
 void CMainModel::initPluginManager()
 {
-    m_pluginMgr.setRegistrator(&m_processMgr.m_processRegistrator);
+    m_pluginMgr.setRegistry(&m_processMgr.m_registry);
 }
 
 void CMainModel::initPython()

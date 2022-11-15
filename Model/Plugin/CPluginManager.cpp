@@ -17,9 +17,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CPluginManager.h"
-#include "CProcessRegistration.h"
 #include "Main/LogCategory.h"
 #include "Main/AppTools.hpp"
+#include "Core/CIkomiaRegistry.h"
 
 CPluginManager::CPluginManager()
 {
@@ -41,14 +41,14 @@ CPluginManager::CPluginManager()
 
 void CPluginManager::loadProcessPlugins()
 {
-    assert(m_pRegistrator);
+    assert(m_pRegistry);
     loadCppProcessPlugins();
     loadPythonProcessPlugins();
 }
 
 TaskFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int language)
 {
-    assert(m_pRegistrator);
+    assert(m_pRegistry);
 
     if(language == ApiLanguage::PYTHON)
     {
@@ -127,8 +127,8 @@ TaskFactoryPtr CPluginManager::loadCppProcessPlugin(const QString &fileName)
                 return nullptr;
             }
 
-            if(m_pRegistrator)
-                m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
+            if (m_pRegistry)
+                m_pRegistry->registerTaskAndWidget(taskFactoryPtr, widgetFactoryPtr);
             else
                 qCCritical(logPlugin).noquote() << tr("Plugin %1 is not registered.").arg(fileName);
 
@@ -196,10 +196,10 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
                     }
 
                     // Plugin registration
-                    if(m_pRegistrator)
+                    if (m_pRegistry)
                     {
                         auto widgetFactoryPtr = plugin->getWidgetFactory();
-                        m_pRegistrator->registerProcess(taskFactoryPtr, widgetFactoryPtr);
+                        m_pRegistry->registerTaskAndWidget(taskFactoryPtr, widgetFactoryPtr);
                         qCInfo(logPlugin()).noquote() << tr("Plugin %1 is loaded.").arg(pluginDirName);
                     }
                     return taskFactoryPtr;
@@ -223,9 +223,9 @@ TaskFactoryPtr CPluginManager::loadPythonProcessPlugin(const QString &directory)
     }
 }
 
-void CPluginManager::setRegistrator(CProcessRegistration *pRegistrator)
+void CPluginManager::setRegistry(CIkomiaRegistry* pRegistry)
 {
-    m_pRegistrator = pRegistrator;
+    m_pRegistry = pRegistry;
 }
 
 void CPluginManager::setCurrentUser(const CUser &user)
@@ -235,7 +235,7 @@ void CPluginManager::setCurrentUser(const CUser &user)
 
 bool CPluginManager::isProcessExists(const QString &name) const
 {
-    return m_pRegistrator->getProcessFactory().isCreatorExists(name.toStdString());
+    return m_pRegistry->getTaskRegistrator()->getProcessFactory().isCreatorExists(name.toStdString());
 }
 
 void CPluginManager::notifyViewShow()

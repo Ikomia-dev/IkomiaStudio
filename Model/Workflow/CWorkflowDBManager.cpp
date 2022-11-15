@@ -270,7 +270,7 @@ std::unique_ptr<CWorkflow> CWorkflowDBManager::load(QSqlDatabase& db, int protoc
        return nullptr;
 
     auto name = q.value("protocolName").toString().toStdString();
-    pWorkflow = std::make_unique<CWorkflow>(name, &pProcessMgr->m_processRegistrator, &pProcessMgr->m_ioRegistrator, graphicsContextPtr);
+    pWorkflow = std::make_unique<CWorkflow>(name, &pProcessMgr->m_registry, graphicsContextPtr);
 
     if(m_pSettingsMgr)
         pWorkflow->setOutputFolder(m_pSettingsMgr->getWorkflowSaveFolder() + name + "/");
