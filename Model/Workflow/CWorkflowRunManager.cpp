@@ -257,13 +257,15 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
             throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid video.").toStdString(), __func__, __FILE__, __LINE__);
 
         inputName = pItem->getName();
-        inputPtr = std::make_shared<CVideoIO>(IODataType::VIDEO, image);
+        auto inputVideoPtr = std::make_shared<CVideoIO>(IODataType::VIDEO, image);
+        auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(index);
+        inputVideoPtr->setDataInfo(videoInfoPtr);
 
         if(bNewSequence)
-        {
-            auto inputVideoPtr = std::static_pointer_cast<CVideoIO>(inputPtr);
             inputVideoPtr->setVideoPath(m_pProjectMgr->getItemPath(index));
-        }
+
+        inputPtr = inputVideoPtr;
+
     }
     else if(type == TreeItemType::LIVE_STREAM)
     {
@@ -273,7 +275,10 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
             throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid camera stream.").toStdString(), __func__, __FILE__, __LINE__);
 
         inputName = pItem->getName();
-        inputPtr = std::make_shared<CVideoIO>(IODataType::LIVE_STREAM, image);
+        auto inputVideoPtr = std::make_shared<CVideoIO>(IODataType::LIVE_STREAM, image);
+        auto videoInfoPtr = m_pDataMgr->getVideoMgr()->getVideoInfo(index);
+        inputVideoPtr->setDataInfo(videoInfoPtr);
+        inputPtr = inputVideoPtr;
     }
     else
         throw CException(CoreExCode::INVALID_USAGE, tr("Workflow inputs error : invalid item type.").toStdString(), __func__, __FILE__, __LINE__);
