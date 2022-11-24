@@ -352,9 +352,7 @@ void CStoreManager::onDownloadPackageDone()
     QString downloadPath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/") + m_currentPluginPackageFile;
     QFile file(downloadPath);
     file.open(QIODevice::WriteOnly);
-
-    QDataStream out(&file);
-    out << data;
+    file.write(data);
     file.close();
     pReply->deleteLater();
 
