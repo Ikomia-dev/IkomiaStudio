@@ -125,7 +125,7 @@ void CMainDataManager::displaySimpleImage(CImageScene* pScene, const QModelIndex
     }
     catch(std::exception& e)
     {
-        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+        qCCritical(logImage).noquote() << QString::fromStdString(e.what());
     }
 }
 
@@ -137,7 +137,7 @@ void CMainDataManager::displayVolumeImage(CImageScene* pScene, const QModelIndex
     }
     catch(std::exception& e)
     {
-        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+        qCCritical(logImage).noquote() << QString::fromStdString(e.what());
     }
 }
 
@@ -149,7 +149,7 @@ void CMainDataManager::displayVideoImage(const QModelIndex& index, size_t inputI
     }
     catch(std::exception& e)
     {
-        qCCritical(logVideoDataManager).noquote() << QString::fromStdString(e.what());
+        qCCritical(logVideo).noquote() << QString::fromStdString(e.what());
     }
 }
 
@@ -162,7 +162,7 @@ void CMainDataManager::displayImageSequence(const QModelIndex& index, size_t inp
     }
     catch(std::exception& e)
     {
-        qCCritical(logImageDataManager).noquote() << QString::fromStdString(e.what());
+        qCCritical(logImage).noquote() << QString::fromStdString(e.what());
     }
 }
 
@@ -278,6 +278,6 @@ void CMainDataManager::onStopVideo(const QModelIndex& index)
     }
     catch(std::exception& e)
     {
-        qCCritical(logVideoDataManager).noquote() << QString::fromStdString(e.what());
+        qCCritical(logVideo).noquote() << QString::fromStdString(e.what());
     }
 }

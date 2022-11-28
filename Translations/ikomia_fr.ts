@@ -1216,8 +1216,8 @@ Utilisez les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation type="vanished">Installation de l&apos;environment Python...</translation>
     </message>
     <message>
+        <location filename="../Model/CMainModel.cpp" line="504"/>
         <location filename="../Model/CMainModel.cpp" line="514"/>
-        <location filename="../Model/CMainModel.cpp" line="524"/>
         <source>Install Python environment...
 (Please be patient, this may take a while)</source>
         <translation>Installation de l&apos;environment Python...
@@ -1253,22 +1253,22 @@ Utilisez les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Serveur Jupyter demarré avec succès.</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="537"/>
+        <location filename="../Model/CMainModel.cpp" line="527"/>
         <source>Install Ikomia API...</source>
         <translation>Installation de l&apos;API Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="546"/>
+        <location filename="../Model/CMainModel.cpp" line="536"/>
         <source>Install Ikomia Resources...</source>
         <translation>Installation des ressources Ikomia...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="554"/>
+        <location filename="../Model/CMainModel.cpp" line="544"/>
         <source>Install Gmic resources...</source>
         <translation>Installation des ressources Gmic...</translation>
     </message>
     <message>
-        <location filename="../Model/CMainModel.cpp" line="562"/>
+        <location filename="../Model/CMainModel.cpp" line="552"/>
         <source>Install Python packages...
 (Please be patient, this may take a while)</source>
         <translation>Installation des paquets Python...
@@ -1701,64 +1701,52 @@ Utilisez les boutons du haut pour charger un projet, des images, des vidéos ou 
         <translation>Tout</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="167"/>
         <source>Default</source>
-        <translation>Défaut</translation>
+        <translation type="vanished">Défaut</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="168"/>
         <source>Workflow</source>
-        <translation>Workflow</translation>
+        <translation type="vanished">Workflow</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="169"/>
         <source>Project</source>
-        <translation>Projet</translation>
+        <translation type="vanished">Projet</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="170"/>
         <source>Render</source>
-        <translation>Rendu 3D</translation>
+        <translation type="vanished">Rendu 3D</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="171"/>
         <source>Graphics</source>
-        <translation>Graphiques</translation>
+        <translation type="vanished">Graphiques</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="172"/>
         <source>Results</source>
-        <translation>Résultats</translation>
+        <translation type="vanished">Résultats</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="173"/>
         <source>Plugin</source>
-        <translation>Plugin</translation>
+        <translation type="vanished">Plugin</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="174"/>
         <source>User</source>
-        <translation>Utilisateur</translation>
+        <translation type="vanished">Utilisateur</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="175"/>
         <source>Video</source>
-        <translation>Vidéo</translation>
+        <translation type="vanished">Vidéo</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="176"/>
         <source>Progress</source>
-        <translation>Progression</translation>
+        <translation type="vanished">Progression</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="177"/>
         <source>Process</source>
-        <translation>Process</translation>
+        <translation type="vanished">Process</translation>
     </message>
     <message>
-        <location filename="../View/Notifications/CNotificationPane.cpp" line="178"/>
         <source>Store</source>
-        <translation>Store</translation>
+        <translation type="vanished">Store</translation>
     </message>
     <message>
         <location filename="../View/Notifications/CNotificationPane.cpp" line="204"/>

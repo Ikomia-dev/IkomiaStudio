@@ -164,18 +164,18 @@ void CNotificationPane::initParams()
     pCategLayout->addWidget(pAllBtn, 0, 0);
 
     m_categoryList = {
-        tr("Default"),
-        tr("Workflow"),
-        tr("Project"),
-        tr("Render"),
-        tr("Graphics"),
-        tr("Results"),
-        tr("Plugin"),
-        tr("User"),
-        tr("Video"),
-        tr("Progress"),
-        tr("Process"),
-        tr("Store")
+        "Default",
+        "Workflow",
+        "Project",
+        "Render",
+        "Graphics",
+        "Results",
+        "Plugin",
+        "User",
+        "Video",
+        "Progress",
+        "Process",
+        "Store"
     };
 
     int ind = 1;
@@ -365,7 +365,7 @@ void CNotificationPane::onDisplayLogMsg(int type, const QString& msg, const QStr
 
     QString htmlMsg = msg.toHtmlEscaped();
     htmlMsg.replace("\n", "<br>");
-    QString str = QString("<b>%1</b> <i>%2</i> : %3").arg(date.toString()).arg(time.toString()).arg(htmlMsg);
+    QString str = QString("<b>%1</b> <i>%2</i> : %3").arg(date.toString(Qt::ISODate)).arg(time.toString(Qt::ISODate)).arg(htmlMsg);
     const QString fontTemplate = "<font size='%3' color='%1'>%2</font><br/>";
     QString newLine = fontTemplate.arg(color.name(), str, QString::number(m_htmlFontSize));
 
@@ -396,25 +396,16 @@ void CNotificationPane::filterText(const QString& text)
 
 void CNotificationPane::setText(const QString& text, const QString& category)
 {
-    // Add scope for QMutexLocker
-    // Ensure thread safety in order to not insert rows at the same time (AddNotification/DisplayLogMsg)
-    //{
-        //std::lock_guard<std::mutex> lock(m_mutex);
-        int r = m_pModel->rowCount();
+    int r = m_pModel->rowCount();
+    if(m_pModel->insertRows(r, 1))
+    {
+        QModelIndex index = m_pModel->index(m_pModel->rowCount() - 1, 0);
+        m_pModel->setData(index, text);
+        m_pModel->setData(index, category, CNotificationModel::categoryRole);
+    }
 
-        if(m_pModel->insertRows(r, 1))
-        {
-            QModelIndex index = m_pModel->index(m_pModel->rowCount() - 1, 0);
-            m_pModel->setData(index, text);
-            m_pModel->setData(index, category, CNotificationModel::categoryRole);
-        }
-
-        updateModelRows();
-
-        emit doUpdateView();
-
-        //m_pProxy->setSourceModel(m_pModel);
-        //}
+    updateModelRows();
+    emit doUpdateView();
 }
 
 void CNotificationPane::clearAllItems()

@@ -458,25 +458,15 @@ void CMainModel::initMatomo()
 void CMainModel::writeLogMsg(int type, const QString& msg, const QString& categoryName)
 {
     Q_UNUSED(categoryName);
+    Q_UNUSED(type);
 
     QFile file(QString::fromStdString(m_logFilePath));
     if(!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
         return;
 
-    QString msgType;
-    switch(type)
-    {
-        case QtDebugMsg: msgType = "DEBUG:"; break;
-        case QtInfoMsg: msgType = "INFO:"; break;
-        case QtWarningMsg: msgType = "WARNING:"; break;
-        case QtCriticalMsg: msgType = "CRITICAL:"; break;
-        case QtFatalMsg: msgType = "FATAL:"; break;
-        default: msgType = "INFO:"; break;
-    }
-
     auto date = QDate::currentDate();
     auto time = QTime::currentTime();
-    QString str = msgType + date.toString() + " " + time.toString() + ": " + msg;
+    QString str = date.toString(Qt::ISODate) + " " + time.toString(Qt::ISODate) + ": " + msg;
 
     QTextStream out(&file);
     out << str << "\n";
