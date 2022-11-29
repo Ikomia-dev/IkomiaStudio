@@ -68,6 +68,7 @@ void CPythonPluginMaker::generate()
     createMainFile(pluginFolder);
     createProcessFile(pluginFolder);
     createWidgetFile(pluginFolder);
+    createTestFile(pluginFolder);
 
     //Requirements files
     QFile requirementsFile(pluginFolder + "/requirements.txt");
@@ -146,6 +147,26 @@ void CPythonPluginMaker::createWidgetFile(const QString &folder)
     }
     QTextStream widgetTextStream(&widgetFile);
     widgetTextStream << newContent;
+}
+
+void CPythonPluginMaker::createTestFile(const QString& folder)
+{
+    QFile templateFile(":/Templates/Python/template_test.py");
+    if(templateFile.open(QFile::ReadOnly | QFile::Text) == false)
+        throw CException(CoreExCode::INVALID_PARAMETER, QObject::tr("Read test template failed").toStdString(), __func__, __FILE__, __LINE__);
+
+    QTextStream txtStream(&templateFile);
+    auto templateContent = txtStream.readAll();
+    QString filePath = folder + "/" + m_name + "_test.py";
+    QFile testFile(filePath);
+
+    if(testFile.open(QIODevice::WriteOnly | QFile::Text | QFile::Truncate) == false)
+    {
+        std::string err = QObject::tr("Write test file to %1 failed").arg(filePath).toStdString();
+        throw CException(CoreExCode::INVALID_PARAMETER, err, __func__, __FILE__, __LINE__);
+    }
+    QTextStream testTextStream(&testFile);
+    testTextStream << templateContent;
 }
 
 QString CPythonPluginMaker::getProcessBaseClass() const

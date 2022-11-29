@@ -1,4 +1,4 @@
 # Create layout : QGridLayout by default
-        self.gridLayout = QtWidgets.QGridLayout()
+        self.grid_layout = QtWidgets.QGridLayout()
         # PySide -> Qt wrapping
-        layout_ptr = qtconversion.PySideToQt(self.gridLayout)
+        layout_ptr = qtconversion.PySideToQt(self.grid_layout)
