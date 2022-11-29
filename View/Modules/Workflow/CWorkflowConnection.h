@@ -46,6 +46,8 @@ class CWorkflowConnection : public QObject, public QGraphicsPathItem
         CWorkflowPortItem*  getSourcePort() const;
         CWorkflowPortItem*  getTargetPort() const;
 
+        bool                isConnectionItem(QGraphicsItem* pItem) const;
+
         //Setters
         void                setSourcePort(CWorkflowPortItem* pPort);
         void                setTargetPort(CWorkflowPortItem* pPort);

@@ -64,6 +64,11 @@ CWorkflowPortItem *CWorkflowConnection::getTargetPort() const
     return m_pDstPort;
 }
 
+bool CWorkflowConnection::isConnectionItem(QGraphicsItem *pItem) const
+{
+    return pItem == this || pItem == m_pDeleteWidget;
+}
+
 void CWorkflowConnection::setSourcePort(CWorkflowPortItem *pPort)
 {
     m_pSrcPort = pPort;
@@ -155,7 +160,8 @@ void CWorkflowConnection::updatePath(QPointF currentPos)
 
 bool CWorkflowConnection::contains(const WorkflowVertex &id1, const WorkflowVertex &id2, bool bDirected)
 {
-    assert(m_pSrcPort && m_pDstPort);
+    if (!m_pSrcPort || !m_pDstPort)
+        return false;
 
     if(bDirected == false)
     {
@@ -198,6 +204,10 @@ void CWorkflowConnection::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 void CWorkflowConnection::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event);
+
+    if (!m_pSrcPort || ! m_pDstPort)
+        return;
+
     setPen(createPen(m_pSrcPort->scenePos(), m_pDstPort->scenePos()));
     hideDeleteWidget();
 }
@@ -213,6 +223,9 @@ void CWorkflowConnection::init()
 
 void CWorkflowConnection::showDeleteWidget()
 {
+    if (!m_pSrcPort || ! m_pDstPort)
+        return;
+
     QPointF srcPos = m_pSrcPort->scenePos();
     QPointF dstPos = m_pDstPort->scenePos();
     QPointF pos = (srcPos + dstPos) / 2;

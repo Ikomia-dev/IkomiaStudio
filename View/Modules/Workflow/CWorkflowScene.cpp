@@ -138,14 +138,16 @@ void CWorkflowScene::addTaskItem(CWorkflowItem *pItem, CWorkflowItem *pParent)
 
 QPair<int,int> CWorkflowScene::getCandidateCell(CWorkflowItem *pItem) const
 {
-    assert(pItem);
-    assert(m_pDummyItem);
+    Q_UNUSED(pItem);
+    if (!m_pDummyItem)
+        return QPair<int,int>(0, 0);
+
     return positionToGrid(m_pDummyItem->pos());
 }
 
 QPair<int,int> CWorkflowScene::getCellFromParent(CWorkflowItem *pItem, CWorkflowItem *pParent, int childIndex) const
 {
-    assert(pItem);
+    Q_UNUSED(pItem);
     QPair<int,int> parentCell(0, 0);
 
     if(pParent != nullptr)
@@ -173,9 +175,7 @@ bool CWorkflowScene::isGraphGridRowEmpty(int row, int firstColumn, int lastColum
     for(int i=firstColumn; i<=lastColumn; ++i)
     {
         auto index = getGraphGridIndex(QPair<int, int>(row, i));
-        assert(index != SIZE_MAX);
-
-        if(m_graphGrid[index] !=  nullptr)
+        if(index < m_graphGrid.size() && m_graphGrid[index] !=  nullptr)
             return false;
     }
     return true;
@@ -197,14 +197,17 @@ bool CWorkflowScene::isValidDropCell(const QPair<int,int>& cell) const
 
 void CWorkflowScene::deleteInput(int index)
 {
-    assert(m_pInputArea);
-    m_pInputArea->removePort(index);
+    if (m_pInputArea)
+        m_pInputArea->removePort(index);
 }
 
 void CWorkflowScene::deleteConnection(CWorkflowConnection *pConnection, bool bLater, bool bNotifyView, bool bNotifyModel)
 {
-    assert(pConnection);
-    m_pCurWorkflowItem = nullptr;
+    if (!pConnection)
+        return;
+
+    if (pConnection->isConnectionItem(m_pCurWorkflowItem))
+        m_pCurWorkflowItem = nullptr;
 
     if(bNotifyView)
         emit doDeleteConnection(pConnection->getId(), bNotifyModel);
@@ -459,7 +462,9 @@ void CWorkflowScene::setGraphGridItem(QGraphicsItem *pItem, QPair<int, int> &cel
 
 void CWorkflowScene::setPosition(QGraphicsItem *pItem, int row, int column)
 {
-    assert(pItem);
+    if (!pItem)
+        return;
+
     QRectF itemRect = pItem->boundingRect();
     auto cellCenter = gridToPosition(row, column);
     pItem->setPos(cellCenter.x() - itemRect.width()/2, cellCenter.y() - itemRect.height()/2);
@@ -474,15 +479,17 @@ void CWorkflowScene::setPosition(QGraphicsItem *pItem, int row, int column)
 
 void CWorkflowScene::setDialogPosition(QDialog *pDialog, const QPointF &pos)
 {
-    assert(pDialog);
+    if (!pDialog)
+        return;
 
     // pos is current screen position
     // get Screen size
     auto newPos = pos.toPoint();
     auto pScreen = QGuiApplication::screenAt(newPos);
-    assert(pScreen);
-    auto screenRect = pScreen->availableGeometry();
+    if (!pScreen)
+        return;
 
+    auto screenRect = pScreen->availableGeometry();
     int w = pDialog->width();
     int h = pDialog->height();
     newPos.setY(newPos.y() - h);
@@ -605,7 +612,8 @@ void CWorkflowScene::deleteSelectedItems()
 
 void CWorkflowScene::deleteTaskItem(CWorkflowItem *pItem)
 {
-    assert(pItem);
+    if (!pItem)
+        return;
 
     //Update graph grid
     size_t index = m_graphGrid.find(pItem);
@@ -684,7 +692,9 @@ void CWorkflowScene::finalizeCurrentConnection(QPointF pos)
 void CWorkflowScene::updateNearestPorts(QPointF pos)
 {
     CWorkflowPortItem* pCurrPort = static_cast<CWorkflowPortItem*>(m_pCurWorkflowItem);
-    assert(pCurrPort != nullptr);
+    if (!pCurrPort)
+        return;
+
     bool bIn = pCurrPort->isInput();
     auto allItems = items();
     for(auto it : allItems)
@@ -808,7 +818,9 @@ void CWorkflowScene::endItemDrag(QPointF pos)
 
 QPoint CWorkflowScene::mapToScreen(QPointF scenePos)
 {
-    assert(views().size() > 0);
+    if (views().size() == 0)
+        return QPoint();
+
     QGraphicsView* pView = views().first();
     QPoint viewPos = pView->mapFromScene(scenePos);
     QPoint screenPos = pView->mapToGlobal(viewPos);
@@ -865,7 +877,9 @@ void CWorkflowScene::centerInputArea()
 
 void CWorkflowScene::onPortClicked(CWorkflowPortItem *pPort, const QPointF &pos)
 {
-    assert(pPort);
+    if (!pPort)
+        return;
+
     IODataType type = pPort->getDataType();
     if(type == IODataType::INPUT_GRAPHICS)
         openGraphicsLayerChoiceDlg(pPort, pos);
