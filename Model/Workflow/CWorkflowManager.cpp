@@ -81,7 +81,7 @@ WorkflowInputViewMode CWorkflowManager::getInputViewMode() const
 
 void CWorkflowManager::setManagers(CProcessManager *pProcessMgr, CProjectManager *pProjectMgr,
                                    CGraphicsManager *pGraphicsMgr, CResultManager *pResultsMgr,
-                                   CMainDataManager  *pDataMgr, CProgressBarManager *pProgressMgr,
+                                   CMainDataManager *pDataMgr, CProgressBarManager *pProgressMgr,
                                    CSettingsManager *pSettingsMgr)
 {
     m_pProcessMgr = pProcessMgr;
@@ -549,6 +549,7 @@ void CWorkflowManager::loadWorkflow(const QString &path)
         else
         {
             m_pWorkflow = std::make_unique<CWorkflow>("", &m_pProcessMgr->m_registry, m_pGraphicsMgr->getContext());
+            m_pWorkflow->setOutputFolder(m_pSettingsMgr->getWorkflowSaveFolder() + m_pWorkflow->getName() + "/");
             m_pWorkflow->load(path.toStdString());
         }
 
