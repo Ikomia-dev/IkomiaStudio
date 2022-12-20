@@ -18,6 +18,7 @@
 
 #include "CMultiModel.h"
 #include <memory>
+#include <QDebug>
 
 CMultiModel::CMultiModel( QObject * pParent ) : QAbstractItemModel( pParent )
     ,	m_MaxCols( 1 )

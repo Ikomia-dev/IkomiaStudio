@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QDir>
 #include <QPluginLoader>
+#include <Main/AppDefine.hpp>
 #include "CPluginTools.h"
 #include "CPluginPythonModel.h"
 #include "CPluginPythonDependencyModel.h"

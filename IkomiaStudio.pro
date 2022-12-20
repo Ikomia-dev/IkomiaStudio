@@ -418,7 +418,7 @@ HEADERS += \
         Main/LogCategory.h
 
 FORMS += \
-        CMainView.ui
+        View/Main/CMainView.ui
 
 RESOURCES += \
         res.qrc

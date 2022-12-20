@@ -1,5 +1,7 @@
 IkomiaStudio.pro.user
 Build/
 LocalSettings.pri
+LocalSettings.cmake
 Doc/Internal/html
 Doc/Internal/latex
+.idea

@@ -29,6 +29,7 @@ class CProjectManager;
 class CResultManager;
 class CRenderManager;
 class CGraphicsManager;
+class CViewPropertyIO;
 
 using CImageDataMgrPtr = std::shared_ptr<CImageDataManager>;
 

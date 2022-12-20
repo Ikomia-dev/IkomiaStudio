@@ -23,6 +23,8 @@
 
 #include <string>
 #include <QString>
+#include <QMap>
+#include <QSqlDatabase>
 
 class CDbManager
 {
