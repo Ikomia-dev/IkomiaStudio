@@ -16,10 +16,10 @@ include(Versions.cmake)
 include(LocalSettings.cmake)
 
 # Qt
-find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg)
+find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
 
 # Python
-find_package(Python3 ${PYTHON_VERSION_DOT} REQUIRED COMPONENTS Interpreter Development NumPy)
+find_package(Python3 ${PYTHON_VERSION_DOT} EXACT REQUIRED COMPONENTS Interpreter Development NumPy)
 
 # OpenMP
 find_package(OpenMP REQUIRED)
@@ -28,6 +28,10 @@ find_package(OpenMP REQUIRED)
 find_package(OpenGL REQUIRED)
 
 # OpenCV
+if(WIN32)
+    set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc16/lib")
+endif()
+
 find_package(OpenCV ${OPENCV_VERSION} REQUIRED)
 
 # Boost
@@ -420,6 +424,7 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Workflow/CWorkflowInfoDlg.h
     View/Workflow/CWorkflowPane.cpp
     View/Workflow/CWorkflowPane.h
+    app.rc
 )
 
 # Resources
@@ -432,9 +437,9 @@ target_precompile_headers(IkomiaStudio PRIVATE
 )
 
 if(MSVC)
-    target_compile_options(IkomiaStudio
-        -arch:AVX2
-        _CRT_SECURE_NO_WARNINGS
+    target_compile_options(IkomiaStudio PRIVATE
+        /arch:AVX2
+        -D_CRT_SECURE_NO_WARNINGS
     )
 endif()
 
@@ -465,11 +470,25 @@ target_include_directories(IkomiaStudio PRIVATE
     ${Python3_INCLUDE_DIRS}
     # Numpy
     ${Python3_NumPy_INCLUDE_DIRS}
+    # OpenCV
+    ${OpenCV_INCLUDE_DIRS}
+    # Breakpad
+    ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src
+    # Quazip
+    ${CMAKE_CURRENT_LIST_DIR}/../quazip/quazip
+    # Qwt
+    ${CMAKE_CURRENT_LIST_DIR}/../qwt/src
 )
 
 target_link_directories(IkomiaStudio PRIVATE
     # Ikomia libs
     ${CMAKE_CURRENT_LIST_DIR}/../IkomiaCore/Build/lib
+    # GMIC
+    ${CMAKE_CURRENT_LIST_DIR}/../gmic/build
+    # Qwt
+    ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
+    # Quazip
+    ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
 )
 
 target_link_libraries(IkomiaStudio PRIVATE
@@ -492,34 +511,103 @@ target_link_libraries(IkomiaStudio PRIVATE
     OpenMP::OpenMP_CXX
     # OpenGL
     OpenGL::GL
+    # OpenCV
+    opencv_core
+    opencv_imgcodecs
+    opencv_imgproc
+    opencv_alphamat
+    opencv_videoio
+    opencv_highgui
+    opencv_video
+    opencv_calib3d
+    opencv_features2d
+    opencv_objdetect
+    opencv_dnn
+    opencv_ml
+    opencv_flann
+    opencv_photo
+    opencv_stitching
+    opencv_gapi
+    opencv_wechat_qrcode
+    opencv_aruco
+    opencv_bgsegm
+    opencv_bioinspired
+    opencv_ccalib
+    opencv_cudaarithm
+    opencv_cudabgsegm
+    opencv_cudafeatures2d
+    opencv_cudafilters
+    opencv_cudaimgproc
+    opencv_cudalegacy
+    opencv_cudaobjdetect
+    opencv_cudaoptflow
+    opencv_cudastereo
+    opencv_cudawarping
+    opencv_cudev
+    opencv_datasets
+    opencv_dnn_objdetect
+    opencv_dnn_superres
+    opencv_dpm
+    opencv_face
+    opencv_fuzzy
+    opencv_hfs
+    opencv_img_hash
+    opencv_intensity_transform
+    opencv_line_descriptor
+    opencv_mcc
+    opencv_optflow
+    opencv_phase_unwrapping
+    opencv_plot
+    opencv_quality
+    opencv_rapid
+    opencv_reg
+    opencv_rgbd
+    opencv_saliency
+    opencv_shape
+    opencv_stereo
+    opencv_structured_light
+    opencv_superres
+    opencv_surface_matching
+    opencv_text
+    opencv_tracking
+    opencv_videostab
+    opencv_viz
+    opencv_xfeatures2d
+    opencv_ximgproc
+    opencv_xobjdetect
+    opencv_xphoto
     # VTK
-    vtkCommonCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkCommonDataModel-${VTK_MAJOR_MINOR_VERSION}
-    vtkCommonExecutionModel-${VTK_MAJOR_MINOR_VERSION}
-    vtkCommonMath-${VTK_MAJOR_MINOR_VERSION}
-    vtkCommonSystem-${VTK_MAJOR_MINOR_VERSION}
-    vtkCommonTransforms-${VTK_MAJOR_MINOR_VERSION}
-    vtkFiltersCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkFiltersGeneral-${VTK_MAJOR_MINOR_VERSION}
-    vtkFiltersImaging-${VTK_MAJOR_MINOR_VERSION}
-    vtkImagingColor-${VTK_MAJOR_MINOR_VERSION}
-    vtkImagingCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkImagingGeneral-${VTK_MAJOR_MINOR_VERSION}
-    vtkImagingMath-${VTK_MAJOR_MINOR_VERSION}
-    vtkImagingSources-${VTK_MAJOR_MINOR_VERSION}
-    vtkInteractionImage-${VTK_MAJOR_MINOR_VERSION}
-    vtkInteractionStyle-${VTK_MAJOR_MINOR_VERSION}
-    vtkIOCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkIOImage-${VTK_MAJOR_MINOR_VERSION}
-    vtkRenderingContext2D-${VTK_MAJOR_MINOR_VERSION}
-    vtkRenderingCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkRenderingImage-${VTK_MAJOR_MINOR_VERSION}
-    vtkRenderingOpenGL2-${VTK_MAJOR_MINOR_VERSION}
-    vtksys-${VTK_MAJOR_MINOR_VERSION}
-    vtkViewsCore-${VTK_MAJOR_MINOR_VERSION}
-    vtkDICOM-${VTK_MAJOR_MINOR_VERSION}
+    vtkCommonCore
+    vtkCommonDataModel
+    vtkCommonExecutionModel
+    vtkCommonMath
+    vtkCommonSystem
+    vtkCommonTransforms
+    vtkFiltersCore
+    vtkFiltersGeneral
+    vtkFiltersImaging
+    vtkImagingColor
+    vtkImagingCore
+    vtkImagingGeneral
+    vtkImagingMath
+    vtkImagingSources
+    vtkInteractionImage
+    vtkInteractionStyle
+    vtkIOCore
+    vtkIOImage
+    vtkRenderingContext2D
+    vtkRenderingCore
+    vtkRenderingImage
+    vtkRenderingOpenGL2
+    vtksys
+    vtkViewsCore
+    vtkDICOM
     # gmic
     gmic
+    # Qwt
+    qwt
+    # Quazip
+    quazip1-qt5
     # OpenCL
     OpenCL
     # Ikomia
@@ -534,82 +622,16 @@ target_link_libraries(IkomiaStudio PRIVATE
 
 if(UNIX)
     target_link_directories(IkomiaStudio PRIVATE
-        # GMIC
-        ${CMAKE_CURRENT_LIST_DIR}/../gmic/build
+        # Breakpad
+        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/linux
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
         curl
-        breakpad_client
-        quazip1-qt5
-        qwt
-        # OpenCV
-        opencv_core
-        opencv_imgcodecs
-        opencv_imgproc
-        opencv_alphamat
-        opencv_videoio
-        opencv_highgui
-        opencv_video
-        opencv_calib3d
-        opencv_features2d
         opencv_freetype
-        opencv_objdetect
-        opencv_dnn
-        opencv_ml
-        opencv_flann
-        opencv_photo
-        opencv_stitching
-        opencv_gapi
-        opencv_wechat_qrcode
-        opencv_aruco
-        opencv_bgsegm
-        opencv_bioinspired
-        opencv_ccalib
-        opencv_cudaarithm
-        opencv_cudabgsegm
-        opencv_cudafeatures2d
-        opencv_cudafilters
-        opencv_cudaimgproc
-        opencv_cudalegacy
-        opencv_cudaobjdetect
-        opencv_cudaoptflow
-        opencv_cudastereo
-        opencv_cudawarping
-        opencv_cudev
-        opencv_datasets
-        opencv_dnn_objdetect
-        opencv_dnn_superres
-        opencv_dpm
-        opencv_face
-        opencv_fuzzy
         opencv_hdf
-        opencv_hfs
-        opencv_img_hash
-        opencv_intensity_transform
-        opencv_line_descriptor
-        opencv_mcc
-        opencv_optflow
-        opencv_phase_unwrapping
-        opencv_plot
-        opencv_quality
-        opencv_rapid
-        opencv_reg
-        opencv_rgbd
-        opencv_saliency
-        opencv_shape
-        opencv_stereo
-        opencv_structured_light
-        opencv_superres
-        opencv_surface_matching
-        opencv_text
-        opencv_tracking
-        opencv_videostab
-        opencv_viz
-        opencv_xfeatures2d
-        opencv_ximgproc
-        opencv_xobjdetect
-        opencv_xphoto
+        # Breakpad
+        breakpad_client
     )
 endif()
 
@@ -624,44 +646,34 @@ endif()
 
 if(UNIX AND NOT CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src
-        ${CMAKE_CURRENT_LIST_DIR}/../quazip/quazip
-        ${CMAKE_CURRENT_LIST_DIR}/../qwt/src
         # OpenCV
         /usr/local/include/opencv4
-    )
-
-    target_link_directories(IkomiaStudio PRIVATE
-        # Qwt
-        ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
-        # Quazip
-        ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
-        # Breakpad
-        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/linux
     )
 endif()
 
 if(WIN32)
     target_include_directories(IkomiaStudio PRIVATE
-        # OpenCV
-        $<$<IK_CPU:1>:$ENV{ProgramW6432}/OpenCV/cpu/include>
-        $<$<IK_CPU:0>:$ENV{ProgramW6432}/OpenCV/cuda/include>
+        # Boost
+        ${Boost_INCLUDE_DIRS}/Boost/include/boost-${BOOST_VERSION}
+        # OpenCL
+        "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/include"
+        # Zlib
+        "C:/Program Files/zlib/include"
     )
 
     target_link_directories(IkomiaStudio PRIVATE
         # GMIC
         $ENV{ProgramW6432}/gmic/bin
         $ENV{ProgramW6432}/gmic/lib
+        # Breakpad
+        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/windows/Release/lib
+        # TODO Not directly linked with but necessary to launch app from QtCreator
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
         common
         crash_generation_client
         exception_handler
-        $<$<CONFIG:RELEASE>:quazip>
-        $<$<CONFIG:DEBUG>:quazipd>
-        $<$<CONFIG:RELEASE>:qwt>
-        $<$<CONFIG:DEBUG>:qwtd>
         OpenGL32
     )
 endif()
