@@ -667,7 +667,6 @@ if(WIN32)
         $ENV{ProgramW6432}/gmic/lib
         # Breakpad
         ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/windows/Release/lib
-        # TODO Not directly linked with but necessary to launch app from QtCreator
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
@@ -683,6 +682,16 @@ install(TARGETS IkomiaStudio
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# Consider using qt_generate_deploy_app_script() for app deployment if
-# the project can use Qt 6.3. In that case rerun qmake2cmake with
-# --min-qt-version=6.3.
+#------------------------------------------------------------------------
+#- Run on WINDOWS
+#- To run with QtCreator directly, following paths must be added to PATH:
+# OpenGL: C:/Program Files(x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64"
+# GDCM: C:/Program Files/GDCM/bin
+# Tesseract: C:/Program Files/tesseract/bin
+# ZLib: C:/Program Files/zlib/bin
+# Quazip: C:/Developpement/quazip/build/lib
+# Qwt: C:/Developpement/qwt/build/lib
+# gmic: C:/Program Files/gmic/bin/
+# OpenSSL: C:/Program Files/OpenSSL-Win64/bin
+# IkomiaCore: C:/Developpement/IkomiaCore/Build/lib
+#------------------------------------------------------------------------
