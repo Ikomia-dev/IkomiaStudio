@@ -29,7 +29,11 @@ find_package(OpenGL REQUIRED)
 
 # OpenCV
 if(WIN32)
-    set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc16/lib")
+    if(${IK_CPU})
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc16/lib")
+    else()
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc16/lib")
+    endif()
 endif()
 
 find_package(OpenCV ${OPENCV_VERSION} REQUIRED)
@@ -447,8 +451,6 @@ target_compile_features(IkomiaStudio PRIVATE cxx_std_14)
 
 target_compile_definitions(IkomiaStudio PRIVATE
     BOOST_ALL_NO_LIB
-    CUDA11
-    PY310
     QT_DEPRECATED_WARNINGS
     QT_QTPROPERTYBROWSER_IMPORT
     SOCORRO
