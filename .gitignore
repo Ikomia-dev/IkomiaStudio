@@ -5,3 +5,4 @@ LocalSettings.cmake
 Doc/Internal/html
 Doc/Internal/latex
 .idea
+CMakeLists.txt.user
