@@ -22,6 +22,8 @@
 #include <QAbstractItemModel>
 #include <QApplication>
 #include <QIcon>
+#include <QFont>
+#include <QPalette>
 #include <memory>
 #include <boost/container/flat_map.hpp>
 #include "CTreeItem.hpp"
@@ -139,7 +141,7 @@ class CTreeModel : public QAbstractItemModel
                     case Qt::ForegroundRole:
                         if(item->isHighlighted())
                         {
-                            auto pal = qApp->palette();
+                            QPalette pal = qApp->palette();
                             value = pal.highlight();
                         }
                         break;

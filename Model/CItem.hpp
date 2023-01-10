@@ -20,6 +20,7 @@
 #define CITEM_HPP
 
 #include <QHash>
+#include <QPixmap>
 #include "Main/AppDefine.hpp"
 
 /**

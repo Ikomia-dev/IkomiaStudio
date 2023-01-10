@@ -18,6 +18,7 @@
 
 #include "CGraphicsDbManager.h"
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include "Graphics/CGraphicsLayer.h"
 #include "Graphics/CGraphicsJSON.h"
 #include "CGraphicsLayerItem.hpp"

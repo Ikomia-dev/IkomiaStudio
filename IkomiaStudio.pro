@@ -418,7 +418,7 @@ HEADERS += \
         Main/LogCategory.h
 
 FORMS += \
-        CMainView.ui
+        View/Main/CMainView.ui
 
 RESOURCES += \
         res.qrc
@@ -542,7 +542,7 @@ centos7 {
     ########################
     win32:CONFIG(release, debug|release): LIBS += -L$$IKOMIA_EXT_LIB_PATH/quazip/build/lib/ -lquazip
     else:win32:CONFIG(debug, debug|release): LIBS += -L$$IKOMIA_EXT_LIB_PATH/quazip/build/lib/ -lquazipd
-    else:unix:!macx: LIBS += -L$$IKOMIA_EXT_LIB_PATH/quazip/build/lib/ -lquazip
+    else:unix:!macx: LIBS += -L$$IKOMIA_EXT_LIB_PATH/quazip/build/lib/ -lquazip1-qt5
     else:macx: LIBS += -L$$IKOMIA_EXT_LIB_PATH/quazip/build/lib/ -lquazip
     INCLUDEPATH += $$IKOMIA_EXT_LIB_PATH/quazip/quazip
     DEPENDPATH += $$IKOMIA_EXT_LIB_PATH/quazip/build/lib/

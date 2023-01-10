@@ -21,6 +21,8 @@
 #ifndef LOGCATEGORY_H
 #define LOGCATEGORY_H
 
+#include <QLoggingCategory>
+
 //Register log category
 Q_DECLARE_LOGGING_CATEGORY(logGraphics)
 Q_DECLARE_LOGGING_CATEGORY(logImage)

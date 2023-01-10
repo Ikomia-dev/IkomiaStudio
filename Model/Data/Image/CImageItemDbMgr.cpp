@@ -17,6 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CImageItemDbMgr.h"
+#include <QSqlRecord>
 #include "UtilsTools.hpp"
 #include "CImageItem.hpp"
 #include "Model/Project/CProjectModel.h"
