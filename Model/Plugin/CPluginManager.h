@@ -26,10 +26,10 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <Main/AppDefine.hpp>
-#include "CPluginTools.h"
 #include "CPluginPythonModel.h"
 #include "CPluginPythonDependencyModel.h"
 #include "Model/User/CUser.h"
+#include "Core/CTaskFactory.hpp"
 
 class CIkomiaRegistry;
 class CProgressCircle;
@@ -44,8 +44,6 @@ class CPluginManager : public QObject
 
         void                loadProcessPlugins();
         TaskFactoryPtr      loadProcessPlugin(const QString& name, int language);
-        TaskFactoryPtr      loadCppProcessPlugin(const QString& fileName);
-        TaskFactoryPtr      loadPythonProcessPlugin(const QString& directory);
 
         void                setRegistry(CIkomiaRegistry *pRegistry);
         void                setCurrentUser(const CUser& user);
@@ -76,12 +74,6 @@ class CPluginManager : public QObject
 
         QString             getPythonInstalledPkgVersion(const QString& name) const;
         void                getPythonPackageInfo(const QString& name) const;
-
-        void                addToPythonPath(const QString& path);
-
-        void                    loadCppProcessPlugins();
-        void                    loadPythonProcessPlugins();
-        boost::python::object   loadPythonMainModule(const std::string& folder, const std::string& name);
 
         void                updatePythonQueryModel();
         void                updateOutdatedPackages();
