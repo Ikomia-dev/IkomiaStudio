@@ -110,8 +110,6 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Plugin/CPluginPythonDependencyModel.h
     Model/Plugin/CPluginPythonModel.cpp
     Model/Plugin/CPluginPythonModel.h
-    Model/Plugin/CPluginTools.cpp
-    Model/Plugin/CPluginTools.h
     Model/Process/CProcessItem.hpp
     Model/Process/CProcessManager.cpp
     Model/Process/CProcessManager.h
