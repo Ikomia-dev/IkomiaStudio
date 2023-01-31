@@ -19,7 +19,7 @@
 #include "CPluginPythonModel.h"
 #include <QSqlDatabase>
 #include "Main/AppTools.hpp"
-#include "CPluginTools.h"
+#include "Core/CPluginTools.h"
 
 CPluginPythonModel::CPluginPythonModel(QObject *parent) : QStandardItemModel(parent)
 {

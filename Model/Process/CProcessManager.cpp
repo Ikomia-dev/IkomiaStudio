@@ -16,12 +16,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <QTreeView>
+#include <QDialog>
 #include "CProcessManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "Core/CPluginTools.h"
 #include "UtilsTools.hpp"
-#include <QTreeView>
-#include <QDialog>
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 

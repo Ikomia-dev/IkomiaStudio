@@ -20,7 +20,7 @@
 #include "Main/LogCategory.h"
 #include "Main/AppTools.hpp"
 #include "PythonThread.hpp"
-#include "CPluginTools.h"
+#include "Core/CPluginTools.h"
 
 CPluginPythonDependencyModel::CPluginPythonDependencyModel(QObject *parent)
     :QStandardItemModel(parent)

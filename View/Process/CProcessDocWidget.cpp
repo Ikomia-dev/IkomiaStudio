@@ -21,7 +21,7 @@
 #include "Main/AppTools.hpp"
 #include "CProcessDocFrame.h"
 #include "CProcessEditDocFrame.h"
-#include "Model/Plugin/CPluginTools.h"
+#include "Core/CPluginTools.h"
 
 CProcessDocWidget::CProcessDocWidget(int actions, QWidget *parent, Qt::WindowFlags f)
     : QWidget(parent, f)

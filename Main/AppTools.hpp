@@ -207,32 +207,7 @@ namespace Ikomia
                 }
                 return libVersion.toStdString();
             }
-            inline std::set<std::string> getImportedModules()
-            {
-                CPyEnsureGIL gil;
-                object main_module = import("__main__");
-                object main_namespace = main_module.attr("__dict__");
 
-                str code
-                (
-                    "import types\n\n"
-                    "def imported_modules():\n"
-                    "   modules = list()\n"
-                    "   for name, val in globals().items():\n"
-                    "       if isinstance(val, types.ModuleType):\n"
-                    "           modules.append(val.__name__)\n"
-                    "   return modules"
-                );
-                exec(code, main_namespace, main_namespace);
-                object imported_modules = main_namespace["imported_modules"];
-                object modules = imported_modules();
-
-                std::set<std::string> importedModules;
-                for(int i=0; i<len(modules); ++i)
-                    importedModules.insert(extract<std::string>(modules[i]));
-
-                return importedModules;
-            }
 
             inline void         prepareQCommand(QString& cmd, QStringList& args)
             {
@@ -336,84 +311,6 @@ namespace Ikomia
                         return false;
                     }
                 }
-            }
-
-            inline bool         isModuleImported(const std::string& name)
-            {
-                CPyEnsureGIL gil;
-                object main_module = import("__main__");
-                object main_namespace = main_module.attr("__dict__");
-
-                str code
-                (
-                    "import types\n\n"
-                    "def imported_modules():\n"
-                    "   modules = list()\n"
-                    "   for name, val in globals().items():\n"
-                    "       if isinstance(val, types.ModuleType):\n"
-                    "           modules.append(val.__name__)\n"
-                    "   return modules"
-                );
-                exec(code, main_namespace, main_namespace);
-                object imported_modules = main_namespace["imported_modules"];
-                object modules = imported_modules();
-
-                for(int i=0; i<len(modules); ++i)
-                {
-                    std::string moduleName = extract<std::string>(modules[i]);
-                    if(moduleName == name)
-                        return true;
-                }
-                return false;
-            }
-            inline bool         isFolderModule(const std::string& folder)
-            {
-                boost::filesystem::directory_iterator iter(folder), end;
-                for(; iter != end; ++iter)
-                {
-                    if(iter->path().filename() == "__init__.py")
-                        return true;
-                }
-                return false;
-            }
-
-            inline object       reloadModule(const std::string& name)
-            {
-                CPyEnsureGIL gil;
-                object main_module = boost::python::import("__main__");
-                object main_namespace = main_module.attr("__dict__");
-                QString script = QString("import importlib\nimportlib.reload(%1)").arg(QString::fromStdString(name));
-                str pyScript(script.toStdString());
-                exec(pyScript, main_namespace, main_namespace);
-                return main_namespace[name];
-            }
-            inline void         unloadModule(const std::string& name, bool bStrictCompare)
-            {
-                CPyEnsureGIL gil;
-                object main_module = boost::python::import("__main__");
-                object main_namespace = main_module.attr("__dict__");
-
-                QString script;
-
-                if(bStrictCompare)
-                {
-                    script = QString(
-                            "import sys\n"
-                            "modules_to_delete = [m for m in sys.modules.keys() if '%1' == m]\n"
-                            "for m in modules_to_delete: del(sys.modules[m])\n"
-                            ).arg(QString::fromStdString(name));
-                }
-                else
-                {
-                    script = QString(
-                            "import sys\n"
-                            "modules_to_delete = [m for m in sys.modules.keys() if '%1' in m]\n"
-                            "for m in modules_to_delete: del(sys.modules[m])\n"
-                            ).arg(QString::fromStdString(name));
-
-                }
-                str pyScript(script.toStdString());
-                exec(pyScript, main_namespace, main_namespace);
             }
 
             inline void         installRequirements(const QString& txtFile)

@@ -19,7 +19,7 @@
 #include "CProcessDocFrame.h"
 #include <QTextDocumentWriter>
 #include "UtilsTools.hpp"
-#include "Model/Plugin/CPluginTools.h"
+#include "Core/CPluginTools.h"
 
 CProcessDocFrame::CProcessDocFrame(QWidget *parent, Qt::WindowFlags f):
     QFrame(parent, f)

@@ -25,6 +25,7 @@
 #include "CStoreOnlineIconManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "Core/CPluginTools.h"
 #include "Model/Process/CProcessManager.h"
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
