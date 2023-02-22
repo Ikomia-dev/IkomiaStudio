@@ -22,7 +22,7 @@
 #define CPROCESSEDITDOCFRAME_H
 
 #include <QFrame>
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CProcessEditDocFrame : public QFrame

@@ -23,7 +23,7 @@
 
 #include <QDialog>
 #include "View/Common/CDialog.h"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CStorePluginListView;

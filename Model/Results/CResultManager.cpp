@@ -1007,13 +1007,13 @@ void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, cons
     auto pOut = std::dynamic_pointer_cast<CImageIO>(outputPtr);
     if(!pOut)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid volume");
+        qCCritical(logResults).noquote() << tr("Process output management: invalid volume");
         return;
     }
 
     if(pOut->isDataAvailable() == false)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid volume buffer");
+        qCCritical(logResults).noquote() << tr("Process output management: invalid volume buffer");
         return;
     }
 
@@ -1046,7 +1046,7 @@ void CResultManager::manageGraphicsOutput(const WorkflowTaskPtr &taskPtr, const 
     auto pOut = std::dynamic_pointer_cast<CGraphicsOutput>(pOutput);
     if(!pOut)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid graphics");
+        qCCritical(logResults).noquote() << tr("Process output management: invalid graphics");
         return;
     }
 
@@ -1070,7 +1070,7 @@ void CResultManager::manageBlobOutput(const WorkflowTaskIOPtr &pOutput, const st
     auto pOut = std::dynamic_pointer_cast<CBlobMeasureIO>(pOutput);
     if(!pOut)
     {
-        qCCritical(logResults).noquote() << tr("Process output management : invalid measures");
+        qCCritical(logResults).noquote() << tr("Process output management: invalid measures");
         return;
     }
 

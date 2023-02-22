@@ -23,7 +23,7 @@
 #include "Main/AppDefine.hpp"
 #include "Main/CoreTools.hpp"
 #include "PythonThread.hpp"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/Settings/CSettingsManager.h"
 #include "CImageDataManager.h"
 #include "Data/CDataConversion.h"

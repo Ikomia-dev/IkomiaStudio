@@ -29,7 +29,7 @@
 #include "CPluginPythonModel.h"
 #include "CPluginPythonDependencyModel.h"
 #include "Model/User/CUser.h"
-#include "Core/CTaskFactory.hpp"
+#include "Task/CTaskFactory.hpp"
 
 class CIkomiaRegistry;
 class CProgressCircle;

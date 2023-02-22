@@ -22,7 +22,7 @@
 #include <QtNetwork/QHttpPart>
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 
 CStoreOnlineIconManager::CStoreOnlineIconManager(QNetworkAccessManager *pNetworkMgr, const CUser &user)
 {

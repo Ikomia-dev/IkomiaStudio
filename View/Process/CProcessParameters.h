@@ -23,7 +23,7 @@
 
 #include "View/Common/CDialog.h"
 #include "Main/forwards.hpp"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CResizeStackedWidget;

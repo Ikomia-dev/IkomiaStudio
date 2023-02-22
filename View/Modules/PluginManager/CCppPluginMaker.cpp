@@ -179,7 +179,7 @@ QString CCppPluginMaker::getProcessBaseClassHeader() const
     switch(m_processBaseClass)
     {
         case PluginManager::CWORKFLOW_TASK: header = "Workflow/CWorkflowTask.h"; break;
-        case PluginManager::C2DIMAGE_TASK: header = "Core/C2dImageTask.h"; break;
+        case PluginManager::C2DIMAGE_TASK: header = "Task/C2dImageTask.h"; break;
         case PluginManager::C2DIMAGE_INTERACTIVE_TASK: header = "Core/C2dImageInteractiveTask.h"; break;
         case PluginManager::CVIDEO_TASK: header = "Core/CVideoProcess.h"; break;
         case PluginManager::CVIDEO_OF_TASK: header = "Core/CVideoOFTask.h"; break;

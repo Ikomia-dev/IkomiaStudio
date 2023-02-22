@@ -22,7 +22,7 @@
 #define CSTOREDBMANAGER_H
 
 #include <QSqlDatabase>
-#include "Core/CTaskFactory.hpp"
+#include "Task/CTaskFactory.hpp"
 #include "Model/User/CUser.h"
 
 class CStoreDbManager

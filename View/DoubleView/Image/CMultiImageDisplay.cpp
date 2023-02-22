@@ -55,7 +55,7 @@ void CMultiImageDisplay::initConnections()
 
 void CMultiImageDisplay::initOverlayColors()
 {
-    std::srand(std::time(nullptr));
+    std::srand(RANDOM_COLOR_SEED);
     m_overlayColormap = CMat(256, 1, CV_8UC3, cv::Scalar(0));
 
     //Random colors
@@ -178,7 +178,7 @@ void CMultiImageDisplay::onExportImage(const QString &path, bool bWithGraphics)
         {
             CImageDataIO ioMask(maskPath.toStdString());
             mask = ioMask.read();
-            img = Utils::Image::mergeColorMask(img, mask, m_overlayColormap, 0.7);
+            img = Utils::Image::mergeColorMask(img, mask, m_overlayColormap, 0.7, true);
         }
 
         if(bWithGraphics)

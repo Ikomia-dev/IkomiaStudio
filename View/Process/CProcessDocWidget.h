@@ -22,7 +22,7 @@
 #define CPROCESSDOCWIDGET_H
 
 #include <QWidget>
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class QStackedWidget;

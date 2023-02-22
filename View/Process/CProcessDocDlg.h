@@ -22,7 +22,7 @@
 #define CPROCESSDOCDLG_H
 
 #include "View/Common/CDialog.h"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
 
 class CProcessDocWidget;

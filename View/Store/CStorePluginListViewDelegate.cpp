@@ -21,7 +21,7 @@
 #include <QTimer>
 #include "Main/CoreTools.hpp"
 #include "Model/Store/CStoreQueryModel.h"
-#include "Core/CTaskFactory.hpp"
+#include "Task/CTaskFactory.hpp"
 
 CStorePluginListViewDelegate::CStorePluginListViewDelegate(int pluginSource, QObject *parent)
     : CListViewDelegate(parent)

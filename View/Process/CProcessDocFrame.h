@@ -22,7 +22,7 @@
 #define CPROCESSDOCFRAME_H
 
 #include "CProcessDocContent.h"
-#include "Core/CTaskInfo.h"
+#include "Task/CTaskInfo.h"
 
 class QTextBrowser;
 class QTextDocument;
