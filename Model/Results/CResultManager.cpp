@@ -29,6 +29,7 @@
 #include "IO/CObjectDetectionIO.h"
 #include "IO/CInstanceSegIO.h"
 #include "IO/CSemanticSegIO.h"
+#include "IO/CKeypointsIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -249,6 +250,15 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                         manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
+                    }
+
+                    case IODataType::KEYPOINTS:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CKeypointsIO>(outputPtr);
+                        assert(outPtr);
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
                     }
 
                     default: break;
@@ -769,6 +779,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::OBJECT_DETECTION: viewType = DisplayType::EMPTY_DISPLAY; break;        //Composite
         case IODataType::INSTANCE_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
+        case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
     }
     return viewType;
 }
@@ -850,16 +861,22 @@ InputOutputVect CResultManager::getImageOutputs(const WorkflowTaskPtr &taskPtr)
 InputOutputVect CResultManager::getGraphicsOutputsFromComposite(const std::shared_ptr<CWorkflowTaskIO> &ioPtr)
 {
     InputOutputVect outputs;
+    IODataType dataType = ioPtr->getDataType();
 
-    if (ioPtr->getDataType() == IODataType::OBJECT_DETECTION)
+    if (dataType == IODataType::OBJECT_DETECTION)
     {
         auto objDetectionIOPtr = std::static_pointer_cast<CObjectDetectionIO>(ioPtr);
         outputs.push_back(objDetectionIOPtr->getGraphicsIO());
     }
-    else if (ioPtr->getDataType() == IODataType::INSTANCE_SEGMENTATION)
+    else if (dataType == IODataType::INSTANCE_SEGMENTATION)
     {
         auto instanceSegIOPtr = std::static_pointer_cast<CInstanceSegIO>(ioPtr);
         outputs.push_back(instanceSegIOPtr->getGraphicsIO());
+    }
+    else if (dataType == IODataType::KEYPOINTS)
+    {
+        auto keyptsIOPtr = std::static_pointer_cast<CKeypointsIO>(ioPtr);
+        outputs.push_back(keyptsIOPtr->getGraphicsIO());
     }
     return outputs;
 }
@@ -867,7 +884,8 @@ InputOutputVect CResultManager::getGraphicsOutputsFromComposite(const std::share
 InputOutputVect CResultManager::getGraphicsOutputs(const WorkflowTaskPtr &taskPtr)
 {
     InputOutputVect graphicsOutputs;
-    auto outputs = taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS, IODataType::OBJECT_DETECTION, IODataType::INSTANCE_SEGMENTATION});
+    auto outputs = taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS, IODataType::OBJECT_DETECTION,
+                                        IODataType::INSTANCE_SEGMENTATION, IODataType::KEYPOINTS});
 
     // Get graphics from possible outputs: composite outputs may have more than 1 CGraphicsOutput
     for (size_t i=0; i<outputs.size(); ++i)
