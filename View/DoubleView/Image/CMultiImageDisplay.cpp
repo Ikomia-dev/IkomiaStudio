@@ -138,7 +138,7 @@ void CMultiImageDisplay::loadNextImage()
 
 CMat CMultiImageDisplay::createDisplayOverlay(const CMat &img)
 {
-    CMat ovrImg = Utils::Image::createOverlayMask(img, m_overlayColormap);
+    CMat ovrImg = Utils::Image::createOverlayMask(img, m_overlayColormap, true);
     return ovrImg;
 }
 
