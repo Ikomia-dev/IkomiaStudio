@@ -128,6 +128,10 @@ namespace Ikomia
                     case IODataType::KEYPOINTS:
                         color = QColor(80, 10, 220);
                         break;
+
+                    case IODataType::TEXT:
+                        color = QColor(30,130,255);
+                        break;
                 }
                 return color;
             }
@@ -166,6 +170,7 @@ namespace Ikomia
                     case IODataType::INSTANCE_SEGMENTATION:
                     case IODataType::SEMANTIC_SEGMENTATION:
                     case IODataType::KEYPOINTS:
+                    case IODataType::TEXT:
                         bClickable = false;
                         break;
 

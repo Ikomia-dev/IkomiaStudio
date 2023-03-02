@@ -30,6 +30,7 @@
 #include "IO/CInstanceSegIO.h"
 #include "IO/CSemanticSegIO.h"
 #include "IO/CKeypointsIO.h"
+#include "IO/CTextIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -258,6 +259,14 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                    }
+
+                    case IODataType::TEXT:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CTextIO>(outputPtr);
+                        assert(outPtr);
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
                     }
 
@@ -780,6 +789,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::INSTANCE_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
+        case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
     }
     return viewType;
 }
@@ -878,6 +888,11 @@ InputOutputVect CResultManager::getGraphicsOutputsFromComposite(const std::share
         auto keyptsIOPtr = std::static_pointer_cast<CKeypointsIO>(ioPtr);
         outputs.push_back(keyptsIOPtr->getGraphicsIO());
     }
+    else if (dataType == IODataType::TEXT)
+    {
+        auto textIOPtr = std::static_pointer_cast<CTextIO>(ioPtr);
+        outputs.push_back(textIOPtr->getGraphicsIO());
+    }
     return outputs;
 }
 
@@ -885,7 +900,8 @@ InputOutputVect CResultManager::getGraphicsOutputs(const WorkflowTaskPtr &taskPt
 {
     InputOutputVect graphicsOutputs;
     auto outputs = taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS, IODataType::OBJECT_DETECTION,
-                                        IODataType::INSTANCE_SEGMENTATION, IODataType::KEYPOINTS});
+                                        IODataType::INSTANCE_SEGMENTATION, IODataType::KEYPOINTS,
+                                        IODataType::TEXT});
 
     // Get graphics from possible outputs: composite outputs may have more than 1 CGraphicsOutput
     for (size_t i=0; i<outputs.size(); ++i)
