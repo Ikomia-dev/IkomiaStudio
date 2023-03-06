@@ -263,6 +263,8 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
 
 void CStoreDlg::showEvent(QShowEvent *event)
 {
+    emit doGetServerModel();
+    emit doGetLocalModel();
     QDialog::showEvent(event);
 }
 

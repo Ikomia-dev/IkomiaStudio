@@ -115,13 +115,6 @@ void CStoreManager::onInstallPlugin(const QModelIndex &index)
         return;
     }
 
-    //User has to be logged in to install plugins
-    if(m_currentUser.m_id == -1)
-    {
-        qCCritical(logStore).noquote() << tr("You have to login before installing plugins");
-        return;
-    }
-
     //Http request to get plugin package (zip) url
     m_currentPluginServerId = m_pServerPluginModel->record(index.row()).value("id").toInt();
     QUrlQuery urlQuery(Utils::Network::getBaseUrl() + QString("/api/plugin/%1/package/").arg(m_currentPluginServerId));
@@ -138,8 +131,6 @@ void CStoreManager::onInstallPlugin(const QModelIndex &index)
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
     m_currentServerIndex = index;
 
     auto pReply = m_pNetworkMgr->get(request);
@@ -549,12 +540,6 @@ void CStoreManager::createServerPluginModel()
         m_pServerPluginModel = nullptr;
     }
 
-    if(m_currentUser.m_token.isEmpty())
-    {
-        emit doSetServerPluginModel(nullptr);
-        return;
-    }
-
     m_dbMgr.clearServerRecords();
     QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/api/plugin/");
 
@@ -571,8 +556,6 @@ void CStoreManager::createServerPluginModel()
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
 
     auto pReply = m_pNetworkMgr->get(request);
     m_mapTypeRequest.insert(GET_PLUGINS, pReply);
@@ -593,12 +576,6 @@ void CStoreManager::createLocalPluginModel()
     {
         delete m_pLocalPluginModel;
         m_pLocalPluginModel = nullptr;
-    }
-
-    if(!m_currentUser.isConnected())
-    {
-        emit doSetLocalPluginModel(nullptr);
-        return;
     }
 
     m_pLocalPluginModel = new CStoreQueryModel;
@@ -1173,8 +1150,6 @@ void CStoreManager::downloadPluginPackage(const QString &packageUrl)
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
 
     auto pReply = m_pNetworkMgr->get(request);
     m_mapTypeRequest.insert(DOWNLOAD_PACKAGE, pReply);
