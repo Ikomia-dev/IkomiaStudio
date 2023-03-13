@@ -19,6 +19,10 @@ include(LocalSettings.cmake)
 find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
 
 # Python
+if(CENTOS7)
+    set(Python3_DIR "/work/shared/local")
+endif()
+
 find_package(Python3 ${PYTHON_VERSION_DOT} EXACT REQUIRED COMPONENTS Interpreter Development NumPy)
 
 # OpenMP
@@ -42,7 +46,15 @@ find_package(OpenCV ${OPENCV_VERSION} REQUIRED)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
+
+if(CENTOS7)
+    set(BUILD_SHARED_LIBS ON)
+    set(BOOST_PYTHON_TARGET Boost::python)
+    find_package(Boost REQUIRED COMPONENTS system filesystem python)
+else()
+    set(BOOST_PYTHON_TARGET Boost::python${PYTHON_VERSION_NO_DOT})
+    find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
+endif()
 
 # VTK
 find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED)
@@ -506,7 +518,7 @@ target_link_libraries(IkomiaStudio PRIVATE
     # Boost
     Boost::system
     Boost::filesystem
-    Boost::python${PYTHON_VERSION_NO_DOT}
+    ${BOOST_PYTHON_TARGET}
     # OpenMP
     OpenMP::OpenMP_CXX
     # OpenGL
@@ -604,7 +616,6 @@ if(UNIX)
         curl
         # Linux only OpenCV libs
         opencv_freetype
-        opencv_hdf
         # VTK
         vtkCommonCore-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonDataModel-${VTK_MAJOR_MINOR_VERSION}
@@ -640,8 +651,15 @@ if(UNIX AND CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
         ../build/breakpad/src/breakpad/src
         /work/shared/local/include/QuaZip-Qt5-1.1/quazip
-        # OpenCV
-        /work/shared/local/include/opencv4
+        # Global include
+        /work/shared/local/include
+        # Qwt
+        /include
+    )
+
+    target_link_directories(IkomiaStudio PRIVATE
+        /work/shared/local/lib
+        /work/shared/local/lib64
     )
 endif()
 
@@ -649,6 +667,11 @@ if(UNIX AND NOT CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
         # OpenCV
         /usr/local/include/opencv4
+    )
+
+    target_link_libraries(IkomiaStudio PRIVATE
+        # Linux only OpenCV libs
+        opencv_hdf
     )
 endif()
 
