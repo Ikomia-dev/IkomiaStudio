@@ -616,7 +616,6 @@ if(UNIX)
         curl
         # Linux only OpenCV libs
         opencv_freetype
-        opencv_hdf
         # VTK
         vtkCommonCore-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonDataModel-${VTK_MAJOR_MINOR_VERSION}
@@ -654,6 +653,13 @@ if(UNIX AND CENTOS7)
         /work/shared/local/include/QuaZip-Qt5-1.1/quazip
         # OpenCV
         /work/shared/local/include/opencv4
+        # Qwt -> should be patched...
+        /include
+    )
+
+    target_link_directories(IkomiaStudio PRIVATE
+        /work/shared/local/lib
+        /work/shared/local/lib64
     )
 endif()
 
@@ -661,6 +667,10 @@ if(UNIX AND NOT CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
         # OpenCV
         /usr/local/include/opencv4
+    )
+
+    target_link_libraries(IkomiaStudio PRIVATE
+        opencv_hdf
     )
 endif()
 
