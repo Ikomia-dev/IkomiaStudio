@@ -260,6 +260,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
                     }
 
                     case IODataType::TEXT:
@@ -268,6 +269,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
                     }
 
                     default: break;
