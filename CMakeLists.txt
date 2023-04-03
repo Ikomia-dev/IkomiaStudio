@@ -34,9 +34,9 @@ find_package(OpenGL REQUIRED)
 # OpenCV
 if(WIN32)
     if(${IK_CPU})
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc16/lib")
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc${MSVC_VERSION}/lib")
     else()
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc16/lib")
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc${MSVC_VERSION}/lib")
     endif()
 endif()
 
