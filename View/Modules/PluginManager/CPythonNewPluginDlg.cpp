@@ -62,16 +62,21 @@ void CPythonNewPluginDlg::onGeneratePlugin()
 
 void CPythonNewPluginDlg::initLayout()
 {
-    auto pLabelName = new QLabel(tr("Plugin name"));
+    auto pLabelName = new QLabel(tr("Algorithm name"));
     m_pEditPyName = new QLineEdit;
 
-    auto pLabelProcessType = new QLabel(tr("Process type"));
+    auto pLabelProcessType = new QLabel(tr("Algorithm type"));
     m_pComboPyProcessType = new QComboBox;
-    m_pComboPyProcessType->addItem(tr("Generic process"), PluginManager::CWORKFLOW_TASK);
-    m_pComboPyProcessType->addItem(tr("Image process"), PluginManager::C2DIMAGE_TASK);
-    m_pComboPyProcessType->addItem(tr("Interactive image process"), PluginManager::C2DIMAGE_INTERACTIVE_TASK);
-    m_pComboPyProcessType->addItem(tr("Video process"), PluginManager::CVIDEO_TASK);
-    m_pComboPyProcessType->addItem(tr("Optical flow process"), PluginManager::CVIDEO_OF_TASK);
+    m_pComboPyProcessType->addItem(tr("Generic algorithm"), PluginManager::CWORKFLOW_TASK);
+    m_pComboPyProcessType->addItem(tr("Image algorithm"), PluginManager::C2DIMAGE_TASK);
+    m_pComboPyProcessType->addItem(tr("Interactive image algorithm"), PluginManager::C2DIMAGE_INTERACTIVE_TASK);
+    m_pComboPyProcessType->addItem(tr("Video algorithm"), PluginManager::CVIDEO_TASK);
+    m_pComboPyProcessType->addItem(tr("Classification algorithm"), PluginManager::CCLASSIFICATION_TASK);
+    m_pComboPyProcessType->addItem(tr("Object detection algorithm"), PluginManager::COBJECT_DETECTION_TASK);
+    m_pComboPyProcessType->addItem(tr("Semantic segmentation algorithm"), PluginManager::CSEMANTIC_SEGMENTATION_TASK);
+    m_pComboPyProcessType->addItem(tr("Instance segmentation algorithm"), PluginManager::CINSTANCE_SEGMENTATION_TASK);
+    m_pComboPyProcessType->addItem(tr("Keypoints detection algorithm"), PluginManager::CKEYPOINT_DETECTION_TASK);
+    m_pComboPyProcessType->addItem(tr("Optical flow algorithm"), PluginManager::CVIDEO_OF_TASK);
     m_pComboPyProcessType->setCurrentIndex(1);
 
     auto pLabelWidgetType = new QLabel(tr("Widget type"));

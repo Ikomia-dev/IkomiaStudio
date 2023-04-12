@@ -29,6 +29,11 @@ namespace Ikomia
             C2DIMAGE_TASK,
             C2DIMAGE_INTERACTIVE_TASK,
             CVIDEO_TASK,
+            CCLASSIFICATION_TASK,
+            COBJECT_DETECTION_TASK,
+            CSEMANTIC_SEGMENTATION_TASK,
+            CINSTANCE_SEGMENTATION_TASK,
+            CKEYPOINT_DETECTION_TASK,
             CVIDEO_OF_TASK
         };
 
