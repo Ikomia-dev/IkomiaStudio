@@ -650,11 +650,9 @@ endif()
 if(UNIX AND CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
         ../build/breakpad/src/breakpad/src
-        /work/shared/local/include/QuaZip-Qt5-1.1/quazip
+        /work/shared/local/include/QuaZip-Qt5-1.3/quazip
         # OpenCV
         /work/shared/local/include/opencv4
-        # Qwt -> should be patched...
-        /include
     )
 
     target_link_directories(IkomiaStudio PRIVATE
