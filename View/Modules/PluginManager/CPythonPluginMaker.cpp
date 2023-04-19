@@ -178,6 +178,11 @@ QString CPythonPluginMaker::getProcessBaseClass() const
         case PluginManager::C2DIMAGE_TASK: baseClass = "dataprocess.C2dImageTask"; break;
         case PluginManager::C2DIMAGE_INTERACTIVE_TASK: baseClass = "dataprocess.C2dImageInteractiveTask"; break;
         case PluginManager::CVIDEO_TASK: baseClass = "dataprocess.CVideoTask"; break;
+        case PluginManager::CCLASSIFICATION_TASK: baseClass = "dataprocess.CClassificationTask"; break;
+        case PluginManager::COBJECT_DETECTION_TASK: baseClass = "dataprocess.CObjectDetectionTask"; break;
+        case PluginManager::CSEMANTIC_SEGMENTATION_TASK: baseClass = "dataprocess.CSemanticSegmentationTask"; break;
+        case PluginManager::CINSTANCE_SEGMENTATION_TASK: baseClass = "dataprocess.CInstanceSegmentationTask"; break;
+        case PluginManager::CKEYPOINT_DETECTION_TASK: baseClass = "dataprocess.CKeypointDetectionTask"; break;
         case PluginManager::CVIDEO_OF_TASK: baseClass = "dataprocess.CVideoOFTask"; break;
     }
     return baseClass;

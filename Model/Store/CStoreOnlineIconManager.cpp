@@ -81,8 +81,6 @@ void CStoreOnlineIconManager::loadIcons(QJsonArray* pPlugins)
             QNetworkRequest request;
             request.setUrl(url);
             request.setRawHeader("Content-Type", "application/json");
-            QString token = "Token " + m_currentUser.m_token;
-            request.setRawHeader("Authorization", token.toLocal8Bit());
 
             auto pReply = m_pNetworkMgr->get(request);
             m_mapReplyPluginIndex.insert(pReply, i);

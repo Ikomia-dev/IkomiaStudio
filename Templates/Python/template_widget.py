@@ -39,16 +39,16 @@ class _PluginClassName_Widget(_WidgetBaseClass_):
 
         _InitQtLayout_
         # Set widget layout
-        self.setLayout(layout_ptr)
+        self.set_layout(layout_ptr)
 
-    def onApply(self):
+    def on_apply(self):
         # Apply button clicked slot
 
         # Get parameters from widget
         # Example : self.parameters.windowSize = self.spinWindowSize.value()
 
         # Send signal to launch the process
-        self.emitApply(self.parameters)
+        self.emit_apply(self.parameters)
 
 
 # --------------------

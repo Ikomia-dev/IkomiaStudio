@@ -34,9 +34,9 @@ find_package(OpenGL REQUIRED)
 # OpenCV
 if(WIN32)
     if(${IK_CPU})
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc16/lib")
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc${MSVC_VERSION}/lib")
     else()
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc16/lib")
+        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc${MSVC_VERSION}/lib")
     endif()
 endif()
 
@@ -650,11 +650,9 @@ endif()
 if(UNIX AND CENTOS7)
     target_include_directories(IkomiaStudio PRIVATE
         ../build/breakpad/src/breakpad/src
-        /work/shared/local/include/QuaZip-Qt5-1.1/quazip
-        # Global include
-        /work/shared/local/include
-        # Qwt
-        /include
+        /work/shared/local/include/QuaZip-Qt5-1.3/quazip
+        # OpenCV
+        /work/shared/local/include/opencv4
     )
 
     target_link_directories(IkomiaStudio PRIVATE
@@ -670,7 +668,6 @@ if(UNIX AND NOT CENTOS7)
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
-        # Linux only OpenCV libs
         opencv_hdf
     )
 endif()

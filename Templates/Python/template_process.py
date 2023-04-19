@@ -31,16 +31,16 @@ class _PluginClassName_Param(core.CWorkflowTaskParam):
         # Place default value initialization here
         # Example : self.windowSize = 25
 
-    def setParamMap(self, param_map):
+    def set_values(self, param_map):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
         # Example : self.windowSize = int(param_map["windowSize"])
         pass
 
-    def getParamMap(self):
+    def get_values(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        param_map = core.ParamMap()
+        param_map = {}
         # Example : paramMap["windowSize"] = str(self.windowSize)
         return param_map
 
@@ -54,49 +54,49 @@ class _PluginClassName_(_ProcessBaseClass_):
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
         # Add input/output of the process here
-        # Example :  self.addInput(dataprocess.CImageIO())
-        #           self.addOutput(dataprocess.CImageIO())
+        # Example :  self.add_input(dataprocess.CImageIO())
+        #           self.add_output(dataprocess.CImageIO())
 
         # Create parameters class
         if param is None:
-            self.setParam(_PluginClassName_Param())
+            self.set_param_object(_PluginClassName_Param())
         else:
-            self.setParam(copy.deepcopy(param))
+            self.set_param_object(copy.deepcopy(param))
 
-    def getProgressSteps(self):
+    def get_progress_steps(self):
         # Function returning the number of progress steps for this process
         # This is handled by the main progress bar of Ikomia application
         return 1
 
     def run(self):
         # Core function of your process
-        # Call beginTaskRun for initialization
-        self.beginTaskRun()
+        # Call begin_task_run() for initialization
+        self.begin_task_run()
 
         # Examples :
         # Get input :
-        # input = self.getInput(indexOfInput)
+        # task_input = self.get_input(index_of_input)
 
         # Get output :
-        # output = self.getOutput(indexOfOutput)
+        # task_output = self.get_output(index_of_output)
 
         # Get parameters :
-        # param = self.getParam()
+        # param = self.get_param_object()
 
         # Get image from input/output (numpy array):
-        # srcImage = input.getImage()
+        # src_image = task_input.get_image()
 
         # Call to the process main routine
-        # dstImage = ...
+        # dst_image = ...
 
         # Set image of input/output (numpy array):
-        # output.setImage(dstImage)
+        # task_output.set_image(dst_image)
 
-        # Step progress bar:
-        self.emitStepProgress()
+        # Step progress bar (Ikomia Studio):
+        self.emit_step_progress()
 
-        # Call endTaskRun to finalize process
-        self.endTaskRun()
+        # Call end_task_run() to finalize process
+        self.end_task_run()
 
 
 # --------------------
@@ -109,19 +109,19 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "_PluginName_"
-        self.info.shortDescription = "your short description"
+        self.info.short_description = "your short description"
         self.info.description = "your description"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python"
         self.info.version = "1.0.0"
-        # self.info.iconPath = "your path to a specific icon"
+        # self.info.icon_path = "your path to a specific icon"
         self.info.authors = "algorithm author"
         self.info.article = "title of associated research article"
         self.info.journal = "publication journal"
         self.info.year = 2021
         self.info.license = "MIT License"
         # URL of documentation
-        self.info.documentationLink = ""
+        self.info.documentation_link = ""
         # Code source repository
         self.info.repository = ""
         # Keywords used for search
