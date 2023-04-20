@@ -34,7 +34,8 @@ bool CUser::operator==(const CUser &other) const
             m_firstName == other.m_firstName &&
             m_lastName == other.m_lastName &&
             m_email == other.m_email &&
-            m_token == other.m_token;
+            m_url == other.m_url &&
+            m_namespace == other.m_namespace;
 }
 
 bool CUser::operator!=(const CUser &other) const
@@ -45,21 +46,36 @@ bool CUser::operator!=(const CUser &other) const
             m_firstName != other.m_firstName ||
             m_lastName != other.m_lastName ||
             m_email != other.m_email ||
-            m_token != other.m_token;
+            m_url != other.m_url ||
+            m_namespace != other.m_namespace;
 }
 
 bool CUser::isConnected() const
 {
-    return !m_token.isEmpty();
+    return m_sessionCookies.size() > 0;
+}
+
+QByteArray CUser::getSessionCookie(const QString &name)
+{
+    for (int i=0; i<m_sessionCookies.size(); ++i)
+    {
+        if (m_sessionCookies[i].name() == name)
+            return m_sessionCookies[i].value();
+    }
+    return nullptr;
 }
 
 void CUser::logout()
 {
     m_id = -1;
     m_role = -1;
+    m_reputation = 0;
     m_name.clear();
     m_firstName.clear();
     m_lastName.clear();
     m_email.clear();
     m_token.clear();
+    m_url.clear();
+    m_namespace.clear();
+    m_sessionCookies.clear();
 }

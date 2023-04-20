@@ -82,20 +82,14 @@ void CUserManager::onLoginDone()
     if(pReply == nullptr)
         return;
 
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+    QVariant cookieHeader = pReply->header(QNetworkRequest::SetCookieHeader);
+    if (!cookieHeader.isValid())
     {
-        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document");
+        qCCritical(logUser).noquote().noquote() << tr("Invalid connection reply from Ikomia Scale");
         return;
     }
 
-    if(doc.isObject() == false)
-    {
-        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document structure");
-        return;
-    }
-    QJsonObject jsonPlugin = doc.object();
-    m_sessionToken = jsonPlugin["key"].toString();
+    m_sessionCookies = cookieHeader.value<QList<QNetworkCookie>>();
     retrieveUserInfo();
     qCInfo(logUser).noquote() << tr("Connection successfull");
     pReply->deleteLater();
@@ -120,7 +114,7 @@ void CUserManager::onLogoutDone()
     m_pTimerSingleConnection->stop();
     qCInfo(logUser).noquote() << tr("User sucessfully disconnected");
     m_currentUser.logout();
-    m_sessionToken.clear();
+    m_sessionCookies.clear();
     clearUserInfo();
     emit doSetCurrentUser(m_currentUser);
 }
@@ -150,13 +144,13 @@ void CUserManager::onRetrieveUserInfoDone()
     }
     QJsonObject jsonUser = doc.object();
     CUser connectedUser;
-    connectedUser.m_token = m_sessionToken;
-    connectedUser.m_id = jsonUser["pk"].toInt();
     connectedUser.m_name = jsonUser["username"].toString();
     connectedUser.m_firstName = jsonUser["first_name"].toString();
     connectedUser.m_lastName = jsonUser["last_name"].toString();
     connectedUser.m_email = jsonUser["email"].toString();
-    connectedUser.m_reputation = jsonUser["reputation"].toInt();
+    connectedUser.m_url = jsonUser["url"].toString();
+    connectedUser.m_namespace = jsonUser["namespace"].toString();
+    connectedUser.m_sessionCookies = m_sessionCookies;
 
     if(connectedUser != m_currentUser)
     {
@@ -213,7 +207,7 @@ void CUserManager::connectUser(const QString &login, const QString &pwd)
     jsonLogin["password"] = pwd;
     QJsonDocument jsonDoc(jsonLogin);
 
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/api/rest-auth/login/");
+    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/accounts/signin/");
     QUrl url(urlQuery.query());
 
     if(url.isValid() == false)
@@ -236,7 +230,7 @@ void CUserManager::disconnectUser(bool bSynchronous)
     assert(m_pNetworkMgr);
 
     //Http request to logout
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/api/rest-auth/logout/");
+    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/accounts/signout/");
     QUrl url(urlQuery.query());
 
     if(url.isValid() == false)
@@ -247,8 +241,10 @@ void CUserManager::disconnectUser(bool bSynchronous)
 
     QNetworkRequest request;
     request.setUrl(url);
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
 
     auto pReply = m_pNetworkMgr->post(request, QByteArray());
     if(bSynchronous)
@@ -320,7 +316,7 @@ void CUserManager::retrieveUserInfo()
     assert(m_pNetworkMgr);
 
     //Http request to retrieve user info from token
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/api/rest-auth/user/");
+    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/users/me/");
     QUrl url(urlQuery.query());
 
     if(url.isValid() == false)
@@ -331,8 +327,9 @@ void CUserManager::retrieveUserInfo()
 
     QNetworkRequest request;
     request.setUrl(url);
-    QString token = "Token " + m_sessionToken;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
 
     auto pReply = m_pNetworkMgr->get(request);
     m_mapTypeRequest.insert(GET_USER, pReply);
@@ -343,7 +340,7 @@ void CUserManager::manageGetUserInfoError()
 {
     m_pTimerSingleConnection->stop();
     m_currentUser.logout();
-    m_sessionToken.clear();
+    m_sessionCookies.clear();
     emit doSetCurrentUser(m_currentUser);
     emit doShowNotification(tr("You have been disconnected.\nMain reasons are internet connection issues or concurrent login for a single account."),
                             Notification::INFO,

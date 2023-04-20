@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QNetworkCookie>
 #include "CUser.h"
 #include "Main/AppDefine.hpp"
 
@@ -95,7 +96,7 @@ class CUserManager : public QObject
 
         QNetworkAccessManager*      m_pNetworkMgr = nullptr;
         CUser                       m_currentUser;
-        QString                     m_sessionToken;
+        QList<QNetworkCookie>       m_sessionCookies;
         QString                     m_loginTmp;
         QString                     m_pwdTmp;
         QMap<int, QNetworkReply*>   m_mapTypeRequest;
