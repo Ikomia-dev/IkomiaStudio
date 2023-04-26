@@ -39,10 +39,10 @@ QVariant CStoreQueryModel::data(const QModelIndex &index, int role) const
 
 void CStoreQueryModel::setCurrentUser(const CUser &user)
 {
-    m_currentUser = user;
+    m_user = user;
 }
 
 CUser CStoreQueryModel::getCurrentUser() const
 {
-    return m_currentUser;
+    return m_user;
 }

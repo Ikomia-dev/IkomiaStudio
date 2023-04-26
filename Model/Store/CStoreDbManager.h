@@ -24,6 +24,7 @@
 #include <QSqlDatabase>
 #include "Task/CTaskFactory.hpp"
 #include "Model/User/CUser.h"
+#include "CPluginModel.h"
 
 class CStoreDbManager
 {
@@ -33,16 +34,14 @@ class CStoreDbManager
 
         void            initDb();
 
-        QSqlDatabase    getServerPluginsDatabase() const;
-        QSqlDatabase    getLocalPluginsDatabase() const;
-        QString         getAllServerPluginsQuery() const;
-        QString         getAllLocalPluginsQuery() const;
+        QSqlDatabase    getPluginsDatabase(CPluginModel::Type type) const;
+        QString         getAllPluginsQuery(CPluginModel::Type type) const;
         QString         getLocalSearchQuery(const QString& searchText) const;
         QString         getServerSearchQuery(const QString& searchText) const;
 
         void            setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser& user);
 
-        void            insertPlugins(const QJsonArray& plugins);
+        void            insertPlugins(CPluginModel *pModel);
         void            insertPlugin(int serverId, const CTaskInfo& procInfo, const CUser &user);
 
         void            removeRemotePlugin(const QString& pluginName);
@@ -51,22 +50,22 @@ class CStoreDbManager
         void            updateLocalPluginModifiedDate(int pluginId);
         void            updateMemoryLocalPluginsInfo();
 
-        void            clearServerRecords();
+        void            clearServerRecords(CPluginModel::Type type);
 
     private:
 
-        void            createServerPluginsDb();
+        void            createServerPluginsDb(const QString& connectionName);
 
+        QString         getDbConnectionName(CPluginModel::Type type) const;
         int             getLocalIdFromServerId(const QSqlDatabase& db, int serverId) const;
 
-        bool            checkPluginCompatibility(const QJsonObject& plugin) const;
-
     private:
 
-        QString m_serverConnectionName = "ServerStoreConnection";
+        QString m_hubConnectionName = "HubConnection";
+        QString m_workspaceConnectionName = "WorkspaceConnection";
         QString m_name = ":memory:";
         QString m_type = "QSQLITE";
-        int     m_currentOS = -1;
+        OSType  m_currentOS = OSType::UNDEFINED;
 };
 
 #endif // CSTOREDBMANAGER_H

@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
 #include "CStoreDbManager.h"
-#include "Model/Store/CStoreQueryModel.h"
+#include "CPluginModel.h"
 #include "Model/User/CUser.h"
 
 class QNetworkAccessManager;
@@ -32,19 +32,22 @@ class CProcessManager;
 class CPluginManager;
 class CProgressBarManager;
 
+enum class StoreRequestType : int
+{
+    GET_PLUGINS,
+    GET_PLUGIN_DETAILS,
+    GET_PACKAGE_URL,
+    PUBLISH_PLUGIN,
+    UPDATE_PLUGIN,
+    UPLOAD_PACKAGE,
+    UPLOAD_ICON,
+    DOWNLOAD_PACKAGE,
+    DELETE_PLUGIN
+};
+
 class CStoreManager : public QObject
 {
     Q_OBJECT
-
-    enum Request { GET_PLUGINS,
-                   GET_PACKAGE_URL,
-                   PUBLISH_PLUGIN,
-                   UPDATE_PLUGIN,
-                   UPLOAD_PACKAGE,
-                   UPLOAD_ICON,
-                   DOWNLOAD_PACKAGE,
-                   DELETE_PLUGIN
-                 };
 
     public:
 
@@ -55,24 +58,25 @@ class CStoreManager : public QObject
 
     signals:
 
-        void            doSetServerPluginModel(CStoreQueryModel* pModel);
-        void            doSetLocalPluginModel(CStoreQueryModel* pModel);
+        void            doSetPluginModel(CPluginModel* pModel);
 
         void            doRestartIkomia();
 
     public slots:
 
-        void            onRequestServerModel();
+        void            onRequestHubModel();
+        void            onRequestWorkspaceModel();
         void            onRequestLocalModel();
         void            onPublishPlugin(const QModelIndex& index);
-        void            onInstallPlugin(const QModelIndex& index);
+        void            onInstallHubPlugin(const QModelIndex& index);
+        void            onInstallWorkspacePlugin(const QModelIndex& index);
         void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            onServerSearchChanged(const QString& text);
         void            onLocalSearchChanged(const QString& text);
 
     private slots:
 
-        void            onGetPlugins();
+        void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, StoreRequestType requestType);
         void            onPublishPluginDone();
         void            onPluginCompressionDone(const QString &zipFile);
         void            onUpdatePluginDone();
@@ -87,23 +91,32 @@ class CStoreManager : public QObject
 
     private:
 
-        void            createServerPluginModel();
-        void            createServerQueryModel();
-        void            createLocalPluginModel();
+        void            createHubPluginModel();
+        void            createWorkspacePluginModel();
+        void            createQueryModel(CPluginModel* pModel);
         QByteArray      createPluginJson();
 
-        QNetworkReply*  checkReply(int type) const;
         QString         checkPythonPluginDirectory(const QString &directory);
         QString         checkCppPluginDirectory(const QString &directory, const QString& name);
         void            checkPendingUpdates();
         void            checkInstalledModules(const QString &pluginDir);
 
+        void            queryServerPlugins(CPluginModel* pModel, const QString& strUrl);
+        void            queryServerPluginDetails(CPluginModel *pModel, QString strUrl);
+        void            queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl, StoreRequestType requestType);
+        void            queryServerUpdatePlugin(const QString& strUrl, StoreRequestType requestType);
+        void            queryServerPublishPlugin(const QString& strUrl, StoreRequestType requestType);
+
         void            updateServerPlugin();
         void            updateLocalPlugin();
 
-        void            fillServerPluginModel(QNetworkReply* pReply);
+        void            fillServerPluginModel(CPluginModel *pModel, QNetworkReply *pReply);
 
-        void            validateServerPluginModel();
+        void            fetchPagePlugins(CPluginModel* pModel, const QJsonObject& jsonPage);
+
+        void            addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply);
+
+        void            validateServerPluginModel(CPluginModel *pModel);
 
         void            generateZipFile();
         void            extractZipFile(const QString &src, const QString &dstDir);
@@ -126,24 +139,20 @@ class CStoreManager : public QObject
 
     private:
 
-        QNetworkAccessManager*      m_pNetworkMgr = nullptr;
-        CProcessManager*            m_pProcessMgr = nullptr;
-        CPluginManager*             m_pPluginMgr = nullptr;
-        CProgressBarManager*        m_pProgressMgr = nullptr;
-        CProgressSignalHandler      m_progressSignal;
-        QJsonArray                  m_jsonServerPlugins;
-        QString                     m_currentPluginPackageFile;
-        QMap<int, QNetworkReply*>   m_mapTypeRequest;
-        CStoreDbManager             m_dbMgr;
-        CStoreQueryModel*           m_pServerPluginModel = nullptr;
-        CStoreQueryModel*           m_pLocalPluginModel = nullptr;
-        QFile*                      m_pTranferFile = nullptr;
-        QModelIndex                 m_currentServerIndex = QModelIndex();
-        QModelIndex                 m_currentLocalIndex = QModelIndex();
-        CUser                       m_currentUser;
-        int                         m_currentPluginServerId = -1;
-        bool                        m_bDownloadStarted = false;
-        bool                        m_bBusy = false;
+        QNetworkAccessManager*  m_pNetworkMgr = nullptr;
+        CProcessManager*        m_pProcessMgr = nullptr;
+        CPluginManager*         m_pPluginMgr = nullptr;
+        CProgressBarManager*    m_pProgressMgr = nullptr;
+        CProgressSignalHandler  m_progressSignal;
+        CStoreDbManager         m_dbMgr;
+        CPluginModel            m_hubPluginModel;
+        CPluginModel            m_workspacePluginModel;
+        CPluginModel            m_localPluginModel;
+        std::mutex              m_mutex;
+        QFile*                  m_pTranferFile = nullptr;
+        CUser                   m_currentUser;
+        bool                    m_bDownloadStarted = false;
+        bool                    m_bBusy = false;
 };
 
 #endif // CSTOREMANAGER_H

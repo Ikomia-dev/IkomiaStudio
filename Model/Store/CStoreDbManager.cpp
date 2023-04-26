@@ -24,46 +24,38 @@
 
 CStoreDbManager::CStoreDbManager()
 {
-#if defined(Q_OS_LINUX)
-    m_currentOS = OSType::LINUX;
-#elif defined(Q_OS_MACOS)
-    m_currentOS = OSType::OSX;
-#elif defined(Q_OS_WIN64)
-    m_currentOS = OSType::WIN;
-#endif
+    m_currentOS = Utils::OS::getCurrent();
 }
 
 void CStoreDbManager::initDb()
 {
-    createServerPluginsDb();
+    createServerPluginsDb(m_hubConnectionName);
+    createServerPluginsDb(m_workspaceConnectionName);
 }
 
-QSqlDatabase CStoreDbManager::getServerPluginsDatabase() const
+QSqlDatabase CStoreDbManager::getPluginsDatabase(CPluginModel::Type type) const
 {
-    auto db = Utils::Database::connect(m_name, m_serverConnectionName);
+    auto db = Utils::Database::connect(m_name, getDbConnectionName(type));
     if(db.isValid() == false)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     return db;
 }
 
-QSqlDatabase CStoreDbManager::getLocalPluginsDatabase() const
+QString CStoreDbManager::getAllPluginsQuery(CPluginModel::Type type) const
 {
-    auto db = Utils::Database::connect(m_name, Utils::Database::getProcessConnectionName());
-    if(db.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    return db;
-}
-
-QString CStoreDbManager::getAllServerPluginsQuery() const
-{
-    return QString("SELECT * FROM serverPlugins;");
-}
-
-QString CStoreDbManager::getAllLocalPluginsQuery() const
-{
-    return QString("SELECT * FROM process WHERE isInternal=False;");
+    QString query;
+    switch(type)
+    {
+        case CPluginModel::Type::HUB:
+        case CPluginModel::Type::WORKSPACE:
+            query = "SELECT * FROM serverPlugins;";
+            break;
+        case CPluginModel::Type::LOCAL:
+            query = "SELECT * FROM process WHERE isInternal=False;";
+            break;
+    }
+    return query;
 }
 
 QString CStoreDbManager::getLocalSearchQuery(const QString &searchText) const
@@ -135,83 +127,113 @@ void CStoreDbManager::setLocalPluginServerInfo(int pluginId, const QString name,
     }
 }
 
-bool CStoreDbManager::checkPluginCompatibility(const QJsonObject &plugin) const
+void CStoreDbManager::insertPlugins(CPluginModel* pModel)
 {
-    // Check OS compatibility
-    int pluginOS = plugin["os"].toInt();
-    if (pluginOS != OSType::ALL && m_currentOS != pluginOS)
-        return false;
-
-    int language = plugin["language"].toInt();
-    if (language == ApiLanguage::CPP)
-    {
-        std::string keywords = plugin["keywords"].toString().toStdString();
-        return Utils::Plugin::checkArchitectureKeywords(keywords);
-    }
-    return true;
-}
-
-void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
-{
-    auto db = Utils::Database::connect(m_name, m_serverConnectionName);
+    auto db = Utils::Database::connect(m_name, getDbConnectionName(pModel->getType()));
     if(db.isValid() == false)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     //Retrieve plugins information from JSON
-    QVariantList ids, names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
+    /*QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
             journals, years, docLinks, createdDates, modifiedDates, versions, ikomiaVersions, languages,
-            licenses, repositories, os, iconPaths, certifications, userIds, userReputations, votes;
+            licenses, repositories, iconPaths, certifications, userIds, userReputations, votes;*/
+    QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
+            journals, years, languages, repositories, iconPaths;
 
+    QJsonArray plugins = pModel->getJsonPlugins();
     for(int i=0; i<plugins.size(); ++i)
     {
         QJsonObject plugin = plugins[i].toObject();
-        if (checkPluginCompatibility(plugin) == false)
-            continue;
 
-        ids << plugin["id"].toInt();
+        // Name
         names << plugin["name"].toString();
+        // Short description
         shortDescriptions << plugin["short_description"].toString();
+        // Description
         descriptions << plugin["description"].toString();
-        keywords << plugin["keywords"].toString();
-        authors << plugin["authors"].toString();
-        articles << plugin["article"].toString();
-        journals << plugin["journal"].toString();
-        years << plugin["year"].toInt();
-        docLinks << plugin["docLink"].toString();
-        createdDates << plugin["createdDate"].toString();
-        modifiedDates << plugin["modifiedDate"].toString();
-        versions << plugin["version"].toString();
-        ikomiaVersions << plugin["ikomiaVersion"].toString();;
-        languages << plugin["language"].toInt();
-        licenses << plugin["license"].toString();
+
+        // Keywords
+        QJsonArray jsonKeywords = plugin["keywords"].toArray();
+        if (jsonKeywords.size() > 0)
+        {
+            QString strKeywords = jsonKeywords[0].toString();
+            for (int j=1; j<jsonKeywords.size(); ++j)
+                strKeywords += "," + jsonKeywords[j].toString();
+
+            keywords << plugin["keywords"].toString();
+        }
+
+        // Paper
+        QJsonObject jsonPaper = plugin["paper"].toObject();
+        authors << jsonPaper["authors"].toString();
+        articles << jsonPaper["title"].toString();
+        journals << jsonPaper["journal"].toString();
+        years << jsonPaper["year"].toInt();
+
+        // TODO: missing fields
+        //docLinks << plugin["docLink"].toString();
+        //createdDates << plugin["createdDate"].toString();
+        //modifiedDates << plugin["modifiedDate"].toString();
+
+        // TODO: Ikomia HUB only
+        //versions << plugin["version"].toString();
+
+        // TODO: to remove -> check compatibility
+        //ikomiaVersions << plugin["ikomiaVersion"].toString();
+
+        // Language
+        languages << pModel->getLanguageFromString(plugin["language"].toString());
+
+        // TODO: Ikomia HUB only
+        //licenses << plugin["license"].toString();
+
+        // Implementation repository
         repositories << plugin["repository"].toString();
-        os << plugin["os"].toInt();
-        iconPaths << plugin["iconPath"].toString();
-        certifications << plugin["certification"].toInt();
-        votes << plugin["votes_count"].toInt();
 
-        QJsonObject user = plugin["user"].toObject();
-        userIds << user["pk"].toInt();
-        userReputations << user["reputation"].toInt();
+        // Icon path
+        iconPaths << plugin["icon_path"].toString();
 
-        if(user["first_name"].toString().isEmpty() && user["last_name"].toString().isEmpty())
-            userNames << user["username"].toString();
+        // TODO: missing fields
+        //certifications << plugin["certification"].toInt();
+        //votes << plugin["votes_count"].toInt();
+
+        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
+        {
+            auto user = pModel->getCurrentUser();
+            if(user.m_firstName.isEmpty() && user.m_lastName.isEmpty())
+                userNames << user.m_name;
+            else
+                userNames << user.m_firstName + " " + user.m_lastName;
+        }
         else
-            userNames << user["first_name"].toString() + " " + user["last_name"].toString();
+        {
+            // TODO: Ikomia HUB
+            /*QJsonObject user = plugin["user"].toObject();
+            userIds << user["pk"].toInt();
+            userReputations << user["reputation"].toInt();
+
+            if(user["first_name"].toString().isEmpty() && user["last_name"].toString().isEmpty())
+                userNames << user["username"].toString();
+            else
+                userNames << user["first_name"].toString() + " " + user["last_name"].toString();*/
+        }
     }
 
     //Insert to serverPlugins table
     QSqlQuery q(db);
-    if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "id, name, shortDescription, description, keywords, user, authors, article, journal, "
+    /*if(!q.prepare(QString("INSERT INTO serverPlugins ("
+                          "name, shortDescription, description, keywords, user, authors, article, journal, "
                           "year, docLink, createdDate, modifiedDate, version, ikomiaVersion, language, license, "
-                          "repository, os, iconPath, certification, votes, userId, userReputation) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                          "repository, iconPath, certification, votes, userId, userReputation) "
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))*/
+    if(!q.prepare(QString("INSERT INTO serverPlugins ("
+                          "name, shortDescription, description, keywords, user, authors, article, journal, "
+                          "year, language, repository, iconPath) "
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
 
-    q.addBindValue(ids);
     q.addBindValue(names);
     q.addBindValue(shortDescriptions);
     q.addBindValue(descriptions);
@@ -221,20 +243,19 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
     q.addBindValue(articles);
     q.addBindValue(journals);
     q.addBindValue(years);
-    q.addBindValue(docLinks);
-    q.addBindValue(createdDates);
-    q.addBindValue(modifiedDates);
-    q.addBindValue(versions);
-    q.addBindValue(ikomiaVersions);
+    //q.addBindValue(docLinks);
+    //q.addBindValue(createdDates);
+    //q.addBindValue(modifiedDates);
+    //q.addBindValue(versions);
+    //q.addBindValue(ikomiaVersions);
     q.addBindValue(languages);
-    q.addBindValue(licenses);
+    //q.addBindValue(licenses);
     q.addBindValue(repositories);
-    q.addBindValue(os);
     q.addBindValue(iconPaths);
-    q.addBindValue(certifications);
-    q.addBindValue(votes);
-    q.addBindValue(userIds);
-    q.addBindValue(userReputations);
+    //q.addBindValue(certifications);
+    //q.addBindValue(votes);
+    //q.addBindValue(userIds);
+    //q.addBindValue(userReputations);
 
     if(!q.execBatch())
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
@@ -242,13 +263,12 @@ void CStoreDbManager::insertPlugins(const QJsonArray &plugins)
     //Insert to FTS table
     QSqlQuery qFts(db);
     if(!qFts.prepare(QString("INSERT INTO serverPluginsFTS "
-                             "(id, name, shortDescription, description, keywords, user, authors, article, journal) "
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                             "(name, shortDescription, description, keywords, user, authors, article, journal) "
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, qFts.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
 
-    qFts.addBindValue(ids);
     qFts.addBindValue(names);
     qFts.addBindValue(shortDescriptions);
     qFts.addBindValue(descriptions);
@@ -321,7 +341,7 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
 
 void CStoreDbManager::removeRemotePlugin(const QString& pluginName)
 {
-    auto db = getServerPluginsDatabase();
+    auto db = getPluginsDatabase(CPluginModel::Type::WORKSPACE);
     if(db.isValid() == false)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
@@ -331,7 +351,6 @@ void CStoreDbManager::removeRemotePlugin(const QString& pluginName)
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
-
 }
 
 void CStoreDbManager::removeLocalPlugin(const QString& pluginName)
@@ -388,7 +407,7 @@ void CStoreDbManager::updateLocalPluginModifiedDate(int pluginId)
 void CStoreDbManager::updateMemoryLocalPluginsInfo()
 {
     //Get server certification, votes and user reputation for all plugins
-    auto dbServer = Utils::Database::connect(m_name, m_serverConnectionName);
+    auto dbServer = Utils::Database::connect(m_name, m_hubConnectionName);
 
     QSqlQuery q1(dbServer);
     if(!q1.exec("SELECT id, certification, votes, userReputation FROM serverPlugins;"))
@@ -422,11 +441,9 @@ void CStoreDbManager::updateMemoryLocalPluginsInfo()
         throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::clearServerRecords()
+void CStoreDbManager::clearServerRecords(CPluginModel::Type type)
 {
-    auto db = Utils::Database::connect(m_name, m_serverConnectionName);
-    if(db.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+    auto db = getPluginsDatabase(type);
 
     QSqlQuery q(db);
     if(!q.exec("DELETE FROM serverPlugins"))
@@ -436,9 +453,9 @@ void CStoreDbManager::clearServerRecords()
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::createServerPluginsDb()
+void CStoreDbManager::createServerPluginsDb(const QString &connectionName)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase(m_type, m_serverConnectionName);
+    QSqlDatabase db = QSqlDatabase::addDatabase(m_type, connectionName);
     if(!db.isValid())
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
@@ -459,6 +476,18 @@ void CStoreDbManager::createServerPluginsDb()
 
     if(!q.exec("CREATE VIRTUAL TABLE serverPluginsFTS USING fts5(id, name, shortDescription, description, keywords, user, authors, article, journal);"))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+}
+
+QString CStoreDbManager::getDbConnectionName(CPluginModel::Type type) const
+{
+    QString dbConnectionName;
+    switch(type)
+    {
+        case CPluginModel::Type::HUB: dbConnectionName = m_hubConnectionName; break;
+        case CPluginModel::Type::WORKSPACE: dbConnectionName = m_workspaceConnectionName; break;
+        case CPluginModel::Type::LOCAL: dbConnectionName = Utils::Database::getProcessConnectionName(); break;
+    }
+    return dbConnectionName;
 }
 
 int CStoreDbManager::getLocalIdFromServerId(const QSqlDatabase &db, int serverId) const

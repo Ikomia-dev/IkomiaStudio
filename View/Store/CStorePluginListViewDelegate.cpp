@@ -27,6 +27,8 @@ CStorePluginListViewDelegate::CStorePluginListViewDelegate(int pluginSource, QOb
     : CListViewDelegate(parent)
 {
     m_source = pluginSource;
+    if (m_source == WORKSPACE)
+        m_actionBtnCount = 3;
 
     // Size redefinition
     m_sizeHint = QSize(400,200);
@@ -78,21 +80,12 @@ bool CStorePluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, in
     switch(index)
     {
         case 0:
+        case 1:
             bEnable = true;
             break;
-
-        case 1:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(itemIndex.model());
-            int language = pModel->record(itemIndex.row()).value("language").toInt();
-            auto state = getProcessState(itemIndex);
-
-            if(language == ApiLanguage::CPP)
-                bEnable = (state == PluginState::VALID);
-            else
-                bEnable = (state == PluginState::VALID || state == PluginState::UPDATED);
+        case 2:
+            bEnable = (m_source == WORKSPACE);
             break;
-        }
     }
     return bEnable;
 }
@@ -143,10 +136,11 @@ int CStorePluginListViewDelegate::getBtnAction(int index) const
             break;
 
         case 1:
-            if(m_source == SERVER)
-                action = INSTALL;
-            else
-                action = PUBLISH;
+            (m_source == HUB || m_source == WORKSPACE) ? action = INSTALL : action = PUBLISH;
+            break;
+
+        case 2:
+            action = PUBLISH;
             break;
     }
     return action;
@@ -154,7 +148,6 @@ int CStorePluginListViewDelegate::getBtnAction(int index) const
 
 QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem& option) const
 {
-    //QRect rcCertification(option.rect.right()-m_ribbonSize+9, option.rect.top()-9, m_ribbonSize, m_ribbonSize);
     QRect rcCertification(option.rect.right() - m_contentMargins.left() - m_btnSize.width(),
                           option.rect.top() + m_contentMargins.top(),
                           m_headerHeight,
@@ -203,7 +196,7 @@ QString CStorePluginListViewDelegate::getStatusMessage(const QModelIndex &index)
         if(state == PluginState::DEPRECATED)
             msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
         else if(state == PluginState::UPDATED)
-            msg = QString("<br><b><i><font color=#de7207>Ikomia Studio update adviced</font></i></b>");
+            msg = QString("<br><b><i><font color=#de7207>Ikomia Studio update recommended</font></i></b>");
     }
     return msg;
 }
@@ -343,33 +336,20 @@ void CStorePluginListViewDelegate::paintStars(QPainter* painter, const QStyleOpt
 
 void CStorePluginListViewDelegate::showTooltip(const QModelIndex& modelIndex, const QPoint& pos, int index) const
 {
+    QString msg;
     switch(index)
     {
         case 0:
-            QToolTip::showText(pos, tr("Info"));
+            msg = tr("Info");
             break;
-
         case 1:
-            if(m_source == SERVER)
-                QToolTip::showText(pos, tr("Install"));
-            else
-                QToolTip::showText(pos, tr("Publish"));
+            (m_source == LOCAL) ? msg = tr("Publish") : msg = tr("Install");
             break;
         case 2:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(modelIndex.model());
-            auto certification = pModel->record(modelIndex.row()).value("certification").toInt();
-
-            switch (certification)
-            {
-                case 0: break;
-                case 1: QToolTip::showText(pos, tr("Tested")); break;
-                case 2: QToolTip::showText(pos, tr("Certified")); break;
-                default: break;
-            }
+            msg = tr("Publish");
             break;
-        }
     }
+    QToolTip::showText(pos, msg);
 }
 
 QRect CStorePluginListViewDelegate::paintName(QPainter* painter, const QStyleOptionViewItem &option, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const

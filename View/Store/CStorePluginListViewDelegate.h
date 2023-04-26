@@ -33,7 +33,7 @@ class CStorePluginListViewDelegate: public CListViewDelegate
     public:
 
         enum Actions { NONE, INFO, INSTALL, PUBLISH };
-        enum PluginSource { SERVER, LOCAL };
+        enum PluginSource { HUB, WORKSPACE, LOCAL };
 
         CStorePluginListViewDelegate(int pluginSource, QObject* parent = nullptr);
 

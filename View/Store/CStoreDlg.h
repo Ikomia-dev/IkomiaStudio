@@ -25,6 +25,7 @@
 #include "View/Common/CDialog.h"
 #include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
+#include "Model/Store/CPluginModel.h"
 
 class CStorePluginListView;
 class CStoreQueryModel;
@@ -42,10 +43,12 @@ class CStoreDlg : public CDialog
 
     signals:
 
-        void            doGetServerModel();
+        void            doGetHubModel();
+        void            doGetWorkspaceModel();
         void            doGetLocalModel();
         void            doPublishPlugin(const QModelIndex& index);
-        void            doInstallPlugin(const QModelIndex& index);
+        void            doInstallHubPlugin(const QModelIndex& index);
+        void            doInstallWorkspacePlugin(const QModelIndex& index);
         void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            doServerSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
@@ -53,8 +56,7 @@ class CStoreDlg : public CDialog
 
     public slots:
 
-        void            onSetServerPluginModel(CStoreQueryModel* pModel);
-        void            onSetLocalPluginModel(CStoreQueryModel* pModel);
+        void            onSetPluginModel(CPluginModel* pModel);
         void            onShowLocalPluginInfo(const QModelIndex& index);
         void            onShowServerPluginInfo(const QModelIndex& index);
 
@@ -71,6 +73,7 @@ class CStoreDlg : public CDialog
 
         QWidget*        createLeftWidget();
         QWidget*        createRightWidget();
+        QWidget*        createPluginsView(CPluginModel::Type type);
         QLabel*         createMessageLabel(const QString &msg);
 
         void            showProcessInfo(const QModelIndex& index);
@@ -80,15 +83,20 @@ class CStoreDlg : public CDialog
         QFrame*                 m_pTitleBar = nullptr;
         QStackedWidget*         m_pPluginStackWidget = nullptr;
         QStackedWidget*         m_pRightStackWidget = nullptr;
-        QPushButton*            m_pBtnServerPlugins = nullptr;
+        QPushButton*            m_pBtnHub = nullptr;
+        QPushButton*            m_pBtnWorkspace = nullptr;
         QPushButton*            m_pBtnLocalPlugins = nullptr;
-        QPushButton*            m_pBtnServerRefresh = nullptr;
-        QLineEdit*              m_pEditServerSearch = nullptr;
+        QPushButton*            m_pBtnHubRefresh = nullptr;
+        QPushButton*            m_pBtnWorkspaceRefresh = nullptr;
+        QLineEdit*              m_pEditHubSearch = nullptr;
+        QLineEdit*              m_pEditWorkspaceSearch = nullptr;
         QLineEdit*              m_pEditLocalSearch = nullptr;
-        QLabel*                 m_pLabelMsgServer = nullptr;
+        QLabel*                 m_pLabelMsgHub = nullptr;
+        QLabel*                 m_pLabelMsgWorkspace = nullptr;
         QLabel*                 m_pLabelMsgLocal = nullptr;
-        CStorePluginListView*   m_pServerPluginsView = nullptr;
-        CStorePluginListView*   m_pLocalPluginsView = nullptr;
+        CStorePluginListView*   m_pHubView = nullptr;
+        CStorePluginListView*   m_pWorkspaceView = nullptr;
+        CStorePluginListView*   m_pLocalView = nullptr;
         CProcessDocWidget*      m_pDocWidget = nullptr;
 };
 

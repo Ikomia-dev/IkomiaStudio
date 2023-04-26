@@ -20,11 +20,10 @@
 #include <QtWidgets>
 #include "CStorePluginListView.h"
 #include "CStorePluginListViewDelegate.h"
-#include "Model/Store/CStoreQueryModel.h"
 #include "View/Process/CProcessDocWidget.h"
 
 CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
-    : CDialog(tr("Ikomia Marketplace"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
+    : CDialog(tr("Ikomia HUB"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
     //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
@@ -40,49 +39,49 @@ CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
 
 void CStoreDlg::setCurrentUser(const CUser &user)
 {
-    emit doGetServerModel();
-    emit doGetLocalModel();
     m_pDocWidget->setCurrentUser(user);
-}
-
-void CStoreDlg::onSetServerPluginModel(CStoreQueryModel *pModel)
-{
-    m_pServerPluginsView->setModel(pModel);
-
-    if(pModel == nullptr)
-        m_pLabelMsgServer->setText(tr("You have to be registered to display online algorithms"));
-    else
+    if (isVisible())
     {
-        auto updateLabelMsg = [this, pModel]
-        {
-            if(pModel->rowCount() == 0)
-                m_pLabelMsgServer->setText(tr("No algorithm found"));
-            else
-                m_pLabelMsgServer->setText(tr("%1 algorithms(s) available").arg(pModel->rowCount()));
-        };
-
-        connect(pModel, &CStoreQueryModel::modelReset, updateLabelMsg);
-        updateLabelMsg();
+        emit doGetHubModel();
+        emit doGetWorkspaceModel();
+        emit doGetLocalModel();
     }
 }
 
-void CStoreDlg::onSetLocalPluginModel(CStoreQueryModel *pModel)
+void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
 {
-    m_pLocalPluginsView->setModel(pModel);
+    QLabel* pLabelMsg;
+    auto pQueryModel = pModel->getModel();
 
-    if(pModel == nullptr)
-        m_pLabelMsgLocal->setText(tr("No algorithm loaded"));
+    switch(pModel->getType())
+    {
+        case CPluginModel::Type::HUB:
+            m_pHubView->setModel(pQueryModel);
+            pLabelMsg = m_pLabelMsgHub;
+            break;
+        case CPluginModel::Type::WORKSPACE:
+            m_pWorkspaceView->setModel(pQueryModel);
+            pLabelMsg = m_pLabelMsgWorkspace;
+            break;
+        case CPluginModel::Type::LOCAL:
+            m_pLocalView->setModel(pQueryModel);
+            pLabelMsg = m_pLabelMsgLocal;
+            break;
+    }
+
+    if(pQueryModel == nullptr)
+        pLabelMsg->setText(tr("You have to be registered to display online algorithms"));
     else
     {
-        auto updateLabelMsg = [this, pModel]
+        auto updateLabelMsg = [this, pQueryModel, pLabelMsg]
         {
-            if(pModel->rowCount() == 0)
-                m_pLabelMsgLocal->setText(tr("No algorithm found"));
+            if(pQueryModel->rowCount() == 0)
+                pLabelMsg->setText(tr("No algorithm found"));
             else
-                m_pLabelMsgLocal->setText(tr("%1 algorithm(s) available").arg(pModel->rowCount()));
+                pLabelMsg->setText(tr("%1 algorithms(s) available").arg(pQueryModel->rowCount()));
         };
 
-        connect(pModel, &CStoreQueryModel::modelReset, updateLabelMsg);
+        connect(pQueryModel, &CStoreQueryModel::modelReset, updateLabelMsg);
         updateLabelMsg();
     }
 }
@@ -114,19 +113,21 @@ void CStoreDlg::initLayout()
 
 void CStoreDlg::initConnections()
 {
-    connect(m_pEditServerSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doServerSearchChanged(text); });
+    connect(m_pEditHubSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doServerSearchChanged(text); });
     connect(m_pEditLocalSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doLocalSearchChanged(text); });
 
-    connect(m_pBtnServerRefresh, &QPushButton::clicked, [&]{ emit doGetServerModel(); });
+    connect(m_pBtnHubRefresh, &QPushButton::clicked, [&]{ emit doGetHubModel(); });
+    connect(m_pBtnWorkspaceRefresh, &QPushButton::clicked, [&]{ emit doGetWorkspaceModel(); });
 
-    connect(m_pBtnServerPlugins, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(0); });
-    connect(m_pBtnLocalPlugins, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(1); });
+    connect(m_pBtnHub, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(0); });
+    connect(m_pBtnWorkspace, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(1); });
+    connect(m_pBtnLocalPlugins, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(2); });
 
-    connect(m_pLocalPluginsView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(index); });
-    connect(m_pLocalPluginsView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowLocalPluginInfo);
+    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(index); });
+    connect(m_pLocalView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowLocalPluginInfo);
 
-    connect(m_pServerPluginsView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(index); });
-    connect(m_pServerPluginsView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowServerPluginInfo);
+    connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallHubPlugin(index); });
+    connect(m_pHubView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowServerPluginInfo);
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
     connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
@@ -137,11 +138,13 @@ void CStoreDlg::initConnections()
 
 QWidget *CStoreDlg::createLeftWidget()
 {
-    m_pBtnServerPlugins = new QPushButton(tr("Ikomia Marketplace"));
+    m_pBtnHub = new QPushButton(tr("Ikomia HUB"));
+    m_pBtnWorkspace = new QPushButton(tr("Private workspace"));
     m_pBtnLocalPlugins = new QPushButton(tr("Installed algorithms"));
 
     QVBoxLayout* pLayout = new QVBoxLayout;
-    pLayout->addWidget(m_pBtnServerPlugins);
+    pLayout->addWidget(m_pBtnHub);
+    pLayout->addWidget(m_pBtnWorkspace);
     pLayout->addWidget(m_pBtnLocalPlugins);
     pLayout->addStretch(1);
 
@@ -150,58 +153,87 @@ QWidget *CStoreDlg::createLeftWidget()
     return pWidget;
 }
 
+QWidget* CStoreDlg::createPluginsView(CPluginModel::Type type)
+{
+    QLineEdit** ppSearchBar = nullptr;
+    QPushButton** ppRefreshBtn = nullptr;
+    QLabel** ppLabel = nullptr;
+    CStorePluginListView** ppView = nullptr;
+    CStorePluginListViewDelegate::PluginSource pluginSource;
+
+    switch(type)
+    {
+        case CPluginModel::Type::HUB:
+            pluginSource = CStorePluginListViewDelegate::HUB;
+            ppSearchBar = &m_pEditHubSearch;
+            ppRefreshBtn = &m_pBtnHubRefresh;
+            ppLabel = &m_pLabelMsgHub;
+            ppView = &m_pHubView;
+            break;
+        case CPluginModel::Type::WORKSPACE:
+            pluginSource = CStorePluginListViewDelegate::WORKSPACE;
+            ppSearchBar = &m_pEditWorkspaceSearch;
+            ppRefreshBtn = &m_pBtnWorkspaceRefresh;
+            ppLabel = &m_pLabelMsgWorkspace;
+            ppView = &m_pWorkspaceView;
+            break;
+        case CPluginModel::Type::LOCAL:
+            pluginSource = CStorePluginListViewDelegate::LOCAL;
+            ppSearchBar = &m_pEditLocalSearch;
+            ppLabel = &m_pLabelMsgLocal;
+            ppView = &m_pLocalView;
+            break;
+    }
+
+    auto pTopBarLayout = new QHBoxLayout;
+
+    // Search bar
+    auto pSearchBar = new QLineEdit;
+    (*ppSearchBar) = pSearchBar;
+    pSearchBar->setPlaceholderText(tr("<Search by keywords>"));
+    pTopBarLayout->addWidget(pSearchBar);
+
+    // Refresh button
+    if (type != CPluginModel::Type::LOCAL)
+    {
+        auto pRefreshBtn = new QPushButton(QIcon(":/Images/update.png"), "");
+        (*ppRefreshBtn) = pRefreshBtn;
+        pRefreshBtn->setToolTip(tr("Refresh"));
+        pTopBarLayout->addWidget(pRefreshBtn);
+    }
+
+    //Plugins list view
+    auto pView = new CStorePluginListView(pluginSource);
+    (*ppView) = pView;
+
+    //Message label
+    auto pLabel = createMessageLabel(tr("You have to be registered to display online plugins"));
+    (*ppLabel) = pLabel;
+
+    auto pVLayout = new QVBoxLayout;
+    pVLayout->addLayout(pTopBarLayout);
+    pVLayout->addWidget(pView);
+    pVLayout->addWidget(pLabel);
+    auto pMainWidget = new QWidget;
+    pMainWidget->setLayout(pVLayout);
+    return pMainWidget;
+}
+
 QWidget *CStoreDlg::createRightWidget()
 {
-    //----------//
-    //- Server -//
-    //----------//
-    //Search bar + refresh button
-    m_pEditServerSearch = new QLineEdit;
-    m_pEditServerSearch->setPlaceholderText(tr("<Search by keywords>"));
-    m_pBtnServerRefresh = new QPushButton(QIcon(":/Images/update.png"), "");
-    m_pBtnServerRefresh->setToolTip(tr("Refresh"));
-    auto pTopBarServerLayout = new QHBoxLayout;
-    pTopBarServerLayout->addWidget(m_pEditServerSearch);
-    pTopBarServerLayout->addWidget(m_pBtnServerRefresh);
-
-    //Plugins list view
-    m_pServerPluginsView = new CStorePluginListView(CStorePluginListViewDelegate::SERVER);
-
-    //Message label
-    m_pLabelMsgServer = createMessageLabel(tr("You have to be registered to display online plugins"));
-
-    auto pServerVLayout = new QVBoxLayout;
-    pServerVLayout->addLayout(pTopBarServerLayout);
-    pServerVLayout->addWidget(m_pServerPluginsView);
-    pServerVLayout->addWidget(m_pLabelMsgServer);
-    auto pServerWidget = new QWidget;
-    pServerWidget->setLayout(pServerVLayout);
-
-    //---------//
-    //- Local -//
-    //---------//
-    //Search bar
-    m_pEditLocalSearch = new QLineEdit;
-    m_pEditLocalSearch->setPlaceholderText(tr("<Search by keywords>"));
-
-    //Plugins list view
-    m_pLocalPluginsView = new CStorePluginListView(CStorePluginListViewDelegate::LOCAL);
-
-    //Message label
-    m_pLabelMsgLocal = createMessageLabel(tr("No algorithm loaded"));
-
-    auto pLocalVLayout = new QVBoxLayout;
-    pLocalVLayout->addWidget(m_pEditLocalSearch);
-    pLocalVLayout->addWidget(m_pLocalPluginsView);
-    pLocalVLayout->addWidget(m_pLabelMsgLocal);
-    auto pLocalWidget = new QWidget;
-    pLocalWidget->setLayout(pLocalVLayout);
+    //----------------------//
+    //- Plugins list views -//
+    //----------------------//
+    auto pHubWidget = createPluginsView(CPluginModel::Type::HUB);
+    auto pWorkspaceWidget = createPluginsView(CPluginModel::Type::WORKSPACE);
+    auto pLocalWidget = createPluginsView(CPluginModel::Type::LOCAL);
 
     //---------------------------------//
     //- Stacked widget for list views -//
     //---------------------------------//
     m_pPluginStackWidget = new QStackedWidget;
-    m_pPluginStackWidget->addWidget(pServerWidget);
+    m_pPluginStackWidget->addWidget(pHubWidget);
+    m_pPluginStackWidget->addWidget(pWorkspaceWidget);
     m_pPluginStackWidget->addWidget(pLocalWidget);
     m_pPluginStackWidget->setCurrentIndex(0);
 
@@ -263,7 +295,8 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
 
 void CStoreDlg::showEvent(QShowEvent *event)
 {
-    emit doGetServerModel();
+    emit doGetHubModel();
+    emit doGetWorkspaceModel();
     emit doGetLocalModel();
     QDialog::showEvent(event);
 }

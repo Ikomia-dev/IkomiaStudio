@@ -38,7 +38,7 @@ class CStoreQueryModel : public QSqlQueryModel
 
     private:
 
-        CUser       m_currentUser;
+        CUser       m_user;
 };
 
 #endif // CSTORETABLEMODEL_H

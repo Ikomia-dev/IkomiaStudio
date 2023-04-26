@@ -178,6 +178,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Store/CStoreOnlineIconManager.h
     Model/Store/CStoreQueryModel.cpp
     Model/Store/CStoreQueryModel.h
+    Model/Store/CPluginModel.h
+    Model/Store/CPluginModel.cpp
     Model/User/CUser.cpp Model/User/CUser.h
     Model/User/CUserManager.cpp
     Model/User/CUserManager.h
