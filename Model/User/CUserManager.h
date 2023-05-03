@@ -40,7 +40,7 @@ class CUserManager : public QObject
     public:
 
         enum Role { ADMINISTRATOR, USER };
-        enum Request { LOGIN, LOGOUT, GET_USER };
+        enum Request { LOGIN, LOGOUT, GET_USER, GET_NAMESPACES };
 
         CUserManager();
         ~CUserManager();
@@ -66,9 +66,8 @@ class CUserManager : public QObject
 
     private slots:
 
-        void            onLoginDone();
-        void            onLogoutDone();
-        void            onRetrieveUserInfoDone();
+        void            onReplyReceived(QNetworkReply* pReply, Request requestType);
+        void            logoutDone();
         void            onCheckSingleConnection();
 
     private:
@@ -81,10 +80,15 @@ class CUserManager : public QObject
         void            connectUser(const QString &login, const QString &pwd);
         void            disconnectUser(bool bSynchronous);
 
-        QNetworkReply*  checkReply(int type) const;
         void            checkAutoLogin();
 
+        void            loginDone(QNetworkReply *pReply);
+
         void            retrieveUserInfo();
+        void            retrieveUserNamespaces(const QString &strUrl);
+
+        void            fillUserInfo(QNetworkReply *pReply);
+        void            fillUserNamespaces(QNetworkReply* pReply);
 
         void            manageGetUserInfoError();
 
@@ -99,7 +103,6 @@ class CUserManager : public QObject
         QList<QNetworkCookie>       m_sessionCookies;
         QString                     m_loginTmp;
         QString                     m_pwdTmp;
-        QMap<int, QNetworkReply*>   m_mapTypeRequest;
         QTimer*                     m_pTimerSingleConnection = nullptr;
 };
 

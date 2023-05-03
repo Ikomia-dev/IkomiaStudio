@@ -86,12 +86,7 @@ void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
     }
 }
 
-void CStoreDlg::onShowLocalPluginInfo(const QModelIndex &index)
-{
-    showProcessInfo(index);
-}
-
-void CStoreDlg::onShowServerPluginInfo(const QModelIndex &index)
+void CStoreDlg::onShowPluginInfo(const QModelIndex &index)
 {
     showProcessInfo(index);
 }
@@ -123,11 +118,14 @@ void CStoreDlg::initConnections()
     connect(m_pBtnWorkspace, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(1); });
     connect(m_pBtnLocalPlugins, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(2); });
 
-    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(index); });
-    connect(m_pLocalView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowLocalPluginInfo);
+    connect(m_pHubView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
+    connect(m_pWorkspaceView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
+    connect(m_pLocalView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
 
     connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallHubPlugin(index); });
-    connect(m_pHubView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowServerPluginInfo);
+
+    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(CPluginModel::Type::WORKSPACE, index); });
+    connect(m_pWorkspaceView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(CPluginModel::Type::HUB, index); });
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
     connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)

@@ -35,7 +35,7 @@ bool CUser::operator==(const CUser &other) const
             m_lastName == other.m_lastName &&
             m_email == other.m_email &&
             m_url == other.m_url &&
-            m_namespace == other.m_namespace;
+            m_namespaceUrl == other.m_namespaceUrl;
 }
 
 bool CUser::operator!=(const CUser &other) const
@@ -47,7 +47,7 @@ bool CUser::operator!=(const CUser &other) const
             m_lastName != other.m_lastName ||
             m_email != other.m_email ||
             m_url != other.m_url ||
-            m_namespace != other.m_namespace;
+            m_namespaceUrl != other.m_namespaceUrl;
 }
 
 bool CUser::isConnected() const
@@ -65,6 +65,23 @@ QByteArray CUser::getSessionCookie(const QString &name)
     return nullptr;
 }
 
+CUserNamespace CUser::getNamespace(const QString &name) const
+{
+    for (size_t i=0; i<m_namespaces.size(); ++i)
+    {
+        if (m_namespaces[i].m_name == name)
+            return m_namespaces[i];
+    }
+
+    QString msg = QString("Namespace %1 not found for user %2").arg(name).arg(m_name);
+    throw CException(CoreExCode::NOT_FOUND, msg.toStdString(), __func__, __FILE__, __LINE__);
+}
+
+QString CUser::getMyNamespaceUrl() const
+{
+    return m_namespaceUrl;
+}
+
 void CUser::logout()
 {
     m_id = -1;
@@ -76,6 +93,11 @@ void CUser::logout()
     m_email.clear();
     m_token.clear();
     m_url.clear();
-    m_namespace.clear();
+    m_namespaces.clear();
     m_sessionCookies.clear();
+}
+
+void CUser::addNamespace(const QJsonObject &ns)
+{
+    m_namespaces.push_back(CUserNamespace(ns));
 }

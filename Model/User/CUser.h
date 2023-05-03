@@ -24,6 +24,7 @@
 #include <QString>
 #include <QNetworkCookie>
 #include <QByteArray>
+#include "CUserNamespace.h"
 
 class CUser
 {
@@ -32,28 +33,33 @@ class CUser
         CUser();
         ~CUser();
 
-        bool        operator==(const CUser& other) const;
-        bool        operator!=(const CUser& other) const;
+        bool            operator==(const CUser& other) const;
+        bool            operator!=(const CUser& other) const;
 
-        bool        isConnected() const;
+        bool            isConnected() const;
 
-        QByteArray  getSessionCookie(const QString& name);
+        QByteArray      getSessionCookie(const QString& name);
+        CUserNamespace  getNamespace(const QString& name) const;
+        QString         getMyNamespaceUrl() const;
 
-        void        logout();
+        void            logout();
+
+        void            addNamespace(const QJsonObject& ns);
 
     public:
 
-        int                     m_id = -1;
-        int                     m_role = -1;
-        int                     m_reputation = 0;
-        QString                 m_name = "";
-        QString                 m_firstName = "";
-        QString                 m_lastName = "";
-        QString                 m_email = "";
-        QString                 m_token = "";
-        QString                 m_url = "";
-        QString                 m_namespace = "";
-        QList<QNetworkCookie>   m_sessionCookies;
+        int                         m_id = -1;
+        int                         m_role = -1;
+        int                         m_reputation = 0;
+        QString                     m_name;
+        QString                     m_firstName;
+        QString                     m_lastName;
+        QString                     m_email;
+        QString                     m_token;
+        QString                     m_url;
+        QString                     m_namespaceUrl;
+        QList<QNetworkCookie>       m_sessionCookies;
+        std::vector<CUserNamespace> m_namespaces;
 };
 
 #endif // CUSER_H

@@ -76,12 +76,45 @@ void CUserManager::onDisconnectUser()
     disconnectUser(false);
 }
 
-void CUserManager::onLoginDone()
+void CUserManager::onReplyReceived(QNetworkReply *pReply, Request requestType)
 {
-    auto pReply = checkReply(LOGIN);
-    if(pReply == nullptr)
+    if (pReply == nullptr)
+    {
+        qCCritical(logStore).noquote() << "Invalid reply from Ikomia Scale";
         return;
+    }
 
+    if(pReply->error() != QNetworkReply::NoError)
+    {
+        if(pReply->error() == QNetworkReply::ProtocolInvalidOperationError)
+            qCCritical(logUser).noquote() << tr("Invalid login or password");
+        else
+            qCCritical(logUser).noquote() << pReply->errorString();
+
+        pReply->deleteLater();
+        return;
+    }
+
+    switch(requestType)
+    {
+        case Request::LOGIN:
+            loginDone(pReply);
+            break;
+        case Request::GET_USER:
+            fillUserInfo(pReply);
+            break;
+        case Request::GET_NAMESPACES:
+            fillUserNamespaces(pReply);
+            break;
+        case Request::LOGOUT:
+            logoutDone();
+            break;
+    }
+    pReply->deleteLater();
+}
+
+void CUserManager::loginDone(QNetworkReply* pReply)
+{
     QVariant cookieHeader = pReply->header(QNetworkRequest::SetCookieHeader);
     if (!cookieHeader.isValid())
     {
@@ -92,7 +125,6 @@ void CUserManager::onLoginDone()
     m_sessionCookies = cookieHeader.value<QList<QNetworkCookie>>();
     retrieveUserInfo();
     qCInfo(logUser).noquote() << tr("Connection successfull");
-    pReply->deleteLater();
 
     if(m_loginTmp.isEmpty() == false && m_pwdTmp.isEmpty() == false)
         saveLoginInfo();
@@ -105,12 +137,8 @@ void CUserManager::onLoginDone()
     m_pTimerSingleConnection->start(Ikomia::_UserCheckFrequency);
 }
 
-void CUserManager::onLogoutDone()
+void CUserManager::logoutDone()
 {
-    auto pReply = checkReply(LOGOUT);
-    if(pReply == nullptr)
-        return;
-
     m_pTimerSingleConnection->stop();
     qCInfo(logUser).noquote() << tr("User sucessfully disconnected");
     m_currentUser.logout();
@@ -119,26 +147,19 @@ void CUserManager::onLogoutDone()
     emit doSetCurrentUser(m_currentUser);
 }
 
-void CUserManager::onRetrieveUserInfoDone()
+void CUserManager::fillUserInfo(QNetworkReply* pReply)
 {
-    auto pReply = checkReply(GET_USER);
-    if(pReply == nullptr)
-    {
-        manageGetUserInfoError();
-        return;
-    }
-
     QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
     if(doc.isNull())
     {
-        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document");
+        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document while getting user information");
         manageGetUserInfoError();
         return;
     }
 
     if(doc.isObject() == false)
     {
-        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document structure");
+        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document structure while getting user information");
         manageGetUserInfoError();
         return;
     }
@@ -149,12 +170,45 @@ void CUserManager::onRetrieveUserInfoDone()
     connectedUser.m_lastName = jsonUser["last_name"].toString();
     connectedUser.m_email = jsonUser["email"].toString();
     connectedUser.m_url = jsonUser["url"].toString();
-    connectedUser.m_namespace = jsonUser["namespace"].toString();
+    connectedUser.m_namespaceUrl = jsonUser["namespace"].toString();
     connectedUser.m_sessionCookies = m_sessionCookies;
 
     if(connectedUser != m_currentUser)
     {
         m_currentUser = connectedUser;
+        retrieveUserNamespaces(Utils::Network::getBaseUrl() + "/v1/namespaces/");
+    }
+}
+
+void CUserManager::fillUserNamespaces(QNetworkReply *pReply)
+{
+    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
+    if(doc.isNull())
+    {
+        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving namespaces");
+        return;
+    }
+
+    if(doc.isObject() == false)
+    {
+        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving namespaces");
+        return;
+    }
+
+    QJsonObject jsonPage = doc.object();
+    if (jsonPage["next"].isNull() == false)
+    {
+        int count = jsonPage["count"].toInt();
+        retrieveUserNamespaces(QString(Utils::Network::getBaseUrl() + "/v1/namespaces/?page_size=%1").arg(count));
+    }
+    else
+    {
+        QJsonArray namespaces = jsonPage["results"].toArray();
+        for (int i=0; i<namespaces.size(); i++)
+        {
+            QJsonObject ns = namespaces[i].toObject();
+            m_currentUser.addNamespace(ns);
+        }
         emit doSetCurrentUser(m_currentUser);
     }
 }
@@ -221,8 +275,9 @@ void CUserManager::connectUser(const QString &login, const QString &pwd)
     request.setRawHeader("Content-Type", "application/json");
 
     auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
-    m_mapTypeRequest.insert(LOGIN, pReply);
-    connect(pReply, &QNetworkReply::finished, this, &CUserManager::onLoginDone);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, Request::LOGIN);
+    });
 }
 
 void CUserManager::disconnectUser(bool bSynchronous)
@@ -254,31 +309,10 @@ void CUserManager::disconnectUser(bool bSynchronous)
     }
     else
     {
-        m_mapTypeRequest.insert(LOGOUT, pReply);
-        connect(pReply, &QNetworkReply::finished, this, &CUserManager::onLogoutDone);
+        connect(pReply, &QNetworkReply::finished, [=](){
+           this->onReplyReceived(pReply, Request::LOGOUT);
+        });
     }
-}
-
-QNetworkReply *CUserManager::checkReply(int type) const
-{
-    auto it = m_mapTypeRequest.find(type);
-    if(it == m_mapTypeRequest.end())
-        return nullptr;
-
-    QNetworkReply* pReply = it.value();
-    auto error = pReply->error();
-
-    if(error != QNetworkReply::NoError)
-    {
-        if(error == QNetworkReply::ProtocolInvalidOperationError)
-            qCCritical(logUser).noquote() << tr("Invalid login or password");
-        else
-            qCCritical(logUser).noquote() << pReply->errorString();
-
-        pReply->deleteLater();
-        return nullptr;
-    }
-    return pReply;
 }
 
 void CUserManager::checkAutoLogin()
@@ -315,7 +349,7 @@ void CUserManager::retrieveUserInfo()
 {
     assert(m_pNetworkMgr);
 
-    //Http request to retrieve user info from token
+    //Http request to retrieve logged user info
     QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/users/me/");
     QUrl url(urlQuery.query());
 
@@ -332,8 +366,35 @@ void CUserManager::retrieveUserInfo()
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
 
     auto pReply = m_pNetworkMgr->get(request);
-    m_mapTypeRequest.insert(GET_USER, pReply);
-    connect(pReply, &QNetworkReply::finished, this, &CUserManager::onRetrieveUserInfoDone);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, Request::GET_USER);
+    });
+}
+
+void CUserManager::retrieveUserNamespaces(const QString& strUrl)
+{
+    assert(m_pNetworkMgr);
+
+    //Http request to retrieve logged user namespaces
+    QUrlQuery urlQuery(strUrl);
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logUser) << url.errorString();
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+
+    auto pReply = m_pNetworkMgr->get(request);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, Request::GET_NAMESPACES);
+    });
 }
 
 void CUserManager::manageGetUserInfoError()

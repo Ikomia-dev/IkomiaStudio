@@ -86,7 +86,7 @@ void CStoreManager::onRequestLocalModel()
     createQueryModel(&m_localPluginModel);
 }
 
-void CStoreManager::onPublishPlugin(const QModelIndex &index)
+void CStoreManager::onPublishPlugin(CPluginModel::Type serverType, const QModelIndex &index)
 {
     assert(index.isValid());
 
@@ -97,24 +97,21 @@ void CStoreManager::onPublishPlugin(const QModelIndex &index)
     }
 
     //User has to be logged in to publish plugins
-    if(m_currentUser.m_id == -1)
+    if(m_currentUser.isConnected() == false)
     {
         qCCritical(logStore).noquote() << tr("You have to login before publishing plugins");
         return;
     }
 
-    //We can only publish plugins owned by current user (ie userId == -1 OR userId == m_currentUser.m_id)
-    int authorId = m_hubPluginModel.getIntegerField("userId", index);
-    if(authorId != -1 && authorId != m_currentUser.m_id)
+    switch(serverType)
     {
-        qCCritical(logStore).noquote() << tr("This plugin is not yours, you can't publish it");
-        return;
+        case CPluginModel::Type::HUB:
+            publishToHub(index);
+            break;
+        case CPluginModel::Type::WORKSPACE:
+            publishToWorkspace(index);
+            break;
     }
-
-    m_bBusy = true;
-    m_hubPluginModel.setCurrentIndex(index);
-    //Asynchronous call -> plugin compression is made into separate thread
-    generateZipFile();
 }
 
 void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl, StoreRequestType requestType)
@@ -150,20 +147,20 @@ void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString
 
 void CStoreManager::onInstallHubPlugin(const QModelIndex &index)
 {
-    int pluginId = m_hubPluginModel.getIntegerField("id", index);
+    /*int pluginId = m_hubPluginModel.getIntegerField("id", index);
     m_hubPluginModel.setCurrentPluginId(pluginId);
     QString url = Utils::Network::getBaseUrl() + QString("/v1/hub/%1/package/").arg(pluginId);
     queryServerInstallPlugin(&m_hubPluginModel, url, StoreRequestType::GET_PACKAGE_URL);
-    m_hubPluginModel.setCurrentIndex(index);
+    m_hubPluginModel.setCurrentIndex(index);*/
 }
 
 void CStoreManager::onInstallWorkspacePlugin(const QModelIndex &index)
 {
-    int pluginId = m_workspacePluginModel.getIntegerField("id", index);
+    /*int pluginId = m_workspacePluginModel.getIntegerField("id", index);
     m_workspacePluginModel.setCurrentPluginId(pluginId);
     QString url = Utils::Network::getBaseUrl() + QString("/v1/algos/%1/package/").arg(pluginId);
     queryServerInstallPlugin(&m_workspacePluginModel, url, StoreRequestType::GET_PACKAGE_URL);
-    m_workspacePluginModel.setCurrentIndex(index);
+    m_workspacePluginModel.setCurrentIndex(index);*/
 }
 
 void CStoreManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
@@ -221,6 +218,15 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
         case StoreRequestType::GET_PLUGIN_DETAILS:
             addPluginToModel(pModel, pReply);
             break;
+        case StoreRequestType::PUBLISH_PLUGIN:
+            uploadPluginIcon(pModel, pReply);
+            break;
+        case StoreRequestType::UPLOAD_ICON:
+            uploadPluginPackage(pModel, pReply);
+            break;
+        case StoreRequestType::UPLOAD_PACKAGE:
+            finalizePluginPublish(pModel);
+            break;
     }
 
     m_pProgressMgr->endInfiniteProgress();
@@ -271,13 +277,13 @@ void CStoreManager::onPluginCompressionDone(const QString& zipFile)
             return;
         }
 
-        //m_currentPluginPackageFile = zipFile;
-        m_localPluginModel.setCurrentPluginId(m_localPluginModel.getIntegerField("serverId"));
+        m_workspacePluginModel.setPackageFile(zipFile);
+        auto name = m_localPluginModel.getQStringField("name");
 
-        if (m_localPluginModel.getCurrentPluginId() == -1)
-            publishPluginToServer();
-        else
+        if (m_workspacePluginModel.isPluginExists(name))
             updateServerPlugin();
+        else
+            publishPluginToWorkspace();
     }
     catch(std::exception& e)
     {
@@ -299,44 +305,6 @@ void CStoreManager::onUpdatePluginDone()
 
     uploadPluginIcon();
     pReply->deleteLater();*/
-}
-
-void CStoreManager::onUploadPackageDone()
-{
-    /*auto info = checkReply(StoreRequestType::UPLOAD_PACKAGE);
-    auto pReply = info.first;
-
-    if(pReply == nullptr)
-    {
-        qCCritical(logStore).noquote().noquote() << tr("Plugin package was not published successfully. Check your connection and try again.");
-        deletePlugin(); // Only works if connection is still active otherwise the plugin is not deleted on the server
-        deleteTranferFile();
-        return;
-    }
-
-    qCInfo(logStore).noquote() << tr("Plugin was successfully published on the server");
-    emit m_progressSignal.doFinish();
-    updateLocalPlugin();
-    createLocalPluginModel();
-    createHubPluginModel();
-    pReply->deleteLater();
-    deleteTranferFile();
-    //Clear member data
-    clearContext();*/
-}
-
-void CStoreManager::onUploadIconDone()
-{
-    //If error occurs when uploading icon, we do not stop the publication. It's not critical.
-    /*auto info = checkReply(StoreRequestType::UPLOAD_ICON);
-    auto pReply = info.first;
-
-    if(pReply == nullptr)
-        qCWarning(logStore).noquote() << tr("Plugin icon was not published successfully.");
-
-    pReply->deleteLater();
-    emit m_progressSignal.doFinish();
-    uploadPluginPackage();*/
 }
 
 void CStoreManager::onGetPackageUrlDone()
@@ -647,6 +615,37 @@ void CStoreManager::queryServerPluginDetails(CPluginModel* pModel, QString strUr
     });
 }
 
+void CStoreManager::queryServerPublishPlugin(CPluginModel* pModel, const QString& strUrl)
+{
+    /*assert(m_pNetworkMgr);
+
+    //Http request to create new plugin
+    QByteArray jsonPayload = createPluginJsonPayload(pModel);
+    QUrlQuery urlQuery(strUrl);
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logStore) << url.errorString();
+        clearContext();
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("Content-Type", "application/json");
+
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_currentUser.m_sessionCookies[0].toRawForm());
+
+    auto pReply = m_pNetworkMgr->post(request, jsonPayload);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, pModel, StoreRequestType::PUBLISH_PLUGIN);
+    });*/
+}
+
 void CStoreManager::createHubPluginModel()
 {
     QString url = Utils::Network::getBaseUrl() + "/v1/hub/";
@@ -668,26 +667,26 @@ void CStoreManager::createQueryModel(CPluginModel* pModel)
     emit doSetPluginModel(pModel);
 }
 
-QByteArray CStoreManager::createPluginJson()
+QByteArray CStoreManager::createPluginJsonPayload(CPluginModel* pModel)
 {
     QJsonObject plugin;
 
     //Plugin name - mandatory
-    QString name = m_localPluginModel.getQStringField("name");
+    QString name = pModel->getQStringField("name");
     if(name.isEmpty())
         throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: plugin name is mandatory").toStdString(), __func__, __FILE__, __LINE__);
 
     plugin["name"] = name;
 
     //Short description - mandatory
-    QString shortDescription = m_localPluginModel.getQStringField("shortDescription");
+    QString shortDescription = pModel->getQStringField("shortDescription");
     if(shortDescription.isEmpty())
         throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: short description is mandatory").toStdString(), __func__, __FILE__, __LINE__);
 
     plugin["short_description"] = shortDescription;
 
     //Description - mandatory
-    QString description = m_localPluginModel.getQStringField("description");
+    QString description = pModel->getQStringField("description");
     if(description.isEmpty())
         description = shortDescription;
 
@@ -697,72 +696,84 @@ QByteArray CStoreManager::createPluginJson()
     plugin["description"] = description;
 
     //Keywords - optional
-    QString keywords = m_localPluginModel.getQStringField("keywords");
+    QString keywords = pModel->getQStringField("keywords");
     if(keywords.isEmpty() == false)
         plugin["keywords"] = keywords;
 
+    //----- Paper -----//
+    QJsonObject paper;
     //Authors - mandatory
-    QString authors = m_localPluginModel.getQStringField("authors");
+    QString authors = pModel->getQStringField("authors");
     if(authors.isEmpty())
         throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: author is mandatory").toStdString(), __func__, __FILE__, __LINE__);
 
-    plugin["authors"] = authors;
+    paper["authors"] = authors;
 
     //Article - optional
-    QString article = m_localPluginModel.getQStringField("article");
+    QString article = pModel->getQStringField("article");
     if(article.isEmpty() == false)
-        plugin["article"] = article;
+        paper["title"] = article;
 
     //Journal - optional
     QString journal = m_localPluginModel.getQStringField("journal");
     if(journal.isEmpty() == false)
-        plugin["journal"] = journal;
+        paper["journal"] = journal;
 
     //Year - optional
-    plugin["year"] = m_localPluginModel.getIntegerField("year");
+    paper["year"] = m_localPluginModel.getIntegerField("year");
+
+    //Link
+    // TODO paper["link"] = ;
+
+    plugin["paper"] = paper;
 
     //Online documentation - optional
-    QString docLink = m_localPluginModel.getQStringField("docLink");
+    /*QString docLink = m_localPluginModel.getQStringField("docLink");
     if(docLink.isEmpty() == false)
-        plugin["docLink"] = docLink;
+        plugin["docLink"] = docLink;*/
 
     //License - optional
-    QString license = m_localPluginModel.getQStringField("license");
+    /*QString license = m_localPluginModel.getQStringField("license");
     if(license.isEmpty() == false)
-        plugin["license"] = license;
+        plugin["license"] = license;*/
 
     //Repository - optional
     QString repository = m_localPluginModel.getQStringField("repository");
     if(repository.isEmpty() == false)
         plugin["repository"] = repository;
 
+    //Original Repository - optional
+    QString originalRepository = m_localPluginModel.getQStringField("originalRepository");
+    if(originalRepository.isEmpty() == false)
+        plugin["original_implementation_repository"] = originalRepository;
+
     //Date of creation
-    QString createdDate = m_localPluginModel.getQStringField("createdDate");
+    /*QString createdDate = m_localPluginModel.getQStringField("createdDate");
     if(createdDate.isEmpty() == false)
-        plugin["createdDate"] = createdDate;
+        plugin["createdDate"] = createdDate;*/
 
     //Date of modification
-    plugin["modifiedDate"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    //plugin["modifiedDate"] = QDateTime::currentDateTime().toString(Qt::ISODate);
 
     //Version - mandatory
-    QString version = m_localPluginModel.getQStringField("version");
+    /*QString version = m_localPluginModel.getQStringField("version");
     if(version.isEmpty())
         throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: version is mandatory").toStdString(), __func__, __FILE__, __LINE__);
 
-    plugin["version"] = version;
+    plugin["version"] = version;*/
 
     //Ikomia version - App & API
-    QString ikomiaVersion = m_localPluginModel.getQStringField("ikomiaVersion");
+    /*QString ikomiaVersion = m_localPluginModel.getQStringField("ikomiaVersion");
     if(ikomiaVersion.isEmpty())
         ikomiaVersion = Utils::IkomiaApp::getCurrentVersionNumber();
 
-    plugin["ikomiaVersion"] = ikomiaVersion;
+    plugin["ikomiaVersion"] = ikomiaVersion;*/
 
     //Program language
     plugin["language"] = m_localPluginModel.getIntegerField("language");
 
     //Operating System - mandatory
-    plugin["os"] = m_localPluginModel.getIntegerField("os");
+    //plugin["os"] = m_localPluginModel.getIntegerField("os");
 
     QJsonDocument doc(plugin);
     return doc.toJson();
@@ -943,7 +954,7 @@ void CStoreManager::updateServerPlugin()
 
 void CStoreManager::updateLocalPlugin()
 {
-    try
+    /*try
     {
         int pluginId = m_localPluginModel.getIntegerField("id");
         QString pluginName = m_localPluginModel.getQStringField("name");
@@ -957,7 +968,7 @@ void CStoreManager::updateLocalPlugin()
     catch(std::exception& e)
     {
         qCCritical(logStore).noquote() << e.what();
-    }
+    }*/
 }
 
 void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pReply)
@@ -966,7 +977,6 @@ void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* p
     if(doc.isNull())
     {
         qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving algorithm list");
-        m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
@@ -974,7 +984,6 @@ void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* p
     if(doc.isObject() == false)
     {
         qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving algorithm list");
-        m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
@@ -1127,130 +1136,185 @@ void CStoreManager::extractZipFile(const QString& src, const QString& dstDir)
     pWatcher->setFuture(future);
 }
 
-void CStoreManager::queryServerPublishPlugin(const QString& strUrl, StoreRequestType requestType)
+void CStoreManager::publishToHub(const QModelIndex& index)
 {
-    /*assert(m_pNetworkMgr);
+    //We can only publish plugins owned by current user (ie userId == -1 OR userId == m_currentUser.m_id)
+    /*int authorId = m_hubPluginModel.getIntegerField("userId", index);
+    if(authorId != -1 && authorId != m_currentUser.m_id)
+    {
+        qCCritical(logStore).noquote() << tr("This plugin is not yours, you can't publish it");
+        return;
+    }
+
+    m_bBusy = true;
+    m_hubPluginModel.setCurrentIndex(index);
+    //Asynchronous call -> plugin compression is made into separate thread
+    generateZipFile();*/
+}
+
+void CStoreManager::publishToWorkspace(const QModelIndex &index)
+{
+    m_bBusy = true;
+    m_localPluginModel.setCurrentIndex(index);
+    //Asynchronous call -> plugin compression is made into separate thread
+    generateZipFile();
+}
+
+void CStoreManager::publishPluginToWorkspace()
+{
+    assert(m_pNetworkMgr);
 
     //Http request to create new plugin
-    QByteArray jsonString = createPluginJson();
-    QUrlQuery urlQuery(strUrl);
+    QByteArray jsonPayload = createPluginJsonPayload(&m_localPluginModel);
+    QUrlQuery urlQuery(m_currentUser.getMyNamespaceUrl() + "algos/");
     QUrl url(urlQuery.query());
 
     if(url.isValid() == false)
-        throw CException(HttpExCode::INVALID_URL, url.errorString().toStdString(), __func__, __FILE__, __LINE__);
+    {
+        qCDebug(logStore) << url.errorString();
+        clearContext();
+        return;
+    }
 
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
 
-    auto pReply = m_pNetworkMgr->post(request, jsonString);
-    m_requests.push(requestType, serverType, pReply);
-    connect(pReply, &QNetworkReply::finished, this, &CStoreManager::onPublishPluginDone);*/
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+
+    auto pReply = m_pNetworkMgr->post(request, jsonPayload);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, &m_workspacePluginModel, StoreRequestType::PUBLISH_PLUGIN);
+    });
 }
 
-void CStoreManager::publishPluginToServer()
+void CStoreManager::uploadPluginPackage(CPluginModel* pModel, QNetworkReply* pReply)
 {
-    /*QString url  = Utils::Network::getBaseUrl() + "/api/plugin/";
-    queryServerPublishPlugin(url, StoreRequestType::PUBLISH_PLUGIN, HUB);*/
+    assert(m_pNetworkMgr);
+    assert(m_pProgressMgr);
+
+    //Http request to send plugin file
+    QUrlQuery urlQuery("");
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logStore) << url.errorString();
+        clearContext();
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_currentUser.m_sessionCookies[0].toRawForm());
+
+    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    m_pTranferFile = new QFile(pModel->getPackageFile());
+    m_pTranferFile->open(QIODevice::ReadOnly);
+
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/zip"));
+    QString formData = QString("form-data; name=\"file\"; filename=\"%1\"").arg(pModel->getPackageFile());
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
+    filePart.setHeader(QNetworkRequest::ContentLengthHeader, m_pTranferFile->size());
+    filePart.setBodyDevice(m_pTranferFile);
+    pMultiPart->append(filePart);
+
+    //Init progress: size in ko
+    m_pProgressMgr->launchProgress(&m_progressSignal, m_pTranferFile->size() / 1024, tr("Uploading plugin..."), false);
+
+    auto pNewReply = m_pNetworkMgr->put(request, pMultiPart);
+    pMultiPart->setParent(pNewReply);
+
+    connect(pNewReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pNewReply, pModel, StoreRequestType::UPLOAD_PACKAGE);
+    });
+    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
 }
 
-void CStoreManager::uploadPluginPackage()
+void CStoreManager::uploadPluginIcon(CPluginModel* pModel, QNetworkReply* pReply)
 {
-//    assert(m_pNetworkMgr);
-//    assert(m_pProgressMgr);
+    assert(m_pNetworkMgr);
+    assert(m_pProgressMgr);
 
-//    //Http request to send plugin file
-//    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + QString("/api/plugin/%1/package/").arg(m_currentPluginServerId));
-//    QUrl url(urlQuery.query());
+    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
+    if(doc.isNull())
+    {
+        qCCritical(logStore).noquote() << tr("Invalid JSON document in plugin creation response");
+        clearContext();
+        return;
+    }
 
-//    if(url.isValid() == false)
-//    {
-//        qCDebug(logStore) << url.errorString();
-//        clearContext();
-//        return;
-//    }
+    if(doc.isObject() == false)
+    {
+        qCCritical(logStore).noquote() << tr("Invalid JSON document structure in plugin creation response");
+        clearContext();
+        return;
+    }
 
-//    QNetworkRequest request;
-//    request.setUrl(url);
-//    QString token = "Token " + m_currentUser.m_token;
-//    request.setRawHeader("Authorization", token.toLocal8Bit());
+    // TODO: get plugin url
+    QJsonObject jsonResponse = doc.object();
+    QString strUrl;
 
-//    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //Http request to send plugin file
+    QUrlQuery urlQuery(strUrl);
+    QUrl url(urlQuery.query());
 
-//    m_pTranferFile = new QFile(m_currentPluginPackageFile);
-//    m_pTranferFile->open(QIODevice::ReadOnly);
+    if(url.isValid() == false)
+    {
+        qCDebug(logStore) << url.errorString();
+        clearContext();
+        return;
+    }
 
-//    QHttpPart filePart;
-//    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/zip"));
-//    QString formData = QString("form-data; name=\"packageFile\"; filename=\"%1\"").arg(m_currentPluginPackageFile);
-//    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-//    filePart.setHeader(QNetworkRequest::ContentLengthHeader, m_pTranferFile->size());
-//    filePart.setBodyDevice(m_pTranferFile);
-//    pMultiPart->append(filePart);
+    //Get full path to icon file
+    QString iconPath = pModel->getQStringField("iconPath");
+    if(iconPath.isEmpty())
+    {
+        iconPath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/" + "icon.png");
+        QPixmap pixmap = QPixmap(":/Images/default-process.png");
+        pixmap.save(iconPath, "PNG");
+    }
 
-//    //Init progress: size in ko
-//    m_pProgressMgr->launchProgress(&m_progressSignal, m_pTranferFile->size() / 1024, tr("Uploading plugin..."), false);
+    QFile* pIconFile = new QFile(iconPath);
+    pIconFile->open(QIODevice::ReadOnly);
 
-//    auto pReply = m_pNetworkMgr->put(request, pMultiPart);
-//    pMultiPart->setParent(pReply);
-//    m_mapTypeRequest.insert(UPLOAD_PACKAGE, pReply);
-//    connect(pReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
-//    connect(pReply, &QNetworkReply::finished, this, &CStoreManager::onUploadPackageDone);
-}
+    QNetworkRequest request;
+    request.setUrl(url);
 
-void CStoreManager::uploadPluginIcon()
-{
-//    assert(m_pNetworkMgr);
-//    assert(m_pProgressMgr);
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_currentUser.m_sessionCookies[0].toRawForm());
 
-//    //Http request to send plugin file
-//    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + QString("/api/plugin/%1/icon/").arg(m_currentPluginServerId));
-//    QUrl url(urlQuery.query());
+    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+    QString formData = QString("form-data; name=\"icon\"; filename=\"%1\"").arg(iconPath);
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
+    filePart.setHeader(QNetworkRequest::ContentLengthHeader, pIconFile->size());
+    filePart.setBodyDevice(pIconFile);
+    pMultiPart->append(filePart);
+    pIconFile->setParent(pMultiPart);
 
-//    if(url.isValid() == false)
-//    {
-//        qCDebug(logStore) << url.errorString();
-//        clearContext();
-//        return;
-//    }
+    //Init progress: size in ko
+    m_pProgressMgr->launchProgress(&m_progressSignal, pIconFile->size() / 1024, tr("Uploading icon..."), false);
 
-//    //Get full path to icon file
-//    QString iconPath = m_pLocalPluginModel->record(m_currentLocalIndex.row()).value("iconPath").toString();
-//    if(iconPath.isEmpty())
-//    {
-//        iconPath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/" + "icon.png");
-//        QPixmap pixmap = QPixmap(":/Images/default-process.png");
-//        pixmap.save(iconPath, "PNG");
-//    }
+    auto pNewReply = m_pNetworkMgr->put(request, pMultiPart);
+    pMultiPart->setParent(pNewReply);
 
-//    QFile* pIconFile = new QFile(iconPath);
-//    pIconFile->open(QIODevice::ReadOnly);
-
-//    QNetworkRequest request;
-//    request.setUrl(url);
-//    QString token = "Token " + m_currentUser.m_token;
-//    request.setRawHeader("Authorization", token.toLocal8Bit());
-
-//    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-//    QHttpPart filePart;
-//    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
-//    QString formData = QString("form-data; name=\"iconFile\"; filename=\"%1\"").arg(iconPath);
-//    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-//    filePart.setHeader(QNetworkRequest::ContentLengthHeader, pIconFile->size());
-//    filePart.setBodyDevice(pIconFile);
-//    pMultiPart->append(filePart);
-//    pIconFile->setParent(pMultiPart);
-
-//    //Init progress: size in ko
-//    m_pProgressMgr->launchProgress(&m_progressSignal, pIconFile->size() / 1024, tr("Uploading icon..."), false);
-
-//    auto pReply = m_pNetworkMgr->put(request, pMultiPart);
-//    pMultiPart->setParent(pReply);
-//    m_mapTypeRequest.insert(UPLOAD_ICON, pReply);
-//    connect(pReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
-//    connect(pReply, &QNetworkReply::finished, this, &CStoreManager::onUploadIconDone);
+    connect(pNewReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, pModel, StoreRequestType::UPLOAD_ICON);
+    });
+    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
 }
 
 void CStoreManager::downloadPluginPackage(const QString &packageUrl)
@@ -1358,13 +1422,27 @@ void CStoreManager::clearContext()
     /*m_localPluginModel.setCurrentIndex(QModelIndex());
     m_localPluginModel.setCurrentPluginId(-1);
     m_hubPluginModel.setCurrentIndex(QModelIndex());
-    m_hubPluginModel.setCurrentPluginId(-1);
-    m_bBusy = false;*/
+    m_hubPluginModel.setCurrentPluginId(-1);*/
+    m_pProgressMgr->endInfiniteProgress();
+    m_bBusy = false;
+}
+
+void CStoreManager::finalizePluginPublish(CPluginModel* pModel)
+{
+    /*qCInfo(logStore).noquote() << tr("Plugin was successfully published on the server");
+    emit m_progressSignal.doFinish();
+    updateLocalPlugin();
+    createLocalPluginModel();
+    createHubPluginModel();
+    pReply->deleteLater();
+    deleteTranferFile();
+    //Clear member data
+    clearContext();*/
 }
 
 void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
 {
-    //Insert or update plugin to file database
+    /*//Insert or update plugin to file database
     m_dbMgr.insertPlugin(m_hubPluginModel.getCurrentPluginId(), info, user);
     //Reload process library
     m_pProgressMgr->launchInfiniteProgress(tr("Reloading plugin..."), false);
@@ -1380,7 +1458,7 @@ void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& us
 
     //Clean
     clearContext();
-    m_pProgressMgr->endInfiniteProgress();
+    m_pProgressMgr->endInfiniteProgress();*/
 }
 
 #include "moc_CStoreManager.cpp"

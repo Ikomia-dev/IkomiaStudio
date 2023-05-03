@@ -185,6 +185,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/User/CUserManager.h
     Model/User/CUserSqlQueryModel.cpp
     Model/User/CUserSqlQueryModel.h
+    Model/User/CUserNamespace.h
+    Model/User/CUserNamespace.cpp
     Model/Wizard/CWizardDbManager.cpp
     Model/Wizard/CWizardDbManager.h
     Model/Wizard/CWizardManager.cpp

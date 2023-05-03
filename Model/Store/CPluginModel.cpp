@@ -28,11 +28,6 @@ void CPluginModel::setCurrentIndex(const QModelIndex &index)
     m_currentIndex = index;
 }
 
-void CPluginModel::setCurrentPluginId(int id)
-{
-    m_currentPluginId = id;
-}
-
 void CPluginModel::setQuery(const QString &query, const QSqlDatabase& db)
 {
     if (!m_pModel)
@@ -56,6 +51,11 @@ void CPluginModel::setPluginField(int index, const QString& key, const QString& 
     m_jsonPlugins[index] = plugin;
 }
 
+void CPluginModel::setPackageFile(const QString &file)
+{
+    m_packageFile = file;
+}
+
 CPluginModel::Type CPluginModel::getType() const
 {
     return m_type;
@@ -74,11 +74,6 @@ CUser CPluginModel::getCurrentUser() const
 QModelIndex CPluginModel::getCurrentIndex() const
 {
     return m_currentIndex;
-}
-
-int CPluginModel::getCurrentPluginId() const
-{
-    return m_currentPluginId;
 }
 
 int CPluginModel::getIntegerField(const QString &fieldName, const QModelIndex &index) const
@@ -130,9 +125,25 @@ ApiLanguage CPluginModel::getLanguageFromString(const QString strLanguage) const
         return ApiLanguage::PYTHON;
 }
 
+QString CPluginModel::getPackageFile() const
+{
+    return m_packageFile;
+}
+
 bool CPluginModel::isComplete() const
 {
     return m_totalPluginCount == m_jsonPlugins.size();
+}
+
+bool CPluginModel::isPluginExists(const QString &name) const
+{
+    for (int i=0; i<m_jsonPlugins.size(); ++i)
+    {
+        QJsonObject plugin = m_jsonPlugins[i].toObject();
+        if (plugin["name"] == name)
+            return true;
+    }
+    return false;
 }
 
 void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatabase &db)

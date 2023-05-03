@@ -21,24 +21,25 @@ class CPluginModel
         void                setType(Type type);
         void                setCurrentUser(const CUser &user);
         void                setCurrentIndex(const QModelIndex& index);
-        void                setCurrentPluginId(int id);
         void                setQuery(const QString& query, const QSqlDatabase& db);
         void                setTotalPluginCount(int count);
         void                setPluginField(int index, const QString &key, const QString &value);
+        void                setPackageFile(const QString& file);
 
         Type                getType() const;
         CStoreQueryModel*   getModel() const;
         CUser               getCurrentUser() const;
         QModelIndex         getCurrentIndex() const;
-        int                 getCurrentPluginId() const;
         int                 getIntegerField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         std::string         getStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         QString             getQStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         QJsonArray          getJsonPlugins() const;
         int                 getTotalPluginCount() const;
         ApiLanguage         getLanguageFromString(const QString strLanguage) const;
+        QString             getPackageFile() const;
 
         bool                isComplete() const;
+        bool                isPluginExists(const QString& name) const;
 
         void                init(const CUser &user, const QString& query, const QSqlDatabase& db);
 
@@ -61,6 +62,7 @@ class CPluginModel
         QModelIndex         m_currentIndex = QModelIndex();
         QJsonArray          m_jsonPlugins;
         CUser               m_user;
+        QString             m_packageFile;
         int                 m_currentPluginId = -1;
         int                 m_totalPluginCount = 0;
 };

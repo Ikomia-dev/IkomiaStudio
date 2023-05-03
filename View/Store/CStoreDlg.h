@@ -46,7 +46,7 @@ class CStoreDlg : public CDialog
         void            doGetHubModel();
         void            doGetWorkspaceModel();
         void            doGetLocalModel();
-        void            doPublishPlugin(const QModelIndex& index);
+        void            doPublishPlugin(CPluginModel::Type serverType, const QModelIndex& index);
         void            doInstallHubPlugin(const QModelIndex& index);
         void            doInstallWorkspacePlugin(const QModelIndex& index);
         void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
@@ -57,8 +57,7 @@ class CStoreDlg : public CDialog
     public slots:
 
         void            onSetPluginModel(CPluginModel* pModel);
-        void            onShowLocalPluginInfo(const QModelIndex& index);
-        void            onShowServerPluginInfo(const QModelIndex& index);
+        void            onShowPluginInfo(const QModelIndex& index);
 
     protected:
 

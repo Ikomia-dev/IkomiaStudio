@@ -116,13 +116,9 @@ void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &
             break;
         }
 
-        case PUBLISH:
-        {
-            auto state = getProcessState(index);
-            if(state == PluginState::VALID)
-                emit doPublishPlugin(index);
+        case PUBLISH:            
+            emit doPublishPlugin(index);
             break;
-        }
     }
 }
 
