@@ -253,14 +253,6 @@ namespace Ikomia
                 }
             }
 
-            inline void         runScript(const std::string& script)
-            {
-                CPyEnsureGIL gil;
-                str pyScript(script);
-                object main_module = import("__main__");
-                object main_namespace = main_module.attr("__dict__");
-                exec(pyScript, main_namespace, main_namespace);
-            }
             inline object       runCommand(const std::vector<std::string>& args)
             {
                 // DO NOT USE THIS FUNCTION
