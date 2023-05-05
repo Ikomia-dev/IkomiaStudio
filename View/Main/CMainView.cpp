@@ -586,11 +586,11 @@ void CMainView::initMainToolBar()
 
     //Open plugin store
     const QIcon storeIcon(":/Images/store-color.png");
-    m_pOpenStoreAct = new QAction(storeIcon, tr("&Open plugins store..."), this);
-    m_pOpenStoreAct->setStatusTip(tr("Open plugins store"));
+    m_pOpenStoreAct = new QAction(storeIcon, tr("&Open Ikomia HUB..."), this);
+    m_pOpenStoreAct->setStatusTip(tr("Open Ikomia HUB"));
     m_pCentralViewLayout->addActionToMenu(m_pOpenStoreAct);
     QToolButton* pOpenStore = m_pCentralViewLayout->addButtonToUpperBar("", itemSize, storeIcon, Qt::AlignRight);
-    pOpenStore->setToolTip(tr("Open plugins store"));
+    pOpenStore->setToolTip(tr("Open Ikomia HUB"));
     pOpenStore->setDefaultAction(m_pOpenStoreAct);
 
     //Load plugins : action only

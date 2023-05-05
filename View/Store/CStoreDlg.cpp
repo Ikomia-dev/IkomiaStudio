@@ -24,7 +24,7 @@
 #include "View/Process/CProcessDocWidget.h"
 
 CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
-    : CDialog(tr("Ikomia Marketplace"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
+    : CDialog(tr("Ikomia HUB"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
     //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
@@ -137,7 +137,7 @@ void CStoreDlg::initConnections()
 
 QWidget *CStoreDlg::createLeftWidget()
 {
-    m_pBtnServerPlugins = new QPushButton(tr("Ikomia Marketplace"));
+    m_pBtnServerPlugins = new QPushButton(tr("Ikomia HUB"));
     m_pBtnLocalPlugins = new QPushButton(tr("Installed algorithms"));
 
     QVBoxLayout* pLayout = new QVBoxLayout;
@@ -168,7 +168,7 @@ QWidget *CStoreDlg::createRightWidget()
     m_pServerPluginsView = new CStorePluginListView(CStorePluginListViewDelegate::SERVER);
 
     //Message label
-    m_pLabelMsgServer = createMessageLabel(tr("You have to be registered to display online plugins"));
+    m_pLabelMsgServer = createMessageLabel(tr("You have to be registered to display online algorithms"));
 
     auto pServerVLayout = new QVBoxLayout;
     pServerVLayout->addLayout(pTopBarServerLayout);
