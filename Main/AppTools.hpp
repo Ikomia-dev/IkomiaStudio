@@ -188,8 +188,8 @@ namespace Ikomia
         {
             using namespace boost::python;
 
-            const std::string _python_bin_prod_version = "3.7m";
-            const std::string _python_lib_prod_version = "3.7";
+            const std::string _python_bin_prod_version = "3.8";
+            const std::string _python_lib_prod_version = "3.8";
 
             inline std::string  getDevBinVersion()
             {
@@ -252,6 +252,7 @@ namespace Ikomia
     #endif
                 }
             }
+
             inline object       runCommand(const std::vector<std::string>& args)
             {
                 // DO NOT USE THIS FUNCTION

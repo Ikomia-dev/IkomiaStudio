@@ -109,7 +109,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Process List
             addStep(m_pView->getProcessPane()->getTreeView(),
-                    tr("All algorithms are listed here (OpenCV, G'MIC, plugins and algorithms installed from the Ikomia MarketPlace)."),
+                    tr("All algorithms are listed here (OpenCV, G'MIC, plugins and algorithms installed from the Ikomia HUB)."),
                     "",
                     "QTreeView{border: 2px solid green; border-radius: 5px}",
                     m_pView->getProcessPane()->getTreeView(),
@@ -129,7 +129,7 @@ class CTutoStartingHelper : public CWizardScenario
 
             // Open Store
             addStep(m_pView->getBtn(CMainView::BTN_OPEN_STORE),
-                    tr("Open Ikomia Marketplace and leverage state of the art algorithms."),
+                    tr("Open Ikomia HUB and leverage state of the art algorithms."),
                     "",
                     "",
                     m_pView->getStoreView(),

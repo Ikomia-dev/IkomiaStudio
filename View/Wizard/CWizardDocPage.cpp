@@ -55,7 +55,7 @@ void CWizardDocPage::initLayout()
     if(m_actions & BACK)
     {
         QPushButton* pBackBtn = new QPushButton(QIcon(":/Images/back.png"), "");
-        pBackBtn->setToolTip(tr("Back to process store"));
+        pBackBtn->setToolTip(tr("Back to algorithms"));
         connect(pBackBtn, &QPushButton::clicked, [&]{ emit doBack();});
         pActionsLayout->addWidget(pBackBtn);
     }

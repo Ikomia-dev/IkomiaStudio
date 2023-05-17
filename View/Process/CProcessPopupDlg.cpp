@@ -20,7 +20,7 @@
 #include "View/Process/CProcessDocWidget.h"
 
 CProcessPopupDlg::CProcessPopupDlg(QWidget *parent, Qt::WindowFlags f):
-    CDialog(tr("Process store"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
+    CDialog(tr("Algorithms"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
     //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
