@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-set(IKOMIA_VERSION 0.9.0)
-project(IkomiaStudio VERSION 0.9.0 LANGUAGES CXX)
+set(IKOMIA_VERSION 0.10.0)
+project(IkomiaStudio VERSION 0.10.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/Build)
@@ -422,6 +422,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Store/CStorePluginListView.h
     View/Store/CStorePluginListViewDelegate.cpp
     View/Store/CStorePluginListViewDelegate.h
+    View/Store/CWorkspaceChoiceDlg.h
+    View/Store/CWorkspaceChoiceDlg.cpp
     View/Wizard/CWizardDocFrame.cpp
     View/Wizard/CWizardDocFrame.h
     View/Wizard/CWizardDocPage.cpp

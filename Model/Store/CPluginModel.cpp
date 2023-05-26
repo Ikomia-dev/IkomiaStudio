@@ -28,6 +28,16 @@ void CPluginModel::setCurrentIndex(const QModelIndex &index)
     m_currentIndex = index;
 }
 
+void CPluginModel::setCurrentWorkspace(const QString &workspace)
+{
+    m_currentWorkspace = workspace;
+}
+
+void CPluginModel::setCurrentRequestUrl(const QString &url)
+{
+    m_currentRequestUrl = url;
+}
+
 void CPluginModel::setQuery(const QString &query, const QSqlDatabase& db)
 {
     if (!m_pModel)
@@ -74,6 +84,16 @@ CUser CPluginModel::getCurrentUser() const
 QModelIndex CPluginModel::getCurrentIndex() const
 {
     return m_currentIndex;
+}
+
+QString CPluginModel::getCurrentWorkspace() const
+{
+    return m_currentWorkspace;
+}
+
+QString CPluginModel::getCurrentRequestUrl() const
+{
+    return m_currentRequestUrl;
 }
 
 int CPluginModel::getIntegerField(const QString &fieldName, const QModelIndex &index) const
@@ -187,8 +207,8 @@ void CPluginModel::filterCompatiblePlugins()
     // Remove incompatible plugins
     if (toRemove.size() > 0)
     {
-        for (size_t i=toRemove.size() - 1; i>=0; --i)
-            m_jsonPlugins.removeAt(i);
+        for (size_t i=0; i<toRemove.size(); ++i)
+            m_jsonPlugins.removeAt(toRemove[i]);
     }
 }
 
@@ -274,9 +294,9 @@ bool CPluginModel::checkArchitecture(const QJsonObject &plugin) const
 
 void CPluginModel::clear()
 {
-    m_currentIndex = QModelIndex();
+    // Clear all
+    clearContext();
     m_jsonPlugins = QJsonArray();
-    m_currentPluginId = -1;
     m_totalPluginCount = 0;
 
     if (m_pModel != nullptr)
@@ -284,4 +304,14 @@ void CPluginModel::clear()
         delete m_pModel;
         m_pModel = nullptr;
     }
+}
+
+void CPluginModel::clearContext()
+{
+    // Clear contextual data
+    m_currentIndex = QModelIndex();
+    m_currentPluginId = -1;
+    m_currentWorkspace.clear();
+    m_currentRequestUrl.clear();
+    m_packageFile.clear();
 }

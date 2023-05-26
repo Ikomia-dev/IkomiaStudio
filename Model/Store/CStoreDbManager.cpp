@@ -76,57 +76,6 @@ QString CStoreDbManager::getServerSearchQuery(const QString &searchText) const
     return query;
 }
 
-void CStoreDbManager::setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser &user)
-{
-    auto dbMemory = Utils::Database::connect(m_name, Utils::Database::getProcessConnectionName());
-    if(dbMemory.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, dbMemory.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    if(pluginId == -1)
-        pluginId = getLocalIdFromServerId(dbMemory, serverId);
-
-    if(pluginId == -1)
-        throw CException(DatabaseExCode::INVALID_ID, "Plugin ID not found", __func__, __FILE__, __LINE__);
-
-    QString userFullName;
-    if(user.m_firstName.isEmpty() && user.m_lastName.isEmpty())
-        userFullName = user.m_name;
-    else
-        userFullName = user.m_firstName + " " + user.m_lastName;
-
-    //Update memory database
-    QSqlQuery q1(dbMemory);
-    if(!q1.exec(QString("UPDATE process SET user='%1', serverId=%2, userId=%3 WHERE id=%4")
-                .arg(userFullName)
-                .arg(serverId)
-                .arg(user.m_id)
-                .arg(pluginId)))
-    {
-        throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-    }
-
-    //Update file database
-    auto dbFile = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
-    if(dbFile.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, dbFile.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    QSqlQuery q2(dbFile);
-    if(!q2.exec(QString("INSERT INTO process "
-                        "(name, user, serverId, userId) "
-                        "VALUES ('%1', '%2', %3, %4) "
-                        "ON CONFLICT(name) DO UPDATE SET "
-                        "user = COALESCE(excluded.user, user), "
-                        "serverId = excluded.serverId, "
-                        "userId = excluded.userId;")
-                 .arg(name)
-                 .arg(userFullName)
-                 .arg(serverId)
-                 .arg(user.m_id)))
-    {
-        throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-    }
-}
-
 void CStoreDbManager::insertPlugins(CPluginModel* pModel)
 {
     auto db = Utils::Database::connect(m_name, getDbConnectionName(pModel->getType()));
@@ -294,8 +243,8 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
     QSqlQuery q(db);
     auto strQuery = QString("INSERT INTO process "
                             "(name, shortDescription, description, keywords, user, authors, article, journal, year, docLink, "
-                            "createdDate, modifiedDate, version, ikomiaVersion, language, license, repository, os, isInternal, iconPath, serverId, userId) "
-                            "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', '%14', %15, '%16', '%17', %18, %19, '%20', %21, %22) "
+                            "createdDate, modifiedDate, version, ikomiaVersion, minPythonVersion, language, license, repository, os, isInternal, iconPath, serverId, userId) "
+                            "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', '%14', '%15', %16, '%17', '%18', %19, %20, '%21', %22, %23) "
                             "ON CONFLICT(name) DO UPDATE SET "
                             "shortDescription = excluded.shortDescription, "
                             "description = excluded.description, "
@@ -309,6 +258,7 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
                             "modifiedDate = excluded.modifiedDate, "
                             "version = excluded.version, "
                             "ikomiaVersion = excluded.ikomiaVersion, "
+                            "minPythonVersion = excluded.minPythonVersion, "
                             "license = excluded.license, "
                             "repository = excluded.repository, "
                             "iconPath = excluded.iconPath;")
@@ -326,6 +276,7 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_modifiedDate)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_version)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_ikomiaVersion)))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_minPythonVersion)))
             .arg(procInfo.m_language)
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_license)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_repo)))

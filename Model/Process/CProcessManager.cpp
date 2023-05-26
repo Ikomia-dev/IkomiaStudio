@@ -85,6 +85,7 @@ CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
         info.m_journal = q.value("journal").toString().toStdString();
         info.m_version = q.value("version").toString().toStdString();
         info.m_ikomiaVersion = q.value("ikomiaVersion").toString().toStdString();
+        info.m_minPythonVersion = q.value("minPythonVersion").toString().toStdString();
         info.m_license = q.value("license").toString().toStdString();
         info.m_repo = q.value("repository").toString().toStdString();
         info.m_createdDate = q.value("createdDate").toString().toStdString();
@@ -93,7 +94,7 @@ CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
         info.m_language = q.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
         info.m_bInternal = q.value("isInternal").toInt();
         info.m_userId = q.value("userId").toInt();
-        info.m_os = q.value("os").toInt();
+        info.m_os = static_cast<OSType>(q.value("os").toInt());
     }
     return info;
 }
@@ -390,6 +391,7 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
     QString docLink = QString::fromStdString(Utils::String::dbFormat(info.m_docLink));
     QString version = QString::fromStdString(Utils::String::dbFormat(info.m_version));
     QString ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(info.m_ikomiaVersion));
+    QString minPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.m_minPythonVersion));
     QString iconPath = QString::fromStdString(Utils::String::dbFormat(info.m_iconPath));
     QString license = QString::fromStdString(Utils::String::dbFormat(info.m_license));
     QString repository = QString::fromStdString(Utils::String::dbFormat(info.m_repo));
@@ -403,10 +405,11 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
         if(!q.exec(QString("UPDATE process SET "
                            "shortDescription = '%1', description = '%2', keywords = '%3', authors = '%4', article = '%5', "
                            "journal = '%6', year = %7, docLink = '%8', version = '%9', iconPath = '%10', os = %11 , license = '%12', "
-                           "repository = '%13', ikomiaVersion = %14 "
-                           "WHERE id = %15;")
+                           "repository = '%13', ikomiaVersion = '%14', minPythonVersion = '%15' "
+                           "WHERE id = %16;")
                 .arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal).arg(info.m_year)
-                .arg(docLink).arg(version).arg(iconPath).arg(info.m_os).arg(license).arg(repository).arg(ikomiaVersion).arg(info.m_id)))
+                .arg(docLink).arg(version).arg(iconPath).arg(info.m_os).arg(license).arg(repository)
+                .arg(ikomiaVersion).arg(minPythonVersion).arg(info.m_id)))
         {
             throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
         }
@@ -448,8 +451,8 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
     if(bFullEdit == true)
     {
         strQuery = QString("INSERT INTO process "
-                           "(name, shortDescription, description, keywords, authors, article, journal, year, docLink, version, ikomiaVersion, iconPath, os, license, repository) "
-                           "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', %8, '%9', '%10', '%11', %12, '%13', '%14', '%15') "
+                           "(name, shortDescription, description, keywords, authors, article, journal, year, docLink, version, ikomiaVersion, minPythonVersion, iconPath, os, license, repository) "
+                           "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', %8, '%9', '%10', '%11', %12, '%13', '%14', '%15', '%16') "
                            "ON CONFLICT(name) DO UPDATE SET "
                            "shortDescription = excluded.shortDescription, "
                            "description = excluded.description, "
@@ -461,13 +464,14 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
                            "docLink = excluded.docLink, "
                            "version = excluded.version, "
                            "ikomiaVersion = excluded.ikomiaVersion, "
+                           "minPythonVersion = excluded.minPythonVersion, "
                            "iconPath = excluded.iconPath, "
                            "os = excluded.os, "
                            "license = excluded.license, "
                            "repository = excluded.repository;")
                 .arg(QString::fromStdString(info.m_name)).arg(description).arg(keywords).arg(authors)
                 .arg(article).arg(journal).arg(info.m_year).arg(docLink).arg(version).arg(ikomiaVersion)
-                .arg(iconPath).arg(info.m_os).arg(license).arg(repository);
+                .arg(minPythonVersion).arg(iconPath).arg(info.m_os).arg(license).arg(repository);
     }
     else
     {
@@ -626,9 +630,9 @@ void CProcessManager::createProcessTable(QSqlDatabase &db)
     QSqlQuery q(db);
     if(!q.exec("CREATE TABLE process ("
                "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXTE, description TEXT, keywords TEXT, user TEXT, "
-               "authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, modifiedDate TEXT, version TEXT, "
-               "ikomiaVersion TEXT, language INTEGER, os INTEGER, isInternal INTEGER, iconPath TEXT, certification INTEGER DEFAULT 0, "
-               "votes INTEGER DEFAULT 0, license TEXT, repository TEXT, "
+               "authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, modifiedDate TEXT, "
+               "version TEXT, ikomiaVersion TEXT, minPythonVersion TEXT, language INTEGER, os INTEGER, isInternal INTEGER, "
+               "iconPath TEXT, certification INTEGER DEFAULT 0, votes INTEGER DEFAULT 0, license TEXT, repository TEXT, "
                "folderId INTEGER, serverId INTEGER DEFAULT -1, userId INTEGER DEFAULT -1, userReputation INTEGER DEFAULT 0);"))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
@@ -703,7 +707,7 @@ void CProcessManager::createModel()
         addFoldersInfo();
 
         //Synchronise memory database with file database (main)
-        synCTaskInfo();
+        syncTaskInfo();
 
         // Fill all models from database
         for(const auto& id : m_viewIds)
@@ -814,15 +818,16 @@ void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, s
     auto docLink = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getDocumentationLink()));
     auto version = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getVersion()));
     auto ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getIkomiaVersion()));
+    auto minPythonVersion = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getMinPythonVersion()));
     auto license = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getLicense()));
     auto repo = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getRepository()));
 
     if (!q.exec(QString("INSERT INTO process"
                         "(id, name, shortDescription, description, keywords, authors, article, journal, year, "
-                        "docLink, version, ikomiaVersion, language, os, isInternal, iconPath, folderId, license, repository) "
-                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', %13, %14, %15, '%16', %17, '%18', '%19');")
+                        "docLink, version, ikomiaVersion, minPythonVersion, language, os, isInternal, iconPath, folderId, license, repository) "
+                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', %14, %15, %16, '%17', %18, '%19', '%20');")
                 .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal)
-                .arg(process->getInfo().getYear()).arg(docLink).arg(version).arg(ikomiaVersion).arg(language).arg(os).arg(bInternal)
+                .arg(process->getInfo().getYear()).arg(docLink).arg(version).arg(ikomiaVersion).arg(minPythonVersion).arg(language).arg(os).arg(bInternal)
                 .arg(iconPath).arg(folderId).arg(license).arg(repo)))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
@@ -869,7 +874,7 @@ void CProcessManager::addFoldersInfo()
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CProcessManager::synCTaskInfo()
+void CProcessManager::syncTaskInfo()
 {
     auto db = QSqlDatabase::database(Utils::Database::getMainConnectionName());
     if(!db.isValid())

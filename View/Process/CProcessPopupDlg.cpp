@@ -363,7 +363,7 @@ CTaskInfo CProcessPopupDlg::getProcessInfo(const QModelIndex &index) const
     info.m_language = record.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
     info.m_bInternal = record.value("isInternal").toInt();
     info.m_userId = record.value("userId").toInt();
-    info.m_os = record.value("os").toInt();
+    info.m_os = static_cast<OSType>(record.value("os").toInt());
     return info;
 }
 

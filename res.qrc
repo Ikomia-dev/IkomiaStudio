@@ -223,6 +223,7 @@
         <file>Images/approved.png</file>
         <file>Images/text-editor.png</file>
         <file>Templates/Python/template_test.py</file>
+        <file>Migrations/migration0002.sql</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

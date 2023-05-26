@@ -21,6 +21,7 @@
 #include "CStorePluginListView.h"
 #include "CStorePluginListViewDelegate.h"
 #include "View/Process/CProcessDocWidget.h"
+#include "CWorkspaceChoiceDlg.h"
 
 CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Ikomia HUB"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
@@ -39,7 +40,9 @@ CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
 
 void CStoreDlg::setCurrentUser(const CUser &user)
 {
+    m_currentUser = user;
     m_pDocWidget->setCurrentUser(user);
+
     if (isVisible())
     {
         emit doGetHubModel();
@@ -91,6 +94,16 @@ void CStoreDlg::onShowPluginInfo(const QModelIndex &index)
     showProcessInfo(index);
 }
 
+void CStoreDlg::onPublishPluginToWorkspace(const QModelIndex& index)
+{
+    CWorkspaceChoiceDlg workspaceDlg(m_currentUser, this);
+    if(workspaceDlg.exec() == QDialog::Accepted)
+    {
+        QString workspace = workspaceDlg.getWorkspaceName();
+        emit doPublishPlugin(CPluginModel::Type::WORKSPACE, index, workspace);
+    }
+}
+
 void CStoreDlg::initLayout()
 {
     auto pLeftWidget = createLeftWidget();
@@ -124,7 +137,7 @@ void CStoreDlg::initConnections()
 
     connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallHubPlugin(index); });
 
-    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(CPluginModel::Type::WORKSPACE, index); });
+    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, this, &CStoreDlg::onPublishPluginToWorkspace);
     connect(m_pWorkspaceView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(CPluginModel::Type::HUB, index); });
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
@@ -137,7 +150,7 @@ void CStoreDlg::initConnections()
 QWidget *CStoreDlg::createLeftWidget()
 {
     m_pBtnHub = new QPushButton(tr("Ikomia HUB"));
-    m_pBtnWorkspace = new QPushButton(tr("Private workspace"));
+    m_pBtnWorkspace = new QPushButton(tr("Private workspaces"));
     m_pBtnLocalPlugins = new QPushButton(tr("Installed algorithms"));
 
     QVBoxLayout* pLayout = new QVBoxLayout;
@@ -285,7 +298,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     info.m_language = record.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
     info.m_bInternal = record.value("isInternal").toInt();
     info.m_userId = record.value("userId").toInt();
-    info.m_os = record.value("os").toInt();
+    info.m_os = static_cast<OSType>(record.value("os").toInt());
 
     m_pDocWidget->setProcessInfo(info);
     m_pRightStackWidget->setCurrentIndex(1);

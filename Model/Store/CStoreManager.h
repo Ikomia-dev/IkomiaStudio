@@ -67,7 +67,7 @@ class CStoreManager : public QObject
         void            onRequestHubModel();
         void            onRequestWorkspaceModel();
         void            onRequestLocalModel();
-        void            onPublishPlugin(CPluginModel::Type serverType, const QModelIndex& index);
+        void            onPublishPlugin(CPluginModel::Type serverType, const QModelIndex& index, const QString &workspace="");
         void            onInstallHubPlugin(const QModelIndex& index);
         void            onInstallWorkspacePlugin(const QModelIndex& index);
         void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
@@ -92,7 +92,8 @@ class CStoreManager : public QObject
         void            createHubPluginModel();
         void            createWorkspacePluginModel();
         void            createQueryModel(CPluginModel* pModel);
-        QByteArray      createPluginJsonPayload(CPluginModel *pModel);
+        QByteArray      createPluginPayload(CPluginModel *pModel);
+        QJsonObject     createPluginPackagePayload(CPluginModel *pModel);
 
         QString         checkPythonPluginDirectory(const QString &directory);
         QString         checkCppPluginDirectory(const QString &directory, const QString& name);
@@ -110,8 +111,6 @@ class CStoreManager : public QObject
 
         void            fillServerPluginModel(CPluginModel *pModel, QNetworkReply *pReply);
 
-        void            fetchPagePlugins(CPluginModel* pModel, const QJsonObject& jsonPage);
-
         void            addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply);
 
         void            validateServerPluginModel(CPluginModel *pModel);
@@ -120,11 +119,12 @@ class CStoreManager : public QObject
         void            extractZipFile(const QString &src, const QString &dstDir);
 
         void            publishToHub(const QModelIndex &index);
-        void            publishToWorkspace(const QModelIndex &index);
+        void            publishToWorkspace(const QModelIndex &index, const QString &workspace);
         void            publishPluginToWorkspace();
+        void            publishPackageToWorkspace();
 
-        void            uploadPluginPackage(CPluginModel *pModel, QNetworkReply *pReply);
-        void            uploadPluginIcon(CPluginModel *pModel, QNetworkReply *pReply);
+        void            uploadPluginPackage();
+        void            uploadPluginIcon(QNetworkReply *pReply);
 
         void            downloadPluginPackage(const QString& packageUrl);
 

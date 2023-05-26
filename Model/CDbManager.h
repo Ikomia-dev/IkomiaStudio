@@ -49,7 +49,7 @@ class CDbManager
     private:
 
         bool                        m_bFirstLaunch = true;
-        const QMap<QString,QString> m_migrationMap = { {"0.3.0" , "migration0001.sql"} };
+        QMap<QString,QString>       m_migrationMap;
 };
 
 #endif // CDBMIGRATIONMANAGER_H

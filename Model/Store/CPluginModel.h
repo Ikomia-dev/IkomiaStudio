@@ -21,6 +21,8 @@ class CPluginModel
         void                setType(Type type);
         void                setCurrentUser(const CUser &user);
         void                setCurrentIndex(const QModelIndex& index);
+        void                setCurrentWorkspace(const QString& workspace);
+        void                setCurrentRequestUrl(const QString& url);
         void                setQuery(const QString& query, const QSqlDatabase& db);
         void                setTotalPluginCount(int count);
         void                setPluginField(int index, const QString &key, const QString &value);
@@ -30,6 +32,8 @@ class CPluginModel
         CStoreQueryModel*   getModel() const;
         CUser               getCurrentUser() const;
         QModelIndex         getCurrentIndex() const;
+        QString             getCurrentWorkspace() const;
+        QString             getCurrentRequestUrl() const;
         int                 getIntegerField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         std::string         getStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         QString             getQStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
@@ -48,6 +52,7 @@ class CPluginModel
         void                filterCompatiblePlugins();
 
         void                clear();
+        void                clearContext();
 
     private:
 
@@ -62,6 +67,8 @@ class CPluginModel
         QModelIndex         m_currentIndex = QModelIndex();
         QJsonArray          m_jsonPlugins;
         CUser               m_user;
+        QString             m_currentWorkspace;
+        QString             m_currentRequestUrl;
         QString             m_packageFile;
         int                 m_currentPluginId = -1;
         int                 m_totalPluginCount = 0;

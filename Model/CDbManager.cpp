@@ -23,6 +23,10 @@
 
 CDbManager::CDbManager()
 {
+    m_migrationMap = {
+        {"0.3.0" , "migration0001.sql"},
+        {"0.10.0" , "migration0002.sql"},
+    };
 }
 
 void CDbManager::init()

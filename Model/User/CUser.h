@@ -33,18 +33,19 @@ class CUser
         CUser();
         ~CUser();
 
-        bool            operator==(const CUser& other) const;
-        bool            operator!=(const CUser& other) const;
+        bool                    operator==(const CUser& other) const;
+        bool                    operator!=(const CUser& other) const;
 
-        bool            isConnected() const;
+        bool                    isConnected() const;
 
-        QByteArray      getSessionCookie(const QString& name);
-        CUserNamespace  getNamespace(const QString& name) const;
-        QString         getMyNamespaceUrl() const;
+        QByteArray              getSessionCookie(const QString& name);
+        CUserNamespace          getNamespace(const QString& name) const;
+        QString                 getMyNamespaceUrl() const;
+        std::vector<QString>    getNamespaceNames() const;
 
-        void            logout();
+        void                    logout();
 
-        void            addNamespace(const QJsonObject& ns);
+        void                    addNamespace(const QJsonObject& ns);
 
     public:
 

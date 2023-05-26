@@ -82,6 +82,15 @@ QString CUser::getMyNamespaceUrl() const
     return m_namespaceUrl;
 }
 
+std::vector<QString> CUser::getNamespaceNames() const
+{
+    std::vector<QString> names;
+    for (size_t i=0; i<m_namespaces.size(); ++i)
+        names.push_back(m_namespaces[i].m_name);
+
+    return names;
+}
+
 void CUser::logout()
 {
     m_id = -1;
