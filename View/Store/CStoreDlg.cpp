@@ -22,6 +22,7 @@
 #include "CStorePluginListViewDelegate.h"
 #include "View/Process/CProcessDocWidget.h"
 #include "CWorkspaceChoiceDlg.h"
+#include "CPublicationFormDlg.h"
 
 CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Ikomia HUB"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
@@ -100,7 +101,20 @@ void CStoreDlg::onPublishPluginToWorkspace(const QModelIndex& index)
     if(workspaceDlg.exec() == QDialog::Accepted)
     {
         QString workspace = workspaceDlg.getWorkspaceName();
-        emit doPublishPlugin(CPluginModel::Type::WORKSPACE, index, workspace);
+        emit doPublishWorkspace(index, workspace);
+    }
+}
+
+void CStoreDlg::onSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo)
+{
+    auto pModel = dynamic_cast<CStoreQueryModel*>(m_pWorkspaceView->model());
+    assert(pModel);
+    QSqlRecord pluginInfo = pModel->record(index.row());
+    CPublicationFormDlg publishFormDlg(pluginInfo, publishInfo, this);
+
+    if(publishFormDlg.exec() == QDialog::Accepted)
+    {
+        emit doPublishHub(index, publishFormDlg.getPublishInfo());
     }
 }
 
@@ -135,10 +149,11 @@ void CStoreDlg::initConnections()
     connect(m_pWorkspaceView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
     connect(m_pLocalView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
 
-    connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallHubPlugin(index); });
+    connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::HUB, index); });
+    connect(m_pWorkspaceView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::WORKSPACE, index); });
 
     connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, this, &CStoreDlg::onPublishPluginToWorkspace);
-    connect(m_pWorkspaceView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(CPluginModel::Type::HUB, index); });
+    connect(m_pWorkspaceView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doGetNextPublishInfo(index); });
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
     connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)

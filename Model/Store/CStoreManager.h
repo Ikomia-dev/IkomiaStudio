@@ -37,12 +37,13 @@ enum class StoreRequestType : int
     GET_PLUGINS,
     GET_PLUGIN_DETAILS,
     GET_PACKAGE_URL,
-    PUBLISH_PLUGIN,
+    GET_NEXT_PUBLISH_INFO,
+    PUBLISH_HUB,
+    PUBLISH_WORKSPACE,
     UPDATE_PLUGIN,
     UPLOAD_PACKAGE,
     UPLOAD_ICON,
-    DOWNLOAD_PACKAGE,
-    DELETE_PLUGIN
+    DOWNLOAD_PACKAGE
 };
 
 class CStoreManager : public QObject
@@ -59,6 +60,7 @@ class CStoreManager : public QObject
     signals:
 
         void            doSetPluginModel(CPluginModel* pModel);
+        void            doSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo);
 
         void            doRestartIkomia();
 
@@ -67,9 +69,10 @@ class CStoreManager : public QObject
         void            onRequestHubModel();
         void            onRequestWorkspaceModel();
         void            onRequestLocalModel();
-        void            onPublishPlugin(CPluginModel::Type serverType, const QModelIndex& index, const QString &workspace="");
-        void            onInstallHubPlugin(const QModelIndex& index);
-        void            onInstallWorkspacePlugin(const QModelIndex& index);
+        void            onRequestNextPublishInfo(const QModelIndex& index);
+        void            onPublishHub(const QModelIndex& index, const QJsonObject &info);
+        void            onPublishWorkspace(const QModelIndex& index, const QString &workspace);
+        void            onInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
         void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            onServerSearchChanged(const QString& text);
         void            onLocalSearchChanged(const QString& text);
@@ -77,15 +80,10 @@ class CStoreManager : public QObject
     private slots:
 
         void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, StoreRequestType requestType);
-        void            onPublishPluginDone();
         void            onPluginCompressionDone(const QString &zipFile);
         void            onUpdatePluginDone();
-        void            onGetPackageUrlDone();
-        void            onDownloadPackageDone();
-        void            onPluginExtractionDone(const QStringList &files, const QString dstDir);
         void            onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
         void            onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-        void            onDeletePlugin();
 
     private:
 
@@ -102,9 +100,8 @@ class CStoreManager : public QObject
 
         void            queryServerPlugins(CPluginModel* pModel, const QString& strUrl);
         void            queryServerPluginDetails(CPluginModel *pModel, QString strUrl);
-        void            queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl, StoreRequestType requestType);
+        void            queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl);
         void            queryServerUpdatePlugin(const QString& strUrl, StoreRequestType requestType);
-        void            queryServerPublishPlugin(CPluginModel *pModel, const QString& strUrl);
 
         void            updateServerPlugin();
         void            updateLocalPlugin();
@@ -114,11 +111,12 @@ class CStoreManager : public QObject
         void            addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply);
 
         void            validateServerPluginModel(CPluginModel *pModel);
+        void            validatePluginFolder(CPluginModel *pModel, const QStringList &files, const QString dstDir);
 
         void            generateZipFile();
-        void            extractZipFile(const QString &src, const QString &dstDir);
+        void            extractZipFile(CPluginModel *pModel, const QString &src, const QString &dstDir);
 
-        void            publishToHub(const QModelIndex &index);
+        void            publishToHub(const QModelIndex &index, const QJsonObject &info);
         void            publishToWorkspace(const QModelIndex &index, const QString &workspace);
         void            publishPluginToWorkspace();
         void            publishPackageToWorkspace();
@@ -126,7 +124,9 @@ class CStoreManager : public QObject
         void            uploadPluginPackage();
         void            uploadPluginIcon(QNetworkReply *pReply);
 
-        void            downloadPluginPackage(const QString& packageUrl);
+        void            downloadPluginPackage(CPluginModel *pModel, QNetworkReply *pReply);
+
+        void            savePluginFolder(CPluginModel *pModel, QNetworkReply *pReply);
 
         void            installPythonPluginDependencies(const QString& directory, const CTaskInfo &info, const CUser &user);
 
@@ -135,8 +135,13 @@ class CStoreManager : public QObject
 
         void            clearContext();
 
-        void            finalizePluginPublish(CPluginModel *pModel);
+        void            finalyzePublishHub();
+        void            finalizePublishWorkspace();
         void            finalizePluginInstall(const CTaskInfo &info, const CUser &user);
+
+        void            sendNextPublishInfo(CPluginModel *pModel, QNetworkReply* pReply);
+
+        QString         findBestPackageUrl(const QJsonArray& packages);
 
     private:
 

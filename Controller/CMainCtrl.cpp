@@ -454,15 +454,18 @@ void CMainCtrl::initStoreConnections()
     connect(m_pView->getStoreView(), &CStoreDlg::doGetHubModel, m_pModel->getStoreManager(), &CStoreManager::onRequestHubModel);
     connect(m_pView->getStoreView(), &CStoreDlg::doGetWorkspaceModel, m_pModel->getStoreManager(), &CStoreManager::onRequestWorkspaceModel);
     connect(m_pView->getStoreView(), &CStoreDlg::doGetLocalModel, m_pModel->getStoreManager(), &CStoreManager::onRequestLocalModel);
-    connect(m_pView->getStoreView(), &CStoreDlg::doPublishPlugin, m_pModel->getStoreManager(), &CStoreManager::onPublishPlugin);
-    connect(m_pView->getStoreView(), &CStoreDlg::doInstallHubPlugin, m_pModel->getStoreManager(), &CStoreManager::onInstallHubPlugin);
-    connect(m_pView->getStoreView(), &CStoreDlg::doInstallWorkspacePlugin, m_pModel->getStoreManager(), &CStoreManager::onInstallWorkspacePlugin);
+    connect(m_pView->getStoreView(), &CStoreDlg::doPublishHub, m_pModel->getStoreManager(), &CStoreManager::onPublishHub);
+    connect(m_pView->getStoreView(), &CStoreDlg::doPublishWorkspace, m_pModel->getStoreManager(), &CStoreManager::onPublishWorkspace);
+    connect(m_pView->getStoreView(), &CStoreDlg::doInstallPlugin, m_pModel->getStoreManager(), &CStoreManager::onInstallPlugin);
     connect(m_pView->getStoreView(), &CStoreDlg::doUpdatePluginInfo, m_pModel->getStoreManager(), &CStoreManager::onUpdatePluginInfo);
     connect(m_pView->getStoreView(), &CStoreDlg::doServerSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onServerSearchChanged);
     connect(m_pView->getStoreView(), &CStoreDlg::doLocalSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onLocalSearchChanged);
+    connect(m_pView->getStoreView(), &CStoreDlg::doGetNextPublishInfo, m_pModel->getStoreManager(), &CStoreManager::onRequestNextPublishInfo);
 
     //Model -> view
     connect(m_pModel->getStoreManager(), &CStoreManager::doSetPluginModel, m_pView->getStoreView(), &CStoreDlg::onSetPluginModel);
+    connect(m_pModel->getStoreManager(), &CStoreManager::doSetNextPublishInfo, m_pView->getStoreView(), &CStoreDlg::onSetNextPublishInfo);
+
     connect(m_pModel->getStoreManager(), &CStoreManager::doRestartIkomia, m_pView, &CMainView::onRestartIkomia, Qt::QueuedConnection);
 }
 

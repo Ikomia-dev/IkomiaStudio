@@ -87,7 +87,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
             journals, years, docLinks, createdDates, modifiedDates, versions, ikomiaVersions, languages,
             licenses, repositories, iconPaths, certifications, userIds, userReputations, votes;*/
     QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
-            journals, years, languages, repositories, iconPaths;
+            journals, years, versions, languages, licenses, repositories, iconPaths;
 
     QJsonArray plugins = pModel->getJsonPlugins();
     for(int i=0; i<plugins.size(); ++i)
@@ -124,8 +124,11 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         //createdDates << plugin["createdDate"].toString();
         //modifiedDates << plugin["modifiedDate"].toString();
 
-        // TODO: Ikomia HUB only
-        //versions << plugin["version"].toString();
+        // Version
+        if (plugin.contains("version"))
+            versions << plugin["version"].toString();
+        else
+            versions << "";
 
         // TODO: to remove -> check compatibility
         //ikomiaVersions << plugin["ikomiaVersion"].toString();
@@ -133,8 +136,11 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         // Language
         languages << pModel->getLanguageFromString(plugin["language"].toString());
 
-        // TODO: Ikomia HUB only
-        //licenses << plugin["license"].toString();
+        // License
+        if (plugin.contains("license"))
+            licenses << plugin["license"].toString();
+        else
+            licenses << "";
 
         // Implementation repository
         repositories << plugin["repository"].toString();
@@ -146,6 +152,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         //certifications << plugin["certification"].toInt();
         //votes << plugin["votes_count"].toInt();
 
+        // User
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
         {
             auto user = pModel->getCurrentUser();
@@ -157,6 +164,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         else
         {
             // TODO: Ikomia HUB
+            userNames << "";
             /*QJsonObject user = plugin["user"].toObject();
             userIds << user["pk"].toInt();
             userReputations << user["reputation"].toInt();
@@ -177,8 +185,8 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))*/
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
                           "name, shortDescription, description, keywords, user, authors, article, journal, "
-                          "year, language, repository, iconPath) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                          "year, version, language, license, repository, iconPath) "
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -195,10 +203,10 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     //q.addBindValue(docLinks);
     //q.addBindValue(createdDates);
     //q.addBindValue(modifiedDates);
-    //q.addBindValue(versions);
+    q.addBindValue(versions);
     //q.addBindValue(ikomiaVersions);
     q.addBindValue(languages);
-    //q.addBindValue(licenses);
+    q.addBindValue(licenses);
     q.addBindValue(repositories);
     q.addBindValue(iconPaths);
     //q.addBindValue(certifications);
@@ -231,10 +239,10 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         throw CException(DatabaseExCode::INVALID_QUERY, qFts.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, const CUser &user)
+void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
 {
     if(procInfo.m_os != OSType::ALL && m_currentOS != procInfo.m_os)
-        throw CException(CoreExCode::INVALID_PARAMETER, "This plugin ("+ procInfo.m_name +") is not build for your platform.",  __func__, __FILE__, __LINE__);
+        throw CException(CoreExCode::INVALID_PARAMETER, "This algorithm ("+ procInfo.m_name +") is not built for your platform.",  __func__, __FILE__, __LINE__);
 
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
     if(db.isValid() == false)
@@ -243,8 +251,8 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
     QSqlQuery q(db);
     auto strQuery = QString("INSERT INTO process "
                             "(name, shortDescription, description, keywords, user, authors, article, journal, year, docLink, "
-                            "createdDate, modifiedDate, version, ikomiaVersion, minPythonVersion, language, license, repository, os, isInternal, iconPath, serverId, userId) "
-                            "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', '%14', '%15', %16, '%17', '%18', %19, %20, '%21', %22, %23) "
+                            "createdDate, modifiedDate, version, ikomiaVersion, minPythonVersion, language, license, repository, os, isInternal, iconPath) "
+                            "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', '%14', '%15', %16, '%17', '%18', %19, %20, '%21') "
                             "ON CONFLICT(name) DO UPDATE SET "
                             "shortDescription = excluded.shortDescription, "
                             "description = excluded.description, "
@@ -282,9 +290,7 @@ void CStoreDbManager::insertPlugin(int serverId, const CTaskInfo &procInfo, cons
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_repo)))
             .arg(procInfo.m_os)
             .arg(false)
-            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_iconPath)))
-            .arg(serverId)
-            .arg(user.m_id);
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_iconPath)));
 
     if(!q.exec(strQuery))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);

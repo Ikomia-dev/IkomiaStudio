@@ -46,9 +46,10 @@ class CStoreDlg : public CDialog
         void            doGetHubModel();
         void            doGetWorkspaceModel();
         void            doGetLocalModel();
-        void            doPublishPlugin(CPluginModel::Type serverType, const QModelIndex& index, const QString& workspace="");
-        void            doInstallHubPlugin(const QModelIndex& index);
-        void            doInstallWorkspacePlugin(const QModelIndex& index);
+        void            doGetNextPublishInfo(const QModelIndex& index);
+        void            doPublishHub(const QModelIndex& index, const QJsonObject& info);
+        void            doPublishWorkspace(const QModelIndex& index, const QString& workspace="");
+        void            doInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
         void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            doServerSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
@@ -57,6 +58,7 @@ class CStoreDlg : public CDialog
     public slots:
 
         void            onSetPluginModel(CPluginModel* pModel);
+        void            onSetNextPublishInfo(const QModelIndex &index, const QJsonObject &publishInfo);
         void            onShowPluginInfo(const QModelIndex &index);
         void            onPublishPluginToWorkspace(const QModelIndex &index);
 

@@ -424,6 +424,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Store/CStorePluginListViewDelegate.h
     View/Store/CWorkspaceChoiceDlg.h
     View/Store/CWorkspaceChoiceDlg.cpp
+    View/Store/CPublicationFormDlg.h
+    View/Store/CPublicationFormDlg.cpp
     View/Wizard/CWizardDocFrame.cpp
     View/Wizard/CWizardDocFrame.h
     View/Wizard/CWizardDocPage.cpp

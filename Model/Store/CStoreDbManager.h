@@ -42,7 +42,7 @@ class CStoreDbManager
         void            setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser& user);
 
         void            insertPlugins(CPluginModel *pModel);
-        void            insertPlugin(int serverId, const CTaskInfo& procInfo, const CUser &user);
+        void            insertPlugin(const CTaskInfo& procInfo, const CUser &user);
 
         void            removeRemotePlugin(const QString& pluginName);
         void            removeLocalPlugin(const QString& pluginName);

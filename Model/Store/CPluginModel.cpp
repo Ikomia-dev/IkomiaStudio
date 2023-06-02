@@ -132,6 +132,18 @@ QJsonArray CPluginModel::getJsonPlugins() const
     return m_jsonPlugins;
 }
 
+QJsonObject CPluginModel::getJsonPlugin(const QString &name) const
+{
+    for (int i=0; i<m_jsonPlugins.size(); ++i)
+    {
+        QJsonObject plugin = m_jsonPlugins[i].toObject();
+        if (plugin["name"] == name)
+            return plugin;
+    }
+    std::string msg = "Algorithm " + name.toStdString() + " can't be found";
+    throw CException(CoreExCode::NOT_FOUND, msg, __func__, __FILE__, __LINE__);
+}
+
 int CPluginModel::getTotalPluginCount() const
 {
     return m_totalPluginCount;
@@ -259,21 +271,23 @@ bool CPluginModel::checkIkomiaCompatibility(const QJsonObject &plugin) const
 
         // Get min version
         QString ikomiaVersion;
-        QRegularExpression re(">=(\\d.\\d.\\d)");
+        QRegularExpression re(">=(\\d.\\d.\\d),<(\\d.\\d.\\d)");
         QRegularExpressionMatch match = re.match(ikomiaVersions);
 
         if(match.hasMatch())
-            ikomiaVersion = match.captured(0);
-
-        if(language == ApiLanguage::CPP)
-            state = Utils::Plugin::getCppState(ikomiaVersion);
-        else
-            state = Utils::Plugin::getPythonState(ikomiaVersion);
-
-        if (state == PluginState::VALID || state == PluginState::UPDATED)
         {
-            bVersionCompatible = true;
-            break;
+            ikomiaVersion = match.captured(1);
+
+            if(language == ApiLanguage::CPP)
+                state = Utils::Plugin::getCppState(ikomiaVersion);
+            else
+                state = Utils::Plugin::getPythonState(ikomiaVersion);
+
+            if (state == PluginState::VALID || state == PluginState::UPDATED)
+            {
+                bVersionCompatible = true;
+                break;
+            }
         }
     }
     return bVersionCompatible;
@@ -310,7 +324,6 @@ void CPluginModel::clearContext()
 {
     // Clear contextual data
     m_currentIndex = QModelIndex();
-    m_currentPluginId = -1;
     m_currentWorkspace.clear();
     m_currentRequestUrl.clear();
     m_packageFile.clear();

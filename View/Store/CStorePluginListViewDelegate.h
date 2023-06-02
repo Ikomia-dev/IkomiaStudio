@@ -61,8 +61,6 @@ class CStorePluginListViewDelegate: public CListViewDelegate
     private:
 
         virtual QPolygon    getRibbonRect(const QStyleOptionViewItem& option) const;
-        PluginState         getProcessState(const QModelIndex& index) const;
-        QString             getStatusMessage(const QModelIndex& index) const;
 
         virtual void        paintText(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual void        paintLanguageIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;

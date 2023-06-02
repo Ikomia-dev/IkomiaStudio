@@ -38,6 +38,7 @@ class CPluginModel
         std::string         getStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         QString             getQStringField(const QString &fieldName, const QModelIndex& index=QModelIndex()) const;
         QJsonArray          getJsonPlugins() const;
+        QJsonObject         getJsonPlugin(const QString& name) const;
         int                 getTotalPluginCount() const;
         ApiLanguage         getLanguageFromString(const QString strLanguage) const;
         QString             getPackageFile() const;
@@ -70,7 +71,6 @@ class CPluginModel
         QString             m_currentWorkspace;
         QString             m_currentRequestUrl;
         QString             m_packageFile;
-        int                 m_currentPluginId = -1;
         int                 m_totalPluginCount = 0;
 };
 

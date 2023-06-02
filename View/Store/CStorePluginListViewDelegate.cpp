@@ -100,21 +100,12 @@ void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &
             break;
 
         case INFO:
-            emit doShowInfo(index); break;
-
-        case INSTALL:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-            int language = pModel->record(index.row()).value("language").toInt();
-            auto state = getProcessState(index);
-
-            if( (language == ApiLanguage::CPP && state == PluginState::VALID) ||
-                (language == ApiLanguage::PYTHON && (state == PluginState::VALID || state == PluginState::UPDATED)))
-            {
-                emit doInstallPlugin(index);
-            }
+            emit doShowInfo(index);
             break;
-        }
+
+        case INSTALL:            
+            emit doInstallPlugin(index);
+            break;
 
         case PUBLISH:            
             emit doPublishPlugin(index);
@@ -152,49 +143,6 @@ QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem&
     QPolygon poly;
     poly << rcCertification.topLeft() << rcCertification.topRight() << rcCertification.bottomRight();
     return poly;
-}
-
-PluginState CStorePluginListViewDelegate::getProcessState(const QModelIndex &index) const
-{
-    assert(index.isValid());
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
-    int language = pModel->record(index.row()).value("language").toInt();
-    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
-
-    if(language == ApiLanguage::CPP)
-        return Utils::Plugin::getCppState(ikomiaVersion);
-    else
-        return Utils::Plugin::getPythonState(ikomiaVersion);
-}
-
-QString CStorePluginListViewDelegate::getStatusMessage(const QModelIndex &index) const
-{
-    // Check version compatibility with App & API
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
-
-    QString msg;
-    int language = pModel->record(index.row()).value("language").toInt();
-    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
-
-    if(language == ApiLanguage::CPP)
-    {
-        auto state = Utils::Plugin::getCppState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
-        else if(state == PluginState::UPDATED)
-            msg = QString("<br><b><i><font color=#9a0000>Ikomia Studio update required</font></i></b>");
-    }
-    else
-    {
-        auto state = Utils::Plugin::getPythonState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
-        else if(state == PluginState::UPDATED)
-            msg = QString("<br><b><i><font color=#de7207>Ikomia Studio update recommended</font></i></b>");
-    }
-    return msg;
 }
 
 void CStorePluginListViewDelegate::paintText(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -373,8 +321,6 @@ QRect CStorePluginListViewDelegate::paintShortDescription(QPainter* painter, int
         shortDescription = pModel->record(index.row()).value("description").toString();
 
     QString displayShortDescription = Utils::String::getElidedString(shortDescription, font, width, 4);
-    displayShortDescription += getStatusMessage(index);
-
     auto shortDescriptionSize = paintStaticText(painter, left, top + m_contentMargins.top()*4, width, displayShortDescription, font, color);
     QRect rcShortDescription(left, top, width, shortDescriptionSize.height());
     return rcShortDescription;
