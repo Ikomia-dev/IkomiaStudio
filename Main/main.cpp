@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
     // QSettings
     QApplication::setOrganizationName("Ikomia");
-    QApplication::setOrganizationDomain("www.ikomia.com");
+    QApplication::setOrganizationDomain("ikomia.ai");
     QApplication::setApplicationVersion(Utils::IkomiaApp::getCurrentVersionName());
     QApplication::setApplicationName("Ikomia Studio");
 
