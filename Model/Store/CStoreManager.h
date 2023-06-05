@@ -80,12 +80,13 @@ class CStoreManager : public QObject
     private slots:
 
         void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, StoreRequestType requestType);
-        void            onPluginCompressionDone(const QString &zipFile);
         void            onUpdatePluginDone();
         void            onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
         void            onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     private:
+
+        QJsonObject     getJsonObject(QNetworkReply *pReply, const QString& errorMsg) const;
 
         void            createHubPluginModel();
         void            createWorkspacePluginModel();
@@ -101,9 +102,8 @@ class CStoreManager : public QObject
         void            queryServerPlugins(CPluginModel* pModel, const QString& strUrl);
         void            queryServerPluginDetails(CPluginModel *pModel, QString strUrl);
         void            queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl);
-        void            queryServerUpdatePlugin(const QString& strUrl, StoreRequestType requestType);
 
-        void            updateServerPlugin();
+        void            updateWorkspacePlugin(const QString &name);
         void            updateLocalPlugin();
 
         void            fillServerPluginModel(CPluginModel *pModel, QNetworkReply *pReply);
@@ -118,11 +118,13 @@ class CStoreManager : public QObject
 
         void            publishToHub(const QModelIndex &index, const QJsonObject &info);
         void            publishToWorkspace(const QModelIndex &index, const QString &workspace);
+        void            publishOrUpdateToWorkspace(const QString &zipFile);
         void            publishPluginToWorkspace();
         void            publishPackageToWorkspace();
 
         void            uploadPluginPackage();
         void            uploadPluginIcon(QNetworkReply *pReply);
+        void            uploadPluginIcon(const QString& strUrl);
 
         void            downloadPluginPackage(CPluginModel *pModel, QNetworkReply *pReply);
 

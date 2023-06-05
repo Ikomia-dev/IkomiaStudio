@@ -258,34 +258,6 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
     pReply->deleteLater();
 }
 
-void CStoreManager::onPluginCompressionDone(const QString& zipFile)
-{
-    m_pProgressMgr->endInfiniteProgress();
-
-    try
-    {
-        if(zipFile.isEmpty())
-        {
-            qCCritical(logStore).noquote() << tr("Plugin compression failed, transfer to server aborted");
-            clearContext();
-            return;
-        }
-
-        m_workspacePluginModel.setPackageFile(zipFile);
-        auto name = m_localPluginModel.getQStringField("name");
-
-        if (m_workspacePluginModel.isPluginExists(name))
-            updateServerPlugin();
-        else
-            publishPluginToWorkspace();
-    }
-    catch(std::exception& e)
-    {
-        qCCritical(logStore).noquote() << QString::fromStdString(e.what());
-        clearContext();
-    }
-}
-
 void CStoreManager::onUpdatePluginDone()
 {
     /*auto info = checkReply(StoreRequestType::UPDATE_PLUGIN);
@@ -325,6 +297,23 @@ void CStoreManager::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     QString total = QString::number(bytesTotal / factor, 'f', 1);
     emit m_progressSignal.doSetMessage(QString("Downloading algorithm: %1 Mb / %2 Mb").arg(received).arg(total));
     emit m_progressSignal.doSetValue(bytesReceived / 1024);
+}
+
+QJsonObject CStoreManager::getJsonObject(QNetworkReply *pReply, const QString &errorMsg) const
+{
+    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
+    if(doc.isNull())
+    {
+        qCCritical(logStore).noquote() << errorMsg << tr(": invalid JSON document");
+        return QJsonObject();
+    }
+
+    if(doc.isObject() == false)
+    {
+        qCCritical(logStore).noquote() << errorMsg << tr(":invalid JSON document structure");
+        return QJsonObject();
+    }
+    return doc.object();
 }
 
 void CStoreManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl)
@@ -735,31 +724,11 @@ void CStoreManager::checkInstalledModules(const QString &pluginDir)
     }
 }
 
-void CStoreManager::queryServerUpdatePlugin(const QString& strUrl, StoreRequestType requestType)
+void CStoreManager::updateWorkspacePlugin(const QString& name)
 {
-    //Http request to update plugin
-    /*QByteArray jsonString = createPluginJson();
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
-        throw CException(HttpExCode::INVALID_URL, url.errorString().toStdString(), __func__, __FILE__, __LINE__);
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("Content-Type", "application/json");
-    QString token = "Token " + m_currentUser.m_token;
-    request.setRawHeader("Authorization", token.toLocal8Bit());
-
-    auto pReply = m_pNetworkMgr->put(request, jsonString);
-    m_requests.push(requestType, serverType, pReply);
-    connect(pReply, &QNetworkReply::finished, this, &CStoreManager::onUpdatePluginDone);*/
-}
-
-void CStoreManager::updateServerPlugin()
-{
-    /*QString url = Utils::Network::getBaseUrl() + QString("/algos/plugin/%1/").arg(m_hubPluginModel.getCurrentPluginId());
-    queryServerUpdatePlugin(url, StoreRequestType::UPDATE_PLUGIN, HUB);*/
+    // TODO: check if it's the selected workspace is the same
+    QJsonObject plugin = m_workspacePluginModel.getJsonPlugin(name);
+    uploadPluginIcon(plugin["url"].toString());
 }
 
 void CStoreManager::updateLocalPlugin()
@@ -777,22 +746,13 @@ void CStoreManager::updateLocalPlugin()
 
 void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pReply)
 {
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+    QJsonObject jsonPage = getJsonObject(pReply, tr("Error while retrieving algorithm list"));
+    if (jsonPage.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving algorithm list");
         clearContext();
         return;
     }
 
-    if(doc.isObject() == false)
-    {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving algorithm list");
-        clearContext();
-        return;
-    }
-
-    QJsonObject jsonPage = doc.object();
     int count = jsonPage["count"].toInt();
     pModel->setTotalPluginCount(count);
 
@@ -819,23 +779,15 @@ void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* p
 
 void CStoreManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply)
 {
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+    QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
+    if (jsonPlugin.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving algorihtm details");
         m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
 
-    if(doc.isObject() == false)
-    {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving algorithm details");
-        m_pProgressMgr->endInfiniteProgress();
-        clearContext();
-        return;
-    }
-    pModel->addJsonPlugin(doc.object());
+    pModel->addJsonPlugin(jsonPlugin);
 
     if( pModel->isComplete())
     {
@@ -959,7 +911,7 @@ void CStoreManager::generateZipFile()
     {
         bool bCompress = pWatcher->result();
         QString zipFile = (bCompress == true ? zipFilePath : QString());
-        onPluginCompressionDone(zipFile);
+        publishOrUpdateToWorkspace(zipFile);
     });
 
     //Compress plugin into separate thread
@@ -1031,6 +983,34 @@ void CStoreManager::publishToWorkspace(const QModelIndex &index, const QString& 
     m_workspacePluginModel.setCurrentWorkspace(workspace);
     //Asynchronous call -> plugin compression is made into separate thread
     generateZipFile();
+}
+
+void CStoreManager::publishOrUpdateToWorkspace(const QString& zipFile)
+{
+    m_pProgressMgr->endInfiniteProgress();
+
+    try
+    {
+        if(zipFile.isEmpty())
+        {
+            qCCritical(logStore).noquote() << tr("Plugin compression failed, transfer to server aborted");
+            clearContext();
+            return;
+        }
+
+        m_workspacePluginModel.setPackageFile(zipFile);
+        auto name = m_localPluginModel.getQStringField("name");
+
+        if (m_workspacePluginModel.isPluginExists(name))
+            updateWorkspacePlugin(name);
+        else
+            publishPluginToWorkspace();
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logStore).noquote() << QString::fromStdString(e.what());
+        clearContext();
+    }
 }
 
 void CStoreManager::publishPluginToWorkspace()
@@ -1139,28 +1119,24 @@ void CStoreManager::uploadPluginPackage()
 }
 
 void CStoreManager::uploadPluginIcon(QNetworkReply* pReply)
-{
-    assert(m_pNetworkMgr);
-    assert(m_pProgressMgr);
-
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+{    
+    QJsonObject jsonResponse = getJsonObject(pReply, tr("Error in plugin creation response"));
+    if (jsonResponse.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document in plugin creation response");
-        clearContext();
-        return;
-    }
-
-    if(doc.isObject() == false)
-    {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure in plugin creation response");
         clearContext();
         return;
     }
 
     // Get algo URL
-    QJsonObject jsonResponse = doc.object();
     QString strUrl = jsonResponse["url"].toString();
+    uploadPluginIcon(strUrl);
+}
+
+void CStoreManager::uploadPluginIcon(const QString &strUrl)
+{
+    assert(m_pNetworkMgr);
+    assert(m_pProgressMgr);
+
     m_workspacePluginModel.setCurrentRequestUrl(strUrl);
 
     //Http request to send plugin file
@@ -1220,24 +1196,14 @@ void CStoreManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* p
 {
     assert(m_pNetworkMgr);
 
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+    QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
+    if (jsonPlugin.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving algorihtm details");
         m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
 
-    if(doc.isObject() == false)
-    {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving algorithm details");
-        m_pProgressMgr->endInfiniteProgress();
-        clearContext();
-        return;
-    }
-
-    QJsonObject jsonPlugin = doc.object();
     QJsonArray jsonPackages = jsonPlugin["packages"].toArray();
     QString packageUrl = findBestPackageUrl(jsonPackages);
 
@@ -1449,21 +1415,13 @@ void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& us
 
 void CStoreManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pReply)
 {
-    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
-    if(doc.isNull())
+    QJsonObject jsonInfo = getJsonObject(pReply, tr("Error while retrieving algorithm information for publication"));
+    if (jsonInfo.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving algorithm information for publication");
         emit doSetNextPublishInfo(pModel->getCurrentIndex(), QJsonObject());
         return;
     }
-
-    if(doc.isObject() == false)
-    {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving algorithm information for publication");
-        emit doSetNextPublishInfo(pModel->getCurrentIndex(), QJsonObject());
-        return;
-    }
-    emit doSetNextPublishInfo(pModel->getCurrentIndex(), doc.object());
+    emit doSetNextPublishInfo(pModel->getCurrentIndex(), jsonInfo);
 }
 
 QString CStoreManager::findBestPackageUrl(const QJsonArray &packages)
