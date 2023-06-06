@@ -58,21 +58,23 @@ QString CStoreDbManager::getAllPluginsQuery(CPluginModel::Type type) const
     return query;
 }
 
-QString CStoreDbManager::getLocalSearchQuery(const QString &searchText) const
+QString CStoreDbManager::getSearchQuery(CPluginModel::Type type, const QString &searchText) const
 {
+    QString query;
     QString searchKey = Utils::Database::getFTSKeywords(searchText);
-    QString query = QString("SELECT p.* FROM process p INNER JOIN processFTS pFts ON p.id = pFts.id "
-                            "WHERE p.isInternal=False AND processFTS MATCH '%1';")
-                        .arg(searchKey);
-    return query;
-}
 
-QString CStoreDbManager::getServerSearchQuery(const QString &searchText) const
-{
-    QString searchKey = Utils::Database::getFTSKeywords(searchText);
-    QString query = QString("SELECT sp.* FROM serverPlugins sp INNER JOIN serverPluginsFTS spFts ON sp.id = spFts.id "
-                            "WHERE serverPluginsFTS MATCH '%1';")
-                        .arg(searchKey);
+    switch(type)
+    {
+        case CPluginModel::Type::HUB:
+        case CPluginModel::Type::WORKSPACE:
+            query = QString("SELECT sp.* FROM serverPlugins sp INNER JOIN serverPluginsFTS spFts ON sp.name = spFts.name "
+                            "WHERE serverPluginsFTS MATCH '%1';").arg(searchKey);
+            break;
+        case CPluginModel::Type::LOCAL:
+            query = QString("SELECT p.* FROM process p INNER JOIN processFTS pFts ON p.name = pFts.name "
+                            "WHERE p.isInternal=False AND processFTS MATCH '%1';").arg(searchKey);
+            break;
+    }
     return query;
 }
 
@@ -86,7 +88,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     /*QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
             journals, years, docLinks, createdDates, modifiedDates, versions, ikomiaVersions, languages,
             licenses, repositories, iconPaths, certifications, userIds, userReputations, votes;*/
-    QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
+    QVariantList names, shortDescriptions, descriptions, keywords, authors, articles,
             journals, years, versions, languages, licenses, repositories, iconPaths;
 
     QJsonArray plugins = pModel->getJsonPlugins();
@@ -109,7 +111,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
             for (int j=1; j<jsonKeywords.size(); ++j)
                 strKeywords += "," + jsonKeywords[j].toString();
 
-            keywords << plugin["keywords"].toString();
+            keywords << strKeywords;
         }
 
         // Paper
@@ -151,29 +153,6 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         // TODO: missing fields
         //certifications << plugin["certification"].toInt();
         //votes << plugin["votes_count"].toInt();
-
-        // User
-        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
-        {
-            auto user = pModel->getCurrentUser();
-            if(user.m_firstName.isEmpty() && user.m_lastName.isEmpty())
-                userNames << user.m_name;
-            else
-                userNames << user.m_firstName + " " + user.m_lastName;
-        }
-        else
-        {
-            // TODO: Ikomia HUB
-            userNames << "";
-            /*QJsonObject user = plugin["user"].toObject();
-            userIds << user["pk"].toInt();
-            userReputations << user["reputation"].toInt();
-
-            if(user["first_name"].toString().isEmpty() && user["last_name"].toString().isEmpty())
-                userNames << user["username"].toString();
-            else
-                userNames << user["first_name"].toString() + " " + user["last_name"].toString();*/
-        }
     }
 
     //Insert to serverPlugins table
@@ -184,9 +163,9 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
                           "repository, iconPath, certification, votes, userId, userReputation) "
                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))*/
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "name, shortDescription, description, keywords, user, authors, article, journal, "
+                          "name, shortDescription, description, keywords, authors, article, journal, "
                           "year, version, language, license, repository, iconPath) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -195,7 +174,6 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     q.addBindValue(shortDescriptions);
     q.addBindValue(descriptions);
     q.addBindValue(keywords);
-    q.addBindValue(userNames);
     q.addBindValue(authors);
     q.addBindValue(articles);
     q.addBindValue(journals);
@@ -220,8 +198,8 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     //Insert to FTS table
     QSqlQuery qFts(db);
     if(!qFts.prepare(QString("INSERT INTO serverPluginsFTS "
-                             "(name, shortDescription, description, keywords, user, authors, article, journal) "
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")))
+                             "(name, shortDescription, description, keywords, authors, article, journal) "
+                             "VALUES (?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, qFts.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -230,7 +208,6 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     qFts.addBindValue(shortDescriptions);
     qFts.addBindValue(descriptions);
     qFts.addBindValue(keywords);
-    qFts.addBindValue(userNames);
     qFts.addBindValue(authors);
     qFts.addBindValue(articles);
     qFts.addBindValue(journals);
@@ -424,14 +401,14 @@ void CStoreDbManager::createServerPluginsDb(const QString &connectionName)
     QSqlQuery q(db);
     if(!q.exec("CREATE TABLE serverPlugins ("
                "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXT, description TEXT, keywords TEXT, "
-               "user TEXT, authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, "
+               "authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, "
                "modifiedDate TEXT, version TEXT, ikomiaVersion TEXT, license TEXT, repository TEXT, language INTEGER, "
-               "os INTEGER, iconPath TEXT, certification INTEGER, votes INTEGER, userId INTEGER, userReputation INTEGER);"))
+               "os INTEGER, iconPath TEXT, certification INTEGER, votes INTEGER, userReputation INTEGER);"))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
 
-    if(!q.exec("CREATE VIRTUAL TABLE serverPluginsFTS USING fts5(id, name, shortDescription, description, keywords, user, authors, article, journal);"))
+    if(!q.exec("CREATE VIRTUAL TABLE serverPluginsFTS USING fts5(name, shortDescription, description, keywords, authors, article, journal);"))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 

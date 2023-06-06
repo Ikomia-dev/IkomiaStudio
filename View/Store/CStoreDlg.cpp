@@ -135,7 +135,8 @@ void CStoreDlg::initLayout()
 
 void CStoreDlg::initConnections()
 {
-    connect(m_pEditHubSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doServerSearchChanged(text); });
+    connect(m_pEditHubSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doHubSearchChanged(text); });
+    connect(m_pEditWorkspaceSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doWorkspaceSearchChanged(text); });
     connect(m_pEditLocalSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doLocalSearchChanged(text); });
 
     connect(m_pBtnHubRefresh, &QPushButton::clicked, [&]{ emit doGetHubModel(); });

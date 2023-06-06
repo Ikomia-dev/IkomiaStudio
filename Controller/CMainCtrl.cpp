@@ -458,7 +458,8 @@ void CMainCtrl::initStoreConnections()
     connect(m_pView->getStoreView(), &CStoreDlg::doPublishWorkspace, m_pModel->getStoreManager(), &CStoreManager::onPublishWorkspace);
     connect(m_pView->getStoreView(), &CStoreDlg::doInstallPlugin, m_pModel->getStoreManager(), &CStoreManager::onInstallPlugin);
     connect(m_pView->getStoreView(), &CStoreDlg::doUpdatePluginInfo, m_pModel->getStoreManager(), &CStoreManager::onUpdatePluginInfo);
-    connect(m_pView->getStoreView(), &CStoreDlg::doServerSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onServerSearchChanged);
+    connect(m_pView->getStoreView(), &CStoreDlg::doHubSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onHubSearchChanged);
+    connect(m_pView->getStoreView(), &CStoreDlg::doWorkspaceSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onWorkspaceSearchChanged);
     connect(m_pView->getStoreView(), &CStoreDlg::doLocalSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onLocalSearchChanged);
     connect(m_pView->getStoreView(), &CStoreDlg::doGetNextPublishInfo, m_pModel->getStoreManager(), &CStoreManager::onRequestNextPublishInfo);
 

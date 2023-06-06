@@ -74,19 +74,20 @@ class CStoreManager : public QObject
         void            onPublishWorkspace(const QModelIndex& index, const QString &workspace);
         void            onInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
         void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
-        void            onServerSearchChanged(const QString& text);
+        void            onHubSearchChanged(const QString& text);
+        void            onWorkspaceSearchChanged(const QString& text);
         void            onLocalSearchChanged(const QString& text);
 
     private slots:
 
         void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, StoreRequestType requestType);
-        void            onUpdatePluginDone();
         void            onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
         void            onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     private:
 
         QJsonObject     getJsonObject(QNetworkReply *pReply, const QString& errorMsg) const;
+        QString         getQuery(CPluginModel::Type serverType, const QString &text) const;
 
         void            createHubPluginModel();
         void            createWorkspacePluginModel();

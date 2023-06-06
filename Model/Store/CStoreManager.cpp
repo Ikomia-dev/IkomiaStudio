@@ -182,26 +182,22 @@ void CStoreManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
     createQueryModel(&m_localPluginModel);
 }
 
-void CStoreManager::onServerSearchChanged(const QString &text)
+void CStoreManager::onHubSearchChanged(const QString &text)
 {
-    /*QString query;
-    if(text.isEmpty())
-        query = m_dbMgr.getAllPluginsQuery(CPluginModel::Type::HUB);
-    else
-        query = m_dbMgr.getServerSearchQuery(text);
+    auto query = getQuery(CPluginModel::Type::HUB, text);
+    m_hubPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::HUB));
+}
 
-    m_hubPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::HUB));*/
+void CStoreManager::onWorkspaceSearchChanged(const QString &text)
+{
+    auto query = getQuery(CPluginModel::Type::WORKSPACE, text);
+    m_workspacePluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::WORKSPACE));
 }
 
 void CStoreManager::onLocalSearchChanged(const QString &text)
 {
-    /*QString query;
-    if(text.isEmpty())
-        query = m_dbMgr.getAllLocalPluginsQuery();
-    else
-        query = m_dbMgr.getLocalSearchQuery(text);
-
-    m_localPluginModel.setQuery(query, m_dbMgr.getServerPluginsDatabase());*/
+    auto query = getQuery(CPluginModel::Type::LOCAL, text);
+    m_localPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::LOCAL));
 }
 
 void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, StoreRequestType requestType)
@@ -258,21 +254,6 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
     pReply->deleteLater();
 }
 
-void CStoreManager::onUpdatePluginDone()
-{
-    /*auto info = checkReply(StoreRequestType::UPDATE_PLUGIN);
-    auto pReply = info.first;
-
-    if(pReply == nullptr)
-    {
-        clearContext();
-        return;
-    }
-
-    uploadPluginIcon();
-    pReply->deleteLater();*/
-}
-
 void CStoreManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
 {
     const float factor = 1024.0*1024.0;
@@ -314,6 +295,17 @@ QJsonObject CStoreManager::getJsonObject(QNetworkReply *pReply, const QString &e
         return QJsonObject();
     }
     return doc.object();
+}
+
+QString CStoreManager::getQuery(CPluginModel::Type serverType, const QString& text) const
+{
+    QString query;
+    if(text.isEmpty())
+        query = m_dbMgr.getAllPluginsQuery(serverType);
+    else
+        query = m_dbMgr.getSearchQuery(serverType, text);
+
+    return query;
 }
 
 void CStoreManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl)

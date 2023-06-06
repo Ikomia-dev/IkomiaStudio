@@ -36,8 +36,7 @@ class CStoreDbManager
 
         QSqlDatabase    getPluginsDatabase(CPluginModel::Type type) const;
         QString         getAllPluginsQuery(CPluginModel::Type type) const;
-        QString         getLocalSearchQuery(const QString& searchText) const;
-        QString         getServerSearchQuery(const QString& searchText) const;
+        QString         getSearchQuery(CPluginModel::Type type, const QString& searchText) const;
 
         void            setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser& user);
 

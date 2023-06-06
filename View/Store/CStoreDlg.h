@@ -51,7 +51,8 @@ class CStoreDlg : public CDialog
         void            doPublishWorkspace(const QModelIndex& index, const QString& workspace="");
         void            doInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
         void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
-        void            doServerSearchChanged(const QString& text);
+        void            doHubSearchChanged(const QString& text);
+        void            doWorkspaceSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
         void            doClose();
 
