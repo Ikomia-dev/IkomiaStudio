@@ -69,7 +69,8 @@ void CStoreOnlineIconManager::loadIcons()
             if(url.isValid() == false)
             {
                 qCDebug(logStore) << url.errorString();
-                return;
+                incrementLoadedIcon();
+                continue;
             }
 
             QNetworkRequest request;

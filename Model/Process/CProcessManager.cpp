@@ -84,7 +84,7 @@ CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
         info.m_article = q.value("article").toString().toStdString();
         info.m_journal = q.value("journal").toString().toStdString();
         info.m_version = q.value("version").toString().toStdString();
-        info.m_ikomiaVersion = q.value("ikomiaVersion").toString().toStdString();
+        info.m_minIkomiaVersion = q.value("ikomiaVersion").toString().toStdString();
         info.m_minPythonVersion = q.value("minPythonVersion").toString().toStdString();
         info.m_license = q.value("license").toString().toStdString();
         info.m_repo = q.value("repository").toString().toStdString();
@@ -390,7 +390,7 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
     QString journal = QString::fromStdString(Utils::String::dbFormat(info.m_journal));
     QString docLink = QString::fromStdString(Utils::String::dbFormat(info.m_docLink));
     QString version = QString::fromStdString(Utils::String::dbFormat(info.m_version));
-    QString ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(info.m_ikomiaVersion));
+    QString ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(info.m_minIkomiaVersion));
     QString minPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.m_minPythonVersion));
     QString iconPath = QString::fromStdString(Utils::String::dbFormat(info.m_iconPath));
     QString license = QString::fromStdString(Utils::String::dbFormat(info.m_license));

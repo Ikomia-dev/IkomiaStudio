@@ -851,7 +851,7 @@ void CStoreManager::validatePluginFolder(CPluginModel* pModel, const QStringList
         procInfo.m_createdDate = pModel->getStringField("createdDate");
         procInfo.m_modifiedDate = pModel->getStringField("modifiedDate");
         procInfo.m_version = pModel->getStringField("version");
-        procInfo.m_ikomiaVersion = pModel->getStringField("ikomiaVersion");
+        procInfo.m_minIkomiaVersion = pModel->getStringField("ikomiaVersion");
         procInfo.m_license = pModel->getStringField("license");
         procInfo.m_repo = pModel->getStringField("repository");
         procInfo.m_language = pModel->getIntegerField("language") == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;

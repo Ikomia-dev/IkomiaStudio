@@ -135,7 +135,7 @@ QString CProcessDocFrame::getMarkdownTemplate() const
 QString CProcessDocFrame::getStatus(const CTaskInfo &info) const
 {
     QString status;
-    QString ikomiaVersion = QString::fromStdString(info.m_ikomiaVersion);
+    QString ikomiaVersion = QString::fromStdString(info.m_minIkomiaVersion);
 
     if(info.m_language == ApiLanguage::CPP)
     {

@@ -305,7 +305,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     info.m_article = record.value("article").toString().toStdString();
     info.m_journal = record.value("journal").toString().toStdString();
     info.m_version = record.value("version").toString().toStdString();
-    info.m_ikomiaVersion = record.value("ikomiaVersion").toString().toStdString();
+    info.m_minIkomiaVersion = record.value("ikomiaVersion").toString().toStdString();
     info.m_createdDate = record.value("createdDate").toString().toStdString();
     info.m_modifiedDate = record.value(" modifiedDate").toString().toStdString();
     info.m_license = record.value("license").toString().toStdString();
