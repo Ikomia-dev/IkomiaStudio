@@ -60,6 +60,10 @@ namespace Ikomia
                         color = QColor(240, 240, 0);
                         break;
 
+                    case IODataType::POSITION:
+                        color = QColor(25, 200, 25);
+                        break;
+
                     case IODataType::INPUT_GRAPHICS:
                     case IODataType::OUTPUT_GRAPHICS:
                         color = QColor(65, 80, 200);
@@ -151,6 +155,7 @@ namespace Ikomia
                     case IODataType::VOLUME:
                     case IODataType::VOLUME_BINARY:
                     case IODataType::VOLUME_LABEL:
+                    case IODataType::POSITION:
                     case IODataType::BLOB_VALUES:
                     case IODataType::NUMERIC_VALUES:
                     case IODataType::VIDEO:

@@ -32,6 +32,7 @@
 #include <QWidget>
 #include "Main/forwards.hpp"
 #include "CDataDisplay.h"
+#include "3D/CPositionDisplay.h"
 #include "3D/CVolumeDisplay.h"
 #include "Image/CImageDisplay.h"
 #include "Video/CVideoDisplay.h"
@@ -78,6 +79,7 @@ class CDataViewer : public QWidget
         void                    displayImage(int index, CImageScene* pScene, QImage image, QString name, CViewPropertyIO *pViewProp);
         void                    displayVideo(const QModelIndex &modelIndex, int displayIndex, CImageScene *pScene, QImage image, QString name, bool bVideoChanged, CViewPropertyIO *pViewProp);
         void                    displayVolume(CImageScene *pScene, QImage image, QString name, bool bStackHasChanged, CViewPropertyIO *pViewProp);
+        void                    displayPosition(CImageScene *pScene, QImage image, QString name, bool bStackHasChanged, CViewPropertyIO *pViewProp);
 
         void                    switchView();
 
@@ -177,6 +179,7 @@ class CDataViewer : public QWidget
         CImageDisplay*          createImageDisplay();
         CVideoDisplay*          createVideoDisplay();
         CVolumeDisplay*         createVolumeDisplay();
+        CPositionDisplay*       createPositionDisplay();
 
         void                    initConnections();
         void                    initDisplayConnections(CDataDisplay* pDisplay);
@@ -185,6 +188,7 @@ class CDataViewer : public QWidget
         void                    initVideoConnections(CVideoDisplay* pDisplay);
         void                    initVolumeConnections(CVolumeDisplay* pDisplay);
         void                    init3dDisplayConnections(C3dDisplay* pDisplay);
+        void                    initPositionConnections(CPositionDisplay *pDisplay);
 
         void                    setActiveWidget(int index);
 
@@ -195,6 +199,7 @@ class CDataViewer : public QWidget
         CImageView*             getImageView(CDataDisplay* pDisplay) const;
         QList<CVideoDisplay*>   getVideoDisplays() const;
         QList<CVolumeDisplay*>  getVolumeDisplays() const;
+        QList<CPositionDisplay*> getPositionDisplays() const;
         int                     getDisplayIndex(CDataDisplay* pDisplay) const;
 
         bool                    isItemShownInListView(const QModelIndex& index);

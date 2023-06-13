@@ -79,6 +79,7 @@ class CDoubleView : public QWidget
         void            onDisplayImage(int index, CImageScene *pScene, QImage image, QString name, CViewPropertyIO *pViewProperty);
         void            onDisplayVideo(const QModelIndex &modelIndex, int displayIndex, CImageScene *pScene, QImage image, QString name, bool bVideoChanged, CViewPropertyIO *pViewProperty);
         void            onDisplayVolume(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty);
+        void            onDisplayPosition(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty);
 
         void            onDisplayResultImage(int index, QImage image, const QString& imageName, CViewPropertyIO *pViewProperty);
         void            onDisplayResultMeasuresTable(int index, const QString taskName, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty);

@@ -225,6 +225,12 @@ void CDoubleView::onDisplayVolume(CImageScene *pScene, QImage image, QString img
     m_pDataViewer->displayVolume(pScene, image, imgName, bStackHasChanged, pViewProperty);
 }
 
+void CDoubleView::onDisplayPosition(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty)
+{
+    m_pDataViewer->fillZoomProperties(pViewProperty);
+    m_pDataViewer->displayPosition(pScene, image, imgName, bStackHasChanged, pViewProperty);
+}
+
 void CDoubleView::onDisplayResultImage(int index, QImage image, const QString &imageName, CViewPropertyIO *pViewProperty)
 {
     // Add image display to result viewer

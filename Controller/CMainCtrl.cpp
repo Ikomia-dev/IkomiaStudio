@@ -528,6 +528,7 @@ void CMainCtrl::initDataConnections()
 
     //Image manager -> Double view
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayVolume, m_pView->getDoubleView(), &CDoubleView::onDisplayVolume);
+    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayPosition, m_pView->getDoubleView(), &CDoubleView::onDisplayPosition);
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);    
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);
 

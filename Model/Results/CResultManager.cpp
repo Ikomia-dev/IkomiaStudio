@@ -104,7 +104,9 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
     for(size_t i=0; i<pTask->getOutputCount(); ++i)
     {
         auto dataType = pTask->getOutputDataType(i);
-        if((dataType == IODataType::VOLUME || dataType == IODataType::VOLUME_BINARY) &&
+        if((dataType == IODataType::VOLUME || 
+            dataType == IODataType::VOLUME_BINARY ||
+            dataType == IODataType::POSITION) &&
             pTask->getOutput(i)->isDataAvailable())
         {
             auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));

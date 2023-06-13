@@ -51,6 +51,7 @@ class CImgManager : public QObject
 
         void                    displaySimpleImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, size_t inputIndex, bool bNewSequence);
         void                    displayVolumeImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence);
+        void                    displayPositionImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence);
 
         void                    exportImage(const QModelIndex& index, const QString &path, bool bWithGraphics);
         void                    exportImage(const CMat& image, const std::vector<ProxyGraphicsItemPtr> &graphics, const QString &path);
@@ -70,6 +71,7 @@ class CImgManager : public QObject
         void                    doDisplayImage(int index, CImageScene* pScene, QImage image, QString name, CViewPropertyIO* pViewProp);
         void                    doDisplayImageInfo(const VectorPairString& infoMap);
         void                    doDisplayVolume(CImageScene* pScene, QImage image, QString imgName, bool bNewSequence, CViewPropertyIO* pViewProp);
+        void                    doDisplayPosition(CImageScene* pScene, QImage image, QString imgName, bool bNewSequence, CViewPropertyIO* pViewProp);
 
         void                    doInputDataChanged(const QModelIndex& index, size_t inputIndex, bool bNewSequence);
         void                    doCurrentDataChanged(const QModelIndex& itemIndex, bool bNewSequence);

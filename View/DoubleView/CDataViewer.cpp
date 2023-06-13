@@ -103,6 +103,15 @@ CVolumeDisplay *CDataViewer::createVolumeDisplay()
     return pDisplay;
 }
 
+CPositionDisplay *CDataViewer::createPositionDisplay()
+{
+    auto pDisplay = new CPositionDisplay(this);
+    pDisplay->setSelectOnClick(true);
+    initDisplayConnections(pDisplay);
+    initPositionConnections(pDisplay);
+    return pDisplay;
+}
+
 void CDataViewer::initConnections()
 {
     connect(m_pDataListView, &CDataListView::doUpdateIndex, this, &CDataViewer::onUpdateIndex);
@@ -231,6 +240,11 @@ void CDataViewer::init3dDisplayConnections(C3dDisplay *pDisplay)
     connect(pDisplay->getGLWidget(), &CGLWidget::doSendErrorMessage, [&](const QString& msg){ emit doSendErrorMessage(msg); });
 }
 
+void CDataViewer::initPositionConnections(CPositionDisplay *pDisplay)
+{
+    initImageConnections(pDisplay->getImageDisplay());
+}
+
 void CDataViewer::setActiveWidget(int index)
 {
     m_pStacked->setCurrentIndex(index);
@@ -329,6 +343,19 @@ QList<CVolumeDisplay *> CDataViewer::getVolumeDisplays() const
             volumeDisplays.push_back(static_cast<CVolumeDisplay*>(views[i]));
     }
     return volumeDisplays;
+}
+
+QList<CPositionDisplay *> CDataViewer::getPositionDisplays() const
+{
+    QList<CPositionDisplay*> positionDisplays;
+    auto views = m_pDataDisplay->getDataViews();
+
+    for(int i=0; i<views.size(); ++i)
+    {
+        if(views[i]->getTypeId() == DisplayType::POSITION_DISPLAY)
+            positionDisplays.push_back(static_cast<CPositionDisplay*>(views[i]));
+    }
+    return positionDisplays;
 }
 
 int CDataViewer::getDisplayIndex(CDataDisplay *pDisplay) const
@@ -648,6 +675,29 @@ void CDataViewer::displayVolume(CImageScene *pScene, QImage image, QString name,
 
     if(bStackHasChanged)
         pDisplay->changeVolume();
+}
+
+void CDataViewer::displayPosition(CImageScene *pScene, QImage image, QString name, bool bStackHasChanged, CViewPropertyIO* pViewProp)
+{
+    CPositionDisplay* pDisplay = nullptr;
+    auto displays = getPositionDisplays();
+
+    if(displays.size() > 0)
+            pDisplay = displays[0];
+    else
+    {
+        m_pDataDisplay->removeAll();
+        pDisplay = createPositionDisplay();
+        m_pDataDisplay->addDataView(pDisplay);
+    }
+
+    //Set main data display visible
+    setActiveWidget(1);
+    //Set image after making the display visible to have a good fit in view behaviour
+    pDisplay->setViewProperty(pViewProp);
+    pDisplay->setSelected(true);
+    pDisplay->show();
+    pDisplay->setImage(pScene, image, name);
 }
 
 void CDataViewer::switchView()

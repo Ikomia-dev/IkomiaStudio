@@ -92,6 +92,7 @@ namespace Ikomia
         PLOT_DISPLAY,
         WIDGET_DISPLAY,
         TEXT_DISPLAY,
+        POSITION_DISPLAY,
     };
 
     enum DisplayCategory

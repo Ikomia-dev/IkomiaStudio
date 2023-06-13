@@ -252,7 +252,7 @@ void CProjectManager::onSaveProjectAs(const QModelIndex& index, const QString& f
     {
         qCCritical(logProject).noquote() << QString(e.what());
         return;
-    }    
+    }
 
     //Preparation du watcher pour le thread de sauvegarde
     QFutureWatcher<void>* pWatcher = new QFutureWatcher<void>;
@@ -898,13 +898,18 @@ void CProjectManager::displayImage(const QModelIndex &itemIndex)
     if(pDataset->hasDimension(DataDimension::VOLUME)) // 3D image
     {
         // Notify data manager to display volume
-        m_pDataMgr->displayVolumeImage(imgItemPtr->getScene(), itemIndex, indexWrapped, bStackChanged);        
+        m_pDataMgr->displayVolumeImage(imgItemPtr->getScene(), itemIndex, indexWrapped, bStackChanged);
     }
     else if(pDataset->hasDimension(DataDimension::TIME)) // Video image sequence
     {
         m_bVideoChanged = bStackChanged;
         // Display new image
         m_pDataMgr->displayImageSequence(itemIndex, 0, m_bVideoChanged);
+    }
+    else if(pDataset->hasDimension(DataDimension::POSITION)) // Position image sequence
+    {
+        // Notify data manager to display position image sequence
+        m_pDataMgr->displayPositionImage(imgItemPtr->getScene(), itemIndex, indexWrapped, bStackChanged);
     }
     else if(pDataset->hasDimension(DataDimension::IMAGE)) // Simple image
     {
@@ -1241,7 +1246,7 @@ void CProjectManager::updateImageSequenceIndex()
 {
     // Get parent index and parent item
     int nextRow;
-    auto parentIndex = m_currentDataItemIndex.parent();    
+    auto parentIndex = m_currentDataItemIndex.parent();
     int rowCount = parentIndex.model()->rowCount(parentIndex);
 
     // Loop if current index reaches end of sequence
@@ -1286,7 +1291,7 @@ CProjectModel* CProjectManager::createProject(bool bWithRoot)
 }
 
 CProjectGraphicsProxyModel *CProjectManager::getGraphicsProxyModel(const std::vector<QModelIndex> &indicesFrom)
-{    
+{
     if(m_pGraphicsProxyModel)
         m_pGraphicsProxyModel->setReferenceIndices(indicesFrom);
     else
@@ -1377,10 +1382,17 @@ size_t CProjectManager::getFolderDataItemCount(const QModelIndex &index) const
         else if(childType == TreeItemType::DATASET)
         {
             auto pDataset = CProjectUtils::getDataset<CMat>(wrapChildIndex);
-            if(pDataset->hasDimension(DataDimension::VOLUME) || pDataset->hasDimension(DataDimension::TIME))
+
+            if(pDataset->hasDimension(DataDimension::VOLUME) ||
+               pDataset->hasDimension(DataDimension::TIME) ||
+               pDataset->hasDimension(DataDimension::POSITION))
+            {
                 count += 1;
+            }
             else
+            {
                 count += pDataset->size();
+            }
         }
     }
     return count;
@@ -1431,7 +1443,10 @@ QModelIndex CProjectManager::getFolderDataIndex(const QModelIndex &folderIndex, 
         else if(childType == TreeItemType::DATASET)
         {
             auto pDataset = CProjectUtils::getDataset<CMat>(wrapChildIndex);
-            if(pDataset->hasDimension(DataDimension::VOLUME) || pDataset->hasDimension(DataDimension::TIME))
+
+            if(pDataset->hasDimension(DataDimension::VOLUME) ||
+               pDataset->hasDimension(DataDimension::TIME) ||
+               pDataset->hasDimension(DataDimension::POSITION))
             {
                 if(dataIndex == 0)
                     return getDatasetDataIndex(childIndex, dataIndex);
@@ -1576,7 +1591,7 @@ QModelIndex CProjectManager::addImages(const QModelIndex &itemIndex, QStringList
                 }
             }
             else if(policy.first == Relationship::MANY_TO_ONE)
-            {                
+            {
                 boost::filesystem::path path(files[0].toStdString());
                 auto datasetIndex = addDataset(itemIndex, path.parent_path().stem().string(), IODataType::IMAGE);
 

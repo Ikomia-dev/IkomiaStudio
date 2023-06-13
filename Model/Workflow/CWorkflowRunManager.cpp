@@ -238,6 +238,19 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
             inputPtr->setName(pDataset->getInfo().getName());
             std::static_pointer_cast<CVideoIO>(inputPtr)->setVideoPath(m_pProjectMgr->getItemPath(index));
         }
+        else if(pDataset->hasDimension(DataDimension::POSITION))
+        {
+            // Position dataset
+            CMat image = m_pDataMgr->getImgMgr()->getImage(wrapInd);
+            if(!image.data)
+                throw CException(CoreExCode::INVALID_IMAGE, tr("Workflow inputs error : invalid position image sequence.").toStdString(), __func__, __FILE__, __LINE__);
+
+            inputName = pDataset->getInfo().getName();
+            DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapInd);
+            auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
+            inputPtr = std::make_shared<CImageIO>(IODataType::POSITION, image);
+            std::static_pointer_cast<CImageIO>(inputPtr)->setCurrentImage(currentImgIndex);
+        }
         else
         {
             // Single 2D image
@@ -650,7 +663,9 @@ size_t CWorkflowRunManager::getBatchCount() const
                 auto wrapInd = m_pProjectMgr->wrapIndex(itemIndex);
                 auto pDataset = CProjectUtils::getDataset<CMat>(wrapInd);
 
-                if(pDataset->hasDimension(DataDimension::VOLUME) || pDataset->hasDimension(DataDimension::TIME))
+                if(pDataset->hasDimension(DataDimension::VOLUME) ||
+                   pDataset->hasDimension(DataDimension::TIME) ||
+                   pDataset->hasDimension(DataDimension::POSITION))
                 {
                     m_pInputs->at(i).setSize(j, 1);
                     inputCount++;
@@ -836,6 +851,14 @@ bool CWorkflowRunManager::checkImageInputs(size_t index1, size_t index2, std::st
         err += "mix volume and time-serie is not possible.";
         return false;
     }
+    else if((pDataset1->hasDimension(DataDimension::VOLUME) && pDataset2->hasDimension(DataDimension::POSITION)) ||
+            (pDataset1->hasDimension(DataDimension::POSITION) && pDataset2->hasDimension(DataDimension::VOLUME)))
+    {
+        // VOLUME - POSITION
+        // POSITION - VOLUME
+        err += "mix volume and position image sequence is not possible.";
+        return false;
+    }
     else if(pDataset1->hasDimension(DataDimension::VOLUME))
     {
         // VOLUME - IMAGE
@@ -870,6 +893,14 @@ bool CWorkflowRunManager::checkImageInputs(size_t index1, size_t index2, std::st
         else
             return true;
     }
+    else if((pDataset1->hasDimension(DataDimension::TIME) && pDataset2->hasDimension(DataDimension::POSITION)) ||
+            (pDataset1->hasDimension(DataDimension::POSITION) && pDataset2->hasDimension(DataDimension::TIME)))
+    {
+        // TIME - POSITION
+        // POSITION - TIME
+        err += "mix time-series and position image sequence is not possible.";
+        return false;
+    }
     else if(pDataset1->hasDimension(DataDimension::TIME))
     {
         // TIME_SERIE - IMAGE
@@ -885,6 +916,40 @@ bool CWorkflowRunManager::checkImageInputs(size_t index1, size_t index2, std::st
         bool bValid = nb1 == 1;
         if(!bValid)
             err += "mix time-serie and single image is only possible if image count is 1.";
+
+        return bValid;
+    }
+    else if(pDataset1->hasDimension(DataDimension::POSITION) && pDataset2->hasDimension(DataDimension::POSITION))
+    {
+        // POSITION - POSITION
+        if(pDataset1->getDataInfo().dimensions() != pDataset2->getDataInfo().dimensions())
+        {
+            err += "position image sequences must have same dimensions.";
+            return false;
+        }
+        else if(nb1 != nb2)
+        {
+            err += "position image sequence count is different.";
+            return false;
+        }
+        else
+            return true;
+    }
+    else if(pDataset1->hasDimension(DataDimension::POSITION))
+    {
+        // POSITION - IMAGE
+        bool bValid = nb2 == 1;
+        if(!bValid)
+            err += "mix position image sequence and single image is only possible if image count is 1.";
+
+        return bValid;
+    }
+    else if(pDataset2->hasDimension(DataDimension::POSITION))
+    {
+        // IMAGE - POSITION
+        bool bValid = nb1 == 1;
+        if(!bValid)
+            err += "mix position image sequence and single image is only possible if image count is 1.";
 
         return bValid;
     }
@@ -915,6 +980,12 @@ bool CWorkflowRunManager::checkImageVideoInputs(size_t index1, size_t index2, st
     {
         // TIME_SERIE - VIDEO
         err += "mix time-serie and video is not possible.";
+        return false;
+    }
+    else if(pDataset->hasDimension(DataDimension::POSITION))
+    {
+        // POSITION - VIDEO
+        err += "mix position image sequence and video is not possible.";
         return false;
     }
     else
@@ -997,6 +1068,37 @@ bool CWorkflowRunManager::checkImageDatasetInputs(size_t index1, size_t index2, 
                 return true;
         }
     }
+    else if(pDataset1->hasDimension(DataDimension::POSITION))
+    {
+        // POSITION - DATASET
+        if(nb2 != 1)
+        {
+            err += "only one dataset can be processed with single position dataset.";
+            return false;
+        }
+        else
+        {
+            QModelIndex itemIndex2 = m_pInputs->at(index2).getModelIndex(0);
+            auto pDataset2 = CProjectUtils::getDataset<CMat>(m_pProjectMgr->wrapIndex(itemIndex2));
+
+            if(pDataset2->hasDimension(DataDimension::POSITION))
+            {
+                if(pDataset1->getDataInfo().dimensions() != pDataset2->getDataInfo().dimensions())
+                {
+                    err += "position image sequence must have same dimensions.";
+                    return false;
+                }
+                else
+                    return true;
+            }
+            else
+            {
+                err += "dataset is not a position image sequence.";
+                return false;
+            }
+        }
+
+    }
     else
     {
         // IMAGE - DATASET
@@ -1022,6 +1124,11 @@ bool CWorkflowRunManager::checkImageFolderInputs(size_t index1, size_t index2, s
     else if(pDataset1->hasDimension(DataDimension::TIME))
     {
         err += "mix time-serie and folder is not possible.";
+        return false;
+    }
+    else if(pDataset1->hasDimension(DataDimension::POSITION))
+    {
+        err += "mix position image sequence and folder is not possible.";
         return false;
     }
     else
