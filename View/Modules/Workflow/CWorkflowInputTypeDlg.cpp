@@ -159,6 +159,8 @@ void CWorkflowInputTypeDlg::initInputOptionWidget()
     m_pCheckSimpleDataset->setChecked(true);
     m_pCheckVolumeDataset = new QCheckBox(tr("Volume dataset"));
     m_pCheckVolumeDataset->setChecked(true);
+    m_pCheckPositionDataset = new QCheckBox(tr("Position dataset"));
+    m_pCheckPositionDataset->setChecked(true);
     m_pCheckTimeDataset = new QCheckBox(tr("Time dataset"));
     m_pCheckTimeDataset->setChecked(true);
 
@@ -166,6 +168,7 @@ void CWorkflowInputTypeDlg::initInputOptionWidget()
     pVLayout->addWidget(pLabelInputOption);
     pVLayout->addWidget(m_pCheckSimpleDataset);
     pVLayout->addWidget(m_pCheckVolumeDataset);
+    pVLayout->addWidget(m_pCheckPositionDataset);
     pVLayout->addWidget(m_pCheckTimeDataset);
     pVLayout->addStretch();
 
@@ -224,6 +227,9 @@ void CWorkflowInputTypeDlg::validateFilters()
 
     if(m_pCheckVolumeDataset->isChecked())
         m_input.addDataFilters(DataDimension::VOLUME);
+
+    if(m_pCheckVolumeDataset->isChecked())
+        m_input.addDataFilters(DataDimension::POSITION);
 
     if(m_pCheckTimeDataset->isChecked())
         m_input.addDataFilters(DataDimension::TIME);

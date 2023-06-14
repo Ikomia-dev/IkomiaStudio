@@ -86,6 +86,7 @@ class CWorkflowInputTypeDlg : public CDialog
 
         QCheckBox*              m_pCheckSimpleDataset = nullptr;
         QCheckBox*              m_pCheckVolumeDataset = nullptr;
+        QCheckBox*              m_pCheckPositionDataset = nullptr;
         QCheckBox*              m_pCheckTimeDataset = nullptr;
 
         CWorkflowInput          m_input;
