@@ -21,6 +21,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHttpPart>
 #include <QtConcurrent>
+#include <quazip/JlCompress.h>
 #include "CStoreQueryModel.h"
 #include "CStoreOnlineIconManager.h"
 #include "Main/AppTools.hpp"
@@ -29,7 +30,6 @@
 #include "Model/Process/CProcessManager.h"
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
-#include "JlCompress.h"
 #include "Core/CIkomiaRegistry.h"
 
 CStoreManager::CStoreManager()
