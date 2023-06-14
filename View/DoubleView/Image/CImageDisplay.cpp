@@ -178,15 +178,18 @@ void CImageDisplay::setToolbarSpacing(int size)
 
 void CImageDisplay::setSliderRange(size_t max)
 {
-    m_pSlider->setRange(0, (int)max-1);
-    m_pSpinBox->setRange(0, (int)max-1);
-    m_pSpinBox->adjustSize();
+    if (m_pSlider)
+    {
+        m_pSlider->setRange(0, (int)max-1);
+        m_pSpinBox->setRange(0, (int)max-1);
+        m_pSpinBox->adjustSize();
+    }
 }
 
 void CImageDisplay::setCurrentImgIndex(size_t index)
 {
-    assert(m_pSlider);
-    m_pSlider->setValue((int)index);
+    if (m_pSlider)
+        m_pSlider->setValue((int)index);
 }
 
 void CImageDisplay::setViewSpaceShared(bool bShared)

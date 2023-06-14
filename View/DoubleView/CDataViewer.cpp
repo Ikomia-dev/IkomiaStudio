@@ -289,6 +289,8 @@ CImageDisplay *CDataViewer::getImageDisplay(CDataDisplay *pDisplay) const
         return (static_cast<CVideoDisplay*>(pDisplay))->getImageDisplay();
     else if(pDisplay->getTypeId() == DisplayType::VOLUME_DISPLAY)
         return (static_cast<CVolumeDisplay*>(pDisplay))->getImageDisplay();
+    else if(pDisplay->getTypeId() == DisplayType::POSITION_DISPLAY)
+            return (static_cast<CPositionDisplay*>(pDisplay))->getImageDisplay();
     else
         return nullptr;
 }
@@ -315,6 +317,8 @@ CImageView *CDataViewer::getImageView(CDataDisplay *pDisplay) const
         return (static_cast<CVideoDisplay*>(pDisplay))->getImageDisplay()->getView();
     else if(pDisplay->getTypeId() == DisplayType::VOLUME_DISPLAY)
         return (static_cast<CVolumeDisplay*>(pDisplay))->getImageDisplay()->getView();
+    else if(pDisplay->getTypeId() == DisplayType::POSITION_DISPLAY)
+        return (static_cast<CPositionDisplay*>(pDisplay))->getImageDisplay()->getView();
     else
         return nullptr;
 }
@@ -869,7 +873,7 @@ void CDataViewer::onUpdateNbImage(int nb)
 
 void CDataViewer::onUpdateCurrentImageIndex(int index)
 {
-    auto imageDisplays = getImageDisplays();
+    auto imageDisplays = getAllImageDisplays();
     for(int i=0; i<imageDisplays.size(); ++i)
         imageDisplays[i]->setCurrentImgIndex(index);
 }

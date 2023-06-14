@@ -606,6 +606,7 @@ void CProjectManager::onCurrentImgChangedInZ(int index)
     if(m_currentDataItemIndex.row() == index)
         return;
 
+    // Notify pane to update tree index and then display image
     auto parentIndex = m_currentDataItemIndex.parent();
     emit doUpdateImgZ(parentIndex.model()->index(index, 0, parentIndex));
 }
