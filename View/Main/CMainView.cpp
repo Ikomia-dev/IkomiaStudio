@@ -698,7 +698,7 @@ void CMainView::initNotifications()
         m_pNotifier->show();
         connect(m_pNotifier, &QSystemTrayIcon::activated, [this]{
             auto title = "Ikomia Studio";
-            auto msg = "Version " + Utils::IkomiaApp::getCurrentVersionName();
+            auto msg = QString("Version %1").arg(QString::fromStdString(Utils::IkomiaApp::getCurrentVersionName()));
             m_pNotifier->showMessage(title, msg, QIcon(":/Images/app.png"));
         });
     }
@@ -1245,11 +1245,6 @@ void CMainView::showNotificationProgress(const QString& title, const QString& de
 
 void CMainView::showNotificationCenter()
 {
-    /*if(m_pNotificationCenter->isHidden())
-        m_pNotificationCenter->show();
-    else
-        m_pNotificationCenter->hide();
-    m_pNotificationCenter->animate();*/
     m_pNotifyBtn->setIcon(QIcon(":/Images/notification.png"));
 }
 

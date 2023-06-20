@@ -68,7 +68,7 @@ void CStoreOnlineIconManager::loadIcons()
 
             if(url.isValid() == false)
             {
-                qCDebug(logStore) << url.errorString();
+                qCDebug(logStore) << "Algorithm " << plugin["name"].toString() << "does not have icon." << url.errorString();
                 incrementLoadedIcon();
                 continue;
             }

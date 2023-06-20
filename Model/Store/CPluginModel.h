@@ -57,9 +57,11 @@ class CPluginModel
 
     private:
 
-        bool                checkOSCompatibility(const QJsonObject& plugin) const;
-        bool                checkIkomiaCompatibility(const QJsonObject& plugin) const;
-        bool                checkArchitecture(const QJsonObject& plugin) const;
+        bool                checkPackageCompatibility(const QJsonObject& package, ApiLanguage language) const;
+        bool                checkOSCompatibility(const QJsonObject& package) const;
+        bool                checkIkomiaCompatibility(const QJsonObject& package, ApiLanguage language) const;
+        bool                checkPythonCompatibility(const QJsonObject& package) const;
+        bool                checkArchitecture(const QJsonObject& package, ApiLanguage language) const;
 
     private:
 

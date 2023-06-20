@@ -44,7 +44,6 @@ class CProcessDocFrame : public QFrame
         void    fillDocumentation(const CTaskInfo& info);
 
         QString getMarkdownTemplate() const;
-        QString getStatus(const CTaskInfo &info) const;
 
         QString generateMarkdown(const CTaskInfo& info) const;
 

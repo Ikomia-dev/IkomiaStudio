@@ -35,7 +35,7 @@ void CProcessEditDocFrame::setCurrentUser(const CUser &user)
 void CProcessEditDocFrame::setProcessInfo(const CTaskInfo &info)
 {
     m_originalInfo = info;
-    m_bFullEdit = info.m_bInternal == false && (info.m_userId == -1 || info.m_userId == m_currentUser.m_id);
+    m_bFullEdit = info.m_bInternal == false;
     fillForm();
     m_bFullEdit == true ? m_pStackWidget->setCurrentIndex(0) : m_pStackWidget->setCurrentIndex(1);
 }

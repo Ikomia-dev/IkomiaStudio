@@ -38,13 +38,8 @@ class CStoreDbManager
         QString         getAllPluginsQuery(CPluginModel::Type type) const;
         QString         getSearchQuery(CPluginModel::Type type, const QString& searchText) const;
 
-        void            setLocalPluginServerInfo(int pluginId, const QString name, int serverId, const CUser& user);
-
         void            insertPlugins(CPluginModel *pModel);
         void            insertPlugin(const CTaskInfo& procInfo, const CUser &user);
-
-        void            removeRemotePlugin(const QString& pluginName);
-        void            removeLocalPlugin(const QString& pluginName);
 
         void            updateLocalPluginModifiedDate(int pluginId);
         void            updateMemoryLocalPluginsInfo();
@@ -56,7 +51,6 @@ class CStoreDbManager
         void            createServerPluginsDb(const QString& connectionName);
 
         QString         getDbConnectionName(CPluginModel::Type type) const;
-        int             getLocalIdFromServerId(const QSqlDatabase& db, int serverId) const;
 
     private:
 

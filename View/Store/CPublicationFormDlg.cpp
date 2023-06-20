@@ -62,7 +62,7 @@ void CPublicationFormDlg::initConnections()
 void CPublicationFormDlg::fillLicences()
 {
     for (const auto& l : m_licenses)
-        m_pComboLicense->addItem(l.first, l.second);
+        m_pComboLicense->addItem(l.second, l.first);
 
     auto currentLicense = m_pluginInfo.value("license").toString();
     if (currentLicense.isEmpty() == false)

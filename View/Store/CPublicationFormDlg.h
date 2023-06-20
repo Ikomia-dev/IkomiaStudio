@@ -34,13 +34,16 @@ class CPublicationFormDlg: public CDialog
 
         const std::map<QString, QString> m_licenses =
         {
-            {"AGPL 3.0", "AGPL_30"},
-            {"Apache 2.0", "APACHE_20"},
-            {"BSD 3-Clause", "BSD_3_CLAUSE"},
-            {"Creative Common 1.0", "CC0_10"},
-            {"GPL 3.0", "GPL_30"},
-            {"LGPL 3.0", "LGPL_30"},
-            {"MIT", "MIT"}
+            {"AGPL_30", "AGPL 3.0"},
+            {"APACHE_20", "Apache 2.0"},
+            {"BSD_3_CLAUSE", "BSD 3-Clause"},
+            {"BSD_2_CLAUSE", "BSD 2-Clause"},
+            {"CC0_10", "Creative Commons 1.0"},
+            {"CC_BY_NC_40", "Creative Commons Non Commercial 4.0"},
+            {"GPL_30", "GPL 3.0"},
+            {"LGPL_30", "LGPL 3.0"},
+            {"MIT", "MIT"},
+            {"CUSTOM", "Custom"},
         };
 };
 

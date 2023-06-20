@@ -89,7 +89,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
             journals, years, docLinks, createdDates, modifiedDates, versions, ikomiaVersions, languages,
             licenses, repositories, iconPaths, certifications, userIds, userReputations, votes;*/
     QVariantList names, shortDescriptions, descriptions, keywords, authors, articles,
-            journals, years, versions, languages, licenses, repositories, iconPaths;
+            journals, years, createdDates, modifiedDates, versions, languages, licenses, repositories, iconPaths;
 
     QJsonArray plugins = pModel->getJsonPlugins();
     for(int i=0; i<plugins.size(); ++i)
@@ -123,8 +123,10 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
 
         // TODO: missing fields
         //docLinks << plugin["docLink"].toString();
-        //createdDates << plugin["createdDate"].toString();
-        //modifiedDates << plugin["modifiedDate"].toString();
+
+        // Dates
+        createdDates << plugin["created_at"].toString();
+        modifiedDates << plugin["updated_at"].toString();
 
         // Version
         if (plugin.contains("version"))
@@ -164,8 +166,8 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))*/
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
                           "name, shortDescription, description, keywords, authors, article, journal, "
-                          "year, version, language, license, repository, iconPath) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                          "year, createdDate, modifiedDate, version, language, license, repository, iconPath) "
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -179,8 +181,8 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     q.addBindValue(journals);
     q.addBindValue(years);
     //q.addBindValue(docLinks);
-    //q.addBindValue(createdDates);
-    //q.addBindValue(modifiedDates);
+    q.addBindValue(createdDates);
+    q.addBindValue(modifiedDates);
     q.addBindValue(versions);
     //q.addBindValue(ikomiaVersions);
     q.addBindValue(languages);
@@ -189,7 +191,6 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     q.addBindValue(iconPaths);
     //q.addBindValue(certifications);
     //q.addBindValue(votes);
-    //q.addBindValue(userIds);
     //q.addBindValue(userReputations);
 
     if(!q.execBatch())
@@ -273,45 +274,6 @@ void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::removeRemotePlugin(const QString& pluginName)
-{
-    auto db = getPluginsDatabase(CPluginModel::Type::WORKSPACE);
-    if(db.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    // Delete plugin from server database
-    QSqlQuery q1(db);
-    if(!q1.exec(QString("DELETE FROM serverPlugins WHERE name='%1'").arg(pluginName)))
-    {
-        throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-    }
-}
-
-void CStoreDbManager::removeLocalPlugin(const QString& pluginName)
-{
-    auto dbMemory = Utils::Database::connect(m_name, Utils::Database::getProcessConnectionName());
-    if(dbMemory.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, dbMemory.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    //Update plugin in memory database with serverId -1 -> allows display in storeDlg
-    QSqlQuery q1(dbMemory);
-    if(!q1.exec(QString("UPDATE process SET serverId=-1 WHERE name='%1'").arg(pluginName)))
-    {
-        throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-    }
-
-    //Delete plugin in file database
-    auto dbFile = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
-    if(dbFile.isValid() == false)
-        throw CException(DatabaseExCode::INVALID_DB_CONNECTION, dbFile.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-
-    QSqlQuery q2(dbFile);
-    if(!q2.exec(QString("DELETE FROM process WHERE name='%1'").arg(pluginName)))
-    {
-        throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-    }
-}
-
 void CStoreDbManager::updateLocalPluginModifiedDate(int pluginId)
 {
     QString modifiedDate = QDateTime::currentDateTime().toString(Qt::ISODate);
@@ -344,13 +306,13 @@ void CStoreDbManager::updateMemoryLocalPluginsInfo()
     auto dbServer = Utils::Database::connect(m_name, m_hubConnectionName);
 
     QSqlQuery q1(dbServer);
-    if(!q1.exec("SELECT id, certification, votes, userReputation FROM serverPlugins;"))
+    if(!q1.exec("SELECT name, certification, votes, userReputation FROM serverPlugins;"))
         throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
-    QVariantList serverIds, serverCertifications, serverVotes, userReputations;
+    QVariantList serverNames, serverCertifications, serverVotes, userReputations;
     while(q1.next())
     {
-        serverIds << q1.value("id");
+        serverNames << q1.value("name");
         serverCertifications << q1.value("certification");
         serverVotes << q1.value("votes");
         userReputations << q1.value("userReputation");
@@ -364,12 +326,12 @@ void CStoreDbManager::updateMemoryLocalPluginsInfo()
                        "certification = IFNULL(?, certification), "
                        "votes = IFNULL(?, votes), "
                        "userReputation = IFNULL(?, userReputation) "
-                       "WHERE serverId = ?;"));
+                       "WHERE name = ?;"));
 
     q2.addBindValue(serverCertifications);
     q2.addBindValue(serverVotes);
     q2.addBindValue(userReputations);
-    q2.addBindValue(serverIds);
+    q2.addBindValue(serverNames);
 
     if(!q2.execBatch())
         throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
@@ -422,16 +384,4 @@ QString CStoreDbManager::getDbConnectionName(CPluginModel::Type type) const
         case CPluginModel::Type::LOCAL: dbConnectionName = Utils::Database::getProcessConnectionName(); break;
     }
     return dbConnectionName;
-}
-
-int CStoreDbManager::getLocalIdFromServerId(const QSqlDatabase &db, int serverId) const
-{
-    QSqlQuery q(db);
-    if(!q.exec(QString("SELECT id FROM process WHERE serverId=%1").arg(serverId)))
-        return -1;
-
-    if(q.first())
-        return q.value(0).toInt();
-    else
-        return -1;
 }

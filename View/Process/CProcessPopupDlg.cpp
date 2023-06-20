@@ -93,44 +93,8 @@ void CProcessPopupDlg::setCurrentUser(const CUser &user)
 
 int CProcessPopupDlg::exec()
 {
-    /*// Desactivate scroll for animation and activate when animation finishes
-    m_pTreeView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-    m_pTreeView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-
-    m_pProcessView->getListView()->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    m_pProcessView->getListView()->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-    // Set opacity to 0 before animation
-    setWindowOpacity(0.0);
-    resize(m_size);
-    m_pRightStackedWidget->setCurrentIndex(0);
-
-    // Fade animation
-    QPropertyAnimation* animFade = new QPropertyAnimation(this, "windowOpacity");
-    animFade->setDuration(1000);
-    animFade->setEasingCurve(QEasingCurve::OutBack);
-    animFade->setStartValue(0.0);
-    animFade->setEndValue(1.0);
-
-    // Geometry animation
-    QPropertyAnimation* animGeom = new QPropertyAnimation(this, "geometry");
-    animGeom->setDuration(5000);
-    animGeom->setEasingCurve(QEasingCurve::InOutQuad);
-    animGeom->setStartValue(QRect(geometry().x(), geometry().y()+geometry().height()-minimumSizeHint().height(), minimumSizeHint().width(), minimumSizeHint().height()));
-    animGeom->setEndValue(QRect(geometry().x(), geometry().y(), geometry().width(), geometry().height()));
-
-    // Parallel animation
-    QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
-    group->addAnimation(animFade);
-    //group->addAnimation(animGeom);
-
-    group->start(QParallelAnimationGroup::DeleteWhenStopped);
-
-    connect(group, &QParallelAnimationGroup::finished, this, &CProcessPopupDlg::onActivateScrollBar);*/
-
     // Update tree and listview with current search text
     emit doTextChanged(m_pSearchProcess->text());
-
     return QDialog::exec();
 }
 
@@ -259,36 +223,6 @@ void CProcessPopupDlg::done(int r)
 {
     m_pParamsWidget->hide();
     QDialog::done(r);
-
-    // Desactivate scroll for animation and activate when animation finishes
-    /*m_pTreeView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-    m_pTreeView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-
-    m_pProcessView->getListView()->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    m_pProcessView->getListView()->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-    // Fade animation
-    QPropertyAnimation* animFade = new QPropertyAnimation(this, "windowOpacity");
-    animFade->setDuration(500);
-    animFade->setEasingCurve(QEasingCurve::OutBack);
-    animFade->setStartValue(0.9);
-    animFade->setEndValue(0.0);
-
-    // Geometry animation
-    QPropertyAnimation* animGeom = new QPropertyAnimation(this, "size");
-    animGeom->setDuration(500);
-    animGeom->setEasingCurve(QEasingCurve::InOutQuad);
-    animGeom->setStartValue(QSize(geometry().width(), geometry().height()));
-    animGeom->setEndValue(QSize(0, 0));
-
-    // Parallel animation
-    QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
-    group->addAnimation(animFade);
-    //group->addAnimation(animGeom);
-
-    group->start(QParallelAnimationGroup::DeleteWhenStopped);
-
-    connect(group, &QParallelAnimationGroup::finished, [this, r]{ QDialog::done(r); });*/
 }
 
 void CProcessPopupDlg::reject()
@@ -347,23 +281,31 @@ CTaskInfo CProcessPopupDlg::getProcessInfo(const QModelIndex &index) const
     CTaskInfo info;
     info.m_id = record.value("id").toInt();
     info.m_name = record.value("name").toString().toStdString();
+    info.m_shortDescription = record.value("shortDescription").toString().toStdString();
     info.m_description = record.value("description").toString().toStdString();
     info.m_docLink = record.value("docLink").toString().toStdString();
     info.m_iconPath = record.value("iconPath").toString().toStdString();
     info.m_keywords = record.value("keywords").toString().toStdString();
     info.m_authors = record.value("authors").toString().toStdString();
     info.m_article = record.value("article").toString().toStdString();
+    info.m_articleUrl = record.value("articleUrl").toString().toStdString();
     info.m_journal = record.value("journal").toString().toStdString();
     info.m_version = record.value("version").toString().toStdString();
+    info.m_minIkomiaVersion = record.value("minIkomiaVersion").toString().toStdString();
+    info.m_maxIkomiaVersion = record.value("maxIkomiaVersion").toString().toStdString();
+    info.m_minPythonVersion = record.value("minPythonVersion").toString().toStdString();
+    info.m_maxPythonVersion = record.value("minPythonVersion").toString().toStdString();
     info.m_license = record.value("license").toString().toStdString();
     info.m_repo = record.value("repository").toString().toStdString();
+    info.m_originalRepo = record.value("originalRepository").toString().toStdString();
     info.m_createdDate = record.value("createdDate").toString().toStdString();
     info.m_modifiedDate = record.value("modifiedDate").toString().toStdString();
     info.m_year = record.value("year").toInt();
     info.m_language = record.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
     info.m_bInternal = record.value("isInternal").toInt();
-    info.m_userId = record.value("userId").toInt();
     info.m_os = static_cast<OSType>(record.value("os").toInt());
+    info.m_algoType = static_cast<AlgoType>(record.value("algoType").toInt());
+    info.m_algoTasks = record.value("algoTasks").toString().toStdString();
     return info;
 }
 

@@ -195,25 +195,23 @@ void CPluginModel::filterCompatiblePlugins()
     std::vector<int> toRemove;
     for (int i=0; i<m_jsonPlugins.size(); ++i)
     {
+        bool bCompatible = false;
         QJsonObject plugin = m_jsonPlugins[i].toObject();
+        ApiLanguage language = getLanguageFromString(plugin["language"].toString());
+        QJsonArray packages = plugin["packages"].toArray();
 
-        if (checkOSCompatibility(plugin) == false)
+        for (int j=0; j<packages.size(); ++j)
         {
-            toRemove.push_back(i);
-            continue;
+            QJsonObject package = packages[j].toObject();
+            if (checkPackageCompatibility(package, language))
+            {
+                bCompatible = true;
+                break;
+            }
         }
 
-        if (checkIkomiaCompatibility(plugin) == false)
-        {
+        if (bCompatible == false)
             toRemove.push_back(i);
-            continue;
-        }
-
-        if (checkArchitecture(plugin) == false)
-        {
-            toRemove.push_back(i);
-            continue;
-        }
     }
 
     // Remove incompatible plugins
@@ -224,85 +222,130 @@ void CPluginModel::filterCompatiblePlugins()
     }
 }
 
-bool CPluginModel::checkOSCompatibility(const QJsonObject& plugin) const
+bool CPluginModel::checkPackageCompatibility(const QJsonObject &package, ApiLanguage language) const
 {
-    // Check OS compatibility
-    bool bOSCompatible = false;
-    OSType currentOS = Utils::OS::getCurrent();
-    QJsonArray jsonPackages = plugin["packages"].toArray();
+    if (checkOSCompatibility(package) == false)
+        return false;
 
-    for (int i=0; i<jsonPackages.size(); ++i)
-    {
-        QJsonObject jsonPackage = jsonPackages[i].toObject();
-        QJsonObject jsonPlatform = jsonPackage["platform"].toObject();
-        QJsonArray jsonOSList = jsonPlatform["os"].toArray();
+    if (checkIkomiaCompatibility(package, language) == false)
+        return false;
 
-        std::set<OSType> osList;
-        for (int j=0; j<jsonOSList.size(); ++j)
-        {
-            if (jsonOSList[j] == "LINUX")
-                osList.insert(OSType::LINUX);
-            else if (jsonOSList[j] == "WINDOWS")
-                osList.insert(OSType::WIN);
-        }
+    if (checkPythonCompatibility(package) == false)
+        return false;
 
-        auto it = osList.find(currentOS);
-        if (it != osList.end())
-        {
-            bOSCompatible = true;
-            break;
-        }
-    }
-    return bOSCompatible;
+    if (checkArchitecture(package, language) == false)
+        return false;
+
+    return true;
 }
 
-bool CPluginModel::checkIkomiaCompatibility(const QJsonObject &plugin) const
+bool CPluginModel::checkOSCompatibility(const QJsonObject& package) const
+{
+    // Check OS compatibility
+    QJsonObject jsonPlatform = package["platform"].toObject();
+    QJsonArray jsonOSList = jsonPlatform["os"].toArray();
+
+    std::set<OSType> osList;
+    for (int j=0; j<jsonOSList.size(); ++j)
+    {
+        if (jsonOSList[j] == "LINUX")
+            osList.insert(OSType::LINUX);
+        else if (jsonOSList[j] == "WINDOWS")
+            osList.insert(OSType::WIN);
+    }
+
+    OSType currentOS = Utils::OS::getCurrent();
+    auto it = osList.find(currentOS);
+    return (it != osList.end());
+}
+
+bool CPluginModel::checkIkomiaCompatibility(const QJsonObject &package, ApiLanguage language) const
 {
     PluginState state;
-    bool bVersionCompatible = false;
-    ApiLanguage language = getLanguageFromString(plugin["language"].toString());
-    QJsonArray jsonPackages = plugin["packages"].toArray();
+    QJsonObject jsonPlatform = package["platform"].toObject();
 
-    for (int i=0; i<jsonPackages.size(); ++i)
+    if (jsonPlatform["ikomia"].isNull())
+        return false;
+
+    // Get min and max versions
+    QString ikomiaVersions = jsonPlatform["ikomia"].toString();
+    QRegularExpression re(">=(\\d+.\\d+.\\d+),?<?(\\d*.?\\d*.?\\d*)");
+    QRegularExpressionMatch match = re.match(ikomiaVersions);
+
+    if(match.hasMatch())
     {
-        QJsonObject jsonPackage = jsonPackages[i].toObject();
-        QJsonObject jsonPlatform = jsonPackage["platform"].toObject();
-        QString ikomiaVersions = jsonPlatform["ikomia"].toString();
+        std::string minIkomiaVersion = match.captured(1).toStdString();
+        std::string maxIkomiaVersion = match.captured(2).toStdString();
+        state = Utils::Plugin::getApiCompatibilityState(minIkomiaVersion, maxIkomiaVersion, language);
+        return (state == PluginState::VALID);
+    }
+    return false;
+}
 
-        // Get min version
-        QString ikomiaVersion;
-        QRegularExpression re(">=(\\d.\\d.\\d),<(\\d.\\d.\\d)");
-        QRegularExpressionMatch match = re.match(ikomiaVersions);
+bool CPluginModel::checkPythonCompatibility(const QJsonObject &package) const
+{
+    QJsonObject platform = package["platform"].toObject();
+    if (platform["python"].isNull())
+        return false;
 
-        if(match.hasMatch())
+    // Get min and max versions
+    QString pythonVersions = platform["python"].toString();
+    QRegularExpression re(">=(\\d+.\\d+.\\d*),?<?(\\d*.?\\d*.?\\d*)");
+    QRegularExpressionMatch match = re.match(pythonVersions);
+
+    if(match.hasMatch())
+    {
+        CSemanticVersion version(Utils::Python::getVersion());
+        std::string minPythonVersion = match.captured(1).toStdString();
+
+        if (minPythonVersion.empty() == false)
         {
-            ikomiaVersion = match.captured(1);
+            CSemanticVersion minVersion(minPythonVersion);
+            if (version < minVersion)
+                return false;
+        }
 
-            if(language == ApiLanguage::CPP)
-                state = Utils::Plugin::getCppState(ikomiaVersion);
-            else
-                state = Utils::Plugin::getPythonState(ikomiaVersion);
+        std::string maxPythonVersion = match.captured(2).toStdString();
+        if (maxPythonVersion.empty() == false)
+        {
+            CSemanticVersion maxVersion(maxPythonVersion);
+            if (version >= maxVersion)
+                return false;
+        }
+    }
+    return true;
+}
 
-            if (state == PluginState::VALID || state == PluginState::UPDATED)
+bool CPluginModel::checkArchitecture(const QJsonObject &package, ApiLanguage language) const
+{
+    //Check architecture and features compatibility
+    if (language == ApiLanguage::CPP)
+    {
+        QJsonObject platform = package["platform"].toObject();
+
+        //Check CPU architecture
+        bool bArchOk = false;
+        QString currentArch = QString::fromStdString(Utils::OS::getCpuArchName(Utils::OS::getCpuArch()));
+        QJsonArray platformArch = platform["architecture"].toArray();
+
+        for (int i=0; i<platformArch.size(); ++i)
+        {
+            if (currentArch == platformArch[i].toString())
             {
-                bVersionCompatible = true;
+                bArchOk = true;
                 break;
             }
         }
-    }
-    return bVersionCompatible;
-}
 
-bool CPluginModel::checkArchitecture(const QJsonObject &plugin) const
-{
-    //Check architecture compatibility
-    //TODO
-//    QString strLanguage = plugin["language"].toString();
-//    if (strLanguage == "CPP")
-//    {
-//        std::string keywords = plugin["keywords"].toString().toStdString();
-//        return Utils::Plugin::checkArchitectureKeywords(keywords);
-//    }
+        if (bArchOk == false)
+            return false;
+
+        //Check features: CUDA version
+        QJsonArray currentFeatures;
+        currentFeatures.append(QString::fromStdString(Utils::OS::getCudaVersionName()));
+        QJsonArray platformFeatures = platform["features"].toArray();
+        return currentFeatures == platformFeatures;
+    }
     return true;
 }
 

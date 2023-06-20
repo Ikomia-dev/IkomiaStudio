@@ -127,7 +127,7 @@ void CStoreManager::onPublishHub(const QModelIndex &index, const QJsonObject& in
     //User has to be logged in to publish plugins
     if(m_currentUser.isConnected() == false)
     {
-        qCCritical(logStore).noquote() << tr("You have to login before publishing plugins");
+        qCCritical(logStore).noquote() << tr("You have to login before publishing algorithms");
         return;
     }
 
@@ -140,14 +140,14 @@ void CStoreManager::onPublishWorkspace(const QModelIndex &index, const QString& 
 
     if(m_bBusy == true)
     {
-        QMessageBox::information(nullptr, tr("Information"), tr("A plugin is already downloaded or uploaded. Please wait until it is finished."), QMessageBox::Ok);
+        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already downloaded or uploaded. Please wait until it is finished."), QMessageBox::Ok);
         return;
     }
 
     //User has to be logged in to publish plugins
     if(m_currentUser.isConnected() == false)
     {
-        qCCritical(logStore).noquote() << tr("You have to login before publishing plugins");
+        qCCritical(logStore).noquote() << tr("You have to login before publishing algorithms");
         return;
     }
 
@@ -494,7 +494,7 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
     paper["year"] = pModel->getIntegerField("year");
 
     //Link
-    // TODO paper["link"] = ;
+    paper["link"] = pModel->getQStringField("articleUrl");
 
     plugin["paper"] = paper;
 
@@ -503,10 +503,10 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
     if(docLink.isEmpty() == false)
         plugin["docLink"] = docLink;*/
 
-    // TODO License - optional
-    /*QString license = m_localPluginModel.getQStringField("license");
+    //License - optional
+    QString license = m_localPluginModel.getQStringField("license");
     if(license.isEmpty() == false)
-        plugin["license"] = license;*/
+        plugin["license"] = QString::fromStdString(Utils::Plugin::getLicenseString(Utils::Plugin::getLicenseFromName(license.toStdString())));
 
     //Repository - optional
     QString repository = pModel->getQStringField("repository");
@@ -518,24 +518,9 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
     if(originalRepository.isEmpty() == false)
         plugin["original_implementation_repository"] = originalRepository;
 
-    //Date of creation
-    /*QString createdDate = m_localPluginModel.getQStringField("createdDate");
-    if(createdDate.isEmpty() == false)
-        plugin["createdDate"] = createdDate;*/
-
-    //Date of modification
-    //plugin["modifiedDate"] = QDateTime::currentDateTime().toString(Qt::ISODate);
-
-    //Version - mandatory
-    /*QString version = m_localPluginModel.getQStringField("version");
-    if(version.isEmpty())
-        throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: version is mandatory").toStdString(), __func__, __FILE__, __LINE__);
-
-    plugin["version"] = version;*/
-
     //Program language
     auto language = static_cast<ApiLanguage>(pModel->getIntegerField("language"));
-    plugin["language"] = QString::fromStdString(Utils::Plugin::getLanguageName(language));
+    plugin["language"] = QString::fromStdString(Utils::Plugin::getLanguageString(language));
 
     QJsonDocument doc(plugin);
     return doc.toJson();
@@ -544,17 +529,61 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
 QJsonObject CStoreManager::createPluginPackagePayload(CPluginModel *pModel)
 {
     QJsonObject package;
+    int language = pModel->getIntegerField("language");
 
-    //Ikomia version
-    QString ikomiaVersion = pModel->getQStringField("ikomiaVersion");
-    if(ikomiaVersion.isEmpty())
-        ikomiaVersion = Utils::IkomiaApp::getCurrentVersionNumber();
+    //Ikomia minimum version: if empty, set the current version
+    QString minIkVersion = pModel->getQStringField("minIkomiaVersion");
+    if(minIkVersion.isEmpty())
+        minIkVersion = QString::fromStdString(Utils::IkomiaApp::getCurrentVersionNumber());
 
-    package["ikomia_min_version"] = ikomiaVersion;
+    package["ikomia_min_version"] = minIkVersion;
+
+    //Ikomia maximum version
+    QString maxIkVersion = pModel->getQStringField("maxIkomiaVersion");
+    if (maxIkVersion.isEmpty())
+    {
+        //For C++ and since the API is not stable, binary compatibility is not ensured between minor versions
+        CSemanticVersion maxVersion(minIkVersion.toStdString());
+        if (language == ApiLanguage::CPP)
+            maxVersion.nextMinor();
+        else
+            maxVersion.nextMajor();
+
+        maxIkVersion = QString::fromStdString(maxVersion.toString());
+    }
+    package["ikomia_max_version"] = maxIkVersion;
 
     //Python minimum version
-    QString minPythonVersion = pModel->getQStringField("minPythonVersion");
+    QString minPythonVersion;
+    if (language == ApiLanguage::CPP)
+    {
+        //For C++ Python version is determined at compile time -> so curent version
+        minPythonVersion = QString::fromStdString(Utils::Python::getVersion());
+    }
+    else
+    {
+        minPythonVersion = pModel->getQStringField("minPythonVersion");
+        if (minPythonVersion.isEmpty())
+            minPythonVersion = QString::fromStdString(Utils::Python::getMinSupportedVersion());
+    }
     package["python_min_version"] = minPythonVersion;
+
+    //Python maximum version
+    QString maxPythonVersion;
+    if (language == ApiLanguage::CPP)
+    {
+        //For C++ we link with Python shared lib, so compatibility is only ensured for same major.minor versions
+        CSemanticVersion maxVersion(minPythonVersion.toStdString());
+        maxVersion.nextMinor();
+        maxPythonVersion = QString::fromStdString(maxVersion.toString());
+    }
+    else
+    {
+        maxPythonVersion = pModel->getQStringField("maxPythonVersion");
+        if (maxPythonVersion.isEmpty())
+            maxPythonVersion = QString::fromStdString(Utils::Python::getMaxSupportedVersion());
+    }
+    package["python_max_version"] = maxPythonVersion;
 
     // OS
     QJsonArray osList;
@@ -567,6 +596,19 @@ QJsonObject CStoreManager::createPluginPackagePayload(CPluginModel *pModel)
         osList.append(QString::fromStdString(Utils::OS::getName(OSType::WIN)));
     }
     package["os"] = osList;
+
+    if (language == ApiLanguage::CPP)
+    {
+        //Architecture
+        QJsonArray arch;
+        arch.append(QString::fromStdString(Utils::OS::getCpuArchName(Utils::OS::getCpuArch())));
+        package["architecture"] = arch;
+
+        //Features = CUDA version (for now)
+        QJsonArray features;
+        features.append(QString::fromStdString(Utils::OS::getCudaVersionName()));
+        package["features"] = features;
+    }
     return package;
 }
 
@@ -1375,13 +1417,13 @@ void CStoreManager::finalyzePublishHub()
 
 void CStoreManager::finalizePublishWorkspace()
 {
-    emit m_progressSignal.doFinish();
     updateLocalPlugin();
-    onRequestLocalModel();
-    onRequestWorkspaceModel();
     deleteTranferFile();
     clearContext();
+    emit m_progressSignal.doFinish();
     qCInfo(logStore).noquote() << tr("Algorithm was successfully published to your workspace");
+    onRequestLocalModel();
+    onRequestWorkspaceModel();
 }
 
 void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
@@ -1419,9 +1461,8 @@ void CStoreManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pRe
 QString CStoreManager::findBestPackageUrl(const QJsonArray &packages)
 {
     //At this point, plugins are already filtered to ensure compatibility.
-    //So for now, we just want to pick the latest version -> TODO: how to get latest version in workspace?
+    //So for now, we just want to pick the latest version
     QString url;
-    QString lastTag;
     CSemanticVersion lastVersion("0.0.0");
 
     for (int i=0; i<packages.size(); ++i)
@@ -1440,12 +1481,7 @@ QString CStoreManager::findBestPackageUrl(const QJsonArray &packages)
         else if (package.contains("tag"))
         {
             // Workspace plugin
-            auto tag = package["tag"].toString();
-            if (tag > lastTag)
-            {
-                url = package["url"].toString();
-                lastTag = tag;
-            }
+            url = package["url"].toString();
         }
     }
     return url;

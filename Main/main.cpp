@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     // QSettings
     QApplication::setOrganizationName("Ikomia");
     QApplication::setOrganizationDomain("www.ikomia.com");
-    QApplication::setApplicationVersion(Utils::IkomiaApp::getCurrentVersionName());
+    QApplication::setApplicationVersion(QString::fromStdString(Utils::IkomiaApp::getCurrentVersionName()));
     QApplication::setApplicationName("Ikomia Studio");
 
     // Instantiate CMainView first to have initialization messages in the notification center
