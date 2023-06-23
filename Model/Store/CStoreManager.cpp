@@ -769,8 +769,8 @@ void CStoreManager::updateLocalPlugin()
 {
     try
     {
-        int pluginId = m_localPluginModel.getIntegerField("id");
-        m_dbMgr.updateLocalPluginModifiedDate(pluginId);
+        QString pluginName = m_localPluginModel.getQStringField("name");
+        m_dbMgr.updateLocalPluginModifiedDate(pluginName);
     }
     catch(std::exception& e)
     {

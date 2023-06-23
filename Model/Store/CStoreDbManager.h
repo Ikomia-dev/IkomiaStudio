@@ -41,7 +41,7 @@ class CStoreDbManager
         void            insertPlugins(CPluginModel *pModel);
         void            insertPlugin(const CTaskInfo& procInfo, const CUser &user);
 
-        void            updateLocalPluginModifiedDate(int pluginId);
+        void            updateLocalPluginModifiedDate(const QString pluginName);
         void            updateMemoryLocalPluginsInfo();
 
         void            clearServerRecords(CPluginModel::Type type);

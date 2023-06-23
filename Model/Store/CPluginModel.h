@@ -57,6 +57,8 @@ class CPluginModel
 
     private:
 
+        void                updatePluginPackagesInfo(int index);
+
         bool                checkPackageCompatibility(const QJsonObject& package, ApiLanguage language) const;
         bool                checkOSCompatibility(const QJsonObject& package) const;
         bool                checkIkomiaCompatibility(const QJsonObject& package, ApiLanguage language) const;

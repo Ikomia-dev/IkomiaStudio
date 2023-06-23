@@ -21,6 +21,7 @@
 #include "CException.h"
 #include "UtilsTools.hpp"
 #include "Main/AppTools.hpp"
+#include "Main/CoreTools.hpp"
 
 CStoreDbManager::CStoreDbManager()
 {
@@ -85,16 +86,18 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     //Retrieve plugins information from JSON
-    /*QVariantList names, shortDescriptions, descriptions, keywords, userNames, authors, articles,
-            journals, years, docLinks, createdDates, modifiedDates, versions, ikomiaVersions, languages,
-            licenses, repositories, iconPaths, certifications, userIds, userReputations, votes;*/
-    QVariantList names, shortDescriptions, descriptions, keywords, authors, articles,
-            journals, years, createdDates, modifiedDates, versions, languages, licenses, repositories, iconPaths;
+    QVariantList names, shortDescriptions, descriptions, keywords,
+            authors, articles, articleUrls, journals, years, createdDates, modifiedDates,
+            versions, minIkVersions, maxIkVersions, minPyVersions, maxPyVersions,
+            languages, osList, iconPaths,
+            licenses, repositories, originalRepositories, algoTypes, algoTasks;
 
     QJsonArray plugins = pModel->getJsonPlugins();
     for(int i=0; i<plugins.size(); ++i)
     {
         QJsonObject plugin = plugins[i].toObject();
+        QJsonArray packages = plugin["packages"].toArray();
+        QJsonObject package = packages[0].toObject();
 
         // Name
         names << plugin["name"].toString();
@@ -118,6 +121,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         QJsonObject jsonPaper = plugin["paper"].toObject();
         authors << jsonPaper["authors"].toString();
         articles << jsonPaper["title"].toString();
+        articleUrls << jsonPaper["link"].toString();
         journals << jsonPaper["journal"].toString();
         years << jsonPaper["year"].toInt();
 
@@ -134,11 +138,29 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         else
             versions << "";
 
-        // TODO: to remove -> check compatibility
-        //ikomiaVersions << plugin["ikomiaVersion"].toString();
+        // Ikomia min and max versions of last package
+        minIkVersions << package["ikomia_min_version"].toString();
+        maxIkVersions << plugin["ikomia_max_version"].toString();
+
+        // Python min and max versions of last package
+        minPyVersions << package["python_min_version"].toString();
+        maxPyVersions << plugin["python_max_version"].toString();
 
         // Language
         languages << pModel->getLanguageFromString(plugin["language"].toString());
+
+        // OS
+        QJsonObject platform = package["platform"].toObject();
+        QJsonArray os = platform["os"].toArray();
+        auto itLinux = std::find(os.begin(), os.end(), "LINUX");
+        auto itWin = std::find(os.begin(), os.end(), "WINDOWS");
+
+        if (itLinux != os.end() && itWin != os.end())
+            osList << OSType::ALL;
+        else if (itLinux != os.end())
+            osList << OSType::LINUX;
+        else
+            osList << OSType::WIN;
 
         // License
         if (plugin.contains("license"))
@@ -146,11 +168,18 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         else
             licenses << "";
 
-        // Implementation repository
-        repositories << plugin["repository"].toString();
-
         // Icon path
         iconPaths << plugin["icon_path"].toString();
+
+        // Implementation repository
+        repositories << plugin["repository"].toString();
+        originalRepositories << plugin["original_implementation_repository"].toString();
+
+        // Algo type
+        algoTypes << (int)(Utils::Plugin::getAlgoTypeFromString(plugin["algo_type"].toString().toStdString()));
+
+        // Algo tasks
+        algoTasks << plugin["algo_task"].toString();
 
         // TODO: missing fields
         //certifications << plugin["certification"].toInt();
@@ -159,15 +188,18 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
 
     //Insert to serverPlugins table
     QSqlQuery q(db);
-    /*if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "name, shortDescription, description, keywords, user, authors, article, journal, "
-                          "year, docLink, createdDate, modifiedDate, version, ikomiaVersion, language, license, "
-                          "repository, iconPath, certification, votes, userId, userReputation) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))*/
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "name, shortDescription, description, keywords, authors, article, journal, "
-                          "year, createdDate, modifiedDate, version, language, license, repository, iconPath) "
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")))
+                          "name, shortDescription, description, keywords, "
+                          "authors, article, articleUrl, journal, year, createdDate, modifiedDate, "
+                          "version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, "
+                          "language, os, iconPath, "
+                          "license, repository,  originalRepository, algoType, algoTasks) "
+                          "VALUES ("
+                          "?, ?, ?, ?, "
+                          "?, ?, ?, ?, ?, ?, ?, "
+                          "?, ?, ?, ?, ?,"
+                          "?, ? ,?,"
+                          "?, ?, ?, ?, ?);")))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -178,17 +210,25 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     q.addBindValue(keywords);
     q.addBindValue(authors);
     q.addBindValue(articles);
+    q.addBindValue(articleUrls);
     q.addBindValue(journals);
     q.addBindValue(years);
     //q.addBindValue(docLinks);
     q.addBindValue(createdDates);
     q.addBindValue(modifiedDates);
     q.addBindValue(versions);
-    //q.addBindValue(ikomiaVersions);
+    q.addBindValue(minIkVersions);
+    q.addBindValue(maxIkVersions);
+    q.addBindValue(minPyVersions);
+    q.addBindValue(maxPyVersions);
     q.addBindValue(languages);
+    q.addBindValue(osList);
+    q.addBindValue(iconPaths);
     q.addBindValue(licenses);
     q.addBindValue(repositories);
-    q.addBindValue(iconPaths);
+    q.addBindValue(originalRepositories);
+    q.addBindValue(algoTypes);
+    q.addBindValue(algoTasks);
     //q.addBindValue(certifications);
     //q.addBindValue(votes);
     //q.addBindValue(userReputations);
@@ -228,9 +268,16 @@ void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
 
     QSqlQuery q(db);
     auto strQuery = QString("INSERT INTO process "
-                            "(name, shortDescription, description, keywords, user, authors, article, journal, year, docLink, "
-                            "createdDate, modifiedDate, version, ikomiaVersion, minPythonVersion, language, license, repository, os, isInternal, iconPath) "
-                            "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', '%13', '%14', '%15', %16, '%17', '%18', %19, %20, '%21') "
+                            "(name, shortDescription, description, keywords, user, "
+                            "authors, article, articleUrl, journal, year, docLink, createdDate, modifiedDate, "
+                            "version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, "
+                            "language, os, iconPath, "
+                            "license, repository,  originalRepository, algoType, algoTasks) "
+                            "VALUES ('%1', '%2', '%3', '%4', '%5', "
+                            "'%6', '%7', '%8', '%9', %10, '%11', '%12', '%13', "
+                            "'%14', '%15', %16, '%17', '%18', "
+                            "%19, %20, '%21'"
+                            "'%22', '%23', '%24', %25, '%26') "
                             "ON CONFLICT(name) DO UPDATE SET "
                             "shortDescription = excluded.shortDescription, "
                             "description = excluded.description, "
@@ -238,23 +285,33 @@ void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
                             "user = COALESCE(excluded.user, user), "
                             "authors = excluded.authors, "
                             "article = excluded.article, "
+                            "articleUrl = excluded.articleUrl, "
                             "journal = excluded.journal, "
                             "year = excluded.year, "
                             "docLink = excluded.docLink, "
+                            "createdDate = excluded.createdDate, "
                             "modifiedDate = excluded.modifiedDate, "
                             "version = excluded.version, "
-                            "ikomiaVersion = excluded.ikomiaVersion, "
+                            "minIkomiaVersion = excluded.minIkomiaVersion, "
+                            "maxIkomiaVersion = excluded.maxIkomiaVersion, "
                             "minPythonVersion = excluded.minPythonVersion, "
+                            "maxPythonVersion = excluded.maxPythonVersion, "
+                            "language = excluded.language, "
+                            "os = excluded.os, "
+                            "iconPath = excluded.iconPath, "
                             "license = excluded.license, "
                             "repository = excluded.repository, "
-                            "iconPath = excluded.iconPath;")
+                            "originalRepository = excluded.originalRepository, "
+                            "algoType = excluded.algoType, "
+                            "algoTasks = excluded.algoTasks;")
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_name)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_shortDescription)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_description)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_keywords)))
-            .arg(QString::fromStdString(Utils::String::dbFormat(user.m_firstName.toStdString())))
+            .arg(QString::fromStdString(Utils::String::dbFormat("")))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_authors)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_article)))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_articleUrl)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_journal)))
             .arg(procInfo.m_year)
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_docLink)))
@@ -262,24 +319,28 @@ void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_modifiedDate)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_version)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_minIkomiaVersion)))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_maxIkomiaVersion)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_minPythonVersion)))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_maxPythonVersion)))
             .arg(procInfo.m_language)
+            .arg(procInfo.m_os)
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_iconPath)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_license)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_repo)))
-            .arg(procInfo.m_os)
-            .arg(false)
-            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_iconPath)));
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_originalRepo)))
+            .arg((int)(procInfo.m_algoType))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_algoTasks)));
 
     if(!q.exec(strQuery))
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::updateLocalPluginModifiedDate(int pluginId)
+void CStoreDbManager::updateLocalPluginModifiedDate(const QString pluginName)
 {
     QString modifiedDate = QDateTime::currentDateTime().toString(Qt::ISODate);
-    QString queryStr = QString("UPDATE process SET modifiedDate='%1' WHERE id=%2")
+    QString queryStr = QString("UPDATE process SET modifiedDate='%1' WHERE name='%2'")
             .arg(modifiedDate)
-            .arg(pluginId);
+            .arg(pluginName);
 
     //Update memory database
     auto dbMemory = Utils::Database::connect(m_name, Utils::Database::getProcessConnectionName());
@@ -362,10 +423,11 @@ void CStoreDbManager::createServerPluginsDb(const QString &connectionName)
 
     QSqlQuery q(db);
     if(!q.exec("CREATE TABLE serverPlugins ("
-               "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXT, description TEXT, keywords TEXT, "
-               "authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, "
-               "modifiedDate TEXT, version TEXT, ikomiaVersion TEXT, license TEXT, repository TEXT, language INTEGER, "
-               "os INTEGER, iconPath TEXT, certification INTEGER, votes INTEGER, userReputation INTEGER);"))
+               "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXT, description TEXT, keywords TEXT, user TEXT, "
+               "authors TEXT, article TEXT, articleUrl TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, modifiedDate TEXT, "
+               "version TEXT, minIkomiaVersion TEXT, maxIkomiaVersion TEXT, minPythonVersion TEXT, maxPythonVersion TEXT, "
+               "language INTEGER, os INTEGER, iconPath TEXT, certification INTEGER, votes INTEGER, "
+               "license TEXT, repository TEXT, originalRepository TEXT, algoType INTEGER, algoTasks TEXT, userReputation INTEGER);"))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }

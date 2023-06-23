@@ -188,6 +188,54 @@ void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatab
 void CPluginModel::addJsonPlugin(const QJsonObject &jsonPlugin)
 {
     m_jsonPlugins.append(jsonPlugin);
+    updatePluginPackagesInfo(m_jsonPlugins.count() - 1);
+}
+
+void CPluginModel::updatePluginPackagesInfo(int index)
+{
+    if (index >= m_jsonPlugins.size())
+        return;
+
+    QJsonObject plugin = m_jsonPlugins[index].toObject();
+    QJsonArray packages = plugin["packages"].toArray();
+
+    for (int i=0; i<packages.size(); ++i)
+    {
+        QJsonObject package = packages[i].toObject();
+        QJsonObject platform = package["platform"].toObject();
+
+        if (platform["ikomia"].isNull() == false)
+        {
+            // Set Ikomia min and max versions
+            QString ikomiaVersions = platform["ikomia"].toString();
+            QRegularExpression re(">=(\\d+.\\d+.\\d+),?<?(\\d*.?\\d*.?\\d*)");
+            QRegularExpressionMatch match = re.match(ikomiaVersions);
+
+            if(match.hasMatch())
+            {
+                package["ikomia_min_version"] = match.captured(1);
+                package["ikomia_max_version"] = match.captured(2);
+            }
+        }
+
+        // Set Python min and max versions
+        if (platform["python"].isNull() == false)
+        {
+            // Get min and max versions
+            QString pythonVersions = platform["python"].toString();
+            QRegularExpression re(">=(\\d+.\\d+.\\d*),?<?(\\d*.?\\d*.?\\d*)");
+            QRegularExpressionMatch match = re.match(pythonVersions);
+
+            if(match.hasMatch())
+            {
+                package["python_min_version"] = match.captured(1);
+                package["python_max_version"] = match.captured(2);
+            }
+        }
+        packages[i] = package;
+    }
+    plugin["packages"] = packages;
+    m_jsonPlugins[index] = plugin;
 }
 
 void CPluginModel::filterCompatiblePlugins()
@@ -242,15 +290,15 @@ bool CPluginModel::checkPackageCompatibility(const QJsonObject &package, ApiLang
 bool CPluginModel::checkOSCompatibility(const QJsonObject& package) const
 {
     // Check OS compatibility
-    QJsonObject jsonPlatform = package["platform"].toObject();
-    QJsonArray jsonOSList = jsonPlatform["os"].toArray();
+    QJsonObject platform = package["platform"].toObject();
+    QJsonArray os = platform["os"].toArray();
 
     std::set<OSType> osList;
-    for (int j=0; j<jsonOSList.size(); ++j)
+    for (int j=0; j<os.size(); ++j)
     {
-        if (jsonOSList[j] == "LINUX")
+        if (os[j] == "LINUX")
             osList.insert(OSType::LINUX);
-        else if (jsonOSList[j] == "WINDOWS")
+        else if (os[j] == "WINDOWS")
             osList.insert(OSType::WIN);
     }
 
@@ -261,57 +309,30 @@ bool CPluginModel::checkOSCompatibility(const QJsonObject& package) const
 
 bool CPluginModel::checkIkomiaCompatibility(const QJsonObject &package, ApiLanguage language) const
 {
-    PluginState state;
-    QJsonObject jsonPlatform = package["platform"].toObject();
-
-    if (jsonPlatform["ikomia"].isNull())
-        return false;
-
-    // Get min and max versions
-    QString ikomiaVersions = jsonPlatform["ikomia"].toString();
-    QRegularExpression re(">=(\\d+.\\d+.\\d+),?<?(\\d*.?\\d*.?\\d*)");
-    QRegularExpressionMatch match = re.match(ikomiaVersions);
-
-    if(match.hasMatch())
-    {
-        std::string minIkomiaVersion = match.captured(1).toStdString();
-        std::string maxIkomiaVersion = match.captured(2).toStdString();
-        state = Utils::Plugin::getApiCompatibilityState(minIkomiaVersion, maxIkomiaVersion, language);
-        return (state == PluginState::VALID);
-    }
-    return false;
+    std::string minIkomiaVersion = package["ikomia_min_version"].toString().toStdString();
+    std::string maxIkomiaVersion = package["ikomia_max_version"].toString().toStdString();
+    PluginState state = Utils::Plugin::getApiCompatibilityState(minIkomiaVersion, maxIkomiaVersion, language);
+    return (state == PluginState::VALID);
 }
 
 bool CPluginModel::checkPythonCompatibility(const QJsonObject &package) const
 {
-    QJsonObject platform = package["platform"].toObject();
-    if (platform["python"].isNull())
-        return false;
+    CSemanticVersion version(Utils::Python::getVersion());
+    std::string minPythonVersion = package["python_min_version"].toString().toStdString();
 
-    // Get min and max versions
-    QString pythonVersions = platform["python"].toString();
-    QRegularExpression re(">=(\\d+.\\d+.\\d*),?<?(\\d*.?\\d*.?\\d*)");
-    QRegularExpressionMatch match = re.match(pythonVersions);
-
-    if(match.hasMatch())
+    if (minPythonVersion.empty() == false)
     {
-        CSemanticVersion version(Utils::Python::getVersion());
-        std::string minPythonVersion = match.captured(1).toStdString();
+        CSemanticVersion minVersion(minPythonVersion);
+        if (version < minVersion)
+            return false;
+    }
 
-        if (minPythonVersion.empty() == false)
-        {
-            CSemanticVersion minVersion(minPythonVersion);
-            if (version < minVersion)
-                return false;
-        }
-
-        std::string maxPythonVersion = match.captured(2).toStdString();
-        if (maxPythonVersion.empty() == false)
-        {
-            CSemanticVersion maxVersion(maxPythonVersion);
-            if (version >= maxVersion)
-                return false;
-        }
+    std::string maxPythonVersion = package["python_max_version"].toString().toStdString();
+    if (maxPythonVersion.empty() == false)
+    {
+        CSemanticVersion maxVersion(maxPythonVersion);
+        if (version >= maxVersion)
+            return false;
     }
     return true;
 }
