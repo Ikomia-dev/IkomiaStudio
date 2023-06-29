@@ -32,23 +32,23 @@ class CProcessManager;
 class CPluginManager;
 class CProgressBarManager;
 
-enum class StoreRequestType : int
-{
-    GET_PLUGINS,
-    GET_PLUGIN_DETAILS,
-    GET_PACKAGE_URL,
-    GET_NEXT_PUBLISH_INFO,
-    PUBLISH_HUB,
-    PUBLISH_WORKSPACE,
-    UPDATE_PLUGIN,
-    UPLOAD_PACKAGE,
-    UPLOAD_ICON,
-    DOWNLOAD_PACKAGE
-};
-
 class CStoreManager : public QObject
 {
     Q_OBJECT
+
+    enum class StoreRequestType : int
+    {
+        GET_PLUGINS,
+        GET_PLUGIN_DETAILS,
+        GET_PACKAGE_URL,
+        GET_NEXT_PUBLISH_INFO,
+        PUBLISH_HUB,
+        PUBLISH_WORKSPACE,
+        UPDATE_PLUGIN,
+        UPLOAD_PACKAGE,
+        UPLOAD_ICON,
+        DOWNLOAD_PACKAGE
+    };
 
     public:
 

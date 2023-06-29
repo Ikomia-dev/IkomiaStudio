@@ -35,6 +35,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QColor>
+#include <QNetworkAccessManager>
 #include <vector>
 #include <set>
 #include <unordered_map>

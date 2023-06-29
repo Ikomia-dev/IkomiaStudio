@@ -224,6 +224,7 @@
         <file>Images/text-editor.png</file>
         <file>Templates/Python/template_test.py</file>
         <file>Migrations/migration0002.sql</file>
+        <file>Images/share.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

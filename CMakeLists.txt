@@ -210,6 +210,10 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Workflow/CWorkflowManager.h
     Model/Workflow/CWorkflowRunManager.cpp
     Model/Workflow/CWorkflowRunManager.h
+    Model/Workflow/CWorkflowScaleManager.h
+    Model/Workflow/CWorkflowScaleManager.cpp
+    Model/Workflow/CWorkflowPackage.h
+    Model/Workflow/CWorkflowPackage.cpp
     View/Common/CBorderLayout.cpp
     View/Common/CBorderLayout.h
     View/Common/CBubbleTip.cpp
@@ -374,6 +378,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Modules/Workflow/CWorkflowScene.h
     View/Modules/Workflow/CWorkflowView.cpp
     View/Modules/Workflow/CWorkflowView.h
+    View/Modules/Workflow/CWorkflowPublishDlg.h
+    View/Modules/Workflow/CWorkflowPublishDlg.cpp
     View/Notifications/CNotificationPane.cpp
     View/Notifications/CNotificationPane.h
     View/Notifications/CNotificationPopup.cpp

@@ -114,7 +114,7 @@ class CMainModel : public QObject
         CDbManager              m_dbMgr;
         CProjectManager         m_projectMgr;
         CProcessManager         m_processMgr;
-        CWorkflowManager        m_protocolMgr;
+        CWorkflowManager        m_workflowMgr;
         CRenderManager          m_renderMgr;
         CProgressBarManager     m_progressMgr;
         CGraphicsManager        m_graphicsMgr;
