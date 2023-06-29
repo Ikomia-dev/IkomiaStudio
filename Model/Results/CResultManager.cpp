@@ -31,6 +31,7 @@
 #include "IO/CSemanticSegIO.h"
 #include "IO/CKeypointsIO.h"
 #include "IO/CTextIO.h"
+#include "IO/CJsonIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -167,7 +168,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                 switch(outputPtr->getDataType())
                 {
                     case IODataType::IMAGE:
-                    case IODataType::IMAGE_BINARY:                        
+                    case IODataType::IMAGE_BINARY:
                     case IODataType::IMAGE_LABEL:
                         manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
@@ -271,6 +272,14 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
+                    }
+
+                    case IODataType::JSON:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
+                        assert(outPtr);
+                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
                         break;
                     }
 
@@ -794,6 +803,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
         case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
+        case IODataType::JSON: viewType = DisplayType::TEXT_DISPLAY; break;
     }
     return viewType;
 }
