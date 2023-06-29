@@ -132,6 +132,10 @@ namespace Ikomia
                     case IODataType::TEXT:
                         color = QColor(30,130,255);
                         break;
+
+                    case IODataType::JSON:
+                        color = QColor(180,45,255);
+                        break;
                 }
                 return color;
             }
@@ -171,6 +175,7 @@ namespace Ikomia
                     case IODataType::SEMANTIC_SEGMENTATION:
                     case IODataType::KEYPOINTS:
                     case IODataType::TEXT:
+                    case IODataType::JSON:
                         bClickable = false;
                         break;
 
