@@ -406,7 +406,7 @@ namespace Ikomia
 
                 if(url.isEmpty())
                 {
-                    url = "http://ikomia.com:1127/crashreports";
+                    url = "http://members.ikomia.com:1127/crashreports";
                     ikomiaSettings.setValue(BREAKPAD_SERVER_URL, url);
                 }
                 return url;
