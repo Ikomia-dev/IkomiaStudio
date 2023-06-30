@@ -1,5 +1,7 @@
 #include "CWorkflowScaleManager.h"
-#include <QNetworkReply>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QHttpPart>
 #include "UtilsTools.hpp"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
@@ -44,6 +46,9 @@ void CWorkflowScaleManager::onReplyReceived(QNetworkReply *pReply, RequestType r
             break;
         case RequestType::CREATE_PROJECT:
             addProject(pReply);
+            break;
+        case RequestType::PUBLISH_WORKFLOW:
+            clearContext();
             break;
     }
     pReply->deleteLater();
@@ -204,14 +209,56 @@ void CWorkflowScaleManager::addProject(QNetworkReply *pReply)
 void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
 {
     CWorkflowPackage package(m_wfPath);
-    QString zipPath = package.create();
+    m_zipPath = package.create();
 
-    // Cleanup
-    boost::filesystem::remove_all(m_wfPath.toStdString());
-    boost::filesystem::remove_all(zipPath.toStdString());
+    QUrlQuery urlQuery(projectUrl + "workflows/");
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logStore) << url.errorString();
+        clearContext();
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    QVariant cookieHeaders;
+    cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
+    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("csrftoken"));
+
+    // Build multi-part request
+    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    // Plugin package zip part
+    m_pPackageFile = new QFile(m_zipPath);
+    m_pPackageFile->open(QIODevice::ReadOnly);
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/zip"));
+    QString formData = QString("form-data; name=\"archive\"; filename=\"%1\"").arg(m_zipPath);
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
+    filePart.setHeader(QNetworkRequest::ContentLengthHeader, m_pPackageFile->size());
+    filePart.setBodyDevice(m_pPackageFile);
+    pMultiPart->append(filePart);
+
+    auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
+    pMultiPart->setParent(pNewReply);
+
+    connect(pNewReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pNewReply, RequestType::PUBLISH_WORKFLOW);
+    });
 }
 
 void CWorkflowScaleManager::clearContext()
 {
-
+    // Cleanup
+    if (m_pPackageFile)
+    {
+        m_pPackageFile->remove();
+        delete m_pPackageFile;
+        m_pPackageFile = nullptr;
+    }
+    boost::filesystem::remove_all(m_wfPath.toStdString());
+    boost::filesystem::remove_all(m_zipPath.toStdString());
 }

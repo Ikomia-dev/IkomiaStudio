@@ -616,11 +616,11 @@ void CWorkflowManager::publishWorkflow(const QString& name, const QString& descr
                 .arg(name)
                 .arg(QDateTime::currentDateTime().toString(Qt::ISODate)));
 
-    saveWorkflow(tmpPath);
-
     try
     {
+        m_pWorkflow->save(tmpPath.toStdString());
         m_scaleMgr.publishWorkflow(tmpPath, bNewProject, projectName, projectDescription, projectNamespace);
+        emit doNewWorkflowNotification(tr("Workflow %1 has been published successfully.").arg(name), Notification::INFO);
     }
     catch(std::exception& e)
     {

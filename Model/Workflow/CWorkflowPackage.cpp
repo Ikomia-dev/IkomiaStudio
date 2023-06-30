@@ -45,6 +45,7 @@ QString CWorkflowPackage::create()
 
     QJsonDocument jsonDoc(m_workflow);
     jsonFile.write(jsonDoc.toJson());
+    jsonFile.close();
 
     // Zip folder
     QString zipPath = QString("%1/Workflows/archive.zip").arg(Utils::IkomiaApp::getQIkomiaFolder());

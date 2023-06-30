@@ -10,7 +10,8 @@ class CWorkflowScaleManager : public QObject
     enum class RequestType : int
     {
         GET_PROJECTS,
-        CREATE_PROJECT
+        CREATE_PROJECT,
+        PUBLISH_WORKFLOW
     };
 
     public:
@@ -50,9 +51,11 @@ class CWorkflowScaleManager : public QObject
     private:
 
         QNetworkAccessManager*  m_pNetworkMgr = nullptr;
+        QFile*                  m_pPackageFile = nullptr;
         CUser                   m_user;
         QJsonArray              m_projects;
         QString                 m_wfPath;
+        QString                 m_zipPath;
 };
 
 #endif // CWORKFLOWSCALEMANAGER_H
