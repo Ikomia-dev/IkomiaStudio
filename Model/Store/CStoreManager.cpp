@@ -120,7 +120,7 @@ void CStoreManager::onPublishHub(const QModelIndex &index, const QJsonObject& in
 
     if(m_bBusy == true)
     {
-        QMessageBox::information(nullptr, tr("Information"), tr("A plugin is already downloaded or uploaded. Please wait until it is finished."), QMessageBox::Ok);
+        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already being published. Please wait until it is finished."), QMessageBox::Ok);
         return;
     }
 
@@ -140,7 +140,7 @@ void CStoreManager::onPublishWorkspace(const QModelIndex &index, const QString& 
 
     if(m_bBusy == true)
     {
-        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already downloaded or uploaded. Please wait until it is finished."), QMessageBox::Ok);
+        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already being published. Please wait until it is finished."), QMessageBox::Ok);
         return;
     }
 
@@ -205,7 +205,7 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
     if (pReply == nullptr)
     {
         clearContext();
-        qCCritical(logStore).noquote() << "Invalid reply from Ikomia Scale";
+        qCCritical(logStore).noquote() << "Invalid reply from Ikomia HUB";
         return;
     }
 
@@ -249,8 +249,6 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
             savePluginFolder(pModel, pReply);
             break;
     }
-
-    m_pProgressMgr->endInfiniteProgress();
     pReply->deleteLater();
 }
 
@@ -259,7 +257,7 @@ void CStoreManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
     const float factor = 1024.0*1024.0;
     QString sent = QString::number(bytesSent / factor, 'f', 1);
     QString total = QString::number(bytesTotal / factor, 'f', 1);
-    emit m_progressSignal.doSetMessage(QString("Uploading plugin: %1 Mb / %2 Mb").arg(sent).arg(total));
+    emit m_progressSignal.doSetMessage(QString("Uploading package: %1 Mb / %2 Mb").arg(sent).arg(total));
     emit m_progressSignal.doSetValue(bytesSent / 1024);
 }
 
@@ -373,7 +371,7 @@ void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString
     assert(m_pNetworkMgr);
     if (m_bBusy == true)
     {
-        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already downloaded or uploaded. Please wait until it is finished."), QMessageBox::Ok);
+        QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already being installed. Please wait until it is finished."), QMessageBox::Ok);
         return;
     }
 
@@ -436,7 +434,7 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
     //Plugin name - mandatory
     QString name = pModel->getQStringField("name");
     if(name.isEmpty())
-        throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: plugin name is mandatory").toStdString(), __func__, __FILE__, __LINE__);
+        throw CException(CoreExCode::INVALID_USAGE, tr("Publication failed: algorithm name is mandatory").toStdString(), __func__, __FILE__, __LINE__);
 
     plugin["name"] = name;
 
@@ -816,7 +814,6 @@ void CStoreManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply
     QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
     if (jsonPlugin.isEmpty())
     {
-        m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
@@ -938,13 +935,14 @@ void CStoreManager::generateZipFile()
         return;
     }
 
-    m_pProgressMgr->launchInfiniteProgress(tr("Plugin compression..."), false);
+    m_pProgressMgr->launchInfiniteProgress(tr("Algorithm package compression..."), false);
 
     QFutureWatcher<bool>* pWatcher = new QFutureWatcher<bool>;
     connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, zipFilePath]
     {
         bool bCompress = pWatcher->result();
         QString zipFile = (bCompress == true ? zipFilePath : QString());
+        m_pProgressMgr->endInfiniteProgress();
         publishOrUpdateToWorkspace(zipFile);
     });
 
@@ -958,7 +956,7 @@ void CStoreManager::generateZipFile()
 
 void CStoreManager::extractZipFile(CPluginModel* pModel, const QString& src, const QString& dstDir)
 {
-    m_pProgressMgr->launchInfiniteProgress(tr("Plugin extraction..."), false);
+    m_pProgressMgr->launchInfiniteProgress(tr("Algorithm package extraction..."), false);
 
     QFutureWatcher<QStringList>* pWatcher = new QFutureWatcher<QStringList>(this);
     connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, pModel, src, dstDir]
@@ -982,7 +980,8 @@ void CStoreManager::extractZipFile(CPluginModel* pModel, const QString& src, con
 
 void CStoreManager::publishToHub(const QModelIndex& index, const QJsonObject& info)
 {
-    auto name = m_workspacePluginModel.getQStringField("name", index);
+    m_workspacePluginModel.setCurrentIndex(index);
+    auto name = m_workspacePluginModel.getQStringField("name");
     QJsonObject pluginInfo = m_workspacePluginModel.getJsonPlugin(name);
     QUrlQuery urlQuery(pluginInfo["url"].toString() + "publish/");
     QUrl url(urlQuery.query());
@@ -1021,13 +1020,11 @@ void CStoreManager::publishToWorkspace(const QModelIndex &index, const QString& 
 
 void CStoreManager::publishOrUpdateToWorkspace(const QString& zipFile)
 {
-    m_pProgressMgr->endInfiniteProgress();
-
     try
     {
         if(zipFile.isEmpty())
         {
-            qCCritical(logStore).noquote() << tr("Plugin compression failed, transfer to server aborted");
+            qCCritical(logStore).noquote() << tr("Compression of algorithm package failed, transfer to Ikomia HUB aborted");
             clearContext();
             return;
         }
@@ -1141,7 +1138,7 @@ void CStoreManager::uploadPluginPackage()
     pMultiPart->append(filePart);
 
     //Init progress: size in ko
-    m_pProgressMgr->launchProgress(&m_progressSignal, m_pTranferFile->size() / 1024, tr("Uploading plugin..."), false);
+    m_pProgressMgr->launchProgress(&m_progressSignal, m_pTranferFile->size() / 1024, tr("Uploading algorithm package..."), false);
 
     auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
     pMultiPart->setParent(pNewReply);
@@ -1154,7 +1151,7 @@ void CStoreManager::uploadPluginPackage()
 
 void CStoreManager::uploadPluginIcon(QNetworkReply* pReply)
 {    
-    QJsonObject jsonResponse = getJsonObject(pReply, tr("Error in plugin creation response"));
+    QJsonObject jsonResponse = getJsonObject(pReply, tr("Error in algorithm creation response from Ikomia HUB"));
     if (jsonResponse.isEmpty())
     {
         clearContext();
@@ -1230,10 +1227,9 @@ void CStoreManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* p
 {
     assert(m_pNetworkMgr);
 
-    QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
+    QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorithm details"));
     if (jsonPlugin.isEmpty())
     {
-        m_pProgressMgr->endInfiniteProgress();
         clearContext();
         return;
     }
@@ -1323,7 +1319,7 @@ void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply
 
             //Need to restart to make the copy
             auto buttons = QMessageBox::question(nullptr, tr("Restart required"),
-                                                 tr("Ikomia needs restarting to finalize plugin installation. Do you want to restart now?"),
+                                                 tr("Ikomia needs restarting to finalize algorithm installation. Do you want to restart now?"),
                                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes);
             if(buttons == QMessageBox::Yes)
             {
@@ -1354,7 +1350,7 @@ void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply
 
 void CStoreManager::installPythonPluginDependencies(const QString &directory, const CTaskInfo& info, const CUser& user)
 {
-    m_pProgressMgr->launchInfiniteProgress(tr("Plugin dependencies installation..."), false);
+    m_pProgressMgr->launchInfiniteProgress(tr("Installation of algorithm dependencies..."), false);
 
     QFutureWatcher<void>* pWatcher = new QFutureWatcher<void>(this);
     connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, directory, info, user]
@@ -1384,7 +1380,7 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
         for(auto&& name : requirements)
         {
             QString requirementFile = directory + "/" + name;
-            qCInfo(logStore()).noquote() << "Plugin dependencies installation from " + requirementFile;
+            qCInfo(logStore()).noquote() << "Algorithm dependencies installation from " + requirementFile;
             Utils::Python::installRequirements(requirementFile);
         }
     });
@@ -1410,18 +1406,20 @@ void CStoreManager::clearContext()
 void CStoreManager::finalyzePublishHub()
 {
     emit m_progressSignal.doFinish();
+    auto name = m_workspacePluginModel.getQStringField("name");
+    qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully published to Ikomia HUB").arg(name);
     onRequestHubModel();
     clearContext();
-    qCInfo(logStore).noquote() << tr("Algorithm was successfully published to Ikomia HUB");
 }
 
 void CStoreManager::finalizePublishWorkspace()
 {
     updateLocalPlugin();
     deleteTranferFile();
-    clearContext();
     emit m_progressSignal.doFinish();
-    qCInfo(logStore).noquote() << tr("Algorithm was successfully published to your workspace");
+    auto name =  m_localPluginModel.getQStringField("name");
+    qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
+    clearContext();
     onRequestLocalModel();
     onRequestWorkspaceModel();
 }
@@ -1429,18 +1427,27 @@ void CStoreManager::finalizePublishWorkspace()
 void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
 {
     //Insert or update plugin to file database
-    m_dbMgr.insertPlugin(info, user);
-    //Reload process library
-    m_pProgressMgr->launchInfiniteProgress(tr("Reloading algorithm..."), false);
+    try
+    {
+        m_dbMgr.insertPlugin(info, user);
+    }
+    catch(CException& e)
+    {
+        qCDebug(logStore) << QString::fromStdString(e.what());
+    }
 
-    bool bLoaded = m_pProcessMgr->reloadPlugin(QString::fromStdString(info.m_name), info.m_language);
+    //Reload process library
+    auto name = QString::fromStdString(info.m_name);
+    m_pProgressMgr->launchInfiniteProgress(tr("Reloading algorithm %1...").arg(name), false);
+
+    bool bLoaded = m_pProcessMgr->reloadPlugin(name, info.m_language);
     if(bLoaded)
     {
         createQueryModel(&m_localPluginModel);
-        qCInfo(logStore).noquote() << tr("Algorithm was successfully installed");
+        qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully installed").arg(name);
     }
     else
-        qCWarning(logStore).noquote() << tr("Algorithm was successfully installed but failed to load. Try to restart Ikomia Studio.");
+        qCWarning(logStore).noquote() << tr("Algorithm %1 was successfully installed but failed to load. Try to restart Ikomia Studio.").arg(name);
 
     //Clean
     clearContext();

@@ -61,14 +61,14 @@ void CPublicationFormDlg::initConnections()
 
 void CPublicationFormDlg::fillLicences()
 {
-    for (const auto& l : m_licenses)
+    for (const auto& l : _officialLicenses)
         m_pComboLicense->addItem(l.second, l.first);
 
     auto currentLicense = m_pluginInfo.value("license").toString();
     if (currentLicense.isEmpty() == false)
     {
-        auto it = m_licenses.find(currentLicense);
-        if (it == m_licenses.end())
+        auto it = _officialLicenses.find(currentLicense);
+        if (it == _officialLicenses.end())
             m_pComboLicense->addItem(currentLicense, currentLicense);
 
         m_pComboLicense->setCurrentIndex(m_pComboLicense->findData(currentLicense));

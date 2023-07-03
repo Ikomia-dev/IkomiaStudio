@@ -74,7 +74,7 @@ void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
     }
 
     if(pQueryModel == nullptr)
-        pLabelMsg->setText(tr("You have to be registered to display online algorithms"));
+        pLabelMsg->setText(tr("Connection to Ikomia HUB failed"));
     else
     {
         auto updateLabelMsg = [this, pQueryModel, pLabelMsg]
@@ -92,6 +92,7 @@ void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
 
 void CStoreDlg::onShowPluginInfo(const QModelIndex &index)
 {
+    m_currentModelIndex = index;
     showProcessInfo(index);
 }
 
@@ -103,6 +104,16 @@ void CStoreDlg::onPublishPluginToWorkspace(const QModelIndex& index)
         QString workspace = workspaceDlg.getWorkspaceName();
         emit doPublishWorkspace(index, workspace);
     }
+}
+
+void CStoreDlg::onInstallPlugin()
+{
+    // Slot called from plugin details window
+    int index = m_pPluginStackWidget->currentIndex();
+    if (index == 0)
+        emit doInstallPlugin(CPluginModel::Type::HUB, m_currentModelIndex);
+    else if (index == 1)
+        emit doInstallPlugin(CPluginModel::Type::WORKSPACE, m_currentModelIndex);
 }
 
 void CStoreDlg::onSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo)
@@ -161,13 +172,24 @@ void CStoreDlg::initConnections()
     {
         emit doUpdatePluginInfo(bFullEdit, info);
     });
+    connect(m_pDocWidget, &CProcessDocWidget::doInstallPlugin, this, &CStoreDlg::onInstallPlugin);
 }
 
 QWidget *CStoreDlg::createLeftWidget()
 {
     m_pBtnHub = new QPushButton(tr("Ikomia HUB"));
+    m_pBtnHub->setCheckable(true);
+    m_pBtnHub->setChecked(true);
     m_pBtnWorkspace = new QPushButton(tr("Private workspaces"));
+    m_pBtnWorkspace->setCheckable(true);
     m_pBtnLocalPlugins = new QPushButton(tr("Installed algorithms"));
+    m_pBtnLocalPlugins->setCheckable(true);
+
+    auto pButtonGroup = new QButtonGroup;
+    pButtonGroup->setExclusive(true);
+    pButtonGroup->addButton(m_pBtnHub);
+    pButtonGroup->addButton(m_pBtnWorkspace);
+    pButtonGroup->addButton(m_pBtnLocalPlugins);
 
     QVBoxLayout* pLayout = new QVBoxLayout;
     pLayout->addWidget(m_pBtnHub);
@@ -234,7 +256,7 @@ QWidget* CStoreDlg::createPluginsView(CPluginModel::Type type)
     (*ppView) = pView;
 
     //Message label
-    auto pLabel = createMessageLabel(tr("You have to be registered to display online plugins"));
+    auto pLabel = createMessageLabel(tr("Not connected to Ikomia HUB"));
     (*ppLabel) = pLabel;
 
     auto pVLayout = new QVBoxLayout;
@@ -312,7 +334,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     info.m_minPythonVersion = record.value("minPythonVersion").toString().toStdString();
     info.m_maxPythonVersion = record.value("maxPythonVersion").toString().toStdString();
     info.m_createdDate = record.value("createdDate").toString().toStdString();
-    info.m_modifiedDate = record.value(" modifiedDate").toString().toStdString();
+    info.m_modifiedDate = record.value("modifiedDate").toString().toStdString();
     info.m_license = record.value("license").toString().toStdString();
     info.m_repo = record.value("repository").toString().toStdString();
     info.m_originalRepo = record.value("originalRepository").toString().toStdString();
@@ -323,7 +345,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     info.m_algoType = static_cast<AlgoType>(record.value("algoType").toInt());
     info.m_algoTasks = record.value("algoTasks").toString().toStdString();
 
-    m_pDocWidget->setProcessInfo(info);
+    m_pDocWidget->setProcessInfo(info, !m_pBtnLocalPlugins->isChecked());
     m_pRightStackWidget->setCurrentIndex(1);
 }
 

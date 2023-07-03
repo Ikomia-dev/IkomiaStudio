@@ -63,6 +63,10 @@ class CStoreDlg : public CDialog
         void            onShowPluginInfo(const QModelIndex &index);
         void            onPublishPluginToWorkspace(const QModelIndex &index);
 
+    private slots:
+
+        void            onInstallPlugin();
+
     protected:
 
         virtual void    showEvent(QShowEvent* event) override;
@@ -102,6 +106,7 @@ class CStoreDlg : public CDialog
         CStorePluginListView*   m_pWorkspaceView = nullptr;
         CStorePluginListView*   m_pLocalView = nullptr;
         CProcessDocWidget*      m_pDocWidget = nullptr;
+        QPersistentModelIndex   m_currentModelIndex;
 };
 
 #endif // CPLUGINSTOREDLG_H

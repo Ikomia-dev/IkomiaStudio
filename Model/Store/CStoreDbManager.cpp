@@ -86,7 +86,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     //Retrieve plugins information from JSON
-    QVariantList names, shortDescriptions, descriptions, keywords,
+    QVariantList names, shortDescriptions, descriptions, keywords, users,
             authors, articles, articleUrls, journals, years, createdDates, modifiedDates,
             versions, minIkVersions, maxIkVersions, minPyVersions, maxPyVersions,
             languages, osList, iconPaths,
@@ -116,6 +116,10 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
 
             keywords << strKeywords;
         }
+
+        // Contributor
+        QJsonObject contributor = plugin["author"].toObject();
+        users << contributor["name"].toString();
 
         // Paper
         QJsonObject jsonPaper = plugin["paper"].toObject();
@@ -189,13 +193,13 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     //Insert to serverPlugins table
     QSqlQuery q(db);
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "name, shortDescription, description, keywords, "
+                          "name, shortDescription, description, keywords, user, "
                           "authors, article, articleUrl, journal, year, createdDate, modifiedDate, "
                           "version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, "
                           "language, os, iconPath, "
                           "license, repository,  originalRepository, algoType, algoTasks) "
                           "VALUES ("
-                          "?, ?, ?, ?, "
+                          "?, ?, ?, ?, ?, "
                           "?, ?, ?, ?, ?, ?, ?, "
                           "?, ?, ?, ?, ?,"
                           "?, ? ,?,"
@@ -208,6 +212,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
     q.addBindValue(shortDescriptions);
     q.addBindValue(descriptions);
     q.addBindValue(keywords);
+    q.addBindValue(users);
     q.addBindValue(authors);
     q.addBindValue(articles);
     q.addBindValue(articleUrls);

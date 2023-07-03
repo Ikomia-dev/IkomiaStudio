@@ -137,9 +137,9 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 
     QString languageIconPath;
     if(info.m_language == ApiLanguage::PYTHON)
-        languageIconPath = "qrc:/Images/python-language-logo-32.png";
+        languageIconPath = ":/Images/python-language-logo-32.png";
     else
-        languageIconPath = "qrc:/Images/C++-language-logo-32.png";
+        languageIconPath = ":/Images/C++-language-logo-32.png";
 
     //Process name
     auto newContent = templateContent.replace("_name_", QString::fromStdString(info.m_name));
@@ -194,7 +194,11 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 
     if(info.m_repo.empty() == false)
     {
-        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2>Repository</h2></span> \n\n [%1](%1) \n\n").arg(QString::fromStdString(info.m_repo));
+        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2>Repositories</h2></span> \n\n"
+                               "**Implementation** [%1](%1) \n\n"
+                               "**Original implementation** [%2](%2)")
+                .arg(QString::fromStdString(info.m_repo))
+                .arg(QString::fromStdString(info.m_originalRepo));
         newContent = newContent.replace("_repo_", repoStr);
     }
     else
@@ -202,7 +206,12 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 
     if(info.m_license.empty() == false)
     {
-        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2>License</h2></span> \n\n %1 \n\n").arg(QString::fromStdString(info.m_license));
+        QString licenseName = QString::fromStdString(info.m_license);
+        auto it = _officialLicenses.find(licenseName);
+        if (it != _officialLicenses.end())
+            licenseName = it->second;
+
+        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2>License</h2></span> \n\n %1 \n\n").arg(licenseName);
         newContent = newContent.replace("_license_", licenceStr);
     }
     else
