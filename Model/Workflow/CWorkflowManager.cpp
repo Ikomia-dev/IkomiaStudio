@@ -102,7 +102,7 @@ void CWorkflowManager::setManagers(QNetworkAccessManager *pNetMgr, CProcessManag
     m_runMgr.setManagers(pProjectMgr, pDataMgr, pProgressMgr);
     m_dbMgr.setManagers(pSettingsMgr);
     m_inputViewMgr.setManagers(pProjectMgr);
-    m_scaleMgr.setManagers(pNetMgr);
+    m_scaleMgr.setManagers(pNetMgr, pProgressMgr);
 
     if(m_pProgressMgr)
     {

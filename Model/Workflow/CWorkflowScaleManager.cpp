@@ -6,14 +6,16 @@
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
 #include "Model/Workflow/CWorkflowPackage.h"
+#include "Model/ProgressBar/CProgressBarManager.h"
 
 CWorkflowScaleManager::CWorkflowScaleManager()
 {
 }
 
-void CWorkflowScaleManager::setManagers(QNetworkAccessManager *pNetMgr)
+void CWorkflowScaleManager::setManagers(QNetworkAccessManager *pNetMgr, CProgressBarManager *pProgressMgr)
 {
     m_pNetworkMgr = pNetMgr;
+    m_pProgressMgr = pProgressMgr;
 }
 
 void CWorkflowScaleManager::setCurrentUser(const CUser &user)
@@ -94,6 +96,15 @@ void CWorkflowScaleManager::publishWorkflow(const QString &path, bool bNewProjec
             throw CException(CoreExCode::INVALID_PARAMETER, error, __FILE__, __func__, __LINE__);
         }
     }
+}
+
+void CWorkflowScaleManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+    const float factor = 1024.0*1024.0;
+    QString sent = QString::number(bytesSent / factor, 'f', 1);
+    QString total = QString::number(bytesTotal / factor, 'f', 1);
+    emit m_progressSignal.doSetMessage(QString("Uploading workflow package: %1 Mb / %2 Mb").arg(sent).arg(total));
+    emit m_progressSignal.doSetValue(bytesSent / 1024);
 }
 
 QJsonObject CWorkflowScaleManager::getJsonObject(QNetworkReply *pReply, const QString &errorMsg) const
@@ -209,7 +220,9 @@ void CWorkflowScaleManager::addProject(QNetworkReply *pReply)
 void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
 {
     CWorkflowPackage package(m_wfPath);
+    m_pProgressMgr->launchInfiniteProgress(tr("Package compression..."), false);
     m_zipPath = package.create();
+    m_pProgressMgr->endInfiniteProgress();
 
     QUrlQuery urlQuery(projectUrl + "workflows/");
     QUrl url(urlQuery.query());
@@ -242,16 +255,22 @@ void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
     filePart.setBodyDevice(m_pPackageFile);
     pMultiPart->append(filePart);
 
+    // Progress bar
+    m_pProgressMgr->launchProgress(&m_progressSignal, m_pPackageFile->size() / 1024, tr("Uploading workflow package..."), false);
+
     auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
     pMultiPart->setParent(pNewReply);
 
     connect(pNewReply, &QNetworkReply::finished, [=](){
        this->onReplyReceived(pNewReply, RequestType::PUBLISH_WORKFLOW);
     });
+    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CWorkflowScaleManager::onUploadProgress);
 }
 
 void CWorkflowScaleManager::clearContext()
 {
+    emit m_progressSignal.doFinish();
+
     // Cleanup
     if (m_pPackageFile)
     {

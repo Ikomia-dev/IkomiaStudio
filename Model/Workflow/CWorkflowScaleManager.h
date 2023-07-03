@@ -2,6 +2,10 @@
 #define CWORKFLOWSCALEMANAGER_H
 
 #include "Model/User/CUser.h"
+#include "CProgressSignalHandler.h"
+
+class CProgressBarManager;
+
 
 class CWorkflowScaleManager : public QObject
 {
@@ -18,7 +22,7 @@ class CWorkflowScaleManager : public QObject
 
         CWorkflowScaleManager();
 
-        void        setManagers(QNetworkAccessManager* pNetMgr);
+        void        setManagers(QNetworkAccessManager* pNetMgr, CProgressBarManager *pProgressMgr);
         void        setCurrentUser(const CUser &user);
 
         void        requestProjects();
@@ -29,6 +33,10 @@ class CWorkflowScaleManager : public QObject
     signals:
 
         void        doSetProjects(const QJsonArray& projects);
+
+    private slots:
+
+        void        onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
 
     private:
 
@@ -51,6 +59,8 @@ class CWorkflowScaleManager : public QObject
     private:
 
         QNetworkAccessManager*  m_pNetworkMgr = nullptr;
+        CProgressBarManager*    m_pProgressMgr = nullptr;
+        CProgressSignalHandler  m_progressSignal;
         QFile*                  m_pPackageFile = nullptr;
         CUser                   m_user;
         QJsonArray              m_projects;
