@@ -46,12 +46,13 @@ class CProcessDocWidget : public QWidget
         CProcessDocWidget(int actions, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void            setCurrentUser(const CUser& user);
-        void            setProcessInfo(const CTaskInfo &info);
+        void            setProcessInfo(const CTaskInfo &info, bool bFromHub);
 
     signals:
 
         void            doBack();
         void            doSave(bool bFullEdit, const CTaskInfo& info);
+        void            doInstallPlugin();
 
     private slots:
 
@@ -76,6 +77,8 @@ class CProcessDocWidget : public QWidget
         CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
         CTaskInfo               m_processInfo;
         QPushButton*            m_pExportDocBtn = nullptr;
+        QPushButton*            m_pInstallBtn = nullptr;
+        QPersistentModelIndex   m_currentIndex;
 };
 
 #endif // CPROCESSDOCWIDGET_H

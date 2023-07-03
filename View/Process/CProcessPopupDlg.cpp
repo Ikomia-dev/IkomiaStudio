@@ -215,7 +215,7 @@ void CProcessPopupDlg::onAddProcess(const QString& processName)
 void CProcessPopupDlg::onShowProcessInfo(const QModelIndex& index)
 {
     auto info = getProcessInfo(index);
-    m_pDocWidget->setProcessInfo(info);
+    m_pDocWidget->setProcessInfo(info, false);
     m_pRightStackedWidget->setCurrentIndex(1);
 }
 

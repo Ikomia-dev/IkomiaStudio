@@ -36,9 +36,10 @@ void CProcessDocWidget::setCurrentUser(const CUser &user)
     m_currentUser = user;
 }
 
-void CProcessDocWidget::setProcessInfo(const CTaskInfo& info)
+void CProcessDocWidget::setProcessInfo(const CTaskInfo& info, bool bFromHub)
 {
     m_processInfo = info;
+    m_pInstallBtn->setVisible(bFromHub);
 
     if(m_pDocFrame)
         m_pDocFrame->setProcessInfo(info);
@@ -111,6 +112,12 @@ void CProcessDocWidget::initLayout()
     m_pExportDocBtn->setToolTip(tr("Export algorithm documentation to file"));
     connect(m_pExportDocBtn, &QPushButton::clicked, this, &CProcessDocWidget::onExportDocumentation);
     pActionsLayout->addWidget(m_pExportDocBtn);
+
+    m_pInstallBtn = new QPushButton(QIcon(":/Images/download-color.png"), "Install algorithm");
+    m_pInstallBtn->setToolTip(tr("Install algorithm from Ikomia HUB"));
+    connect(m_pInstallBtn, &QPushButton::clicked, [&]{ emit doInstallPlugin(); });
+    pActionsLayout->addWidget(m_pInstallBtn);
+    m_pInstallBtn->setVisible(false);
 
     pActionsLayout->addStretch(1);
 
