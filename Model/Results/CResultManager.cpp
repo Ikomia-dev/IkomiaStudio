@@ -19,6 +19,7 @@
 #include "CResultManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "DataProcessTools.hpp"
 #include "IO/CImageIO.h"
 #include "IO/CGraphicsOutput.h"
 #include "IO/CBlobMeasureIO.h"
@@ -1369,11 +1370,11 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
         {
             auto graphicsOutPtr = std::static_pointer_cast<CGraphicsOutput>(graphicsOutputs[i]);
             if(graphicsOutPtr->getImageIndex() == index)
-            {
-                m_pGraphicsMgr->burnGraphicsToImage(graphicsOutPtr->getItems(), img);
-                break;
-            }
+                Utils::Image::burnGraphics(img, graphicsOutPtr->getItems());
         }
+
+        if (pImageIO->isOverlayAvailable())
+            img = Utils::Image::mergeColorMask(img, pImageIO->getOverlayMask(), 0.7, true);
     }
     else
         img = srcImg;
