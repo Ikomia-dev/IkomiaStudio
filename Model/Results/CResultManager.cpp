@@ -127,13 +127,13 @@ QModelIndex CResultManager::getRootIndex() const
 
 void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const WorkflowVertex& taskId, const QModelIndex& itemIndex)
 {
+    CPyEnsureGIL gil;
     m_bWorkflowInProgress = true;
     size_t outputCount = taskPtr->getOutputCount();
+    clearPreviousOutputs();
 
     if(m_pCurrentTask != taskPtr || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
     {
-        CPyEnsureGIL gil;
-        clearPreviousOutputs();
         m_pCurrentTask = taskPtr;
         m_currentInputIndex = itemIndex;
         m_currentOutputCount = (int)outputCount;
