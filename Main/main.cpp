@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
     QApplication::setFont(font);
 
     // QSettings
+    QApplication::setWindowIcon(QIcon(":/Images/app.ico"));
     QApplication::setOrganizationName("Ikomia");
     QApplication::setOrganizationDomain("ikomia.ai");
     QApplication::setApplicationVersion(Utils::IkomiaApp::getCurrentVersionName());

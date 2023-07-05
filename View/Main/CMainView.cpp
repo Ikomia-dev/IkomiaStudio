@@ -34,7 +34,6 @@ bool CMainView::bUseOpenGL_330;
 
 CMainView::CMainView(QWidget *parent) : QMainWindow(parent), ui(new Ui::CMainView)
 {
-    setWindowIcon(QIcon(":/Images/app.png"));
     setAcceptDrops(true);
 
     // Disable default title bar

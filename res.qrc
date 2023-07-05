@@ -222,6 +222,7 @@
         <file>Images/approved.png</file>
         <file>Images/text-editor.png</file>
         <file>Templates/Python/template_test.py</file>
+        <file>Images/app.ico</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>
