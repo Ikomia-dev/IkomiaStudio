@@ -406,7 +406,7 @@ void CWorkflowModuleWidget::initLeftTab()
     connect(pBtnExport, &QPushButton::clicked, this, &CWorkflowModuleWidget::onExportWorkflow);
 
     // Add button to close current protocol
-    auto pBtnClose = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/close-protocol.png"));
+    auto pBtnClose = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/close-workflow.png"));
     assert(pBtnClose != nullptr);
     //pBtnClose->setFlat(true);
     pBtnClose->setToolTip(tr("Close workflow"));

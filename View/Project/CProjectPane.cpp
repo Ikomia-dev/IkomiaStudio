@@ -348,7 +348,7 @@ void CProjectPane::initLayout()
     pToolbar->widgetForAction(pSaveProject)->setObjectName("CToolbarBtn");
 
     //Add close project to toolbar
-    QAction* pCloseProject = new QAction(QIcon(":/Images/close-protocol.png"), tr("Close project"), this);
+    QAction* pCloseProject = new QAction(QIcon(":/Images/close-workflow.png"), tr("Close project"), this);
     pCloseProject->setStatusTip(tr("Close project"));
     connect(pCloseProject, &QAction::triggered, [this]{ emit doCloseProject(m_pTreeView->currentIndex()); });
     pToolbar->addAction(pCloseProject);
