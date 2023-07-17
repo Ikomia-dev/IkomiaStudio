@@ -421,7 +421,7 @@ void CMainView::initConnections()
     {
         QSettings IkomiaSettings;
         QStringList files = QFileDialog::getOpenFileNames(  this, tr("Choose image files"), IkomiaSettings.value(_DefaultDirImg).toString(),
-                                                            tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.pgm *.exr *.hdr *.ppm *.webp)"), nullptr,
+                                                            tr("All images (*.jpg * JPG *.jpeg *.JPEG *.tif *.TIF *.tiff *.TIFF *.png *.PNG *.bmp *.BMP *.jp2 *.JP2 *.pgm *.PGM *.exr *.EXR *.hdr *.HDR *.ppm *.PPM *.webp *.WEBP)"), nullptr,
                                                             CSettingsManager::dialogOptions() );
         if(files.size() > 0)
         {
