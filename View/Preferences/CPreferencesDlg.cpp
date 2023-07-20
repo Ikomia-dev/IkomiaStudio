@@ -47,7 +47,7 @@ void CPreferencesDlg::initLayout()
 
     m_pTabBar = new FancyTabBar(FancyTabBar::Left);
     m_pTabBar->insertTab(0, QIcon(":/Images/settings-3d.png"), tr("General"));
-    m_pTabBar->insertTab(1, QIcon(":/Images/protocols-white.png"), tr("Workflow"));
+    m_pTabBar->insertTab(1, QIcon(":/Images/workflow-white.png"), tr("Workflow"));
     //m_pTabBar->insertTab(1, QIcon(":/Images/avatar.png"), tr("Users"));
     m_pTabBar->setTabEnabled(0, true);
     m_pTabBar->setTabEnabled(1, true);

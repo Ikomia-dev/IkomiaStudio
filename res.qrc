@@ -24,17 +24,17 @@
         <file>Images/open.png</file>
         <file>Images/process.png</file>
         <file>Images/projects.png</file>
-        <file>Images/protocols.png</file>
+        <file>Images/workflow.png</file>
         <file>Images/maximize.png</file>
-        <file>Images/module_protocol.png</file>
+        <file>Images/module_workflow.png</file>
         <file>Images/dataset.png</file>
         <file>Images/dimension.png</file>
         <file>Images/folder.png</file>
         <file>Images/project.png</file>
-        <file>Images/close-protocol.png</file>
-        <file>Images/export-protocol.png</file>
-        <file>Images/new-protocol.png</file>
-        <file>Images/save-protocol.png</file>
+        <file>Images/close-workflow.png</file>
+        <file>Images/export-workflow.png</file>
+        <file>Images/new-workflow.png</file>
+        <file>Images/save-workflow.png</file>
         <file>Images/home.png</file>
         <file>Images/plot.png</file>
         <file>Images/zoom-in.png</file>
@@ -44,7 +44,7 @@
         <file>Images/new-project.png</file>
         <file>Images/open-project.png</file>
         <file>Images/zoom-original.png</file>
-        <file>Images/open-protocol.png</file>
+        <file>Images/open-workflow.png</file>
         <file>Images/new-image.png</file>
         <file>Images/default-process.png</file>
         <file>Images/folder-opencv.png</file>
@@ -103,7 +103,7 @@
         <file>Images/properties_white.png</file>
         <file>Images/message.png</file>
         <file>Images/new-message.png</file>
-        <file>Images/module_protocol_warning.png</file>
+        <file>Images/module_workflow_warning.png</file>
         <file>Images/app.png</file>
         <file>Images/new-notification.png</file>
         <file>Images/notification.png</file>
@@ -157,8 +157,7 @@
         <file>Images/save-color.png</file>
         <file>Images/save-as.png</file>
         <file>Images/save-color-as.png</file>
-        <file>Images/store-color.png</file>
-        <file>Images/store.png</file>
+        <file>Images/hub-color.png</file>
         <file>Images/info-color2.png</file>
         <file>Images/share-color.png</file>
         <file>Images/download-color.png</file>
@@ -216,7 +215,7 @@
         <file>Images/image-batch.png</file>
         <file>Images/io.png</file>
         <file>Images/save-as-disable.png</file>
-        <file>Images/protocols-white.png</file>
+        <file>Images/workflow-white.png</file>
         <file>Migrations/migration0001.sql</file>
         <file>Images/code.png</file>
         <file>Images/jupyter.png</file>
@@ -225,6 +224,7 @@
         <file>Templates/Python/template_test.py</file>
         <file>Migrations/migration0002.sql</file>
         <file>Images/share.png</file>
+        <file>Images/app.ico</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

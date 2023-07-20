@@ -18,6 +18,7 @@
 
 #include "CImgManager.h"
 #include "Main/LogCategory.h"
+#include "DataProcessTools.hpp"
 #include "Model/ProgressBar/CProgressBarManager.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Results/CResultManager.h"
@@ -287,7 +288,7 @@ void CImgManager::exportImage(const CMat &image, const std::vector<ProxyGraphics
     {
         assert(m_pGraphicsMgr);
         imgToSave = image.clone();
-        m_pGraphicsMgr->burnGraphicsToImage(graphics, imgToSave);
+        Utils::Image::burnGraphics(imgToSave, graphics);
     }
     else
         imgToSave = image;

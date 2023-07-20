@@ -1,27 +1,9 @@
-# Copyright (C) 2021 Ikomia SAS
-# Contact: https://www.ikomia.com
-#
-# This file is part of the IkomiaStudio software.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import copy
 from ikomia import core, dataprocess
 
 
 # --------------------
-# - Class to handle the process parameters
+# - Class to handle the algorithm parameters
 # - Inherits PyCore.CWorkflowTaskParam from Ikomia API
 # --------------------
 class _PluginClassName_Param(core.CWorkflowTaskParam):
@@ -29,47 +11,47 @@ class _PluginClassName_Param(core.CWorkflowTaskParam):
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
         # Place default value initialization here
-        # Example : self.windowSize = 25
+        # Example : self.window_size = 25
 
-    def set_values(self, param_map):
-        # Set parameters values from Ikomia application
+    def set_values(self, params):
+        # Set parameters values from Ikomia Studio or API
         # Parameters values are stored as string and accessible like a python dict
-        # Example : self.windowSize = int(param_map["windowSize"])
+        # Example : self.window_size = int(params["window_size"])
         pass
 
     def get_values(self):
-        # Send parameters values to Ikomia application
+        # Send parameters values to Ikomia Studio or API
         # Create the specific dict structure (string container)
-        param_map = {}
-        # Example : paramMap["windowSize"] = str(self.windowSize)
-        return param_map
+        params = {}
+        # Example : paramMap["window_size"] = str(self.window_size)
+        return params
 
 
 # --------------------
-# - Class which implements the process
+# - Class which implements the algorithm
 # - Inherits PyCore.CWorkflowTask or derived from Ikomia API
 # --------------------
 class _PluginClassName_(_ProcessBaseClass_):
 
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
-        # Add input/output of the process here
+        # Add input/output of the algorithm here
         # Example :  self.add_input(dataprocess.CImageIO())
         #           self.add_output(dataprocess.CImageIO())
 
-        # Create parameters class
+        # Create parameters object
         if param is None:
             self.set_param_object(_PluginClassName_Param())
         else:
             self.set_param_object(copy.deepcopy(param))
 
     def get_progress_steps(self):
-        # Function returning the number of progress steps for this process
-        # This is handled by the main progress bar of Ikomia application
+        # Function returning the number of progress steps for this algorithm
+        # This is handled by the main progress bar of Ikomia Studio
         return 1
 
     def run(self):
-        # Core function of your process
+        # Main function of your algorithm
         # Call begin_task_run() for initialization
         self.begin_task_run()
 
@@ -107,11 +89,11 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
 
     def __init__(self):
         dataprocess.CTaskFactory.__init__(self)
-        # Set process information as string here
+        # Set algorithm information/metadata here
         self.info.name = "_PluginName_"
         self.info.short_description = "your short description"
         self.info.description = "your description"
-        # relative path -> as displayed in Ikomia application process tree
+        # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.path = "Plugins/Python"
         self.info.version = "1.0.0"
         # self.info.icon_path = "your path to a specific icon"
@@ -128,5 +110,5 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         self.info.keywords = "your,keywords,here"
 
     def create(self, param=None):
-        # Create process object
+        # Create algorithm object
         return _PluginClassName_(self.info.name, param)

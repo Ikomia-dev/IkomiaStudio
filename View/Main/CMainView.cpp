@@ -34,7 +34,6 @@ bool CMainView::bUseOpenGL_330;
 
 CMainView::CMainView(QWidget *parent) : QMainWindow(parent), ui(new Ui::CMainView)
 {
-    setWindowIcon(QIcon(":/Images/app.png"));
     setAcceptDrops(true);
 
     // Disable default title bar
@@ -355,7 +354,7 @@ void CMainView::initBottomView()
 void CMainView::initWorkflowModule()
 {
     m_pWorkflowModule = new CWorkflowModuleWidget(this);
-    m_pModuleDock->addModuleWidget(m_pWorkflowModule, QIcon(":/Images/module_protocol.png"));
+    m_pModuleDock->addModuleWidget(m_pWorkflowModule, QIcon(":/Images/module_workflow.png"));
 }
 
 void CMainView::initPluginMakerModule()
@@ -422,7 +421,7 @@ void CMainView::initConnections()
     {
         QSettings IkomiaSettings;
         QStringList files = QFileDialog::getOpenFileNames(  this, tr("Choose image files"), IkomiaSettings.value(_DefaultDirImg).toString(),
-                                                            tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.pgm *.exr *.hdr *.ppm *.webp)"), nullptr,
+                                                            tr("All images (*.jpg * JPG *.jpeg *.JPEG *.tif *.TIF *.tiff *.TIFF *.png *.PNG *.bmp *.BMP *.jp2 *.JP2 *.pgm *.PGM *.exr *.EXR *.hdr *.HDR *.ppm *.PPM *.webp *.WEBP)"), nullptr,
                                                             CSettingsManager::dialogOptions() );
         if(files.size() > 0)
         {
@@ -585,7 +584,7 @@ void CMainView::initMainToolBar()
     m_pCentralViewLayout->addActionToMenu(m_pOpenFolderAct);
 
     //Open plugin store
-    const QIcon storeIcon(":/Images/store-color.png");
+    const QIcon storeIcon(":/Images/hub-color.png");
     m_pOpenStoreAct = new QAction(storeIcon, tr("&Open Ikomia HUB..."), this);
     m_pOpenStoreAct->setStatusTip(tr("Open Ikomia HUB"));
     m_pCentralViewLayout->addActionToMenu(m_pOpenStoreAct);
@@ -624,7 +623,7 @@ void CMainView::initLeftTab()
     m_pProcessBtn = createLeftTabBtn(tr("Process"), tr("Process"), QIcon(":/Images/process.png"), m_pProcessPane);
 
     // Add button to show/hide protocol pane
-    m_pWorkflowBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/protocols.png"), m_pWorkflowPane);
+    m_pWorkflowBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/workflow.png"), m_pWorkflowPane);
 
     // Add button to show/hide protocol pane
     m_pPropertiesBtn = createLeftTabBtn(tr("Properties"), tr("Data properties"), QIcon(":/Images/info-color.png"), m_pInfoPane); 
@@ -849,18 +848,17 @@ void CMainView::setAppStyle(const QString& style)
         QPalette p = qApp->palette();
 
         QColor selCol, sunkCol, baseCol, raisedCol, txtCol, intCol, kfCol, disCol, eCol, altCol, lightSelCol;
-        //selCol = QColor(142,45,197).lighter();
-        selCol = QColor(204,90,32);
+        selCol = QColor(255,122,0);
         sunkCol = QColor(70,70,70);
         baseCol = QColor(48,48,48);
         raisedCol = QColor(70,70,70);
-        txtCol = QColor(177,177,177);
+        txtCol = QColor(179,181,180);
         intCol = Qt::white;
         kfCol = Qt::white;
         disCol = Qt::black;
         eCol = Qt::white;
         altCol = QColor(200,200,200);
-        lightSelCol = QColor(204,90,32);
+        lightSelCol = QColor(255,122,0);
 
         p.setBrush( QPalette::Window, sunkCol );
         p.setBrush( QPalette::WindowText, txtCol );
@@ -954,7 +952,7 @@ void CMainView::onSetCurrentUser(const CUser& user)
 void CMainView::onSetWorkflowChangedIcon()
 {
     if(m_pModuleDock->isModuleOpen(0))
-        m_pModuleDock->getModuleBtn(0)->setIcon(QIcon(":/Images/module_protocol_warning.png"));
+        m_pModuleDock->getModuleBtn(0)->setIcon(QIcon(":/Images/module_workflow_warning.png"));
 }
 
 void CMainView::onGraphicsContextChanged()

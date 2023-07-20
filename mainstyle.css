@@ -693,18 +693,18 @@ QProgressBar
     color: %5;
     background-color: %3;
     selection-color: %8;
-    selection-background-color: rgba(204,90,32,150);
+    selection-background-color: rgba(255,122,0,150);
     border-radius: 5px;
 }
 #CTreeView::item::hover
 {
     color: %8;
-    background-color: rgba(204,90,32,150);
+    background-color: rgba(255,122,0,150);
 }
 #CTreeView::item::selected
 {
     color: %8;
-    background-color: rgba(204,90,32,150);
+    background-color: rgba(255,122,0,150);
 }
 
 #CRollupWidget
@@ -752,7 +752,7 @@ QToolButton#CToolbarBtn
 }
 QToolButton#CToolbarBtn::hover
 {
-    background: rgba(204,90,32,128);
+    background: rgba(255,122,0,128);
     border: 2px solid %1; 
     border-radius: 5px;
 }

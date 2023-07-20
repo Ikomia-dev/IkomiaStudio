@@ -295,7 +295,7 @@ button::-moz-focus-inner {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgba(204, 90, 32, 1);
+  background: rgba(255, 122, 0, 1);
   border-radius: 10px;
 }
 

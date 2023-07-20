@@ -128,7 +128,6 @@ class CGraphicsManager : public QObject
         void                    notifyViewShow();
 
         void                    burnGraphicsToImage(const QModelIndex& imageIndex, CMat &image);
-        void                    burnGraphicsToImage(const std::vector<ProxyGraphicsItemPtr>& items, CMat &image);
         void                    burnLayerToImage(const CGraphicsLayer *pLayer, CMat& image);
 
     public slots:

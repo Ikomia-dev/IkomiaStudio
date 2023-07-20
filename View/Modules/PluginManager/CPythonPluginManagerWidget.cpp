@@ -32,7 +32,7 @@ void CPythonPluginManagerWidget::setModel(CPluginPythonModel *pModel)
 {
     m_pPluginsView->setModel(pModel);
     m_pPluginsView->horizontalHeader()->setMinimumSectionSize(150);
-    m_pPluginsView->horizontalHeader()->setMaximumSectionSize(1000);
+    m_pPluginsView->horizontalHeader()->setMaximumSectionSize(650);
     m_pPluginsView->resizeColumnsToContents();
     adjustTableSize(m_pPluginsView);
     connect(m_pPluginsView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CPythonPluginManagerWidget::onPluginSelectionChanged);
@@ -42,7 +42,7 @@ void CPythonPluginManagerWidget::setDependencyModel(CPluginPythonDependencyModel
 {
     m_pDependenciesView->setModel(pModel);
     m_pDependenciesView->horizontalHeader()->setMinimumSectionSize(150);
-    m_pPluginsView->horizontalHeader()->setMaximumSectionSize(1000);
+    m_pDependenciesView->horizontalHeader()->setMaximumSectionSize(650);
     m_pDependenciesView->resizeColumnsToContents();
     adjustTableSize(m_pDependenciesView);
 }
@@ -150,6 +150,7 @@ void CPythonPluginManagerWidget::initLayout()
 {
     m_pPluginsView = new QTableView();
     m_pPluginsView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_pPluginsView->setWordWrap(true);
 
     m_pNewBtn = createButton(QIcon(":/Images/new.png"), tr("Create new plugin..."));
     m_pReloadBtn = createButton(QIcon(":/Images/update.png"), tr("Reload selected plugin"));

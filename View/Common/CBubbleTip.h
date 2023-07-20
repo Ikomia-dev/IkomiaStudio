@@ -61,7 +61,7 @@ class CBubbleTipBtn : public QPushButton
             painter.setRenderHint( QPainter::Antialiasing );
 
             QColor color(150,150,150);
-            QColor highlight(204,90,32);
+            QColor highlight(255,122,0);
 
             QRect border( 2, 2, 16, 16 );
             if(opt.state & QStyle::State_MouseOver)

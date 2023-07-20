@@ -446,15 +446,6 @@ void CGraphicsManager::burnGraphicsToImage(const QModelIndex& imageIndex, CMat &
     burnLayerToImage(pLayer, image);
 }
 
-void CGraphicsManager::burnGraphicsToImage(const std::vector<ProxyGraphicsItemPtr> &items, CMat &image)
-{
-    CGraphicsConversion graphicsConv((int)image.getNbCols(), (int)image.getNbRows());
-
-    //Double dispatch design pattern
-    for(auto it : items)
-        it->insertToImage(image, graphicsConv, false, false);
-}
-
 void CGraphicsManager::burnLayerToImage(const CGraphicsLayer *pLayer, CMat &image)
 {
     if(pLayer->isVisible() == false)
