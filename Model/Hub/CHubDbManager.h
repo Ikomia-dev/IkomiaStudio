@@ -18,19 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREDBMANAGER_H
-#define CSTOREDBMANAGER_H
+#ifndef CHUBDBMANAGER_H
+#define CHUBDBMANAGER_H
 
 #include <QSqlDatabase>
 #include "Task/CTaskFactory.hpp"
 #include "Model/User/CUser.h"
 #include "CPluginModel.h"
 
-class CStoreDbManager
+class CHubDbManager
 {
     public:
 
-        CStoreDbManager();
+        CHubDbManager();
 
         void            initDb();
 
@@ -61,4 +61,4 @@ class CStoreDbManager
         OSType  m_currentOS = OSType::UNDEFINED;
 };
 
-#endif // CSTOREDBMANAGER_H
+#endif // CHUBDBMANAGER_H

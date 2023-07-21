@@ -16,19 +16,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStoreDlg.h"
+#include "CHubDlg.h"
 #include <QtWidgets>
-#include "CStorePluginListView.h"
-#include "CStorePluginListViewDelegate.h"
+#include "CHubPluginListView.h"
+#include "CHubPluginListViewDelegate.h"
 #include "View/Process/CProcessDocWidget.h"
 #include "CWorkspaceChoiceDlg.h"
 #include "CPublicationFormDlg.h"
 
-CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
+CHubDlg::CHubDlg(QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Ikomia HUB"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
-    //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
+    //CHubDlg includes a QWebEngineView based on QOpenGLWidget,
     //and graphics effects are not supported for OpenGL-based widgets.
     initLayout();
     initConnections();
@@ -39,7 +39,7 @@ CStoreDlg::CStoreDlg(QWidget *parent, Qt::WindowFlags f)
     resize(QSize(screenRect.width()*0.7, screenRect.height()*0.7));
 }
 
-void CStoreDlg::setCurrentUser(const CUser &user)
+void CHubDlg::setCurrentUser(const CUser &user)
 {
     m_currentUser = user;
     m_pDocWidget->setCurrentUser(user);
@@ -52,7 +52,7 @@ void CStoreDlg::setCurrentUser(const CUser &user)
     }
 }
 
-void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
+void CHubDlg::onSetPluginModel(CPluginModel *pModel)
 {
     QLabel* pLabelMsg;
     auto pQueryModel = pModel->getModel();
@@ -85,18 +85,18 @@ void CStoreDlg::onSetPluginModel(CPluginModel *pModel)
                 pLabelMsg->setText(tr("%1 algorithms(s) available").arg(pQueryModel->rowCount()));
         };
 
-        connect(pQueryModel, &CStoreQueryModel::modelReset, updateLabelMsg);
+        connect(pQueryModel, &CHubQueryModel::modelReset, updateLabelMsg);
         updateLabelMsg();
     }
 }
 
-void CStoreDlg::onShowPluginInfo(const QModelIndex &index)
+void CHubDlg::onShowPluginInfo(const QModelIndex &index)
 {
     m_currentModelIndex = index;
     showProcessInfo(index);
 }
 
-void CStoreDlg::onPublishPluginToWorkspace(const QModelIndex& index)
+void CHubDlg::onPublishPluginToWorkspace(const QModelIndex& index)
 {
     CWorkspaceChoiceDlg workspaceDlg(m_currentUser, this);
     if(workspaceDlg.exec() == QDialog::Accepted)
@@ -106,7 +106,7 @@ void CStoreDlg::onPublishPluginToWorkspace(const QModelIndex& index)
     }
 }
 
-void CStoreDlg::onInstallPlugin()
+void CHubDlg::onInstallPlugin()
 {
     // Slot called from plugin details window
     int index = m_pPluginStackWidget->currentIndex();
@@ -116,9 +116,9 @@ void CStoreDlg::onInstallPlugin()
         emit doInstallPlugin(CPluginModel::Type::WORKSPACE, m_currentModelIndex);
 }
 
-void CStoreDlg::onSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo)
+void CHubDlg::onSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo)
 {
-    auto pModel = dynamic_cast<CStoreQueryModel*>(m_pWorkspaceView->model());
+    auto pModel = dynamic_cast<CHubQueryModel*>(m_pWorkspaceView->model());
     assert(pModel);
     QSqlRecord pluginInfo = pModel->record(index.row());
     CPublicationFormDlg publishFormDlg(pluginInfo, publishInfo, this);
@@ -129,7 +129,7 @@ void CStoreDlg::onSetNextPublishInfo(const QModelIndex& index, const QJsonObject
     }
 }
 
-void CStoreDlg::initLayout()
+void CHubDlg::initLayout()
 {
     auto pLeftWidget = createLeftWidget();
     auto pRightWidget = createRightWidget();
@@ -144,7 +144,7 @@ void CStoreDlg::initLayout()
     pLayout->addWidget(pSplitter);
 }
 
-void CStoreDlg::initConnections()
+void CHubDlg::initConnections()
 {
     connect(m_pEditHubSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doHubSearchChanged(text); });
     connect(m_pEditWorkspaceSearch, &QLineEdit::textChanged, [&](const QString& text){ emit doWorkspaceSearchChanged(text); });
@@ -157,25 +157,25 @@ void CStoreDlg::initConnections()
     connect(m_pBtnWorkspace, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(1); });
     connect(m_pBtnLocalPlugins, &QPushButton::clicked, [&]{ m_pPluginStackWidget->setCurrentIndex(2); });
 
-    connect(m_pHubView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
-    connect(m_pWorkspaceView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
-    connect(m_pLocalView, &CStorePluginListView::doShowPluginInfo, this, &CStoreDlg::onShowPluginInfo);
+    connect(m_pHubView, &CHubPluginListView::doShowPluginInfo, this, &CHubDlg::onShowPluginInfo);
+    connect(m_pWorkspaceView, &CHubPluginListView::doShowPluginInfo, this, &CHubDlg::onShowPluginInfo);
+    connect(m_pLocalView, &CHubPluginListView::doShowPluginInfo, this, &CHubDlg::onShowPluginInfo);
 
-    connect(m_pHubView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::HUB, index); });
-    connect(m_pWorkspaceView, &CStorePluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::WORKSPACE, index); });
+    connect(m_pHubView, &CHubPluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::HUB, index); });
+    connect(m_pWorkspaceView, &CHubPluginListView::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(CPluginModel::Type::WORKSPACE, index); });
 
-    connect(m_pLocalView, &CStorePluginListView::doPublishPlugin, this, &CStoreDlg::onPublishPluginToWorkspace);
-    connect(m_pWorkspaceView, &CStorePluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doGetNextPublishInfo(index); });
+    connect(m_pLocalView, &CHubPluginListView::doPublishPlugin, this, &CHubDlg::onPublishPluginToWorkspace);
+    connect(m_pWorkspaceView, &CHubPluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doGetNextPublishInfo(index); });
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
     connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
     {
         emit doUpdatePluginInfo(bFullEdit, info);
     });
-    connect(m_pDocWidget, &CProcessDocWidget::doInstallPlugin, this, &CStoreDlg::onInstallPlugin);
+    connect(m_pDocWidget, &CProcessDocWidget::doInstallPlugin, this, &CHubDlg::onInstallPlugin);
 }
 
-QWidget *CStoreDlg::createLeftWidget()
+QWidget *CHubDlg::createLeftWidget()
 {
     m_pBtnHub = new QPushButton(tr("Ikomia HUB"));
     m_pBtnHub->setCheckable(true);
@@ -202,32 +202,32 @@ QWidget *CStoreDlg::createLeftWidget()
     return pWidget;
 }
 
-QWidget* CStoreDlg::createPluginsView(CPluginModel::Type type)
+QWidget* CHubDlg::createPluginsView(CPluginModel::Type type)
 {
     QLineEdit** ppSearchBar = nullptr;
     QPushButton** ppRefreshBtn = nullptr;
     QLabel** ppLabel = nullptr;
-    CStorePluginListView** ppView = nullptr;
-    CStorePluginListViewDelegate::PluginSource pluginSource;
+    CHubPluginListView** ppView = nullptr;
+    CHubPluginListViewDelegate::PluginSource pluginSource;
 
     switch(type)
     {
         case CPluginModel::Type::HUB:
-            pluginSource = CStorePluginListViewDelegate::HUB;
+            pluginSource = CHubPluginListViewDelegate::HUB;
             ppSearchBar = &m_pEditHubSearch;
             ppRefreshBtn = &m_pBtnHubRefresh;
             ppLabel = &m_pLabelMsgHub;
             ppView = &m_pHubView;
             break;
         case CPluginModel::Type::WORKSPACE:
-            pluginSource = CStorePluginListViewDelegate::WORKSPACE;
+            pluginSource = CHubPluginListViewDelegate::WORKSPACE;
             ppSearchBar = &m_pEditWorkspaceSearch;
             ppRefreshBtn = &m_pBtnWorkspaceRefresh;
             ppLabel = &m_pLabelMsgWorkspace;
             ppView = &m_pWorkspaceView;
             break;
         case CPluginModel::Type::LOCAL:
-            pluginSource = CStorePluginListViewDelegate::LOCAL;
+            pluginSource = CHubPluginListViewDelegate::LOCAL;
             ppSearchBar = &m_pEditLocalSearch;
             ppLabel = &m_pLabelMsgLocal;
             ppView = &m_pLocalView;
@@ -252,7 +252,7 @@ QWidget* CStoreDlg::createPluginsView(CPluginModel::Type type)
     }
 
     //Plugins list view
-    auto pView = new CStorePluginListView(pluginSource);
+    auto pView = new CHubPluginListView(pluginSource);
     (*ppView) = pView;
 
     //Message label
@@ -268,7 +268,7 @@ QWidget* CStoreDlg::createPluginsView(CPluginModel::Type type)
     return pMainWidget;
 }
 
-QWidget *CStoreDlg::createRightWidget()
+QWidget *CHubDlg::createRightWidget()
 {
     //----------------------//
     //- Plugins list views -//
@@ -302,7 +302,7 @@ QWidget *CStoreDlg::createRightWidget()
     return m_pRightStackWidget;
 }
 
-QLabel *CStoreDlg::createMessageLabel(const QString& msg)
+QLabel *CHubDlg::createMessageLabel(const QString& msg)
 {
     auto pLabelMsg = new QLabel;
     pLabelMsg->setText(msg);
@@ -311,9 +311,9 @@ QLabel *CStoreDlg::createMessageLabel(const QString& msg)
     return pLabelMsg;
 }
 
-void CStoreDlg::showProcessInfo(const QModelIndex &index)
+void CHubDlg::showProcessInfo(const QModelIndex &index)
 {
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
     auto record = pModel->record(index.row());
 
     CTaskInfo info;
@@ -349,7 +349,7 @@ void CStoreDlg::showProcessInfo(const QModelIndex &index)
     m_pRightStackWidget->setCurrentIndex(1);
 }
 
-void CStoreDlg::showEvent(QShowEvent *event)
+void CHubDlg::showEvent(QShowEvent *event)
 {
     emit doGetHubModel();
     emit doGetWorkspaceModel();
@@ -357,16 +357,16 @@ void CStoreDlg::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
 }
 
-void CStoreDlg::closeEvent(QCloseEvent* event)
+void CHubDlg::closeEvent(QCloseEvent* event)
 {
     emit doClose();
     QDialog::closeEvent(event);
 }
 
-void CStoreDlg::hideEvent(QHideEvent* event)
+void CHubDlg::hideEvent(QHideEvent* event)
 {
     emit doClose();
     QDialog::hideEvent(event);
 }
 
-#include "moc_CStoreDlg.cpp"
+#include "moc_CHubDlg.cpp"

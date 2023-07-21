@@ -25,7 +25,7 @@
  */
 #include "CMainView.h"
 #include "Main/AppTools.hpp"
-#include "View/Store/CStoreDlg.h"
+#include "View/Hub/CHubDlg.h"
 #include "View/Process/CProcessPopupDlg.h"
 #include "Model/Project/CProjectViewProxyModel.h"
 #include "CLogManager.h"
@@ -146,8 +146,8 @@ QAction* CMainView::getMainToolBarBtn(int id)
         case BTN_OPEN_STREAM:
             pAct = m_pOpenCamAct;
             break;
-        case BTN_OPEN_STORE:
-            pAct = m_pOpenStoreAct;
+        case BTN_OPEN_HUB:
+            pAct = m_pOpenHubAct;
             break;
     }
 
@@ -164,7 +164,7 @@ QToolButton* CMainView::getBtn(int id)
         case BTN_OPEN_IMG:
         case BTN_OPEN_VIDEO:
         case BTN_OPEN_STREAM:
-        case BTN_OPEN_STORE:
+        case BTN_OPEN_HUB:
             pBtn = static_cast<QToolButton*>(getMainToolBarBtn(id)->associatedWidgets().back());
             break;
         case BTN_OPEN_LOGIN:
@@ -204,9 +204,9 @@ QToolButton* CMainView::getBtn(int id)
     return pBtn;
 }
 
-CStoreDlg *CMainView::getStoreView() const
+CHubDlg *CMainView::getHubView() const
 {
-    return m_pStoreDlg;
+    return m_pHubDlg;
 }
 
 CProcessPopupDlg *CMainView::getProcessPopup() const
@@ -269,8 +269,8 @@ void CMainView::init()
     // Init login dialog
     initLoginDialog();
 
-    // Init store view
-    initStoreView();
+    // Init Hub view
+    initHubView();
 
     //Init process popup
     initProcessPopup();
@@ -468,7 +468,7 @@ void CMainView::initConnections()
             openFolder(dir);
         }
     });
-    connect(m_pOpenStoreAct, &QAction::triggered, this, &CMainView::onShowStore);
+    connect(m_pOpenHubAct, &QAction::triggered, this, &CMainView::onShowHub);
     connect(m_pPluginAct, &QAction::triggered, [this]{ emit doLoadPlugin(); });
     connect(m_pPreferencesAct, &QAction::triggered, this, &CMainView::onShowPreferences);
 
@@ -583,14 +583,14 @@ void CMainView::initMainToolBar()
     m_pOpenFolderAct->setStatusTip(tr("Open image folder"));
     m_pCentralViewLayout->addActionToMenu(m_pOpenFolderAct);
 
-    //Open plugin store
-    const QIcon storeIcon(":/Images/hub-color.png");
-    m_pOpenStoreAct = new QAction(storeIcon, tr("&Open Ikomia HUB..."), this);
-    m_pOpenStoreAct->setStatusTip(tr("Open Ikomia HUB"));
-    m_pCentralViewLayout->addActionToMenu(m_pOpenStoreAct);
-    QToolButton* pOpenStore = m_pCentralViewLayout->addButtonToUpperBar("", itemSize, storeIcon, Qt::AlignRight);
-    pOpenStore->setToolTip(tr("Open Ikomia HUB"));
-    pOpenStore->setDefaultAction(m_pOpenStoreAct);
+    //Open plugin Hub
+    const QIcon hubIcon(":/Images/hub-color.png");
+    m_pOpenHubAct = new QAction(hubIcon, tr("&Open Ikomia HUB..."), this);
+    m_pOpenHubAct->setStatusTip(tr("Open Ikomia HUB"));
+    m_pCentralViewLayout->addActionToMenu(m_pOpenHubAct);
+    QToolButton* pOpenHub = m_pCentralViewLayout->addButtonToUpperBar("", itemSize, hubIcon, Qt::AlignRight);
+    pOpenHub->setToolTip(tr("Open Ikomia HUB"));
+    pOpenHub->setDefaultAction(m_pOpenHubAct);
 
     //Load plugins : action only
     const QIcon pluginImgIcon(":/Images/update-color.png");
@@ -719,9 +719,9 @@ void CMainView::initProgressBar()
     m_circleProgressMgr.setColorInner(colorInner);
 }
 
-void CMainView::initStoreView()
+void CMainView::initHubView()
 {
-    m_pStoreDlg = new CStoreDlg(this);
+    m_pHubDlg = new CHubDlg(this);
 }
 
 void CMainView::initProcessPopup()
@@ -934,8 +934,8 @@ void CMainView::onSetCurrentUser(const CUser& user)
     if(m_pUserLoginDlg)
         m_pUserLoginDlg->setCurrentUser(user.m_name);
 
-    if(m_pStoreDlg)
-        m_pStoreDlg->setCurrentUser(user);
+    if(m_pHubDlg)
+        m_pHubDlg->setCurrentUser(user);
 
     if(m_pWorkflowModule)
         m_pWorkflowModule->setCurrentUser(user);
@@ -1056,8 +1056,8 @@ void CMainView::onRestartIkomia()
 
 void CMainView::onClose()
 {
-    if(m_pStoreDlg)
-        delete m_pStoreDlg;
+    if(m_pHubDlg)
+        delete m_pHubDlg;
 
     if(m_pProcessDlg)
         delete m_pProcessDlg;
@@ -1108,12 +1108,12 @@ void CMainView::onShowPreferences()
     m_preferencesDlg.exec();
 }
 
-void CMainView::onShowStore()
+void CMainView::onShowHub()
 {
-    if(m_pStoreDlg->isHidden())
-        m_pStoreDlg->show();
+    if(m_pHubDlg->isHidden())
+        m_pHubDlg->show();
     else
-        m_pStoreDlg->hide();
+        m_pHubDlg->hide();
 }
 
 void CMainView::onShowProcessPopup()

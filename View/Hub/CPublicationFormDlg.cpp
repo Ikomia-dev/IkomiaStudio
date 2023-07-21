@@ -1,5 +1,5 @@
 #include "CPublicationFormDlg.h"
-#include "Model/Store/CStoreQueryModel.h"
+#include "Model/Hub/CHubQueryModel.h"
 
 CPublicationFormDlg::CPublicationFormDlg(const QSqlRecord &pluginInfo, const QJsonObject& publishInfo, QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Ikomia HUB publication "), parent, DEFAULT|EFFECT_ENABLED, f)

@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREONLINEICONMANAGER_H
-#define CSTOREONLINEICONMANAGER_H
+#ifndef CHUBONLINEICONMANAGER_H
+#define CHUBONLINEICONMANAGER_H
 
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
@@ -27,13 +27,13 @@
 
 class CPluginModel;
 
-class CStoreOnlineIconManager: public QObject
+class CHubOnlineIconManager: public QObject
 {
     Q_OBJECT
 
     public:
 
-        CStoreOnlineIconManager(CPluginModel* pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user);
+        CHubOnlineIconManager(CPluginModel* pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user);
 
         void    loadIcons();
 
@@ -64,4 +64,4 @@ class CStoreOnlineIconManager: public QObject
         int                         m_nbLoadedIcons = 0;
 };
 
-#endif // CSTOREONLINEICONMANAGER_H
+#endif // CHUBONLINEICONMANAGER_H

@@ -2,7 +2,7 @@
 #define CPLUGINMODEL_H
 
 #include "UtilsDefine.hpp"
-#include "Model/Store/CStoreQueryModel.h"
+#include "Model/Hub/CHubQueryModel.h"
 
 class CPluginModel
 {
@@ -29,7 +29,7 @@ class CPluginModel
         void                setPackageFile(const QString& file);
 
         Type                getType() const;
-        CStoreQueryModel*   getModel() const;
+        CHubQueryModel*   getModel() const;
         CUser               getCurrentUser() const;
         QModelIndex         getCurrentIndex() const;
         QString             getCurrentWorkspace() const;
@@ -68,7 +68,7 @@ class CPluginModel
     private:
 
         Type                m_type = Type::HUB;
-        CStoreQueryModel*   m_pModel = nullptr;
+        CHubQueryModel*   m_pModel = nullptr;
         QModelIndex         m_currentIndex = QModelIndex();
         QJsonArray          m_jsonPlugins;
         CUser               m_user;

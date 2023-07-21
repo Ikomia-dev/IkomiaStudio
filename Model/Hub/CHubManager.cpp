@@ -16,13 +16,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStoreManager.h"
+#include "CHubManager.h"
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHttpPart>
 #include <QtConcurrent>
-#include "CStoreQueryModel.h"
-#include "CStoreOnlineIconManager.h"
+#include "CHubQueryModel.h"
+#include "CHubOnlineIconManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
 #include "Core/CPluginTools.h"
@@ -32,10 +32,10 @@
 #include "JlCompress.h"
 #include "Core/CIkomiaRegistry.h"
 
-//-----------------//
-//- CStoreManager -//
-//-----------------//
-CStoreManager::CStoreManager():
+//---------------//
+//- CHubManager -//
+//---------------//
+CHubManager::CHubManager():
     m_hubPluginModel(CPluginModel::Type::HUB),
     m_workspacePluginModel(CPluginModel::Type::WORKSPACE),
     m_localPluginModel(CPluginModel::Type::LOCAL)
@@ -46,11 +46,11 @@ CStoreManager::CStoreManager():
     }
     catch(std::exception& e)
     {
-        qCCritical(logStore).noquote() << QString::fromStdString(e.what());
+        qCCritical(logHub).noquote() << QString::fromStdString(e.what());
     }
 }
 
-void CStoreManager::setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager *pProcessMgr, CPluginManager *pPluginMgr, CProgressBarManager *pProgressMgr)
+void CHubManager::setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager *pProcessMgr, CPluginManager *pPluginMgr, CProgressBarManager *pProgressMgr)
 {
     m_pNetworkMgr = pNetworkMgr;
     m_pProcessMgr = pProcessMgr;
@@ -59,34 +59,34 @@ void CStoreManager::setManagers(QNetworkAccessManager *pNetworkMgr, CProcessMana
     checkPendingUpdates();
 }
 
-void CStoreManager::setCurrentUser(const CUser &user)
+void CHubManager::setCurrentUser(const CUser &user)
 {
     m_currentUser = user;
     m_hubPluginModel.setCurrentUser(user);
     m_workspacePluginModel.setCurrentUser(user);
 }
 
-void CStoreManager::onRequestHubModel()
+void CHubManager::onRequestHubModel()
 {
     m_hubPluginModel.clear();
     m_dbMgr.clearServerRecords(m_hubPluginModel.getType());
     createHubPluginModel();
 }
 
-void CStoreManager::onRequestWorkspaceModel()
+void CHubManager::onRequestWorkspaceModel()
 {
     m_workspacePluginModel.clear();
     m_dbMgr.clearServerRecords(m_workspacePluginModel.getType());
     createWorkspacePluginModel();
 }
 
-void CStoreManager::onRequestLocalModel()
+void CHubManager::onRequestLocalModel()
 {
     m_localPluginModel.clear();
     createQueryModel(&m_localPluginModel);
 }
 
-void CStoreManager::onRequestNextPublishInfo(const QModelIndex &index)
+void CHubManager::onRequestNextPublishInfo(const QModelIndex &index)
 {
     m_workspacePluginModel.setCurrentIndex(index);
     auto name = m_workspacePluginModel.getQStringField("name", index);
@@ -96,7 +96,7 @@ void CStoreManager::onRequestNextPublishInfo(const QModelIndex &index)
 
     if(url.isValid() == false)
     {
-        qCWarning(logStore) << url.errorString();
+        qCWarning(logHub) << url.errorString();
         emit doSetNextPublishInfo(index, QJsonObject());
         return;
     }
@@ -110,11 +110,11 @@ void CStoreManager::onRequestNextPublishInfo(const QModelIndex &index)
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=]{
-       this->onReplyReceived(pReply, &m_workspacePluginModel, StoreRequestType::GET_NEXT_PUBLISH_INFO);
+       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::GET_NEXT_PUBLISH_INFO);
     });
 }
 
-void CStoreManager::onPublishHub(const QModelIndex &index, const QJsonObject& info)
+void CHubManager::onPublishHub(const QModelIndex &index, const QJsonObject& info)
 {
     assert(index.isValid());
 
@@ -127,14 +127,14 @@ void CStoreManager::onPublishHub(const QModelIndex &index, const QJsonObject& in
     //User has to be logged in to publish plugins
     if(m_currentUser.isConnected() == false)
     {
-        qCCritical(logStore).noquote() << tr("You have to login before publishing algorithms");
+        qCCritical(logHub).noquote() << tr("You have to login before publishing algorithms");
         return;
     }
 
     publishToHub(index, info);
 }
 
-void CStoreManager::onPublishWorkspace(const QModelIndex &index, const QString& workspace)
+void CHubManager::onPublishWorkspace(const QModelIndex &index, const QString& workspace)
 {
     assert(index.isValid());
 
@@ -147,14 +147,14 @@ void CStoreManager::onPublishWorkspace(const QModelIndex &index, const QString& 
     //User has to be logged in to publish plugins
     if(m_currentUser.isConnected() == false)
     {
-        qCCritical(logStore).noquote() << tr("You have to login before publishing algorithms");
+        qCCritical(logHub).noquote() << tr("You have to login before publishing algorithms");
         return;
     }
 
     publishToWorkspace(index, workspace);
 }
 
-void CStoreManager::onInstallPlugin(CPluginModel::Type type, const QModelIndex &index)
+void CHubManager::onInstallPlugin(CPluginModel::Type type, const QModelIndex &index)
 {
     CPluginModel* pModel = nullptr;
     switch(type)
@@ -174,7 +174,7 @@ void CStoreManager::onInstallPlugin(CPluginModel::Type type, const QModelIndex &
     queryServerInstallPlugin(pModel, pluginInfo["url"].toString());
 }
 
-void CStoreManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
+void CHubManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
 {
     //Slot called if a user edit documentation and save modifications -> only available on local plugins
     assert(m_pProcessMgr);
@@ -182,37 +182,37 @@ void CStoreManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
     createQueryModel(&m_localPluginModel);
 }
 
-void CStoreManager::onHubSearchChanged(const QString &text)
+void CHubManager::onHubSearchChanged(const QString &text)
 {
     auto query = getQuery(CPluginModel::Type::HUB, text);
     m_hubPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::HUB));
 }
 
-void CStoreManager::onWorkspaceSearchChanged(const QString &text)
+void CHubManager::onWorkspaceSearchChanged(const QString &text)
 {
     auto query = getQuery(CPluginModel::Type::WORKSPACE, text);
     m_workspacePluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::WORKSPACE));
 }
 
-void CStoreManager::onLocalSearchChanged(const QString &text)
+void CHubManager::onLocalSearchChanged(const QString &text)
 {
     auto query = getQuery(CPluginModel::Type::LOCAL, text);
     m_localPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::LOCAL));
 }
 
-void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, StoreRequestType requestType)
+void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, HubRequestType requestType)
 {
     if (pReply == nullptr)
     {
         clearContext();
-        qCCritical(logStore).noquote() << "Invalid reply from Ikomia HUB";
+        qCCritical(logHub).noquote() << "Invalid reply from Ikomia HUB";
         return;
     }
 
     if(pReply->error() != QNetworkReply::NoError)
     {
         clearContext();
-        qCCritical(logStore).noquote() << pReply->errorString();
+        qCCritical(logHub).noquote() << pReply->errorString();
         QString content(pReply->readAll());
         Utils::print(content.toStdString(), QtDebugMsg);
         pReply->deleteLater();
@@ -221,38 +221,38 @@ void CStoreManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel,
 
     switch(requestType)
     {
-        case StoreRequestType::GET_PLUGINS:
+        case HubRequestType::GET_PLUGINS:
             fillServerPluginModel(pModel, pReply);
             break;
-        case StoreRequestType::GET_PLUGIN_DETAILS:
+        case HubRequestType::GET_PLUGIN_DETAILS:
             addPluginToModel(pModel, pReply);
             break;
-        case StoreRequestType::GET_NEXT_PUBLISH_INFO:
+        case HubRequestType::GET_NEXT_PUBLISH_INFO:
             sendNextPublishInfo(pModel, pReply);
             break;
-        case StoreRequestType::GET_PACKAGE_URL:
+        case HubRequestType::GET_PACKAGE_URL:
             downloadPluginPackage(pModel, pReply);
             break;
-        case StoreRequestType::PUBLISH_WORKSPACE:
+        case HubRequestType::PUBLISH_WORKSPACE:
             uploadPluginIcon(pReply);
             break;
-        case StoreRequestType::PUBLISH_HUB:
+        case HubRequestType::PUBLISH_HUB:
             finalyzePublishHub();
             break;
-        case StoreRequestType::UPLOAD_ICON:
+        case HubRequestType::UPLOAD_ICON:
             uploadPluginPackage();
             break;
-        case StoreRequestType::UPLOAD_PACKAGE:
+        case HubRequestType::UPLOAD_PACKAGE:
             finalizePublishWorkspace();
             break;
-        case StoreRequestType::DOWNLOAD_PACKAGE:
+        case HubRequestType::DOWNLOAD_PACKAGE:
             savePluginFolder(pModel, pReply);
             break;
     }
     pReply->deleteLater();
 }
 
-void CStoreManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
+void CHubManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
 {
     const float factor = 1024.0*1024.0;
     QString sent = QString::number(bytesSent / factor, 'f', 1);
@@ -261,7 +261,7 @@ void CStoreManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
     emit m_progressSignal.doSetValue(bytesSent / 1024);
 }
 
-void CStoreManager::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+void CHubManager::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     assert(m_pProgressMgr);
 
@@ -278,24 +278,24 @@ void CStoreManager::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     emit m_progressSignal.doSetValue(bytesReceived / 1024);
 }
 
-QJsonObject CStoreManager::getJsonObject(QNetworkReply *pReply, const QString &errorMsg) const
+QJsonObject CHubManager::getJsonObject(QNetworkReply *pReply, const QString &errorMsg) const
 {
     QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
     if(doc.isNull())
     {
-        qCCritical(logStore).noquote() << errorMsg << tr(": invalid JSON document");
+        qCCritical(logHub).noquote() << errorMsg << tr(": invalid JSON document");
         return QJsonObject();
     }
 
     if(doc.isObject() == false)
     {
-        qCCritical(logStore).noquote() << errorMsg << tr(":invalid JSON document structure");
+        qCCritical(logHub).noquote() << errorMsg << tr(":invalid JSON document structure");
         return QJsonObject();
     }
     return doc.object();
 }
 
-QString CStoreManager::getQuery(CPluginModel::Type serverType, const QString& text) const
+QString CHubManager::getQuery(CPluginModel::Type serverType, const QString& text) const
 {
     QString query;
     if(text.isEmpty())
@@ -306,7 +306,7 @@ QString CStoreManager::getQuery(CPluginModel::Type serverType, const QString& te
     return query;
 }
 
-void CStoreManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl)
+void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl)
 {
     assert(m_pNetworkMgr);
     QUrlQuery urlQuery(strUrl);
@@ -314,7 +314,7 @@ void CStoreManager::queryServerPlugins(CPluginModel* pModel, const QString& strU
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -332,11 +332,11 @@ void CStoreManager::queryServerPlugins(CPluginModel* pModel, const QString& strU
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, StoreRequestType::GET_PLUGINS);
+       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGINS);
     });
 }
 
-void CStoreManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
+void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
 {
     assert(m_pNetworkMgr);
     QUrlQuery urlQuery(strUrl);
@@ -344,7 +344,7 @@ void CStoreManager::queryServerPluginDetails(CPluginModel* pModel, QString strUr
     QUrl url(urlQuery.query());
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -362,11 +362,11 @@ void CStoreManager::queryServerPluginDetails(CPluginModel* pModel, QString strUr
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, StoreRequestType::GET_PLUGIN_DETAILS);
+       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGIN_DETAILS);
     });
 }
 
-void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl)
+void CHubManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl)
 {
     assert(m_pNetworkMgr);
     if (m_bBusy == true)
@@ -381,7 +381,7 @@ void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -400,11 +400,11 @@ void CStoreManager::queryServerInstallPlugin(CPluginModel* pModel, const QString
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, StoreRequestType::GET_PACKAGE_URL);
+       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PACKAGE_URL);
     });
 }
 
-void CStoreManager::createHubPluginModel()
+void CHubManager::createHubPluginModel()
 {
     QString url = Utils::Network::getBaseUrl() + "/v1/hub/";
     m_hubPluginModel.setCurrentRequestUrl(url);
@@ -412,7 +412,7 @@ void CStoreManager::createHubPluginModel()
     m_pProgressMgr->launchInfiniteProgress(tr("Loading algorithms from Ikomia HUB..."), false);
 }
 
-void CStoreManager::createWorkspacePluginModel()
+void CHubManager::createWorkspacePluginModel()
 {
     QString url = Utils::Network::getBaseUrl() + "/v1/algos/";
     m_workspacePluginModel.setCurrentRequestUrl(url);
@@ -420,14 +420,14 @@ void CStoreManager::createWorkspacePluginModel()
     m_pProgressMgr->launchInfiniteProgress(tr("Loading algorithms from private workspaces..."), false);
 }
 
-void CStoreManager::createQueryModel(CPluginModel* pModel)
+void CHubManager::createQueryModel(CPluginModel* pModel)
 {
     auto type = pModel->getType();
     pModel->init(m_currentUser, m_dbMgr.getAllPluginsQuery(type), m_dbMgr.getPluginsDatabase(type));
     emit doSetPluginModel(pModel);
 }
 
-QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
+QByteArray CHubManager::createPluginPayload(CPluginModel* pModel)
 {
     QJsonObject plugin;
 
@@ -524,7 +524,7 @@ QByteArray CStoreManager::createPluginPayload(CPluginModel* pModel)
     return doc.toJson();
 }
 
-QJsonObject CStoreManager::createPluginPackagePayload(CPluginModel *pModel)
+QJsonObject CHubManager::createPluginPackagePayload(CPluginModel *pModel)
 {
     QJsonObject package;
     int language = pModel->getIntegerField("language");
@@ -610,7 +610,7 @@ QJsonObject CStoreManager::createPluginPackagePayload(CPluginModel *pModel)
     return package;
 }
 
-QString CStoreManager::checkPythonPluginDirectory(const QString &directory)
+QString CHubManager::checkPythonPluginDirectory(const QString &directory)
 {
     QDir pluginDir(directory);
     QString dirName = QString::fromStdString(Utils::File::getFileNameWithoutExtension(directory.toStdString()));
@@ -643,7 +643,7 @@ QString CStoreManager::checkPythonPluginDirectory(const QString &directory)
     return newDirectory;
 }
 
-QString CStoreManager::checkCppPluginDirectory(const QString &directory, const QString &name)
+QString CHubManager::checkCppPluginDirectory(const QString &directory, const QString &name)
 {
     QDir pluginDir(directory);
     QString newDirectory = directory;
@@ -663,7 +663,7 @@ QString CStoreManager::checkCppPluginDirectory(const QString &directory, const Q
     return newDirectory;
 }
 
-void CStoreManager::checkPendingUpdates()
+void CHubManager::checkPendingUpdates()
 {
     QSettings ikomiaSettings;
     const QString settingKey = "pending_plugin_update";
@@ -695,14 +695,14 @@ void CStoreManager::checkPendingUpdates()
         }
         catch (const boost::filesystem::filesystem_error& e)
         {
-            qCCritical(logStore).noquote() << QString::fromStdString(e.code().message());
+            qCCritical(logHub).noquote() << QString::fromStdString(e.code().message());
             continue;
         }
 
         //Extract new plugin content
         auto extractedFiles = JlCompress::extractDir(zipPath, QString::fromStdString(destDir));
         if(extractedFiles.size() == 0)
-            qCCritical(logStore).noquote() << tr("Archive extraction failed: installation of %1 aborted").arg(QString::fromStdString(dirName));
+            qCCritical(logHub).noquote() << tr("Archive extraction failed: installation of %1 aborted").arg(QString::fromStdString(dirName));
 
         //Delete archive file
         zipFile.remove();
@@ -711,7 +711,7 @@ void CStoreManager::checkPendingUpdates()
     ikomiaSettings.setValue(settingKey, "");
 }
 
-void CStoreManager::checkInstalledModules(const QString &pluginDir)
+void CHubManager::checkInstalledModules(const QString &pluginDir)
 {
     auto modules = Utils::Python::getInstalledModules();
 
@@ -756,14 +756,14 @@ void CStoreManager::checkInstalledModules(const QString &pluginDir)
     }
 }
 
-void CStoreManager::updateWorkspacePlugin(const QString& name)
+void CHubManager::updateWorkspacePlugin(const QString& name)
 {
     // TODO: check if it's the selected workspace is the same
     QJsonObject plugin = m_workspacePluginModel.getJsonPlugin(name);
     uploadPluginIcon(plugin["url"].toString());
 }
 
-void CStoreManager::updateLocalPlugin()
+void CHubManager::updateLocalPlugin()
 {
     try
     {
@@ -772,11 +772,11 @@ void CStoreManager::updateLocalPlugin()
     }
     catch(std::exception& e)
     {
-        qCCritical(logStore).noquote() << e.what();
+        qCCritical(logHub).noquote() << e.what();
     }
 }
 
-void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pReply)
+void CHubManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pReply)
 {
     QJsonObject jsonPage = getJsonObject(pReply, tr("Error while retrieving algorithm list"));
     if (jsonPage.isEmpty())
@@ -809,7 +809,7 @@ void CStoreManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* p
     }
 }
 
-void CStoreManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply)
+void CHubManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply)
 {
     QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
     if (jsonPlugin.isEmpty())
@@ -824,8 +824,8 @@ void CStoreManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply
     {
         pModel->filterCompatiblePlugins();
 
-        auto pIconMgr = new CStoreOnlineIconManager(pModel, m_pNetworkMgr, m_currentUser);
-        connect(pIconMgr, &CStoreOnlineIconManager::doIconsLoaded, [this, pIconMgr, pModel]
+        auto pIconMgr = new CHubOnlineIconManager(pModel, m_pNetworkMgr, m_currentUser);
+        connect(pIconMgr, &CHubOnlineIconManager::doIconsLoaded, [this, pIconMgr, pModel]
         {
             pIconMgr->deleteLater();
             validateServerPluginModel(pModel);
@@ -837,12 +837,12 @@ void CStoreManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply
         }
         catch(std::exception& e)
         {
-            qCCritical(logStore).noquote() << QString::fromStdString(e.what());
+            qCCritical(logHub).noquote() << QString::fromStdString(e.what());
         }
     }
 }
 
-void CStoreManager::validateServerPluginModel(CPluginModel* pModel)
+void CHubManager::validateServerPluginModel(CPluginModel* pModel)
 {
     m_pProgressMgr->endInfiniteProgress();
     try
@@ -858,15 +858,15 @@ void CStoreManager::validateServerPluginModel(CPluginModel* pModel)
     }
     catch(std::exception& e)
     {
-        qCCritical(logStore).noquote() << QString::fromStdString(e.what());
+        qCCritical(logHub).noquote() << QString::fromStdString(e.what());
     }
 }
 
-void CStoreManager::validatePluginFolder(CPluginModel* pModel, const QStringList& files, const QString dstDir)
+void CHubManager::validatePluginFolder(CPluginModel* pModel, const QStringList& files, const QString dstDir)
 {
     if(files.isEmpty())
     {
-        qCCritical(logStore).noquote() << tr("Archive extraction failed: installation aborted");
+        qCCritical(logHub).noquote() << tr("Archive extraction failed: installation aborted");
         clearContext();
         return;
     }
@@ -909,13 +909,13 @@ void CStoreManager::validatePluginFolder(CPluginModel* pModel, const QStringList
     }
     catch(std::exception& e)
     {
-        qCCritical(logStore).noquote().noquote() << QString::fromStdString(e.what());
+        qCCritical(logHub).noquote().noquote() << QString::fromStdString(e.what());
         //Clean
         clearContext();
     }
 }
 
-void CStoreManager::generateZipFile()
+void CHubManager::generateZipFile()
 {
     assert(m_pProgressMgr);
 
@@ -954,7 +954,7 @@ void CStoreManager::generateZipFile()
     pWatcher->setFuture(future);
 }
 
-void CStoreManager::extractZipFile(CPluginModel* pModel, const QString& src, const QString& dstDir)
+void CHubManager::extractZipFile(CPluginModel* pModel, const QString& src, const QString& dstDir)
 {
     m_pProgressMgr->launchInfiniteProgress(tr("Algorithm package extraction..."), false);
 
@@ -978,7 +978,7 @@ void CStoreManager::extractZipFile(CPluginModel* pModel, const QString& src, con
     pWatcher->setFuture(future);
 }
 
-void CStoreManager::publishToHub(const QModelIndex& index, const QJsonObject& info)
+void CHubManager::publishToHub(const QModelIndex& index, const QJsonObject& info)
 {
     m_workspacePluginModel.setCurrentIndex(index);
     auto name = m_workspacePluginModel.getQStringField("name");
@@ -988,7 +988,7 @@ void CStoreManager::publishToHub(const QModelIndex& index, const QJsonObject& in
 
     if(url.isValid() == false)
     {
-        qCWarning(logStore) << url.errorString();
+        qCWarning(logHub) << url.errorString();
         return;
     }
 
@@ -1005,11 +1005,11 @@ void CStoreManager::publishToHub(const QModelIndex& index, const QJsonObject& in
     auto pReply = m_pNetworkMgr->put(request, payload.toJson());
 
     connect(pReply, &QNetworkReply::finished, [=]{
-       this->onReplyReceived(pReply, &m_hubPluginModel, StoreRequestType::PUBLISH_HUB);
+       this->onReplyReceived(pReply, &m_hubPluginModel, HubRequestType::PUBLISH_HUB);
     });
 }
 
-void CStoreManager::publishToWorkspace(const QModelIndex &index, const QString& workspace)
+void CHubManager::publishToWorkspace(const QModelIndex &index, const QString& workspace)
 {
     m_bBusy = true;
     m_localPluginModel.setCurrentIndex(index);
@@ -1018,13 +1018,13 @@ void CStoreManager::publishToWorkspace(const QModelIndex &index, const QString& 
     generateZipFile();
 }
 
-void CStoreManager::publishOrUpdateToWorkspace(const QString& zipFile)
+void CHubManager::publishOrUpdateToWorkspace(const QString& zipFile)
 {
     try
     {
         if(zipFile.isEmpty())
         {
-            qCCritical(logStore).noquote() << tr("Compression of algorithm package failed, transfer to Ikomia HUB aborted");
+            qCCritical(logHub).noquote() << tr("Compression of algorithm package failed, transfer to Ikomia HUB aborted");
             clearContext();
             return;
         }
@@ -1039,12 +1039,12 @@ void CStoreManager::publishOrUpdateToWorkspace(const QString& zipFile)
     }
     catch(std::exception& e)
     {
-        qCCritical(logStore).noquote() << QString::fromStdString(e.what());
+        qCCritical(logHub).noquote() << QString::fromStdString(e.what());
         clearContext();
     }
 }
 
-void CStoreManager::publishPluginToWorkspace()
+void CHubManager::publishPluginToWorkspace()
 {
     assert(m_pNetworkMgr);
 
@@ -1056,7 +1056,7 @@ void CStoreManager::publishPluginToWorkspace()
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -1072,11 +1072,11 @@ void CStoreManager::publishPluginToWorkspace()
 
     auto pReply = m_pNetworkMgr->post(request, jsonPayload);
     connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, &m_workspacePluginModel, StoreRequestType::PUBLISH_WORKSPACE);
+       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
     });
 }
 
-void CStoreManager::uploadPluginPackage()
+void CHubManager::uploadPluginPackage()
 {
     assert(m_pNetworkMgr);
     assert(m_pProgressMgr);
@@ -1087,7 +1087,7 @@ void CStoreManager::uploadPluginPackage()
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -1144,12 +1144,12 @@ void CStoreManager::uploadPluginPackage()
     pMultiPart->setParent(pNewReply);
 
     connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, &m_workspacePluginModel, StoreRequestType::UPLOAD_PACKAGE);
+       this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_PACKAGE);
     });
-    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
+    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CHubManager::onUploadProgress);
 }
 
-void CStoreManager::uploadPluginIcon(QNetworkReply* pReply)
+void CHubManager::uploadPluginIcon(QNetworkReply* pReply)
 {    
     QJsonObject jsonResponse = getJsonObject(pReply, tr("Error in algorithm creation response from Ikomia HUB"));
     if (jsonResponse.isEmpty())
@@ -1163,7 +1163,7 @@ void CStoreManager::uploadPluginIcon(QNetworkReply* pReply)
     uploadPluginIcon(strUrl);
 }
 
-void CStoreManager::uploadPluginIcon(const QString &strUrl)
+void CHubManager::uploadPluginIcon(const QString &strUrl)
 {
     assert(m_pNetworkMgr);
     assert(m_pProgressMgr);
@@ -1176,7 +1176,7 @@ void CStoreManager::uploadPluginIcon(const QString &strUrl)
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -1218,12 +1218,12 @@ void CStoreManager::uploadPluginIcon(const QString &strUrl)
     pMultiPart->setParent(pNewReply);
 
     connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, &m_workspacePluginModel, StoreRequestType::UPLOAD_ICON);
+       this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_ICON);
     });
-    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CStoreManager::onUploadProgress);
+    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CHubManager::onUploadProgress);
 }
 
-void CStoreManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pReply)
+void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pReply)
 {
     assert(m_pNetworkMgr);
 
@@ -1243,7 +1243,7 @@ void CStoreManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* p
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }
@@ -1261,12 +1261,12 @@ void CStoreManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* p
 
     auto pNewReply = m_pNetworkMgr->get(request);
     connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, pModel, StoreRequestType::DOWNLOAD_PACKAGE);
+       this->onReplyReceived(pNewReply, pModel, HubRequestType::DOWNLOAD_PACKAGE);
     });
-    connect(pNewReply, &QNetworkReply::downloadProgress, this, &CStoreManager::onDownloadProgress);
+    connect(pNewReply, &QNetworkReply::downloadProgress, this, &CHubManager::onDownloadProgress);
 }
 
-void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
+void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
 {
     assert(m_pProcessMgr);
 
@@ -1323,7 +1323,7 @@ void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply
                                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes);
             if(buttons == QMessageBox::Yes)
             {
-                qCInfo(logStore).noquote() << tr("Restarting Ikomia...");
+                qCInfo(logHub).noquote() << tr("Restarting Ikomia...");
                 emit doRestartIkomia();
             }
             return;
@@ -1337,7 +1337,7 @@ void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply
             }
             catch (const boost::filesystem::filesystem_error& e)
             {
-                qCCritical(logStore).noquote() << QString::fromStdString(e.code().message());
+                qCCritical(logHub).noquote() << QString::fromStdString(e.code().message());
                 clearContext();
                 return;
             }
@@ -1348,7 +1348,7 @@ void CStoreManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply
     extractZipFile(pModel, downloadPath, destDir);
 }
 
-void CStoreManager::installPythonPluginDependencies(const QString &directory, const CTaskInfo& info, const CUser& user)
+void CHubManager::installPythonPluginDependencies(const QString &directory, const CTaskInfo& info, const CUser& user)
 {
     m_pProgressMgr->launchInfiniteProgress(tr("Installation of algorithm dependencies..."), false);
 
@@ -1380,21 +1380,21 @@ void CStoreManager::installPythonPluginDependencies(const QString &directory, co
         for(auto&& name : requirements)
         {
             QString requirementFile = directory + "/" + name;
-            qCInfo(logStore()).noquote() << "Algorithm dependencies installation from " + requirementFile;
+            qCInfo(logHub()).noquote() << "Algorithm dependencies installation from " + requirementFile;
             Utils::Python::installRequirements(requirementFile);
         }
     });
     pWatcher->setFuture(future);
 }
 
-void CStoreManager::deleteTranferFile()
+void CHubManager::deleteTranferFile()
 {
     m_pTranferFile->remove();
     delete m_pTranferFile;
     m_pTranferFile = nullptr;
 }
 
-void CStoreManager::clearContext()
+void CHubManager::clearContext()
 {
     m_hubPluginModel.clearContext();
     m_localPluginModel.clearContext();
@@ -1403,28 +1403,28 @@ void CStoreManager::clearContext()
     m_bBusy = false;
 }
 
-void CStoreManager::finalyzePublishHub()
+void CHubManager::finalyzePublishHub()
 {
     emit m_progressSignal.doFinish();
     auto name = m_workspacePluginModel.getQStringField("name");
-    qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully published to Ikomia HUB").arg(name);
+    qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to Ikomia HUB").arg(name);
     onRequestHubModel();
     clearContext();
 }
 
-void CStoreManager::finalizePublishWorkspace()
+void CHubManager::finalizePublishWorkspace()
 {
     updateLocalPlugin();
     deleteTranferFile();
     emit m_progressSignal.doFinish();
     auto name =  m_localPluginModel.getQStringField("name");
-    qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
+    qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
     clearContext();
     onRequestLocalModel();
     onRequestWorkspaceModel();
 }
 
-void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
+void CHubManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
 {
     //Insert or update plugin to file database
     try
@@ -1433,7 +1433,7 @@ void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& us
     }
     catch(CException& e)
     {
-        qCDebug(logStore) << QString::fromStdString(e.what());
+        qCDebug(logHub) << QString::fromStdString(e.what());
     }
 
     //Reload process library
@@ -1444,17 +1444,17 @@ void CStoreManager::finalizePluginInstall(const CTaskInfo& info, const CUser& us
     if(bLoaded)
     {
         createQueryModel(&m_localPluginModel);
-        qCInfo(logStore).noquote() << tr("Algorithm %1 was successfully installed").arg(name);
+        qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully installed").arg(name);
     }
     else
-        qCWarning(logStore).noquote() << tr("Algorithm %1 was successfully installed but failed to load. Try to restart Ikomia Studio.").arg(name);
+        qCWarning(logHub).noquote() << tr("Algorithm %1 was successfully installed but failed to load. Try to restart Ikomia Studio.").arg(name);
 
     //Clean
     clearContext();
     m_pProgressMgr->endInfiniteProgress();
 }
 
-void CStoreManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pReply)
+void CHubManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pReply)
 {
     QJsonObject jsonInfo = getJsonObject(pReply, tr("Error while retrieving algorithm information for publication"));
     if (jsonInfo.isEmpty())
@@ -1465,7 +1465,7 @@ void CStoreManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pRe
     emit doSetNextPublishInfo(pModel->getCurrentIndex(), jsonInfo);
 }
 
-QString CStoreManager::findBestPackageUrl(const QJsonArray &packages)
+QString CHubManager::findBestPackageUrl(const QJsonArray &packages)
 {
     //At this point, plugins are already filtered to ensure compatibility.
     //So for now, we just want to pick the latest version
@@ -1494,4 +1494,4 @@ QString CStoreManager::findBestPackageUrl(const QJsonArray &packages)
     return url;
 }
 
-#include "moc_CStoreManager.cpp"
+#include "moc_CHubManager.cpp"

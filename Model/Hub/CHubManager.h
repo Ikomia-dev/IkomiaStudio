@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREMANAGER_H
-#define CSTOREMANAGER_H
+#ifndef CHUBMANAGER_H
+#define CHUBMANAGER_H
 
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
-#include "CStoreDbManager.h"
+#include "CHubDbManager.h"
 #include "CPluginModel.h"
 #include "Model/User/CUser.h"
 
@@ -32,11 +32,11 @@ class CProcessManager;
 class CPluginManager;
 class CProgressBarManager;
 
-class CStoreManager : public QObject
+class CHubManager : public QObject
 {
     Q_OBJECT
 
-    enum class StoreRequestType : int
+    enum class HubRequestType : int
     {
         GET_PLUGINS,
         GET_PLUGIN_DETAILS,
@@ -52,7 +52,7 @@ class CStoreManager : public QObject
 
     public:
 
-        CStoreManager();
+        CHubManager();
 
         void            setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager* pProcessMgr, CPluginManager* pPluginMgr, CProgressBarManager *pProgressMgr);
         void            setCurrentUser(const CUser& user);
@@ -80,7 +80,7 @@ class CStoreManager : public QObject
 
     private slots:
 
-        void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, StoreRequestType requestType);
+        void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, HubRequestType requestType);
         void            onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
         void            onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
@@ -153,7 +153,7 @@ class CStoreManager : public QObject
         CPluginManager*         m_pPluginMgr = nullptr;
         CProgressBarManager*    m_pProgressMgr = nullptr;
         CProgressSignalHandler  m_progressSignal;
-        CStoreDbManager         m_dbMgr;
+        CHubDbManager         m_dbMgr;
         CPluginModel            m_hubPluginModel;
         CPluginModel            m_workspacePluginModel;
         CPluginModel            m_localPluginModel;
@@ -164,4 +164,4 @@ class CStoreManager : public QObject
         bool                    m_bBusy = false;
 };
 
-#endif // CSTOREMANAGER_H
+#endif // CHUBMANAGER_H

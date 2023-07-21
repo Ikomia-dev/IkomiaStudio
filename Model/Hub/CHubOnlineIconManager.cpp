@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStoreOnlineIconManager.h"
+#include "CHubOnlineIconManager.h"
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHttpPart>
@@ -25,14 +25,14 @@
 #include "Main/LogCategory.h"
 #include "Task/CTaskInfo.h"
 
-CStoreOnlineIconManager::CStoreOnlineIconManager(CPluginModel *pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user)
+CHubOnlineIconManager::CHubOnlineIconManager(CPluginModel *pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user)
 {
     m_pModel = pModel;
     m_pNetworkMgr = pNetworkMgr;
     m_currentUser = user;
 }
 
-void CStoreOnlineIconManager::loadIcons()
+void CHubOnlineIconManager::loadIcons()
 {
     assert(m_pNetworkMgr);
     assert(m_pModel);
@@ -68,7 +68,7 @@ void CStoreOnlineIconManager::loadIcons()
 
             if(url.isValid() == false)
             {
-                qCDebug(logStore) << "Algorithm " << plugin["name"].toString() << "does not have icon." << url.errorString();
+                qCDebug(logHub) << "Algorithm " << plugin["name"].toString() << "does not have icon." << url.errorString();
                 incrementLoadedIcon();
                 continue;
             }
@@ -91,14 +91,14 @@ void CStoreOnlineIconManager::loadIcons()
     }
 }
 
-QString CStoreOnlineIconManager::getPluginIconPath(const QString &name) const
+QString CHubOnlineIconManager::getPluginIconPath(const QString &name) const
 {
     QString destDir = Utils::IkomiaApp::getQIkomiaFolder() + "/Resources/Tmp/";
     QString iconPath = destDir + QString::fromStdString(Utils::String::httpFormat(name.toStdString())) + ".png";
     return iconPath;
 }
 
-bool CStoreOnlineIconManager::isIconExists(const QString &pluginName)
+bool CHubOnlineIconManager::isIconExists(const QString &pluginName)
 {
     try
     {
@@ -108,22 +108,22 @@ bool CStoreOnlineIconManager::isIconExists(const QString &pluginName)
     }
     catch (const boost::filesystem::filesystem_error& e)
     {
-        qCCritical(logStore).noquote() << QString::fromStdString(e.code().message());
+        qCCritical(logHub).noquote() << QString::fromStdString(e.code().message());
         return false;
     }
 }
 
-void CStoreOnlineIconManager::onReplyReceived(QNetworkReply *pReply, int pluginIndex)
+void CHubOnlineIconManager::onReplyReceived(QNetworkReply *pReply, int pluginIndex)
 {
     if (pReply == nullptr)
     {
-        qCCritical(logStore).noquote() << "Invalid reply from Ikomia Scale";
+        qCCritical(logHub).noquote() << "Invalid reply from Ikomia Scale";
         return;
     }
 
     if(pReply->error() != QNetworkReply::NoError)
     {
-        qCCritical(logStore).noquote() << pReply->errorString();
+        qCCritical(logHub).noquote() << pReply->errorString();
         pReply->deleteLater();
         return;
     }
@@ -132,7 +132,7 @@ void CStoreOnlineIconManager::onReplyReceived(QNetworkReply *pReply, int pluginI
     pReply->deleteLater();
 }
 
-void CStoreOnlineIconManager::incrementLoadedIcon()
+void CHubOnlineIconManager::incrementLoadedIcon()
 {
     m_nbLoadedIcons++;
 
@@ -140,7 +140,7 @@ void CStoreOnlineIconManager::incrementLoadedIcon()
         emit doIconsLoaded();
 }
 
-void CStoreOnlineIconManager::savePluginIcon(QNetworkReply* pReply, int pluginIndex)
+void CHubOnlineIconManager::savePluginIcon(QNetworkReply* pReply, int pluginIndex)
 {
     QJsonArray plugins = m_pModel->getJsonPlugins();
     QJsonObject plugin = plugins[pluginIndex].toObject();
@@ -153,7 +153,7 @@ void CStoreOnlineIconManager::savePluginIcon(QNetworkReply* pReply, int pluginIn
     }
     catch (const CException& e)
     {
-        qCWarning(logStore).noquote() << QString::fromStdString(e.what());
+        qCWarning(logHub).noquote() << QString::fromStdString(e.what());
         incrementLoadedIcon();
         return;
     }
@@ -165,7 +165,7 @@ void CStoreOnlineIconManager::savePluginIcon(QNetworkReply* pReply, int pluginIn
     bool bLoaded = icon.loadFromData(pReply->readAll());
     if(bLoaded == false)
     {
-        qCWarning(logStore).noquote() << tr("Unable to load logo for plugin %1").arg(pluginName);
+        qCWarning(logHub).noquote() << tr("Unable to load logo for plugin %1").arg(pluginName);
         incrementLoadedIcon();
         return;
     }
@@ -173,7 +173,7 @@ void CStoreOnlineIconManager::savePluginIcon(QNetworkReply* pReply, int pluginIn
     bool bSaved = icon.save(downloadPath);
     if(bSaved == false)
     {
-        qCWarning(logStore).noquote() << tr("Unable to save logo for plugin %1").arg(pluginName);
+        qCWarning(logHub).noquote() << tr("Unable to save logo for plugin %1").arg(pluginName);
         incrementLoadedIcon();
         return;
     }

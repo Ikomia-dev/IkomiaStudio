@@ -20,7 +20,7 @@
 #define CTUTOSTARTINHELPER_HPP
 
 #include "Model/Wizard/CWizardScenario.h"
-#include "View/Store/CStoreDlg.h"
+#include "View/Hub/CHubDlg.h"
 #include "View/Common/CBubbleTip.h"
 
 class CTutoStartingHelper : public CWizardScenario
@@ -127,12 +127,12 @@ class CTutoStartingHelper : public CWizardScenario
                     nullptr,
                     CBubbleTip::Close | CBubbleTip::Check | CBubbleTip::Next);
 
-            // Open Store
-            addStep(m_pView->getBtn(CMainView::BTN_OPEN_STORE),
+            // Open Hub
+            addStep(m_pView->getBtn(CMainView::BTN_OPEN_HUB),
                     tr("Open Ikomia HUB and leverage state of the art algorithms."),
                     "",
                     "",
-                    m_pView->getStoreView(),
+                    m_pView->getHubView(),
                     SIGNAL(doClose()),
                     nullptr,
                     CBubbleTip::Close | CBubbleTip::Check);

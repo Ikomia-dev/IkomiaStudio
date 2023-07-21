@@ -87,9 +87,9 @@ CMainDataManager* CMainModel::getDataManager()
     return &m_dataMgr;
 }
 
-CStoreManager *CMainModel::getStoreManager()
+CHubManager *CMainModel::getHubManager()
 {
-    return &m_storeMgr;
+    return &m_hubMgr;
 }
 
 CSettingsManager*CMainModel::getSettingsManager()
@@ -118,7 +118,7 @@ void CMainModel::init()
     initRenderManager();
     initDataManager();
     initUserManager();
-    initStoreManager();
+    initHubManager();
     initMatomo();
     initConnections();
 }
@@ -148,7 +148,7 @@ void CMainModel::onSetCurrentUser(const CUser &user)
     //Take care of initialization order
     m_pluginMgr.setCurrentUser(user);
     m_processMgr.setCurrentUser(user);
-    m_storeMgr.setCurrentUser(user);
+    m_hubMgr.setCurrentUser(user);
     m_workflowMgr.setCurrentUser(user);
 }
 
@@ -284,9 +284,9 @@ void CMainModel::initUserManager()
     m_userMgr.setManagers(&m_networkMgr);
 }
 
-void CMainModel::initStoreManager()
+void CMainModel::initHubManager()
 {
-    m_storeMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr);
+    m_hubMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr);
 }
 
 void CMainModel::initSettingsManager()

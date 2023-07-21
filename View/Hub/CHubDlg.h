@@ -18,26 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPLUGINSTOREDLG_H
-#define CPLUGINSTOREDLG_H
+#ifndef CHUBDLG_H
+#define CHUBDLG_H
 
 #include <QDialog>
 #include "View/Common/CDialog.h"
 #include "Task/CTaskInfo.h"
 #include "Model/User/CUser.h"
-#include "Model/Store/CPluginModel.h"
+#include "Model/Hub/CPluginModel.h"
 
-class CStorePluginListView;
-class CStoreQueryModel;
+class CHubPluginListView;
+class CHubQueryModel;
 class CProcessDocWidget;
 
-class CStoreDlg : public CDialog
+class CHubDlg : public CDialog
 {
     Q_OBJECT
 
     public:
 
-        CStoreDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        CHubDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void            setCurrentUser(const CUser& user);
 
@@ -102,11 +102,11 @@ class CStoreDlg : public CDialog
         QLabel*                 m_pLabelMsgHub = nullptr;
         QLabel*                 m_pLabelMsgWorkspace = nullptr;
         QLabel*                 m_pLabelMsgLocal = nullptr;
-        CStorePluginListView*   m_pHubView = nullptr;
-        CStorePluginListView*   m_pWorkspaceView = nullptr;
-        CStorePluginListView*   m_pLocalView = nullptr;
+        CHubPluginListView*   m_pHubView = nullptr;
+        CHubPluginListView*   m_pWorkspaceView = nullptr;
+        CHubPluginListView*   m_pLocalView = nullptr;
         CProcessDocWidget*      m_pDocWidget = nullptr;
         QPersistentModelIndex   m_currentModelIndex;
 };
 
-#endif // CPLUGINSTOREDLG_H
+#endif // CHUBDLG_H

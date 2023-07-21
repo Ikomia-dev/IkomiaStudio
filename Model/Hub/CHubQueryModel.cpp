@@ -16,18 +16,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStoreQueryModel.h"
+#include "CHubQueryModel.h"
 
-CStoreQueryModel::CStoreQueryModel(QObject *parent)
+CHubQueryModel::CHubQueryModel(QObject *parent)
     :QSqlQueryModel(parent)
 {
 }
 
-QVariant CStoreQueryModel::data(const QModelIndex &index, int role) const
+QVariant CHubQueryModel::data(const QModelIndex &index, int role) const
 {
     if(role == Qt::DecorationRole)
     {
-        auto pModel = static_cast<const CStoreQueryModel*>(index.model());
+        auto pModel = static_cast<const CHubQueryModel*>(index.model());
         QString iconPathStr = pModel->record(index.row()).value("iconPath").toString();
         if(iconPathStr.isEmpty())
             return QIcon(":/Images/default-process.png");
@@ -37,12 +37,12 @@ QVariant CStoreQueryModel::data(const QModelIndex &index, int role) const
     return QSqlQueryModel::data(index, role);
 }
 
-void CStoreQueryModel::setCurrentUser(const CUser &user)
+void CHubQueryModel::setCurrentUser(const CUser &user)
 {
     m_user = user;
 }
 
-CUser CStoreQueryModel::getCurrentUser() const
+CUser CHubQueryModel::getCurrentUser() const
 {
     return m_user;
 }

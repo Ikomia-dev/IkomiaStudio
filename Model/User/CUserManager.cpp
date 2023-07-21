@@ -80,7 +80,7 @@ void CUserManager::onReplyReceived(QNetworkReply *pReply, Request requestType)
 {
     if (pReply == nullptr)
     {
-        qCCritical(logStore).noquote() << "Invalid reply from Ikomia Scale";
+        qCCritical(logHub).noquote() << "Invalid reply from Ikomia Scale";
         return;
     }
 
@@ -185,13 +185,13 @@ void CUserManager::fillUserNamespaces(QNetworkReply *pReply)
     QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
     if(doc.isNull())
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document while retrieving namespaces");
+        qCCritical(logHub).noquote() << tr("Invalid JSON document while retrieving namespaces");
         return;
     }
 
     if(doc.isObject() == false)
     {
-        qCCritical(logStore).noquote() << tr("Invalid JSON document structure while retrieving namespaces");
+        qCCritical(logHub).noquote() << tr("Invalid JSON document structure while retrieving namespaces");
         return;
     }
 

@@ -170,16 +170,16 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Results/CResultManager.h
     Model/Settings/CSettingsManager.cpp
     Model/Settings/CSettingsManager.h
-    Model/Store/CStoreDbManager.cpp
-    Model/Store/CStoreDbManager.h
-    Model/Store/CStoreManager.cpp
-    Model/Store/CStoreManager.h
-    Model/Store/CStoreOnlineIconManager.cpp
-    Model/Store/CStoreOnlineIconManager.h
-    Model/Store/CStoreQueryModel.cpp
-    Model/Store/CStoreQueryModel.h
-    Model/Store/CPluginModel.h
-    Model/Store/CPluginModel.cpp
+    Model/Hub/CHubDbManager.cpp
+    Model/Hub/CHubDbManager.h
+    Model/Hub/CHubManager.cpp
+    Model/Hub/CHubManager.h
+    Model/Hub/CHubOnlineIconManager.cpp
+    Model/Hub/CHubOnlineIconManager.h
+    Model/Hub/CHubQueryModel.cpp
+    Model/Hub/CHubQueryModel.h
+    Model/Hub/CPluginModel.h
+    Model/Hub/CPluginModel.cpp
     Model/User/CUser.cpp Model/User/CUser.h
     Model/User/CUserManager.cpp
     Model/User/CUserManager.h
@@ -422,16 +422,16 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Project/CProjectPane.h
     View/Project/CProjectTreeView.cpp
     View/Project/CProjectTreeView.h
-    View/Store/CStoreDlg.cpp
-    View/Store/CStoreDlg.h
-    View/Store/CStorePluginListView.cpp
-    View/Store/CStorePluginListView.h
-    View/Store/CStorePluginListViewDelegate.cpp
-    View/Store/CStorePluginListViewDelegate.h
-    View/Store/CWorkspaceChoiceDlg.h
-    View/Store/CWorkspaceChoiceDlg.cpp
-    View/Store/CPublicationFormDlg.h
-    View/Store/CPublicationFormDlg.cpp
+    View/Hub/CHubDlg.cpp
+    View/Hub/CHubDlg.h
+    View/Hub/CHubPluginListView.cpp
+    View/Hub/CHubPluginListView.h
+    View/Hub/CHubPluginListViewDelegate.cpp
+    View/Hub/CHubPluginListViewDelegate.h
+    View/Hub/CWorkspaceChoiceDlg.h
+    View/Hub/CWorkspaceChoiceDlg.cpp
+    View/Hub/CPublicationFormDlg.h
+    View/Hub/CPublicationFormDlg.cpp
     View/Wizard/CWizardDocFrame.cpp
     View/Wizard/CWizardDocFrame.h
     View/Wizard/CWizardDocPage.cpp

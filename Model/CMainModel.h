@@ -34,7 +34,7 @@
 #include "Model/Data/Video/CVideoManager.h"
 #include "User/CUserManager.h"
 #include "Model/Data/CMainDataManager.h"
-#include "Store/CStoreManager.h"
+#include "Model/Hub/CHubManager.h"
 #include "Settings/CSettingsManager.h"
 #include "Model/CDbManager.h"
 
@@ -65,7 +65,7 @@ class CMainModel : public QObject
         CResultManager*         getResultManager();
         CUserManager*           getUserManager();
         CMainDataManager*       getDataManager();
-        CStoreManager*          getStoreManager();
+        CHubManager*            getHubManager();
         CSettingsManager*       getSettingsManager();
         CPluginManager*         getPluginManager();
 
@@ -97,7 +97,7 @@ class CMainModel : public QObject
         void                    initRenderManager();
         void                    initDataManager();
         void                    initUserManager();
-        void                    initStoreManager();
+        void                    initHubManager();
         void                    initSettingsManager();
         void                    initPluginManager();
         void                    initPython();
@@ -121,7 +121,7 @@ class CMainModel : public QObject
         CResultManager          m_resultsMgr;
         CUserManager            m_userMgr;
         CMainDataManager        m_dataMgr;
-        CStoreManager           m_storeMgr;
+        CHubManager             m_hubMgr;
         CSettingsManager        m_settingsMgr;
         CPluginManager          m_pluginMgr;
         QNetworkAccessManager   m_networkMgr;

@@ -16,25 +16,25 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStoreDbManager.h"
+#include "CHubDbManager.h"
 #include <QSqlError>
 #include "CException.h"
 #include "UtilsTools.hpp"
 #include "Main/AppTools.hpp"
 #include "Main/CoreTools.hpp"
 
-CStoreDbManager::CStoreDbManager()
+CHubDbManager::CHubDbManager()
 {
     m_currentOS = Utils::OS::getCurrent();
 }
 
-void CStoreDbManager::initDb()
+void CHubDbManager::initDb()
 {
     createServerPluginsDb(m_hubConnectionName);
     createServerPluginsDb(m_workspaceConnectionName);
 }
 
-QSqlDatabase CStoreDbManager::getPluginsDatabase(CPluginModel::Type type) const
+QSqlDatabase CHubDbManager::getPluginsDatabase(CPluginModel::Type type) const
 {
     auto db = Utils::Database::connect(m_name, getDbConnectionName(type));
     if(db.isValid() == false)
@@ -43,7 +43,7 @@ QSqlDatabase CStoreDbManager::getPluginsDatabase(CPluginModel::Type type) const
     return db;
 }
 
-QString CStoreDbManager::getAllPluginsQuery(CPluginModel::Type type) const
+QString CHubDbManager::getAllPluginsQuery(CPluginModel::Type type) const
 {
     QString query;
     switch(type)
@@ -59,7 +59,7 @@ QString CStoreDbManager::getAllPluginsQuery(CPluginModel::Type type) const
     return query;
 }
 
-QString CStoreDbManager::getSearchQuery(CPluginModel::Type type, const QString &searchText) const
+QString CHubDbManager::getSearchQuery(CPluginModel::Type type, const QString &searchText) const
 {
     QString query;
     QString searchKey = Utils::Database::getFTSKeywords(searchText);
@@ -79,7 +79,7 @@ QString CStoreDbManager::getSearchQuery(CPluginModel::Type type, const QString &
     return query;
 }
 
-void CStoreDbManager::insertPlugins(CPluginModel* pModel)
+void CHubDbManager::insertPlugins(CPluginModel* pModel)
 {
     auto db = Utils::Database::connect(m_name, getDbConnectionName(pModel->getType()));
     if(db.isValid() == false)
@@ -262,7 +262,7 @@ void CStoreDbManager::insertPlugins(CPluginModel* pModel)
         throw CException(DatabaseExCode::INVALID_QUERY, qFts.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
+void CHubDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
 {
     if(procInfo.m_os != OSType::ALL && m_currentOS != procInfo.m_os)
         throw CException(CoreExCode::INVALID_PARAMETER, "This algorithm ("+ procInfo.m_name +") is not built for your platform.",  __func__, __FILE__, __LINE__);
@@ -340,7 +340,7 @@ void CStoreDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::updateLocalPluginModifiedDate(const QString pluginName)
+void CHubDbManager::updateLocalPluginModifiedDate(const QString pluginName)
 {
     QString modifiedDate = QDateTime::currentDateTime().toString(Qt::ISODate);
     QString queryStr = QString("UPDATE process SET modifiedDate='%1' WHERE name='%2'")
@@ -366,7 +366,7 @@ void CStoreDbManager::updateLocalPluginModifiedDate(const QString pluginName)
         throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::updateMemoryLocalPluginsInfo()
+void CHubDbManager::updateMemoryLocalPluginsInfo()
 {
     //Get server certification, votes and user reputation for all plugins
     auto dbServer = Utils::Database::connect(m_name, m_hubConnectionName);
@@ -403,7 +403,7 @@ void CStoreDbManager::updateMemoryLocalPluginsInfo()
         throw CException(DatabaseExCode::INVALID_QUERY, q2.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::clearServerRecords(CPluginModel::Type type)
+void CHubDbManager::clearServerRecords(CPluginModel::Type type)
 {
     auto db = getPluginsDatabase(type);
 
@@ -415,7 +415,7 @@ void CStoreDbManager::clearServerRecords(CPluginModel::Type type)
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CStoreDbManager::createServerPluginsDb(const QString &connectionName)
+void CHubDbManager::createServerPluginsDb(const QString &connectionName)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase(m_type, connectionName);
     if(!db.isValid())
@@ -441,7 +441,7 @@ void CStoreDbManager::createServerPluginsDb(const QString &connectionName)
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-QString CStoreDbManager::getDbConnectionName(CPluginModel::Type type) const
+QString CHubDbManager::getDbConnectionName(CPluginModel::Type type) const
 {
     QString dbConnectionName;
     switch(type)

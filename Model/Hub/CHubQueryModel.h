@@ -18,17 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTORETABLEMODEL_H
-#define CSTORETABLEMODEL_H
+#ifndef CHUBTABLEMODEL_H
+#define CHUBTABLEMODEL_H
 
 #include <QSqlQueryModel>
 #include "Model/User/CUser.h"
 
-class CStoreQueryModel : public QSqlQueryModel
+class CHubQueryModel : public QSqlQueryModel
 {
     public:
 
-        CStoreQueryModel(QObject *parent = Q_NULLPTR);
+        CHubQueryModel(QObject *parent = Q_NULLPTR);
 
         QVariant    data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
@@ -41,4 +41,4 @@ class CStoreQueryModel : public QSqlQueryModel
         CUser       m_user;
 };
 
-#endif // CSTORETABLEMODEL_H
+#endif // CHUBTABLEMODEL_H

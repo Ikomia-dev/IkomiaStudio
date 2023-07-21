@@ -71,7 +71,7 @@ CPluginModel::Type CPluginModel::getType() const
     return m_type;
 }
 
-CStoreQueryModel *CPluginModel::getModel() const
+CHubQueryModel *CPluginModel::getModel() const
 {
     return m_pModel;
 }
@@ -180,7 +180,7 @@ bool CPluginModel::isPluginExists(const QString &name) const
 
 void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatabase &db)
 {
-    m_pModel = new CStoreQueryModel;
+    m_pModel = new CHubQueryModel;
     m_pModel->setCurrentUser(user);
     m_pModel->setQuery(query, db);
 }

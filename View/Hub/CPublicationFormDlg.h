@@ -3,7 +3,7 @@
 
 #include "View/Common/CDialog.h"
 
-class CStoreQueryModel;
+class CHubQueryModel;
 
 class CPublicationFormDlg: public CDialog
 {

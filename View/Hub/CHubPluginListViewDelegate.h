@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREPLUGINLISTVIEWDELEGATE_H
-#define CSTOREPLUGINLISTVIEWDELEGATE_H
+#ifndef CHUBPLUGINLISTVIEWDELEGATE_H
+#define CHUBPLUGINLISTVIEWDELEGATE_H
 
 #include "View/Common/CListViewDelegate.h"
 #include "UtilsDefine.hpp"
 
-class CStoreQueryModel;
+class CHubQueryModel;
 
-class CStorePluginListViewDelegate: public CListViewDelegate
+class CHubPluginListViewDelegate: public CListViewDelegate
 {
     Q_OBJECT
 
@@ -35,7 +35,7 @@ class CStorePluginListViewDelegate: public CListViewDelegate
         enum Actions { NONE, INFO, INSTALL, PUBLISH };
         enum PluginSource { HUB, WORKSPACE, LOCAL };
 
-        CStorePluginListViewDelegate(int pluginSource, QObject* parent = nullptr);
+        CHubPluginListViewDelegate(int pluginSource, QObject* parent = nullptr);
 
     signals:
 
@@ -66,10 +66,10 @@ class CStorePluginListViewDelegate: public CListViewDelegate
         virtual void        paintLanguageIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
         virtual void        paintOSIcon(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
         virtual void        paintStars(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-        virtual QRect       paintName(QPainter* painter, const QStyleOptionViewItem &option, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
-        virtual QRect       paintShortDescription(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
-        virtual QRect       paintContributor(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
-        virtual void        paintCertification(QPainter* painter, const QStyleOptionViewItem& option, const CStoreQueryModel* pModel, const QModelIndex& index) const;
+        virtual QRect       paintName(QPainter* painter, const QStyleOptionViewItem &option, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
+        virtual QRect       paintShortDescription(QPainter* painter, int left, int top, int width, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
+        virtual QRect       paintContributor(QPainter* painter, int left, int top, int width, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const;
+        virtual void        paintCertification(QPainter* painter, const QStyleOptionViewItem& option, const CHubQueryModel* pModel, const QModelIndex& index) const;
 
     private:
 
@@ -77,4 +77,4 @@ class CStorePluginListViewDelegate: public CListViewDelegate
         int                 m_ribbonSize = 96;
 };
 
-#endif // CSTOREPLUGINLISTVIEWDELEGATE_H
+#endif // CHUBPLUGINLISTVIEWDELEGATE_H

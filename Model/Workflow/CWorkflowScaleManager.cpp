@@ -27,13 +27,13 @@ void CWorkflowScaleManager::onReplyReceived(QNetworkReply *pReply, RequestType r
 {
     if (pReply == nullptr)
     {
-        qCCritical(logStore).noquote() << "Invalid reply from Ikomia Scale";
+        qCCritical(logHub).noquote() << "Invalid reply from Ikomia Scale";
         return;
     }
 
     if(pReply->error() != QNetworkReply::NoError)
     {
-        qCCritical(logStore).noquote() << pReply->errorString();
+        qCCritical(logHub).noquote() << pReply->errorString();
         QString content(pReply->readAll());
         Utils::print(content.toStdString(), QtDebugMsg);
         pReply->deleteLater();
@@ -112,13 +112,13 @@ QJsonObject CWorkflowScaleManager::getJsonObject(QNetworkReply *pReply, const QS
     QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
     if(doc.isNull())
     {
-        qCCritical(logStore).noquote() << errorMsg << tr(": invalid JSON document");
+        qCCritical(logHub).noquote() << errorMsg << tr(": invalid JSON document");
         return QJsonObject();
     }
 
     if(doc.isObject() == false)
     {
-        qCCritical(logStore).noquote() << errorMsg << tr(":invalid JSON document structure");
+        qCCritical(logHub).noquote() << errorMsg << tr(":invalid JSON document structure");
         return QJsonObject();
     }
     return doc.object();
@@ -229,7 +229,7 @@ void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
 
     if(url.isValid() == false)
     {
-        qCDebug(logStore) << url.errorString();
+        qCDebug(logHub) << url.errorString();
         clearContext();
         return;
     }

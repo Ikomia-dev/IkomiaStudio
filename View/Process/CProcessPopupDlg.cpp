@@ -23,7 +23,7 @@ CProcessPopupDlg::CProcessPopupDlg(QWidget *parent, Qt::WindowFlags f):
     CDialog(tr("Algorithms"), parent, DEFAULT | MAXIMIZE_BUTTON, f)
 {
     //Important note: style CDialog::EFFECT_ENABLES must not be used.
-    //CStoreDlg includes a QWebEngineView based on QOpenGLWidget,
+    //CHubDlg includes a QWebEngineView based on QOpenGLWidget,
     //and graphics effects are not supported for OpenGL-based widgets.
     initLayout();
     initConnections();
