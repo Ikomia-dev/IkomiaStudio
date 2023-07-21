@@ -45,29 +45,29 @@ void CHubDlg::setCurrentUser(const CUser &user)
     m_pDocWidget->setCurrentUser(user);
 
     if (isVisible())
-    {
-        emit doGetHubModel();
-        emit doGetWorkspaceModel();
-        emit doGetLocalModel();
-    }
+        requestHubModels();
 }
 
 void CHubDlg::onSetPluginModel(CPluginModel *pModel)
 {
+    assert(pModel);
     QLabel* pLabelMsg;
     auto pQueryModel = pModel->getModel();
 
     switch(pModel->getType())
     {
         case CPluginModel::Type::HUB:
+            m_modelRequestStage = ModelRequestStage::HUB_DONE;
             m_pHubView->setModel(pQueryModel);
             pLabelMsg = m_pLabelMsgHub;
             break;
         case CPluginModel::Type::WORKSPACE:
+            m_modelRequestStage = ModelRequestStage::WORKSPACE_DONE;
             m_pWorkspaceView->setModel(pQueryModel);
             pLabelMsg = m_pLabelMsgWorkspace;
             break;
         case CPluginModel::Type::LOCAL:
+            m_modelRequestStage = ModelRequestStage::LOCAL_DONE;
             m_pLocalView->setModel(pQueryModel);
             pLabelMsg = m_pLabelMsgLocal;
             break;
@@ -88,6 +88,25 @@ void CHubDlg::onSetPluginModel(CPluginModel *pModel)
         connect(pQueryModel, &CHubQueryModel::modelReset, updateLabelMsg);
         updateLabelMsg();
     }
+    requestHubModels();
+}
+
+void CHubDlg::onModelError(CPluginModel *pModel)
+{
+    assert(pModel);
+    switch(pModel->getType())
+    {
+        case CPluginModel::Type::HUB:
+            m_modelRequestStage = ModelRequestStage::HUB_DONE;
+            break;
+        case CPluginModel::Type::WORKSPACE:
+            m_modelRequestStage = ModelRequestStage::WORKSPACE_DONE;
+            break;
+        case CPluginModel::Type::LOCAL:
+            m_modelRequestStage = ModelRequestStage::LOCAL_DONE;
+            break;
+    }
+    requestHubModels();
 }
 
 void CHubDlg::onShowPluginInfo(const QModelIndex &index)
@@ -349,11 +368,31 @@ void CHubDlg::showProcessInfo(const QModelIndex &index)
     m_pRightStackWidget->setCurrentIndex(1);
 }
 
+void CHubDlg::requestHubModels()
+{
+    switch (m_modelRequestStage)
+    {
+        case ModelRequestStage::IDLE:
+            emit doGetLocalModel();
+            m_modelRequestStage = ModelRequestStage::LOCAL_SENT;
+            break;
+        case ModelRequestStage::LOCAL_DONE:
+            emit doGetHubModel();
+            m_modelRequestStage = ModelRequestStage::HUB_SENT;
+            break;
+        case ModelRequestStage::HUB_DONE:
+            emit doGetWorkspaceModel();
+            m_modelRequestStage = ModelRequestStage::WORKSPACE_SENT;
+            break;
+        case ModelRequestStage::WORKSPACE_DONE:
+            m_modelRequestStage = ModelRequestStage::IDLE;
+            break;
+    }
+}
+
 void CHubDlg::showEvent(QShowEvent *event)
 {
-    emit doGetHubModel();
-    emit doGetWorkspaceModel();
-    emit doGetLocalModel();
+    requestHubModels();
     QDialog::showEvent(event);
 }
 

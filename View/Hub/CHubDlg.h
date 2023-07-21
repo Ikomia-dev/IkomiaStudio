@@ -35,6 +35,17 @@ class CHubDlg : public CDialog
 {
     Q_OBJECT
 
+    enum class ModelRequestStage : int
+    {
+        IDLE,
+        HUB_SENT,
+        HUB_DONE,
+        WORKSPACE_SENT,
+        WORKSPACE_DONE,
+        LOCAL_SENT,
+        LOCAL_DONE,
+    };
+
     public:
 
         CHubDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
@@ -59,6 +70,7 @@ class CHubDlg : public CDialog
     public slots:
 
         void            onSetPluginModel(CPluginModel* pModel);
+        void            onModelError(CPluginModel* pModel);
         void            onSetNextPublishInfo(const QModelIndex &index, const QJsonObject &publishInfo);
         void            onShowPluginInfo(const QModelIndex &index);
         void            onPublishPluginToWorkspace(const QModelIndex &index);
@@ -85,6 +97,8 @@ class CHubDlg : public CDialog
 
         void            showProcessInfo(const QModelIndex& index);
 
+        void            requestHubModels();
+
     private:
 
         CUser                   m_currentUser;
@@ -102,11 +116,12 @@ class CHubDlg : public CDialog
         QLabel*                 m_pLabelMsgHub = nullptr;
         QLabel*                 m_pLabelMsgWorkspace = nullptr;
         QLabel*                 m_pLabelMsgLocal = nullptr;
-        CHubPluginListView*   m_pHubView = nullptr;
-        CHubPluginListView*   m_pWorkspaceView = nullptr;
-        CHubPluginListView*   m_pLocalView = nullptr;
+        CHubPluginListView*     m_pHubView = nullptr;
+        CHubPluginListView*     m_pWorkspaceView = nullptr;
+        CHubPluginListView*     m_pLocalView = nullptr;
         CProcessDocWidget*      m_pDocWidget = nullptr;
         QPersistentModelIndex   m_currentModelIndex;
+        ModelRequestStage       m_modelRequestStage = ModelRequestStage::IDLE;
 };
 
 #endif // CHUBDLG_H

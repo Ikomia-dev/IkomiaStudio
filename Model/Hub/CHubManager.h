@@ -60,6 +60,7 @@ class CHubManager : public QObject
     signals:
 
         void            doSetPluginModel(CPluginModel* pModel);
+        void            doNotifyModelError(CPluginModel* pModel);
         void            doSetNextPublishInfo(const QModelIndex& index, const QJsonObject& publishInfo);
 
         void            doRestartIkomia();
@@ -131,16 +132,16 @@ class CHubManager : public QObject
 
         void            savePluginFolder(CPluginModel *pModel, QNetworkReply *pReply);
 
-        void            installPythonPluginDependencies(const QString& directory, const CTaskInfo &info, const CUser &user);
+        void            installPythonPluginDependencies(CPluginModel *pModel, const QString& directory, const CTaskInfo &info, const CUser &user);
 
         void            deletePlugin();
         void            deleteTranferFile();
 
-        void            clearContext();
+        void            clearContext(CPluginModel *pModel, bool bError);
 
         void            finalyzePublishHub();
         void            finalizePublishWorkspace();
-        void            finalizePluginInstall(const CTaskInfo &info, const CUser &user);
+        void            finalizePluginInstall(CPluginModel *pModel, const CTaskInfo &info, const CUser &user);
 
         void            sendNextPublishInfo(CPluginModel *pModel, QNetworkReply* pReply);
 

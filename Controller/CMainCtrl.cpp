@@ -465,6 +465,7 @@ void CMainCtrl::initHubConnections()
 
     //Model -> view
     connect(m_pModel->getHubManager(), &CHubManager::doSetPluginModel, m_pView->getHubView(), &CHubDlg::onSetPluginModel);
+    connect(m_pModel->getHubManager(), &CHubManager::doNotifyModelError, m_pView->getHubView(), &CHubDlg::onModelError);
     connect(m_pModel->getHubManager(), &CHubManager::doSetNextPublishInfo, m_pView->getHubView(), &CHubDlg::onSetNextPublishInfo);
 
     connect(m_pModel->getHubManager(), &CHubManager::doRestartIkomia, m_pView, &CMainView::onRestartIkomia, Qt::QueuedConnection);

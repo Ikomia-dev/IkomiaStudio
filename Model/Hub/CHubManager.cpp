@@ -204,14 +204,14 @@ void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, H
 {
     if (pReply == nullptr)
     {
-        clearContext();
+        clearContext(pModel, true);
         qCCritical(logHub).noquote() << "Invalid reply from Ikomia HUB";
         return;
     }
 
     if(pReply->error() != QNetworkReply::NoError)
     {
-        clearContext();
+        clearContext(pModel, true);
         qCCritical(logHub).noquote() << pReply->errorString();
         QString content(pReply->readAll());
         Utils::print(content.toStdString(), QtDebugMsg);
@@ -315,7 +315,7 @@ void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -345,7 +345,7 @@ void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -382,7 +382,7 @@ void CHubManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& 
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -781,7 +781,7 @@ void CHubManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pRe
     QJsonObject jsonPage = getJsonObject(pReply, tr("Error while retrieving algorithm list"));
     if (jsonPage.isEmpty())
     {
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -814,7 +814,7 @@ void CHubManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply)
     QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
     if (jsonPlugin.isEmpty())
     {
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -867,7 +867,7 @@ void CHubManager::validatePluginFolder(CPluginModel* pModel, const QStringList& 
     if(files.isEmpty())
     {
         qCCritical(logHub).noquote() << tr("Archive extraction failed: installation aborted");
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -905,13 +905,13 @@ void CHubManager::validatePluginFolder(CPluginModel* pModel, const QStringList& 
             validDstDir = checkCppPluginDirectory(dstDir, QString::fromStdString(procInfo.m_name));
 
         //Asynchronous call -> install plugin dependencies
-        installPythonPluginDependencies(validDstDir, procInfo, pluginUser);
+        installPythonPluginDependencies(pModel, validDstDir, procInfo, pluginUser);
     }
     catch(std::exception& e)
     {
         qCCritical(logHub).noquote().noquote() << QString::fromStdString(e.what());
         //Clean
-        clearContext();
+        clearContext(pModel, true);
     }
 }
 
@@ -1025,7 +1025,7 @@ void CHubManager::publishOrUpdateToWorkspace(const QString& zipFile)
         if(zipFile.isEmpty())
         {
             qCCritical(logHub).noquote() << tr("Compression of algorithm package failed, transfer to Ikomia HUB aborted");
-            clearContext();
+            clearContext(&m_localPluginModel, true);
             return;
         }
 
@@ -1040,7 +1040,7 @@ void CHubManager::publishOrUpdateToWorkspace(const QString& zipFile)
     catch(std::exception& e)
     {
         qCCritical(logHub).noquote() << QString::fromStdString(e.what());
-        clearContext();
+        clearContext(&m_localPluginModel, true);
     }
 }
 
@@ -1057,7 +1057,7 @@ void CHubManager::publishPluginToWorkspace()
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(&m_localPluginModel, true);
         return;
     }
 
@@ -1088,7 +1088,7 @@ void CHubManager::uploadPluginPackage()
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(&m_localPluginModel, true);
         return;
     }
 
@@ -1154,7 +1154,7 @@ void CHubManager::uploadPluginIcon(QNetworkReply* pReply)
     QJsonObject jsonResponse = getJsonObject(pReply, tr("Error in algorithm creation response from Ikomia HUB"));
     if (jsonResponse.isEmpty())
     {
-        clearContext();
+        clearContext(&m_localPluginModel, true);
         return;
     }
 
@@ -1177,7 +1177,7 @@ void CHubManager::uploadPluginIcon(const QString &strUrl)
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(&m_localPluginModel, true);
         return;
     }
 
@@ -1230,7 +1230,7 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
     QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorithm details"));
     if (jsonPlugin.isEmpty())
     {
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -1244,7 +1244,7 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
     if(url.isValid() == false)
     {
         qCDebug(logHub) << url.errorString();
-        clearContext();
+        clearContext(pModel, true);
         return;
     }
 
@@ -1315,7 +1315,7 @@ void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
                 ikomiaSettings.setValue(settingKey, pendingUpdates);
             }
 
-            clearContext();
+            clearContext(pModel, false);
 
             //Need to restart to make the copy
             auto buttons = QMessageBox::question(nullptr, tr("Restart required"),
@@ -1338,7 +1338,7 @@ void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
             catch (const boost::filesystem::filesystem_error& e)
             {
                 qCCritical(logHub).noquote() << QString::fromStdString(e.code().message());
-                clearContext();
+                clearContext(pModel, true);
                 return;
             }
         }
@@ -1348,16 +1348,16 @@ void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
     extractZipFile(pModel, downloadPath, destDir);
 }
 
-void CHubManager::installPythonPluginDependencies(const QString &directory, const CTaskInfo& info, const CUser& user)
+void CHubManager::installPythonPluginDependencies(CPluginModel* pModel, const QString &directory, const CTaskInfo& info, const CUser& user)
 {
     m_pProgressMgr->launchInfiniteProgress(tr("Installation of algorithm dependencies..."), false);
 
     QFutureWatcher<void>* pWatcher = new QFutureWatcher<void>(this);
-    connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, directory, info, user]
+    connect(pWatcher, &QFutureWatcher<bool>::finished, [this, pWatcher, pModel, directory, info, user]
     {
         m_pProgressMgr->endInfiniteProgress();
         checkInstalledModules(directory);
-        finalizePluginInstall(info, user);
+        finalizePluginInstall(pModel, info, user);
     });
 
     //Install dependencies into separate thread
@@ -1394,13 +1394,14 @@ void CHubManager::deleteTranferFile()
     m_pTranferFile = nullptr;
 }
 
-void CHubManager::clearContext()
+void CHubManager::clearContext(CPluginModel* pModel, bool bError)
 {
-    m_hubPluginModel.clearContext();
-    m_localPluginModel.clearContext();
-    m_workspacePluginModel.clearContext();
+    pModel->clearContext();
     m_pProgressMgr->endInfiniteProgress();
     m_bBusy = false;
+
+    if (bError)
+        emit doNotifyModelError(pModel);
 }
 
 void CHubManager::finalyzePublishHub()
@@ -1409,7 +1410,7 @@ void CHubManager::finalyzePublishHub()
     auto name = m_workspacePluginModel.getQStringField("name");
     qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to Ikomia HUB").arg(name);
     onRequestHubModel();
-    clearContext();
+    clearContext(&m_workspacePluginModel, false);
 }
 
 void CHubManager::finalizePublishWorkspace()
@@ -1419,12 +1420,12 @@ void CHubManager::finalizePublishWorkspace()
     emit m_progressSignal.doFinish();
     auto name =  m_localPluginModel.getQStringField("name");
     qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
-    clearContext();
+    clearContext(&m_localPluginModel, false);
     onRequestLocalModel();
     onRequestWorkspaceModel();
 }
 
-void CHubManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user)
+void CHubManager::finalizePluginInstall(CPluginModel* pModel, const CTaskInfo& info, const CUser& user)
 {
     //Insert or update plugin to file database
     try
@@ -1450,8 +1451,7 @@ void CHubManager::finalizePluginInstall(const CTaskInfo& info, const CUser& user
         qCWarning(logHub).noquote() << tr("Algorithm %1 was successfully installed but failed to load. Try to restart Ikomia Studio.").arg(name);
 
     //Clean
-    clearContext();
-    m_pProgressMgr->endInfiniteProgress();
+    clearContext(pModel, false);
 }
 
 void CHubManager::sendNextPublishInfo(CPluginModel* pModel, QNetworkReply *pReply)

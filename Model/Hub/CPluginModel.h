@@ -68,7 +68,7 @@ class CPluginModel
     private:
 
         Type                m_type = Type::HUB;
-        CHubQueryModel*   m_pModel = nullptr;
+        CHubQueryModel*     m_pModel = nullptr;
         QModelIndex         m_currentIndex = QModelIndex();
         QJsonArray          m_jsonPlugins;
         CUser               m_user;
