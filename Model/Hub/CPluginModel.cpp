@@ -208,7 +208,7 @@ void CPluginModel::updatePluginPackagesInfo(int index)
         {
             // Set Ikomia min and max versions
             QString ikomiaVersions = platform["ikomia"].toString();
-            QRegularExpression re(">=(\\d+.\\d+.\\d+),?<?(\\d*.?\\d*.?\\d*)");
+            QRegularExpression re(">=(\\d+\\.\\d+\\.?\\d*),?<?(\\d*\\.?\\d*\\.?\\d*)");
             QRegularExpressionMatch match = re.match(ikomiaVersions);
 
             if(match.hasMatch())
@@ -223,7 +223,7 @@ void CPluginModel::updatePluginPackagesInfo(int index)
         {
             // Get min and max versions
             QString pythonVersions = platform["python"].toString();
-            QRegularExpression re(">=(\\d+.\\d+.\\d*),?<?(\\d*.?\\d*.?\\d*)");
+            QRegularExpression re(">=(\\d+\\.\\d+\\.?\\d*),?<?(\\d*\\.?\\d*\\.?\\d*)");
             QRegularExpressionMatch match = re.match(pythonVersions);
 
             if(match.hasMatch())
