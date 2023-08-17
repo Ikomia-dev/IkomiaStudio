@@ -194,7 +194,7 @@ void CWorkflowScaleManager::createProject(const QString &name, const QString &de
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("scale_csrftoken"));
 
     QJsonObject project;
     project["name"] = name;
@@ -239,7 +239,7 @@ void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("scale_csrftoken"));
 
     // Build multi-part request
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);

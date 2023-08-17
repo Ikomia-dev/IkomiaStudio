@@ -579,7 +579,17 @@ QJsonObject CHubManager::createPluginPackagePayload(CPluginModel *pModel)
     {
         maxPythonVersion = pModel->getQStringField("maxPythonVersion");
         if (maxPythonVersion.isEmpty())
-            maxPythonVersion = QString::fromStdString(Utils::Python::getMaxSupportedVersion());
+        {
+            CSemanticVersion maxVersion(Utils::Python::getMaxSupportedVersion());
+            maxVersion.nextMinor();
+            maxPythonVersion = QString::fromStdString(maxVersion.toString());
+        }
+        else
+        {
+            CSemanticVersion maxVersion(maxPythonVersion.toStdString());
+            maxVersion.nextMinor();
+            maxPythonVersion = QString::fromStdString(maxVersion.toString());
+        }
     }
     package["python_max_version"] = maxPythonVersion;
 
@@ -999,7 +1009,7 @@ void CHubManager::publishToHub(const QModelIndex& index, const QJsonObject& info
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
 
     QJsonDocument payload(info);
     auto pReply = m_pNetworkMgr->put(request, payload.toJson());
@@ -1068,7 +1078,7 @@ void CHubManager::publishPluginToWorkspace()
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
 
     auto pReply = m_pNetworkMgr->post(request, jsonPayload);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -1098,7 +1108,7 @@ void CHubManager::uploadPluginPackage()
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
 
     // Build multi-part request
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -1199,7 +1209,7 @@ void CHubManager::uploadPluginIcon(const QString &strUrl)
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
 
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QHttpPart filePart;

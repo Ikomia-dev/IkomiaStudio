@@ -299,7 +299,7 @@ void CUserManager::disconnectUser(bool bSynchronous)
     QVariant cookieHeaders;
     cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
     request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("csrftoken"));
+    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
 
     auto pReply = m_pNetworkMgr->post(request, QByteArray());
     if(bSynchronous)
