@@ -74,9 +74,10 @@ QString CHubPluginListViewDelegate::getActionIconPath(int action) const
 
 bool CHubPluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, int index) const
 {
-    assert(itemIndex.isValid());
-    bool bEnable = true;
+    if (!itemIndex.isValid())
+        return false;
 
+    bool bEnable = true;
     switch(index)
     {
         case 0:
@@ -147,9 +148,12 @@ QPolygon CHubPluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem& o
 
 void CHubPluginListViewDelegate::paintText(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    assert(index.isValid());
+    if (!index.isValid())
+        return;
+
     auto pModel = static_cast<const CHubQueryModel*>(index.model());
-    assert(pModel);
+    if (!pModel)
+        return;
 
     QBrush brushHighlight = option.palette.highlight();
     QColor colorHighlight = brushHighlight.color();
@@ -190,9 +194,12 @@ void CHubPluginListViewDelegate::paintText(QPainter *painter, const QStyleOption
 
 void CHubPluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    assert(index.isValid());
+    if (!index.isValid())
+        return;
+
     auto pModel = static_cast<const CHubQueryModel*>(index.model());
-    assert(pModel);
+    if (!pModel)
+        return;
 
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
@@ -217,7 +224,13 @@ void CHubPluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QSty
 
 void CHubPluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    assert(index.isValid());
+    if (!index.isValid())
+        return;
+
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
+    if (!pModel)
+        return;
+
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
@@ -231,10 +244,9 @@ void CHubPluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOpti
                 m_btnSize.width(),
                 m_btnSize.height());
 
-    auto pModel = static_cast<const CHubQueryModel*>(index.model());
     int os = pModel->record(index.row()).value("os").toInt();
-
     QString pixmapPath;
+
     if(os == OSType::LINUX)
         pixmapPath = ":/Images/linux.png";
     else if(os == OSType::WIN)
@@ -251,9 +263,13 @@ void CHubPluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOpti
 
 void CHubPluginListViewDelegate::paintStars(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    assert(index.isValid());
+    if (!index.isValid())
+        return;
+
     auto pModel = static_cast<const CHubQueryModel*>(index.model());
-    assert(pModel);
+    if (!pModel)
+        return;
+
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
