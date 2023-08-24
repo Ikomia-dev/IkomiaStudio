@@ -41,7 +41,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-At Ikomia, we deeply believe that sharing scientific knowledge is the key to success. This belief drives us to make research-based algorithms ready-to-use for developers through our Python library ([Ikomia API](https://github.com/Ikomia-dev/IkomiaAPI))) and desktop software (Ikomia STUDIO).
+At Ikomia, we deeply believe that sharing scientific knowledge is the key to success. This belief drives us to make research-based algorithms ready-to-use for developers through our Python library ([Ikomia API](https://github.com/Ikomia-dev/IkomiaAPI)) and desktop software (Ikomia STUDIO).
 
 Our main goal is to convert existing Python code into easily accessible and deployable algorithms. This approach enables us to integrate repositories from researchers, labs, and renowned frameworks like [OpenCV](https://github.com/opencv/opencv), [Detectron2](https://github.com/facebookresearch/detectron2), [OpenMMLab](https://github.com/open-mmlab) and [Hugging Face](https://github.com/huggingface). 
 Within a unified framework, developers can craft workflows and seamlessly blend these cutting-edge algorithms, streamlining the integration process by eliminating its complexities.
