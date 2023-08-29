@@ -69,6 +69,7 @@ void CPythonPluginMaker::generate()
     createProcessFile(pluginFolder);
     createWidgetFile(pluginFolder);
     createTestFile(pluginFolder);
+    createReadmeFile(pluginFolder);
 
     //Requirements files
     QFile requirementsFile(pluginFolder + "/requirements.txt");
@@ -167,6 +168,27 @@ void CPythonPluginMaker::createTestFile(const QString& folder)
     }
     QTextStream testTextStream(&testFile);
     testTextStream << templateContent;
+}
+
+void CPythonPluginMaker::createReadmeFile(const QString &folder)
+{
+    QFile templateFile(":/Templates/Python/template_readme.md");
+    if(templateFile.open(QFile::ReadOnly | QFile::Text) == false)
+        throw CException(CoreExCode::INVALID_PARAMETER, QObject::tr("Read README template failed").toStdString(), __func__, __FILE__, __LINE__);
+
+    QTextStream txtStream(&templateFile);
+    auto templateContent = txtStream.readAll();
+    auto newContent = templateContent.replace("_algorithm_name_", m_name);
+    QString filePath = folder + "/README.md";
+    QFile readmeFile(filePath);
+
+    if(readmeFile.open(QIODevice::WriteOnly | QFile::Text | QFile::Truncate) == false)
+    {
+        std::string err = QObject::tr("Write README file to %1 failed").arg(filePath).toStdString();
+        throw CException(CoreExCode::INVALID_PARAMETER, err, __func__, __FILE__, __LINE__);
+    }
+    QTextStream testTextStream(&readmeFile);
+    testTextStream << newContent;
 }
 
 QString CPythonPluginMaker::getProcessBaseClass() const
