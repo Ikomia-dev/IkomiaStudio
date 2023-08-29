@@ -103,10 +103,11 @@ void CHubManager::onRequestNextPublishInfo(const QModelIndex &index)
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=]{
@@ -321,14 +322,11 @@ void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE)
-    {
-        QVariant cookieHeaders;
-        cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-        request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    }
+    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -351,14 +349,11 @@ void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE)
-    {
-        QVariant cookieHeaders;
-        cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-        request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    }
+    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -389,14 +384,11 @@ void CHubManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& 
     m_bBusy = true;
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE)
-    {
-        QVariant cookieHeaders;
-        cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-        request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    }
+    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -1005,11 +997,11 @@ void CHubManager::publishToHub(const QModelIndex& index, const QJsonObject& info
     m_bBusy = true;
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
+
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     QJsonDocument payload(info);
     auto pReply = m_pNetworkMgr->put(request, payload.toJson());
@@ -1073,12 +1065,11 @@ void CHubManager::publishPluginToWorkspace()
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->post(request, jsonPayload);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -1104,11 +1095,10 @@ void CHubManager::uploadPluginPackage()
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
 
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     // Build multi-part request
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -1205,11 +1195,10 @@ void CHubManager::uploadPluginIcon(const QString &strUrl)
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
 
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QHttpPart filePart;
@@ -1260,14 +1249,11 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE)
-    {
-        QVariant cookieHeaders;
-        cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-        request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    }
+    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pNewReply = m_pNetworkMgr->get(request);
     connect(pNewReply, &QNetworkReply::finished, [=](){

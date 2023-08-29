@@ -154,7 +154,7 @@ class CHubManager : public QObject
         CPluginManager*         m_pPluginMgr = nullptr;
         CProgressBarManager*    m_pProgressMgr = nullptr;
         CProgressSignalHandler  m_progressSignal;
-        CHubDbManager         m_dbMgr;
+        CHubDbManager           m_dbMgr;
         CPluginModel            m_hubPluginModel;
         CPluginModel            m_workspacePluginModel;
         CPluginModel            m_localPluginModel;

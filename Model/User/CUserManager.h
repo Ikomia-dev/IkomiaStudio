@@ -40,7 +40,7 @@ class CUserManager : public QObject
     public:
 
         enum Role { ADMINISTRATOR, USER };
-        enum Request { LOGIN, LOGOUT, GET_USER, GET_NAMESPACES };
+        enum Request { AUTH_TOKEN, GET_USER, GET_NAMESPACES };
 
         CUserManager();
         ~CUserManager();
@@ -61,24 +61,23 @@ class CUserManager : public QObject
 
     public slots:
 
-        void            onConnectUser(const QString& login, const QString& pwd, bool bRememberMe);
+        void            onConnectUser(const QString& username, const QString& pwd, bool bRememberMe);
         void            onDisconnectUser();
 
     private slots:
 
         void            onReplyReceived(QNetworkReply* pReply, Request requestType);
-        void            logoutDone();
-        void            onCheckSingleConnection();
 
     private:
 
         void            initDb();
-        void            initConnections();
+
+        void            createAuthToken(const QString &username, const QString &pwd);
 
         QByteArray      getBytesFromImage(const QString& path) const;
 
-        void            connectUser(const QString &login, const QString &pwd);
-        void            disconnectUser(bool bSynchronous);
+        void            connectUser(const QString &username, const QString &pwd, const QString &token);
+        void            disconnectUser();
 
         void            checkAutoLogin();
 
@@ -100,10 +99,10 @@ class CUserManager : public QObject
 
         QNetworkAccessManager*      m_pNetworkMgr = nullptr;
         CUser                       m_currentUser;
-        QList<QNetworkCookie>       m_sessionCookies;
-        QString                     m_loginTmp;
+        QString                     m_usernameTmp;
         QString                     m_pwdTmp;
-        QTimer*                     m_pTimerSingleConnection = nullptr;
+        bool                        m_bRememberMe = false;
+        const int                   m_tokenTTL = 28800;
 };
 
 #endif // CUSERMANAGER_H

@@ -34,7 +34,7 @@ QBreakpadHttpUploader::QBreakpadHttpUploader(QObject *parent) :
     QObject(parent),
     m_file(0)
 {
-
+    m_request.setRawHeader("User-Agent", "Ikomia Studio");
 }
 
 QBreakpadHttpUploader::QBreakpadHttpUploader(const QUrl &url, QObject *parent) :
@@ -42,6 +42,7 @@ QBreakpadHttpUploader::QBreakpadHttpUploader(const QUrl &url, QObject *parent) :
     m_file(0)
 {
     m_request.setUrl(url);
+    m_request.setRawHeader("User-Agent", "Ikomia Studio");
 }
 
 QBreakpadHttpUploader::~QBreakpadHttpUploader()

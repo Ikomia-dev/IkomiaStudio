@@ -138,11 +138,11 @@ void CWorkflowScaleManager::requestProjects(const QString &strUrl)
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    if (m_user.isConnected())
+        request.setRawHeader("Authorization", m_user.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -189,12 +189,11 @@ void CWorkflowScaleManager::createProject(const QString &name, const QString &de
 
     QNetworkRequest request;
     request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
     request.setRawHeader("Content-Type", "application/json");
 
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("scale_csrftoken"));
+    if (m_user.isConnected())
+        request.setRawHeader("Authorization", m_user.getAuthHeader());
 
     QJsonObject project;
     project["name"] = name;
@@ -236,10 +235,10 @@ void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
 
     QNetworkRequest request;
     request.setUrl(url);
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_user.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_user.getSessionCookie("scale_csrftoken"));
+    request.setRawHeader("User-Agent", "Ikomia Studio");
+
+    if (m_user.isConnected())
+        request.setRawHeader("Authorization", m_user.getAuthHeader());
 
     // Build multi-part request
     QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);

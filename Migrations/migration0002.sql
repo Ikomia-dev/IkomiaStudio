@@ -18,3 +18,5 @@ ALTER TABLE process ADD algoTasks TEXT;
 ALTER TABLE process DROP serverId;
 --Remove algorithm userId
 ALTER TABLE process DROP userId;
+--Add authentication token in User table
+ALTER TABLE user ADD token BLOB;

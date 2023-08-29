@@ -75,13 +75,10 @@ void CHubOnlineIconManager::loadIcons()
 
             QNetworkRequest request;
             request.setUrl(url);
+            request.setRawHeader("User-Agent", "Ikomia Studio");
 
             if (m_pModel->getType() == CPluginModel::Type::WORKSPACE)
-            {
-                QVariant cookieHeaders;
-                cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-                request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-            }
+                request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
             auto pReply = m_pNetworkMgr->get(request);
             connect(pReply, &QNetworkReply::finished, [=](){

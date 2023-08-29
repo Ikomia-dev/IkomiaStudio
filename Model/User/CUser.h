@@ -38,7 +38,7 @@ class CUser
 
         bool                    isConnected() const;
 
-        QByteArray              getSessionCookie(const QString& name);
+        QByteArray              getAuthHeader() const;
         CUserNamespace          getNamespace(const QString& name) const;
         QString                 getMyNamespaceUrl() const;
         std::vector<QString>    getNamespaceNames() const;
@@ -56,10 +56,9 @@ class CUser
         QString                     m_firstName;
         QString                     m_lastName;
         QString                     m_email;
-        QString                     m_token;
         QString                     m_url;
         QString                     m_namespaceUrl;
-        QList<QNetworkCookie>       m_sessionCookies;
+        QString                     m_token;
         std::vector<CUserNamespace> m_namespaces;
 };
 

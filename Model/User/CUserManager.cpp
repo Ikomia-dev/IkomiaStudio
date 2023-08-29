@@ -30,7 +30,6 @@
 
 CUserManager::CUserManager()
 {
-    m_pTimerSingleConnection = new QTimer(this);
 }
 
 CUserManager::~CUserManager()
@@ -40,7 +39,6 @@ CUserManager::~CUserManager()
 void CUserManager::init()
 {
     initDb();
-    initConnections();
 }
 
 void CUserManager::setManagers(QNetworkAccessManager *pNetworkMgr)
@@ -55,25 +53,20 @@ void CUserManager::notifyViewShow()
 
 void CUserManager::beforeAppClose()
 {
-    disconnectUser(true);
 }
 
-void CUserManager::onConnectUser(const QString &login, const QString &pwd, bool bRememberMe)
+void CUserManager::onConnectUser(const QString &username, const QString &pwd, bool bRememberMe)
 {
-    if(bRememberMe)
-    {
-        m_loginTmp = login;
-        m_pwdTmp = pwd;
-    }
-    else
+    m_bRememberMe = bRememberMe;
+    if(!m_bRememberMe)
         clearUserInfo();
 
-    connectUser(login, pwd);
+    connectUser(username, pwd, "");
 }
 
 void CUserManager::onDisconnectUser()
 {
-    disconnectUser(false);
+    disconnectUser();
 }
 
 void CUserManager::onReplyReceived(QNetworkReply *pReply, Request requestType)
@@ -87,17 +80,21 @@ void CUserManager::onReplyReceived(QNetworkReply *pReply, Request requestType)
     if(pReply->error() != QNetworkReply::NoError)
     {
         if(pReply->error() == QNetworkReply::ProtocolInvalidOperationError)
-            qCCritical(logUser).noquote() << tr("Invalid login or password");
+            qCCritical(logUser).noquote() << tr("Invalid username or password");
         else
             qCCritical(logUser).noquote() << pReply->errorString();
 
         pReply->deleteLater();
+
+        if (requestType == Request::GET_USER)
+            createAuthToken(m_usernameTmp, m_pwdTmp);
+
         return;
     }
 
     switch(requestType)
     {
-        case Request::LOGIN:
+        case Request::AUTH_TOKEN:
             loginDone(pReply);
             break;
         case Request::GET_USER:
@@ -106,27 +103,32 @@ void CUserManager::onReplyReceived(QNetworkReply *pReply, Request requestType)
         case Request::GET_NAMESPACES:
             fillUserNamespaces(pReply);
             break;
-        case Request::LOGOUT:
-            logoutDone();
-            break;
     }
     pReply->deleteLater();
 }
 
 void CUserManager::loginDone(QNetworkReply* pReply)
 {
-    QVariant cookieHeader = pReply->header(QNetworkRequest::SetCookieHeader);
-    if (!cookieHeader.isValid())
+    QJsonDocument doc = QJsonDocument::fromJson(pReply->readAll());
+    if(doc.isNull())
     {
-        qCCritical(logUser).noquote().noquote() << tr("Invalid connection reply from Ikomia Scale");
+        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document while getting authentication token");
+        manageGetUserInfoError();
         return;
     }
 
-    m_sessionCookies = cookieHeader.value<QList<QNetworkCookie>>();
+    if(doc.isObject() == false)
+    {
+        qCCritical(logUser).noquote().noquote() << tr("Invalid JSON document structure while getting authentication token");
+        manageGetUserInfoError();
+        return;
+    }
+    QJsonObject jsonToken = doc.object();
+    m_currentUser.m_token = jsonToken["clear_token"].toString();
     retrieveUserInfo();
     qCInfo(logUser).noquote() << tr("Connection successfull");
 
-    if(m_loginTmp.isEmpty() == false && m_pwdTmp.isEmpty() == false)
+    if(m_bRememberMe)
         saveLoginInfo();
 
     //Notify Matomo server
@@ -134,17 +136,6 @@ void CUserManager::loginDone(QNetworkReply* pReply)
     pPiwikTracker->sendEvent("main/user", "user", "connection", "User_Connected");
 
     emit doShowNotification(tr("Connection successfull"), Notification::INFO);
-    m_pTimerSingleConnection->start(Ikomia::_UserCheckFrequency);
-}
-
-void CUserManager::logoutDone()
-{
-    m_pTimerSingleConnection->stop();
-    qCInfo(logUser).noquote() << tr("User sucessfully disconnected");
-    m_currentUser.logout();
-    m_sessionCookies.clear();
-    clearUserInfo();
-    emit doSetCurrentUser(m_currentUser);
 }
 
 void CUserManager::fillUserInfo(QNetworkReply* pReply)
@@ -171,10 +162,10 @@ void CUserManager::fillUserInfo(QNetworkReply* pReply)
     connectedUser.m_email = jsonUser["email"].toString();
     connectedUser.m_url = jsonUser["url"].toString();
     connectedUser.m_namespaceUrl = jsonUser["namespace"].toString();
-    connectedUser.m_sessionCookies = m_sessionCookies;
 
     if(connectedUser != m_currentUser)
     {
+        connectedUser.m_token = m_currentUser.m_token;
         m_currentUser = connectedUser;
         retrieveUserNamespaces(Utils::Network::getBaseUrl() + "/v1/namespaces/");
     }
@@ -213,11 +204,6 @@ void CUserManager::fillUserNamespaces(QNetworkReply *pReply)
     }
 }
 
-void CUserManager::onCheckSingleConnection()
-{
-    retrieveUserInfo();
-}
-
 void CUserManager::initDb()
 {
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
@@ -231,14 +217,43 @@ void CUserManager::initDb()
     if(tables.contains("user") == false)
     {
         QSqlQuery q(db);
-        if(!q.exec(QString("CREATE TABLE user (id INTEGER PRIMARY KEY, login BLOB, password BLOB);")))
+        if(!q.exec(QString("CREATE TABLE user (id INTEGER PRIMARY KEY, login BLOB, password BLOB, token BLOB);")))
             qCCritical(logUser).noquote() << q.lastError().text();
     }
 }
 
-void CUserManager::initConnections()
+void CUserManager::createAuthToken(const QString &username, const QString &pwd)
 {
-    connect(m_pTimerSingleConnection, &QTimer::timeout, this, &CUserManager::onCheckSingleConnection);
+    // Basic authentication header
+    QString concatenated = username + ":" + pwd;
+    QByteArray authData = concatenated.toLocal8Bit().toBase64();
+    QString headerAuthData = "Basic " + authData;
+
+    // Request data for token creation
+    QJsonObject jsonData;
+    jsonData["name"] = "Ikomia Studio token";
+    jsonData["ttl"] = m_tokenTTL;
+    QJsonDocument jsonDoc(jsonData);
+
+    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/users/me/tokens/");
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logUser) << url.errorString();
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
+    request.setRawHeader("Content-Type", "application/json");
+    request.setRawHeader("Authorization", headerAuthData.toLocal8Bit());
+
+    auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, Request::AUTH_TOKEN);
+    });
 }
 
 QByteArray CUserManager::getBytesFromImage(const QString &path) const
@@ -251,68 +266,28 @@ QByteArray CUserManager::getBytesFromImage(const QString &path) const
     return bytes;
 }
 
-void CUserManager::connectUser(const QString &login, const QString &pwd)
+void CUserManager::connectUser(const QString &username, const QString &pwd, const QString& token)
 {
     assert(m_pNetworkMgr);
+    m_usernameTmp = username;
+    m_pwdTmp = pwd;
+    m_currentUser.m_token = token;
 
-    //Http request to login
-    QJsonObject jsonLogin;
-    jsonLogin["username"] = login;
-    jsonLogin["password"] = pwd;
-    QJsonDocument jsonDoc(jsonLogin);
-
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/accounts/signin/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
-    {
-        qCDebug(logUser) << url.errorString();
-        return;
-    }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("Content-Type", "application/json");
-
-    auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, Request::LOGIN);
-    });
+    if (token.isEmpty())
+        createAuthToken(username, pwd);
+    else
+        retrieveUserInfo();
 }
 
-void CUserManager::disconnectUser(bool bSynchronous)
+void CUserManager::disconnectUser()
 {
     assert(m_pNetworkMgr);
-
-    //Http request to logout
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/accounts/signout/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
-    {
-        qCDebug(logUser) << url.errorString();
-        return;
-    }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_currentUser.m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
-    request.setRawHeader("X-CSRFToken", m_currentUser.getSessionCookie("scale_csrftoken"));
-
-    auto pReply = m_pNetworkMgr->post(request, QByteArray());
-    if(bSynchronous)
-    {
-        while(pReply->isFinished() == false)
-            QCoreApplication::processEvents();
-    }
-    else
-    {
-        connect(pReply, &QNetworkReply::finished, [=](){
-           this->onReplyReceived(pReply, Request::LOGOUT);
-        });
-    }
+    qCInfo(logUser).noquote() << tr("User sucessfully disconnected");
+    m_currentUser.logout();
+    m_usernameTmp.clear();
+    m_pwdTmp.clear();
+    clearUserInfo();
+    emit doSetCurrentUser(m_currentUser);
 }
 
 void CUserManager::checkAutoLogin()
@@ -325,7 +300,7 @@ void CUserManager::checkAutoLogin()
     }
 
     QSqlQuery q(db);
-    if(!q.exec("SELECT login, password FROM user;"))
+    if(!q.exec("SELECT login, password, token FROM user;"))
     {
         qCCritical(logUser).noquote() << q.lastError().text();
         return;
@@ -339,9 +314,12 @@ void CUserManager::checkAutoLogin()
         QByteArray hashIV = QCryptographicHash::hash(getBytesFromImage(":/Images/iv.png"), QCryptographicHash::Md5);
         QByteArray decodedLogin = encryption.decode(q.value(0).toByteArray(), hashKey, hashIV);
         QByteArray decodedPwd = encryption.decode(q.value(1).toByteArray(), hashKey, hashIV);
+        QByteArray decodedToken = encryption.decode(q.value(2).toByteArray(), hashKey, hashIV);
         QString strLogin = QString(encryption.removePadding(decodedLogin));
         QString strPwd = QString(encryption.removePadding(decodedPwd));
-        connectUser(strLogin, strPwd);
+        QString strToken = QString(encryption.removePadding(decodedToken));
+        m_bRememberMe = true;
+        connectUser(strLogin, strPwd, strToken);
     }
 }
 
@@ -361,9 +339,10 @@ void CUserManager::retrieveUserInfo()
 
     QNetworkRequest request;
     request.setUrl(url);
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
+
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -387,9 +366,8 @@ void CUserManager::retrieveUserNamespaces(const QString& strUrl)
 
     QNetworkRequest request;
     request.setUrl(url);
-    QVariant cookieHeaders;
-    cookieHeaders.setValue<QList<QNetworkCookie>>(m_sessionCookies);
-    request.setHeader(QNetworkRequest::CookieHeader, cookieHeaders);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
+    request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pReply = m_pNetworkMgr->get(request);
     connect(pReply, &QNetworkReply::finished, [=](){
@@ -399,14 +377,9 @@ void CUserManager::retrieveUserNamespaces(const QString& strUrl)
 
 void CUserManager::manageGetUserInfoError()
 {
-    m_pTimerSingleConnection->stop();
     m_currentUser.logout();
-    m_sessionCookies.clear();
     emit doSetCurrentUser(m_currentUser);
-    emit doShowNotification(tr("You have been disconnected.\nMain reasons are internet connection issues or concurrent login for a single account."),
-                            Notification::INFO,
-                            nullptr,
-                            5000);
+    emit doShowNotification(tr("Authentication failed"), Notification::INFO, nullptr, 5000);
 }
 
 void CUserManager::saveLoginInfo()
@@ -414,8 +387,9 @@ void CUserManager::saveLoginInfo()
     QAESEncryption encryption(QAESEncryption::AES_256, QAESEncryption::CBC);
     QByteArray hashKey = QCryptographicHash::hash(getBytesFromImage(":/Images/key.png"), QCryptographicHash::Sha256);
     QByteArray hashIV = QCryptographicHash::hash(getBytesFromImage(":/Images/iv.png"), QCryptographicHash::Md5);
-    QByteArray encodedLogin = encryption.encode(m_loginTmp.toLocal8Bit(), hashKey, hashIV);
+    QByteArray encodedUsername = encryption.encode(m_usernameTmp.toLocal8Bit(), hashKey, hashIV);
     QByteArray encodedPwd = encryption.encode(m_pwdTmp.toLocal8Bit(), hashKey, hashIV);
+    QByteArray encodedToken = encryption.encode(m_currentUser.m_token.toLocal8Bit(), hashKey, hashIV);
 
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
     if(db.isValid() == false)
@@ -428,9 +402,10 @@ void CUserManager::saveLoginInfo()
     clearUserInfo();
 
     QSqlQuery q(db);
-    q.prepare("INSERT INTO user (login, password) VALUES (:login, :password);");
-    q.bindValue(":login", encodedLogin);
+    q.prepare("INSERT INTO user (login, password, token) VALUES (:login, :password, :token);");
+    q.bindValue(":login", encodedUsername);
     q.bindValue(":password", encodedPwd);
+    q.bindValue(":token", encodedToken);
 
     if(!q.exec())
         qCCritical(logUser).noquote() << q.lastError().text();
@@ -438,9 +413,6 @@ void CUserManager::saveLoginInfo()
 
 void CUserManager::clearUserInfo()
 {
-    m_loginTmp.clear();
-    m_pwdTmp.clear();
-
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
     if(db.isValid() == false)
     {

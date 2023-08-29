@@ -115,7 +115,6 @@ namespace Ikomia
     };
 
     constexpr int _NotifDefaultDuration = 1500; //1.5s
-    constexpr int _UserCheckFrequency = 600000; //10min
 
     constexpr auto _DefaultDirImg = "default_dir_img";
     constexpr auto _DefaultDirImgExport = "default_dir_img_export";

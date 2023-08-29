@@ -52,17 +52,12 @@ bool CUser::operator!=(const CUser &other) const
 
 bool CUser::isConnected() const
 {
-    return m_sessionCookies.size() > 0;
+    return !m_token.isEmpty();
 }
 
-QByteArray CUser::getSessionCookie(const QString &name)
+QByteArray CUser::getAuthHeader() const
 {
-    for (int i=0; i<m_sessionCookies.size(); ++i)
-    {
-        if (m_sessionCookies[i].name() == name)
-            return m_sessionCookies[i].value();
-    }
-    return nullptr;
+    return QString("Token %1").arg(m_token).toLocal8Bit();
 }
 
 CUserNamespace CUser::getNamespace(const QString &name) const
@@ -103,7 +98,6 @@ void CUser::logout()
     m_token.clear();
     m_url.clear();
     m_namespaces.clear();
-    m_sessionCookies.clear();
 }
 
 void CUser::addNamespace(const QJsonObject &ns)
