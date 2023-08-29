@@ -70,6 +70,7 @@ void CPythonPluginMaker::generate()
     createWidgetFile(pluginFolder);
     createTestFile(pluginFolder);
     createReadmeFile(pluginFolder);
+    createImageFolder(pluginFolder);
 
     //Requirements files
     QFile requirementsFile(pluginFolder + "/requirements.txt");
@@ -189,6 +190,15 @@ void CPythonPluginMaker::createReadmeFile(const QString &folder)
     }
     QTextStream testTextStream(&readmeFile);
     testTextStream << newContent;
+}
+
+void CPythonPluginMaker::createImageFolder(const QString &folder)
+{
+    QDir dir;
+    dir.mkpath(folder + "/images");
+    auto iconPath = folder + "/images/icon.png";
+    QPixmap pixmap = QPixmap(":/Images/default-process.png");
+    pixmap.save(iconPath, "PNG");
 }
 
 QString CPythonPluginMaker::getProcessBaseClass() const
