@@ -26,15 +26,15 @@
 
 ## :rocket: Use with Ikomia API
 
-1. Install Ikomia API
+#### 1. Install Ikomia API
 
-We strongly recommend using a virtual environment. If you're not sure where to start, we offer a tutorial [here](https://ikomia-dev.github.io/python-api-documentation/bonus/virtual_env.html).
+We strongly recommend using a virtual environment. If you're not sure where to start, we offer a tutorial [here](https://www.ikomia.ai/blog/a-step-by-step-guide-to-creating-virtual-environments-in-python).
 
 ```sh
 pip install ikomia
 ```
 
-2. Create your workflow
+#### 2. Create your workflow
 
 [Change the sample image URL to fit algorithm purpose]
 
@@ -52,15 +52,13 @@ algo = wf.add_task(name="_algorithm_name_", auto_connect=True)
 wf.run_on(url="example_image.png")
 ```
 
-## :rocket: Use with Ikomia Studio
+## :sunny: Use with Ikomia Studio
 
-1. If you are not an Ikomia Studio user yet, you can install it from the [following page](https://www.ikomia.ai/studio).
-2. Start Ikomia Studio software
-3. Open Ikomia HUB
-4. Search and install **_algorithm_name_**
-5. Add **_algorithm_name_** in a workflow and visualize results
+Ikomia Studio offers a friendly UI with the same features as the API.
 
-If you need more resources for your first steps with Ikomia Studio, you can consult the [following blog post](https://www.ikomia.ai/blog/how-to-use-ikomia-studio).
+- If you haven't started using Ikomia Studio yet, download and install it from [this page](https://www.ikomia.ai/studio).
+
+- For additional guidance on getting started with Ikomia Studio, check out [this blog post](https://www.ikomia.ai/blog/how-to-get-started-with-ikomia-studio).
 
 ## :pencil: Set algorithm parameters
 
@@ -89,9 +87,9 @@ wf.run_on(url="example_image.png")
 
 ```
 
-## :tada: Explore algorithm outputs
+## :mag: Explore algorithm outputs
 
-Each algorithm has specific outputs, but you can explore them the same way with Ikomia API. Please consult the [documentation](https://ikomia-dev.github.io/python-api-documentation/advanced_guide/IO_management.html) to go deeper in algorithm outputs management.
+Every algorithm produces specific outputs, yet they can be explored them the same way using the Ikomia API. For a more in-depth understanding of managing algorithm outputs, please refer to the [documentation](https://ikomia-dev.github.io/python-api-documentation/advanced_guide/IO_management.html).
 
 ```python
 import ikomia
