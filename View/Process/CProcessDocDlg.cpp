@@ -56,7 +56,7 @@ CProcessDocWidget *CProcessDocDlg::getDocWidget()
 
 void CProcessDocDlg::initLayout()
 {
-    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::EDIT);
+    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::NONE);
     auto pMainLayout = getContentLayout();
     pMainLayout->addWidget(m_pDocWidget);
 }

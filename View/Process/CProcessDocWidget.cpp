@@ -20,7 +20,6 @@
 #include <QtWidgets>
 #include "Main/AppTools.hpp"
 #include "CProcessDocFrame.h"
-#include "CProcessEditDocFrame.h"
 #include "Core/CPluginTools.h"
 
 CProcessDocWidget::CProcessDocWidget(int actions, QWidget *parent, Qt::WindowFlags f)
@@ -28,7 +27,6 @@ CProcessDocWidget::CProcessDocWidget(int actions, QWidget *parent, Qt::WindowFla
 {
     m_actions = actions;
     initLayout();
-    initConnections();
 }
 
 void CProcessDocWidget::setCurrentUser(const CUser &user)
@@ -43,12 +41,6 @@ void CProcessDocWidget::setProcessInfo(const CTaskInfo& info, bool bFromHub)
 
     if(m_pDocFrame)
         m_pDocFrame->setProcessInfo(info);
-
-    if(m_pEditDocFrame)
-    {
-        m_pEditDocFrame->setCurrentUser(m_currentUser);
-        m_pEditDocFrame->setProcessInfo(info);
-    }
 }
 
 void CProcessDocWidget::onShowSourceCode()
@@ -63,19 +55,6 @@ void CProcessDocWidget::onShowSourceCode()
     }
     else if(!m_processInfo.m_repo.empty())
         QDesktopServices::openUrl(QUrl(QString::fromStdString(m_processInfo.m_repo)));
-}
-
-void CProcessDocWidget::onExportDocumentation()
-{
-    QString pluginDir;;
-    if(m_processInfo.m_language == ApiLanguage::CPP)
-        pluginDir = Utils::CPluginTools::getCppPluginFolder(QString::fromStdString(m_processInfo.m_name));
-    else
-        pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
-
-    auto path = Utils::File::saveFile(this, tr("Export documentation"), pluginDir, tr("HTML (*.html *.htm);;Markdown (*.md)"), QStringList({"html", "htm", "md"}), ".html");
-    if(!path.isEmpty())
-        m_pDocFrame->saveContent(path);
 }
 
 void CProcessDocWidget::showEvent(QShowEvent *event)
@@ -95,23 +74,10 @@ void CProcessDocWidget::initLayout()
         pActionsLayout->addWidget(pBackBtn);
     }
 
-    if(m_actions & EDIT)
-    {
-        QPushButton* pEditBtn = new QPushButton(QIcon(":/Images/edit.png"), " ");
-        pEditBtn->setToolTip(tr("Edit documentation"));
-        connect(pEditBtn, &QPushButton::clicked, [&]{ m_pStackWidget->setCurrentIndex(1); });
-        pActionsLayout->addWidget(pEditBtn);
-    }
-
     QPushButton* pCodeBtn = new QPushButton(QIcon(":/Images/code.png"), "Source code");
     pCodeBtn->setToolTip(tr("Open code source folder"));
     connect(pCodeBtn, &QPushButton::clicked, this, &CProcessDocWidget::onShowSourceCode);
     pActionsLayout->addWidget(pCodeBtn);
-
-    m_pExportDocBtn = new QPushButton(QIcon(":/Images/export.png"), "Export documentation");
-    m_pExportDocBtn->setToolTip(tr("Export algorithm documentation to file"));
-    connect(m_pExportDocBtn, &QPushButton::clicked, this, &CProcessDocWidget::onExportDocumentation);
-    pActionsLayout->addWidget(m_pExportDocBtn);
 
     m_pInstallBtn = new QPushButton(QIcon(":/Images/download-color.png"), "Install algorithm");
     m_pInstallBtn->setToolTip(tr("Install algorithm from Ikomia HUB"));
@@ -122,26 +88,13 @@ void CProcessDocWidget::initLayout()
     pActionsLayout->addStretch(1);
 
     m_pDocFrame = new CProcessDocFrame;
-    m_pEditDocFrame = new CProcessEditDocFrame;
 
     m_pStackWidget = new QStackedWidget;
     m_pStackWidget->addWidget(m_pDocFrame);
-    m_pStackWidget->addWidget(m_pEditDocFrame);
 
     QVBoxLayout* pMainLayout = new QVBoxLayout;
     pMainLayout->addLayout(pActionsLayout);
     pMainLayout->addWidget(m_pStackWidget);
 
     setLayout(pMainLayout);
-}
-
-void CProcessDocWidget::initConnections()
-{
-    connect(m_pEditDocFrame, &CProcessEditDocFrame::doCancel, [&]{ m_pStackWidget->setCurrentIndex(0); });
-    connect(m_pEditDocFrame, &CProcessEditDocFrame::doSave, [&](bool bFullEdit, const CTaskInfo& info)
-    {
-        emit doSave(bFullEdit, info);
-        m_pDocFrame->setProcessInfo(info);
-        m_pStackWidget->setCurrentIndex(0);
-    });
 }

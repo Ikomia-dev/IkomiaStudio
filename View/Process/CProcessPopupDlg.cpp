@@ -261,7 +261,7 @@ QWidget *CProcessPopupDlg::createRightWidget()
     pProcessListViewWidget->setLayout(pVProcessViewLayout);
 
     //2 - Documentation widget
-    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::EDIT|CProcessDocWidget::BACK);
+    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::BACK);
 
     //Add to stacked widget
     m_pRightStackedWidget = new QStackedWidget;

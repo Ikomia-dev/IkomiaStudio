@@ -308,7 +308,7 @@ QWidget *CHubDlg::createRightWidget()
     //------------------------//
     //- Documentation widget -//
     //------------------------//
-    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::EDIT|CProcessDocWidget::BACK);
+    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::BACK);
 
     //-----------------------//
     //- Global stack widget -//

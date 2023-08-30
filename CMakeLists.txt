@@ -402,8 +402,6 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Process/CProcessDocFrame.h
     View/Process/CProcessDocWidget.cpp
     View/Process/CProcessDocWidget.h
-    View/Process/CProcessEditDocFrame.cpp
-    View/Process/CProcessEditDocFrame.h
     View/Process/CProcessListPopup.cpp
     View/Process/CProcessListPopup.h
     View/Process/CProcessListView.cpp
