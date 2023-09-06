@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/icon.png" alt="Algorithm icon" width="100%" height="100%">
+  <img src="images/icon.png" alt="Algorithm icon">
   <h1 align="center">_algorithm_name_</h1>
 </div>
 <br />
