@@ -822,7 +822,6 @@ void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, s
 
     auto name = QString::fromStdString(Utils::String::dbFormat(info.getName()));
     auto shortDescription = QString::fromStdString(Utils::String::dbFormat(info.getShortDescription()));
-    auto description = QString::fromStdString(Utils::String::dbFormat(info.getDescription()));
     auto keywords = QString::fromStdString(Utils::String::dbFormat(info.getKeywords()));
     auto authors = QString::fromStdString(Utils::String::dbFormat(info.getAuthors()));
     auto article = QString::fromStdString(Utils::String::dbFormat(info.getArticle()));
@@ -840,14 +839,14 @@ void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, s
     auto algoTasks = QString::fromStdString(Utils::String::dbFormat(info.getAlgoTasks()));
 
     if (!q.exec(QString("INSERT INTO process"
-                        "(id, name, shortDescription, description, keywords, authors, article, articleUrl, journal, year, "
+                        "(id, name, shortDescription, keywords, authors, article, articleUrl, journal, year, "
                         "docLink, version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, language, "
                         "os, isInternal, iconPath, folderId, license, repository, originalRepository, algoType, algoTasks) "
                         "VALUES "
-                        "(%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', %10, "
+                        "(%1, '%2', '%3', '%5', '%6', '%7', '%8', '%9', %10, "
                         "'%11', '%12', '%13', '%14', '%15', '%16', %17, "
                         "%18, %19, '%20', %21, '%22', '%23', '%24', %25, '%26');")
-                .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(articleUrl).arg(journal).arg(info.getYear())
+                .arg(id).arg(name).arg(shortDescription).arg(keywords).arg(authors).arg(article).arg(articleUrl).arg(journal).arg(info.getYear())
                 .arg(docLink).arg(version).arg(minIkVersion).arg(maxIkVersion).arg(minPythonVersion).arg(maxPythonVersion).arg(language)
                 .arg(os).arg(bInternal).arg(iconPath).arg(folderId).arg(license).arg(repo).arg(originalRepo).arg((int)info.m_algoType).arg(algoTasks)))
     {
@@ -855,9 +854,9 @@ void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, s
     }
 
     if (!q.exec(QString("INSERT INTO processFTS "
-                        "(id, name, shortDescription, description, keywords, authors, article, journal) "
-                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8');")
-                .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal)))
+                        "(id, name, shortDescription, keywords, authors, article, journal) "
+                        "VALUES (%1, '%2', '%3', '%5', '%6', '%7', '%8');")
+                .arg(id).arg(name).arg(shortDescription).arg(keywords).arg(authors).arg(article).arg(journal)))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }

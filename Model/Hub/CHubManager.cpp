@@ -438,7 +438,7 @@ QByteArray CHubManager::createPluginPayload(CPluginModel* pModel)
     plugin["short_description"] = shortDescription;
 
     //Description - mandatory
-    QString description = pModel->getQStringField("description");
+    QString description = pModel->getDescription();
     if(description.isEmpty())
         description = shortDescription;
 
@@ -927,9 +927,9 @@ void CHubManager::generateZipFile()
 
     QString pluginDir;
     if(language == ApiLanguage::CPP)
-        pluginDir = Utils::CPluginTools::getCppPluginFolder(name);
+        pluginDir = QString::fromStdString(Utils::CPluginTools::getCppValidPluginFolder(name.toStdString()));
     else if(language == ApiLanguage::PYTHON)
-        pluginDir = Utils::CPluginTools::getPythonPluginFolder(name);
+        pluginDir = QString::fromStdString(Utils::CPluginTools::getPythonPluginFolder(name.toStdString()));
 
     if(pluginDir.isEmpty())
     {

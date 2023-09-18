@@ -29,7 +29,7 @@ class CPluginModel
         void                setPackageFile(const QString& file);
 
         Type                getType() const;
-        CHubQueryModel*   getModel() const;
+        CHubQueryModel*     getModel() const;
         CUser               getCurrentUser() const;
         QModelIndex         getCurrentIndex() const;
         QString             getCurrentWorkspace() const;
@@ -42,6 +42,7 @@ class CPluginModel
         int                 getTotalPluginCount() const;
         ApiLanguage         getLanguageFromString(const QString strLanguage) const;
         QString             getPackageFile() const;
+        QString             getDescription() const;
 
         bool                isComplete() const;
         bool                isPluginExists(const QString& name) const;

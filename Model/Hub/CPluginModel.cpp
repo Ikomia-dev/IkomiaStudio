@@ -1,5 +1,6 @@
 #include "CPluginModel.h"
 #include "UtilsTools.hpp"
+#include "Core/CPluginTools.h"
 
 CPluginModel::CPluginModel(Type type)
 {
@@ -160,6 +161,11 @@ ApiLanguage CPluginModel::getLanguageFromString(const QString strLanguage) const
 QString CPluginModel::getPackageFile() const
 {
     return m_packageFile;
+}
+
+QString CPluginModel::getDescription() const
+{
+    return QString::fromStdString(Utils::CPluginTools::getDescription(getStringField("name")));
 }
 
 bool CPluginModel::isComplete() const

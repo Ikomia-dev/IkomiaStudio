@@ -47,7 +47,7 @@ void CProcessDocWidget::onShowSourceCode()
 {
     if(m_processInfo.m_language == ApiLanguage::PYTHON)
     {
-        auto pluginDir = Utils::CPluginTools::getPythonPluginFolder(QString::fromStdString(m_processInfo.m_name));
+        auto pluginDir = QString::fromStdString(Utils::CPluginTools::getPythonPluginFolder(m_processInfo.m_name));
         if(!pluginDir.isEmpty() && Utils::File::isFileExist(pluginDir.toStdString()))
             Utils::File::showLocation(pluginDir);
         else if(!m_processInfo.m_repo.empty())

@@ -53,9 +53,9 @@ TaskFactoryPtr CPluginManager::loadProcessPlugin(const QString &name, int langua
     try
     {
         if (language == ApiLanguage::PYTHON)
-            m_pRegistry->loadPythonPlugin(Utils::CPluginTools::getPythonPluginFolder(name).toStdString());
+            m_pRegistry->loadPythonPlugin(Utils::CPluginTools::getPythonPluginFolder(name.toStdString()));
         else if (language == ApiLanguage::CPP)
-            m_pRegistry->loadCppPlugin(Utils::CPluginTools::getCppPluginFolder(name).toStdString());
+            m_pRegistry->loadCppPlugin(Utils::CPluginTools::getCppValidPluginFolder(name.toStdString()));
 
         return m_pRegistry->getTaskFactory(name.toStdString());
     }
@@ -108,30 +108,30 @@ void CPluginManager::onRequestPythonDependencyModel(const QString pluginName)
 
 void CPluginManager::onEditPythonPlugin(const QString &pluginName)
 {
-    QString pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
-    if(pluginDir.isEmpty())
+    std::string name = pluginName.toStdString();
+    std::string pluginDir = Utils::CPluginTools::getPythonPluginFolder(name);
+
+    if(pluginDir.empty())
     {
         qCCritical(logPlugin).noquote() << tr("Editing failed: unable to find directory for plugin %1").arg(pluginName);
         return;
     }
 
     //Edit the Python file where the algorithm is implemented
-    QString processFile = pluginDir + "/" + pluginName + "_process.py";
-    if(boost::filesystem::exists(processFile.toStdString()) == false)
-    {
-        qCCritical(logPlugin).noquote() << tr("Editing failed: file %1 does not exist").arg(processFile);
-        return;
-    }
-    QDesktopServices::openUrl(QUrl::fromLocalFile(processFile));
+    std::string processFile = pluginDir + "/" + name + "_process.py";
+    if(boost::filesystem::exists(processFile) == false)
+        qCCritical(logPlugin).noquote() << tr("Editing failed: file %1 does not exist").arg(QString::fromStdString(processFile));
+    else
+        QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdString(processFile)));
 }
 
 void CPluginManager::onShowLocation(const QString &pluginName, int language)
 {
     QString pluginDir;
     if(language == ApiLanguage::PYTHON)
-        pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
+        pluginDir = QString::fromStdString(Utils::CPluginTools::getPythonPluginFolder(pluginName.toStdString()));
     else
-        pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
+        pluginDir = QString::fromStdString(Utils::CPluginTools::getCppValidPluginFolder(pluginName.toStdString()));
 
     if(pluginDir.isEmpty() == false)
         Utils::File::showLocation(pluginDir);

@@ -65,49 +65,20 @@ void CProcessDocFrame::initLayout()
 
 void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
 {
-    QString pluginDir;
-    QString pluginName = QString::fromStdString(info.m_name);
-
-    if(info.m_language == ApiLanguage::CPP)
-        pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
-    else
-        pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
-
-    QString docFilePath;
-    QDir qpluginDir(pluginDir);
-
-    // Check if local doc file exists
-    foreach (QString fileName, qpluginDir.entryList(QDir::Files|QDir::NoSymLinks))
-    {
-        if(m_docFiles.contains(fileName))
-        {
-            docFilePath = qpluginDir.absoluteFilePath(fileName);
-            break;
-        }
-    }
-
-    if(!docFilePath.isEmpty())
-    {
-        // Load doc file
-        QFile file(docFilePath);
-        if(file.open(QFile::ReadOnly | QFile::Text) == false)
-        {
-            docFilePath.clear();
-            qWarning().noquote() << tr("Found local document file for plugin %1 but loading failed.").arg(pluginName);
-        }
-        else
-        {
-            QString mdContent(file.readAll());
-            updateLocalPath(mdContent, pluginName);
-            m_pDoc->setMarkdown(mdContent);
-        }
-    }
-
-    if(docFilePath.isEmpty())
+    std::string mdContent = Utils::CPluginTools::getDescription(info.m_name);
+    if (mdContent.empty())
     {
         // Generate doc from plugin metadata
-        QString mdContent = generateMarkdown(info);
-        m_pDoc->setMarkdown(mdContent);
+        QString qmdContent = generateMarkdown(info);
+        m_pDoc->setMarkdown(qmdContent);
+    }
+    else
+    {
+        // Remove HTML part
+        QRegularExpression re("<(?s).+</.+>");
+        QString qmdContent = QString::fromStdString(mdContent);
+        qmdContent.replace(re, "");
+        m_pDoc->setMarkdown(qmdContent, QTextDocument::MarkdownFeature::MarkdownDialectGitHub);
     }
 }
 
@@ -167,7 +138,7 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     newContent = newContent.replace("_created_", QString::fromStdString(info.m_createdDate));
 
     //Description
-    newContent = newContent.replace("_description_", QString::fromStdString(info.m_description));
+    newContent = newContent.replace("_description_", QString::fromStdString(info.m_shortDescription));
 
     //Documentation link
     if(info.m_docLink.empty() == false)
@@ -223,20 +194,4 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     newContent = newContent.replace("_keywords_", QString::fromStdString(info.m_keywords));
 
     return newContent;
-}
-
-void CProcessDocFrame::updateLocalPath(QString &content, const QString& name)
-{
-    QString reStr = QString("file:(.*\\/Ikomia)\\/Plugins\\/.*\\/%1\\/.*\\.[a-zA-Z0-9]*").arg(name);
-    QRegularExpression re(reStr);
-    QRegularExpressionMatchIterator matchIt = re.globalMatch(content);
-
-    while(matchIt.hasNext())
-    {
-        QRegularExpressionMatch match = matchIt.next();
-        auto fullMatch = match.captured(0);
-        auto homeDir = match.captured(1);
-        fullMatch.replace(homeDir, Utils::IkomiaApp::getQIkomiaFolder());
-        content.replace(match.captured(0), fullMatch);
-    }
 }
