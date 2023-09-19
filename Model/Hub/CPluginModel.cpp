@@ -165,7 +165,9 @@ QString CPluginModel::getPackageFile() const
 
 QString CPluginModel::getDescription() const
 {
-    return QString::fromStdString(Utils::CPluginTools::getDescription(getStringField("name")));
+    QString description =  QString::fromStdString(Utils::CPluginTools::getDescription(getStringField("name")));
+    if (description.isEmpty())
+        return getQStringField("description");
 }
 
 bool CPluginModel::isComplete() const
