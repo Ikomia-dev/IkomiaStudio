@@ -50,7 +50,9 @@ class CProcessDocFrame : public QFrame
     private:
 
         CProcessDocContent  m_content;
+        QTextBrowser*       m_pBrowserHeader = nullptr;
         QTextBrowser*       m_pBrowser = nullptr;
+        QTextDocument*      m_pHeaderDoc = nullptr;
         QTextDocument*      m_pDoc = nullptr;
 };
 

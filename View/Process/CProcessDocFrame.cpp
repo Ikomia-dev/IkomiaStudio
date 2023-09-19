@@ -54,10 +54,17 @@ void CProcessDocFrame::initLayout()
     QHBoxLayout* pMainLayout = new QHBoxLayout;
     pMainLayout->setContentsMargins(0, 0, 0, 0);
 
+    m_pBrowserHeader = new QTextBrowser;
+    m_pHeaderDoc = new QTextDocument;
+    m_pBrowserHeader->setOpenExternalLinks(true);
+    m_pBrowserHeader->setDocument(m_pHeaderDoc);
+
     m_pBrowser = new QTextBrowser;
     m_pDoc = new QTextDocument;
     m_pBrowser->setOpenExternalLinks(true);
     m_pBrowser->setDocument(m_pDoc);
+
+    pMainLayout->addWidget(m_pBrowserHeader);
     pMainLayout->addWidget(m_pBrowser);
 
     setLayout(pMainLayout);
@@ -65,39 +72,46 @@ void CProcessDocFrame::initLayout()
 
 void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
 {
+    // Generate header doc from plugin metadata
+    QString qmdContent = generateMarkdown(info);
+    m_pHeaderDoc->setMarkdown(qmdContent);
+
     std::string mdContent = Utils::CPluginTools::getDescription(info.m_name);
-    if (mdContent.empty())
-    {
-        // Generate doc from plugin metadata
-        QString qmdContent = generateMarkdown(info);
-        m_pDoc->setMarkdown(qmdContent);
-    }
-    else
+    if (!mdContent.empty())
     {
         // Remove HTML part
         QRegularExpression re("<(?s).+</.+>");
         QString qmdContent = QString::fromStdString(mdContent);
         qmdContent.replace(re, "");
+        // Remove Github emojis
+        qmdContent.replace(":rocket:", "");
+        qmdContent.replace(":sunny:", "");
+        qmdContent.replace(":pencil:", "");
+        qmdContent.replace(":mag:", "");
         m_pDoc->setMarkdown(qmdContent, QTextDocument::MarkdownFeature::MarkdownDialectGitHub);
     }
+    else
+        m_pDoc->clear();
 }
 
 QString CProcessDocFrame::getMarkdownTemplate() const
 {
     return QString("_icon_ \n\n"
                    "<span style=\"color:#cc5a20\"><h1>_name_</h1></span> ![Language logo](_languageIcon_)  \n\n"
+                   "_shortDescription_  \n"
                    "**Version**: _version_  \n"
                    "**_modifiedTxt_**: _modified_  \n"
                    "**_createdTxt_**: _created_  \n"
-                   "_description_\n\n"
                    "_docLink_ \n\n"
                    "<span style=\"color:#cc5a20\"><h2>Publication</h2></span> \n\n"
                    "_article_ \n\n"
                    "*_authors_* \n\n"
                    "_journal_ \n\n"
                    "_year_ \n\n"
-                   "_repo_ \n\n"
-                   "_license_"
+                   "<span style=\"color:#cc5a20\"><h2>_sourceCodeTxt_</h2></span> \n\n"
+                   "**_repoTxt_**: _repo_ \n\n"
+                   "**_originalRepoTxt_**: _originalRepo_ \n\n"
+                   "**_licenseTxt**: _license_ \n\n"
                    "<span style=\"color:#cc5a20\"><h2>_keywordsTxt_</h2></span> \n\n"
                    "_keywords_");
 }
@@ -114,6 +128,9 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 
     //Process name
     auto newContent = templateContent.replace("_name_", QString::fromStdString(info.m_name));
+
+    //Description
+    newContent = newContent.replace("_shortDescription_", QString::fromStdString(info.m_shortDescription));
 
     //Language icon
     newContent = newContent.replace("_languageIcon_", languageIconPath);
@@ -136,9 +153,6 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     QString createdTxt = tr("Created");
     newContent = newContent.replace("_createdTxt_", createdTxt);
     newContent = newContent.replace("_created_", QString::fromStdString(info.m_createdDate));
-
-    //Description
-    newContent = newContent.replace("_description_", QString::fromStdString(info.m_shortDescription));
 
     //Documentation link
     if(info.m_docLink.empty() == false)
@@ -163,17 +177,17 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     else
         newContent = newContent.replace("_year_", "");
 
-    if(info.m_repo.empty() == false)
-    {
-        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2>Repositories</h2></span> \n\n"
-                               "**Implementation** [%1](%1) \n\n"
-                               "**Original implementation** [%2](%2)")
-                .arg(QString::fromStdString(info.m_repo))
-                .arg(QString::fromStdString(info.m_originalRepo));
-        newContent = newContent.replace("_repo_", repoStr);
-    }
-    else
-        newContent = newContent.replace("_repo_", "");
+    // Source code
+    QString sourceCodeTxt = tr("Source code");
+    newContent = newContent.replace("_sourceCodeTxt_", sourceCodeTxt);
+    QString repoTxt = tr("Repository");
+    newContent = newContent.replace("_repoTxt_", repoTxt);
+    newContent = newContent.replace("_repo_", QString::fromStdString(info.m_repo));
+    QString originalRepoTxt = tr("Original repository");
+    newContent = newContent.replace("_originalRepoTxt_", originalRepoTxt);
+    newContent = newContent.replace("_originalRepo_", QString::fromStdString(info.m_originalRepo));
+    QString licenseTxt = tr("License");
+    newContent = newContent.replace("_licenseTxt", licenseTxt);
 
     if(info.m_license.empty() == false)
     {
@@ -182,11 +196,8 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
         if (it != _officialLicenses.end())
             licenseName = it->second;
 
-        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2>License</h2></span> \n\n %1 \n\n").arg(licenseName);
-        newContent = newContent.replace("_license_", licenceStr);
+        newContent = newContent.replace("_license_", licenseName);
     }
-    else
-        newContent = newContent.replace("_license_", "");
 
     //Keywords
     QString keywordsTxt = tr("Keywords");
