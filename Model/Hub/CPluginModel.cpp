@@ -165,7 +165,7 @@ QString CPluginModel::getPackageFile() const
 
 QString CPluginModel::getDescription() const
 {
-    QString description =  QString::fromStdString(Utils::CPluginTools::getDescription(getStringField("name")));
+    QString description =  QString::fromStdString(Utils::CPluginTools::getReadmeDescription(getStringField("name")));
     if (description.isEmpty())
         return getQStringField("description");
 }
@@ -273,8 +273,8 @@ void CPluginModel::filterCompatiblePlugins()
     // Remove incompatible plugins
     if (toRemove.size() > 0)
     {
-        for (size_t i=0; i<toRemove.size(); ++i)
-            m_jsonPlugins.removeAt(toRemove[i]);
+        for (auto it=toRemove.rbegin(); it!=toRemove.rend(); ++it)
+            m_jsonPlugins.removeAt(*it);
     }
 }
 
