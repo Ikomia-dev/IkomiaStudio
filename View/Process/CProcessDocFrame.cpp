@@ -76,7 +76,10 @@ void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
     QString qmdContent = generateMarkdown(info);
     m_pHeaderDoc->setMarkdown(qmdContent);
 
-    std::string mdContent = Utils::CPluginTools::getDescription(info.m_name);
+    std::string mdContent = Utils::CPluginTools::getReadmeDescription(info.m_name);
+    if (mdContent.empty())
+        mdContent = info.getDescription();
+
     if (!mdContent.empty())
     {
         // Remove HTML part

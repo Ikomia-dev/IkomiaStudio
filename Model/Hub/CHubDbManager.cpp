@@ -86,7 +86,7 @@ void CHubDbManager::insertPlugins(CPluginModel* pModel)
         throw CException(DatabaseExCode::INVALID_DB_CONNECTION, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
     //Retrieve plugins information from JSON
-    QVariantList names, shortDescriptions, keywords, users,
+    QVariantList names, shortDescriptions, descriptions, keywords, users,
             authors, articles, articleUrls, journals, years, createdDates, modifiedDates,
             versions, minIkVersions, maxIkVersions, minPyVersions, maxPyVersions,
             languages, osList, iconPaths,
@@ -103,6 +103,8 @@ void CHubDbManager::insertPlugins(CPluginModel* pModel)
         names << plugin["name"].toString();
         // Short description
         shortDescriptions << plugin["short_description"].toString();        
+        // Description
+        descriptions << plugin["description"].toString();
 
         // Keywords
         QJsonArray jsonKeywords = plugin["keywords"].toArray();
@@ -191,13 +193,13 @@ void CHubDbManager::insertPlugins(CPluginModel* pModel)
     //Insert to serverPlugins table
     QSqlQuery q(db);
     if(!q.prepare(QString("INSERT INTO serverPlugins ("
-                          "name, shortDescription, keywords, user, "
+                          "name, shortDescription, description, keywords, user, "
                           "authors, article, articleUrl, journal, year, createdDate, modifiedDate, "
                           "version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, "
                           "language, os, iconPath, "
                           "license, repository,  originalRepository, algoType, algoTasks) "
                           "VALUES ("
-                          "?, ?, ?, ?, "
+                          "?, ?, ?, ?, ?,"
                           "?, ?, ?, ?, ?, ?, ?, "
                           "?, ?, ?, ?, ?,"
                           "?, ? ,?,"
@@ -208,6 +210,7 @@ void CHubDbManager::insertPlugins(CPluginModel* pModel)
 
     q.addBindValue(names);
     q.addBindValue(shortDescriptions);
+    q.addBindValue(descriptions);
     q.addBindValue(keywords);
     q.addBindValue(users);
     q.addBindValue(authors);
@@ -269,18 +272,19 @@ void CHubDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
 
     QSqlQuery q(db);
     auto strQuery = QString("INSERT INTO process "
-                            "(name, shortDescription, keywords, user, "
+                            "(name, shortDescription, description, keywords, user, "
                             "authors, article, articleUrl, journal, year, docLink, createdDate, modifiedDate, "
                             "version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, "
                             "language, os, iconPath, "
                             "license, repository,  originalRepository, algoType, algoTasks) "
-                            "VALUES ('%1', '%2', '%3', '%4', "
-                            "'%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', "
-                            "'%13', '%14', %15, '%16', '%17', "
-                            "%18, %19, '%20'"
-                            "'%21', '%22', '%23', %24, '%25') "
+                            "VALUES ('%1', '%2', '%3', '%4', '%5'"
+                            "'%6', '%7', '%8', '%9', %10, '%11', '%12', '%13', "
+                            "'%14', '%15', %16, '%17', '%18', "
+                            "%19, %20, '%21'"
+                            "'%22', '%23', '%24', %25, '%26') "
                             "ON CONFLICT(name) DO UPDATE SET "
                             "shortDescription = excluded.shortDescription, "
+                            "description = excluded.description, "
                             "keywords = excluded.keywords, "
                             "user = COALESCE(excluded.user, user), "
                             "authors = excluded.authors, "
@@ -306,6 +310,7 @@ void CHubDbManager::insertPlugin(const CTaskInfo &procInfo, const CUser &user)
                             "algoTasks = excluded.algoTasks;")
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_name)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_shortDescription)))
+            .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_description)))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_keywords)))
             .arg(QString::fromStdString(Utils::String::dbFormat("")))
             .arg(QString::fromStdString(Utils::String::dbFormat(procInfo.m_authors)))
@@ -422,7 +427,7 @@ void CHubDbManager::createServerPluginsDb(const QString &connectionName)
 
     QSqlQuery q(db);
     if(!q.exec("CREATE TABLE serverPlugins ("
-               "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXT, keywords TEXT, user TEXT, "
+               "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXT, description TEXT, keywords TEXT, user TEXT, "
                "authors TEXT, article TEXT, articleUrl TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, modifiedDate TEXT, "
                "version TEXT, minIkomiaVersion TEXT, maxIkomiaVersion TEXT, minPythonVersion TEXT, maxPythonVersion TEXT, "
                "language INTEGER, os INTEGER, iconPath TEXT, certification INTEGER, votes INTEGER, "
