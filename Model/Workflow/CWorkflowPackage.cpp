@@ -113,7 +113,8 @@ bool CWorkflowPackage::updatePathInParameters(QJsonObject& data)
                 QString filename = QString::fromStdString(Utils::File::getFileName(path.toStdString()));
                 QString targetPath = QString("%1/%2").arg(dataDir).arg(filename);
                 boost::filesystem::copy_file(path.toStdString(), targetPath.toStdString());
-                value = targetPath;
+                // Set path as relative
+                value = QString("file://data/%2").arg(filename);
                 bUpdateParam = true;
             }
         }
