@@ -185,20 +185,41 @@ void CHubManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
 
 void CHubManager::onHubSearchChanged(const QString &text)
 {
-    auto query = getQuery(CPluginModel::Type::HUB, text);
-    m_hubPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::HUB));
+    try
+    {
+        auto query = getQuery(CPluginModel::Type::HUB, text);
+        m_hubPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::HUB));
+    }
+    catch(std::exception& e)
+    {
+        Utils::print(e.what(), QtMsgType::QtDebugMsg);
+    }
 }
 
 void CHubManager::onWorkspaceSearchChanged(const QString &text)
 {
-    auto query = getQuery(CPluginModel::Type::WORKSPACE, text);
-    m_workspacePluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::WORKSPACE));
+    try
+    {
+        auto query = getQuery(CPluginModel::Type::WORKSPACE, text);
+        m_workspacePluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::WORKSPACE));
+    }
+    catch(std::exception& e)
+    {
+        Utils::print(e.what(), QtMsgType::QtDebugMsg);
+    }
 }
 
 void CHubManager::onLocalSearchChanged(const QString &text)
 {
-    auto query = getQuery(CPluginModel::Type::LOCAL, text);
-    m_localPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::LOCAL));
+    try
+    {
+        auto query = getQuery(CPluginModel::Type::LOCAL, text);
+        m_localPluginModel.setQuery(query, m_dbMgr.getPluginsDatabase(CPluginModel::Type::LOCAL));
+    }
+    catch(std::exception& e)
+    {
+        Utils::print(e.what(), QtMsgType::QtDebugMsg);
+    }
 }
 
 void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, HubRequestType requestType)
