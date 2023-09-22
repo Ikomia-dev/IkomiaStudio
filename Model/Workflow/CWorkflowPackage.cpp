@@ -96,39 +96,43 @@ bool CWorkflowPackage::updatePathInParameters(QJsonObject& data)
     QRegularExpression re("(^(([a-zA-Z]{1}:{1}\\\{1,2})|(\\/{1}))[\\w]{1}.*)");
 
     for (int i=0; i<parameters.size(); ++i)
-    {
-        bool bUpdateParam = false;
+    {        
         QJsonObject param = parameters[i].toObject();
-        QString value = param["value"].toString();
-        QRegularExpressionMatch match = re.match(value);
+        QString path = param["value"].toString();
+        QRegularExpressionMatch match = re.match(path);
 
         if(match.hasMatch())
         {
-            QString path = match.captured(0);
-            if (Utils::File::isFileExist(path.toStdString()) && path.contains(algoDirectory) == false)
+            if (Utils::File::isFileExist(path.toStdString()))
             {
-                // File is external, copy it in working directory and update path
-                QString dataDir = QString("%1/data").arg(targetAlgoDir);
-                Utils::File::createDirectory(dataDir.toStdString());
-                QString filename = QString::fromStdString(Utils::File::getFileName(path.toStdString()));
-                QString targetPath = QString("%1/%2").arg(dataDir).arg(filename);
-                boost::filesystem::copy_file(path.toStdString(), targetPath.toStdString());
-                // Set path as relative
-                value = QString("file://data/%2").arg(filename);
-                bUpdateParam = true;
+                if (Utils::File::isDirContainsFile(algoDirectory.toStdString(), path.toStdString()))
+                {
+                    // File is internal, set path as relative
+                    boost::filesystem::path dir(algoDirectory.toStdString());
+                    boost::filesystem::path filePath(path.toStdString());
+                    path = QString("file://%1").arg(QString::fromStdString(boost::filesystem::relative(filePath, dir).string()));
+                }
+                else
+                {
+                    // File is external, copy it in working directory and update path
+                    QString dataDir = QString("%1/data").arg(targetAlgoDir);
+                    Utils::File::createDirectory(dataDir.toStdString());
+                    QString filename = QString::fromStdString(Utils::File::getFileName(path.toStdString()));
+                    QString targetPath = QString("%1/%2").arg(dataDir).arg(filename);
+                    boost::filesystem::copy_file(path.toStdString(), targetPath.toStdString());
+                    // Set path as relative
+                    path = QString("file://data/%2").arg(filename);
+                }
+                param["value"] = path;
+                parameters[i] = param;
+                bUpdateData = true;
             }
-        }
-
-        if (bUpdateParam)
-        {
-            param["value"] = value;
-            parameters[i] = param;
-            bUpdateData = true;
         }
     }
 
     if (bUpdateData)
         data["parameters"] = parameters;
 
+    data["url"] = QString("file://%1").arg(data["name"].toString());
     return bUpdateData;
 }
