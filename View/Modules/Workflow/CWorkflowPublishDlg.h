@@ -28,6 +28,8 @@ class CWorkflowPublishDlg: public CDialog
         void    initLayout();
         void    initConnections();
 
+        QString getProjectDisplayName(const QJsonObject &project) const;
+
     private slots:
 
         void    validate();

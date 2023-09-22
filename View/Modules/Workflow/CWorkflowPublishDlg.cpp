@@ -29,7 +29,7 @@ QString CWorkflowPublishDlg::getProjectName() const
     if (m_pRadioNewProject->isChecked())
         return m_pNewProjectName->text();
     else
-        return m_pComboProject->currentText();
+        return m_pComboProject->currentData().toString();
 }
 
 QString CWorkflowPublishDlg::getProjectDescription() const
@@ -82,7 +82,8 @@ void CWorkflowPublishDlg::initLayout()
     for (int i=0; i<m_projects.size(); ++i)
     {
         QJsonObject project = m_projects[i].toObject();
-        m_pComboProject->addItem(project["name"].toString());
+        auto displayName = getProjectDisplayName(project);
+        m_pComboProject->addItem(displayName, project["name"].toString());
     }
 
     auto pExistingProjectLayout = new QGridLayout();
@@ -157,6 +158,22 @@ void CWorkflowPublishDlg::initConnections()
     connect(m_pRadioExistingProject, &QRadioButton::toggled, [&](bool bChecked){
         bChecked ? m_pProjectStackWidget->setCurrentIndex(0) : m_pProjectStackWidget->setCurrentIndex(1);
     });
+}
+
+QString CWorkflowPublishDlg::getProjectDisplayName(const QJsonObject& project) const
+{
+    auto path = project["path"].toString();
+    auto name = project["name"].toString();
+    QStringList pathItems = path.split("/", Qt::SkipEmptyParts);
+
+    if (pathItems.size() > 2)
+    {
+        name += " ( ";
+        for (int i=1; i<pathItems.size() - 1; ++i)
+            name += pathItems[i] + "/";
+        name += " )";
+    }
+    return name;
 }
 
 void CWorkflowPublishDlg::validate()
