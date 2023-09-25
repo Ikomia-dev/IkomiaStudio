@@ -168,6 +168,8 @@ QString CPluginModel::getDescription() const
     QString description =  QString::fromStdString(Utils::CPluginTools::getReadmeDescription(getStringField("name")));
     if (description.isEmpty())
         return getQStringField("description");
+    else
+        return description;
 }
 
 bool CPluginModel::isComplete() const
