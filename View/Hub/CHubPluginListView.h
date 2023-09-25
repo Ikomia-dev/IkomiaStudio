@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREPLUGINLISTVIEW_H
-#define CSTOREPLUGINLISTVIEW_H
+#ifndef CHUBPLUGINLISTVIEW_H
+#define CHUBPLUGINLISTVIEW_H
 
 #include <QListView>
 
-class CStorePluginListViewDelegate;
+class CHubPluginListViewDelegate;
 
-class CStorePluginListView : public QListView
+class CHubPluginListView : public QListView
 {
     Q_OBJECT
 
     public:
 
-        CStorePluginListView(int pluginSource, QWidget *parent = nullptr);
+        CHubPluginListView(int pluginSource, QWidget *parent = nullptr);
 
     signals:
 
@@ -49,7 +49,7 @@ class CStorePluginListView : public QListView
 
     private:
 
-        CStorePluginListViewDelegate*   m_pDelegate = nullptr;
+        CHubPluginListViewDelegate*   m_pDelegate = nullptr;
 };
 
-#endif // CSTOREPLUGINLISTVIEW_H
+#endif // CHUBPLUGINLISTVIEW_H

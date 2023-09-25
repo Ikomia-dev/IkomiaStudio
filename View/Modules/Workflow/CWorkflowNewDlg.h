@@ -51,7 +51,7 @@ class CWorkflowNewDlg : public CDialog
         QString         m_name;
         QString         m_keywords;
         QString         m_description;
-        QStringList     m_protocolNames;
+        QStringList     m_workflowNames;
 };
 
 #endif // CWORKFLOWNEWDLG_H

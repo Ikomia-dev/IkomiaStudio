@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-set(IKOMIA_VERSION 0.9.1)
-project(IkomiaStudio VERSION 0.9.1 LANGUAGES CXX)
+set(IKOMIA_VERSION 0.10.0)
+project(IkomiaStudio VERSION 0.10.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/Build)
@@ -170,19 +170,23 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Results/CResultManager.h
     Model/Settings/CSettingsManager.cpp
     Model/Settings/CSettingsManager.h
-    Model/Store/CStoreDbManager.cpp
-    Model/Store/CStoreDbManager.h
-    Model/Store/CStoreManager.cpp
-    Model/Store/CStoreManager.h
-    Model/Store/CStoreOnlineIconManager.cpp
-    Model/Store/CStoreOnlineIconManager.h
-    Model/Store/CStoreQueryModel.cpp
-    Model/Store/CStoreQueryModel.h
+    Model/Hub/CHubDbManager.cpp
+    Model/Hub/CHubDbManager.h
+    Model/Hub/CHubManager.cpp
+    Model/Hub/CHubManager.h
+    Model/Hub/CHubOnlineIconManager.cpp
+    Model/Hub/CHubOnlineIconManager.h
+    Model/Hub/CHubQueryModel.cpp
+    Model/Hub/CHubQueryModel.h
+    Model/Hub/CPluginModel.h
+    Model/Hub/CPluginModel.cpp
     Model/User/CUser.cpp Model/User/CUser.h
     Model/User/CUserManager.cpp
     Model/User/CUserManager.h
     Model/User/CUserSqlQueryModel.cpp
     Model/User/CUserSqlQueryModel.h
+    Model/User/CUserNamespace.h
+    Model/User/CUserNamespace.cpp
     Model/Wizard/CWizardDbManager.cpp
     Model/Wizard/CWizardDbManager.h
     Model/Wizard/CWizardManager.cpp
@@ -206,6 +210,10 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Model/Workflow/CWorkflowManager.h
     Model/Workflow/CWorkflowRunManager.cpp
     Model/Workflow/CWorkflowRunManager.h
+    Model/Workflow/CWorkflowScaleManager.h
+    Model/Workflow/CWorkflowScaleManager.cpp
+    Model/Workflow/CWorkflowPackage.h
+    Model/Workflow/CWorkflowPackage.cpp
     View/Common/CBorderLayout.cpp
     View/Common/CBorderLayout.h
     View/Common/CBubbleTip.cpp
@@ -370,6 +378,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Modules/Workflow/CWorkflowScene.h
     View/Modules/Workflow/CWorkflowView.cpp
     View/Modules/Workflow/CWorkflowView.h
+    View/Modules/Workflow/CWorkflowPublishDlg.h
+    View/Modules/Workflow/CWorkflowPublishDlg.cpp
     View/Notifications/CNotificationPane.cpp
     View/Notifications/CNotificationPane.h
     View/Notifications/CNotificationPopup.cpp
@@ -392,8 +402,6 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Process/CProcessDocFrame.h
     View/Process/CProcessDocWidget.cpp
     View/Process/CProcessDocWidget.h
-    View/Process/CProcessEditDocFrame.cpp
-    View/Process/CProcessEditDocFrame.h
     View/Process/CProcessListPopup.cpp
     View/Process/CProcessListPopup.h
     View/Process/CProcessListView.cpp
@@ -412,12 +420,16 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Project/CProjectPane.h
     View/Project/CProjectTreeView.cpp
     View/Project/CProjectTreeView.h
-    View/Store/CStoreDlg.cpp
-    View/Store/CStoreDlg.h
-    View/Store/CStorePluginListView.cpp
-    View/Store/CStorePluginListView.h
-    View/Store/CStorePluginListViewDelegate.cpp
-    View/Store/CStorePluginListViewDelegate.h
+    View/Hub/CHubDlg.cpp
+    View/Hub/CHubDlg.h
+    View/Hub/CHubPluginListView.cpp
+    View/Hub/CHubPluginListView.h
+    View/Hub/CHubPluginListViewDelegate.cpp
+    View/Hub/CHubPluginListViewDelegate.h
+    View/Hub/CWorkspaceChoiceDlg.h
+    View/Hub/CWorkspaceChoiceDlg.cpp
+    View/Hub/CPublicationFormDlg.h
+    View/Hub/CPublicationFormDlg.cpp
     View/Wizard/CWizardDocFrame.cpp
     View/Wizard/CWizardDocFrame.h
     View/Wizard/CWizardDocPage.cpp

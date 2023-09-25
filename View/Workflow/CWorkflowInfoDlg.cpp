@@ -45,7 +45,7 @@ QString CWorkflowInfoDlg::getName() const
 void CWorkflowInfoDlg::initLayout()
 {
     //Label with line underneath
-    m_pLabel = new QLabel(tr("Process parameters"));
+    m_pLabel = new QLabel(tr("Algorithm parameters"));
     m_pLabel->setAlignment(Qt::AlignCenter);
     auto pBottomLine = createLine();
 

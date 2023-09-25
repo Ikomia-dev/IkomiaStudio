@@ -23,6 +23,7 @@
 #include "CWorkflowView.h"
 #include "CWorkflowScene.h"
 #include "CWorkflowNewDlg.h"
+#include "CWorkflowPublishDlg.h"
 #include "View/Common/CToolbarBorderLayout.h"
 #include "View/Common/CRollupWidget.h"
 #include "View/Process/CProcessDocDlg.h"
@@ -73,6 +74,24 @@ void CWorkflowModuleWidget::onAddTask(const WorkflowTaskPtr &pTask, const Workfl
 void CWorkflowModuleWidget::onAddCandidateTask(const WorkflowTaskPtr &pTask, const WorkflowVertex &id)
 {
     m_pView->addTask(pTask, id);
+}
+
+void CWorkflowModuleWidget::onSetScaleProjects(const QJsonArray &projects, const std::vector<QString> &namespaces)
+{
+    QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
+    QString wfDescription = QString::fromStdString(m_pModel->getWorkflowDescription());
+    CWorkflowPublishDlg publishFormDlg(wfName, wfDescription, projects, namespaces, this);
+
+    if (publishFormDlg.exec() == QDialog::Accepted)
+    {
+        wfName = publishFormDlg.getWorkflowName();
+        wfDescription = publishFormDlg.getWorkflowDescription();
+        bool bNewProject = publishFormDlg.isNewProject();
+        QString projectName = publishFormDlg.getProjectName();
+        QString projectDescription = publishFormDlg.getProjectDescription();
+        QString projectNamespace = publishFormDlg.getNamespaceName();
+        m_pModel->publishWorkflow(wfName, wfDescription, bNewProject, projectName, projectDescription, projectNamespace);
+    }
 }
 
 void CWorkflowModuleWidget::onUpdateTaskInfo(const WorkflowTaskPtr &pTask, const CTaskInfo& info)
@@ -135,12 +154,12 @@ void CWorkflowModuleWidget::onSaveWorkflow()
      if(m_pModel->isWorkflowExists() == false)
          return;
 
-    auto protocolNames = m_pModel->getWorkflowNames();
-    QString protocolName = QString::fromStdString(m_pModel->getWorkflowName());
+    auto wfNames = m_pModel->getWorkflowNames();
+    QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
 
-    if(!protocolNames.contains(protocolName))
+    if(!wfNames.contains(wfName))
     {
-        CWorkflowNewDlg newWorkflowDlg(protocolName, protocolNames, this);
+        CWorkflowNewDlg newWorkflowDlg(wfName, wfNames, this);
         if(newWorkflowDlg.exec() == QDialog::Accepted)
         {
             m_pModel->setWorkflowName(newWorkflowDlg.getName().toStdString());
@@ -162,12 +181,12 @@ void CWorkflowModuleWidget::onExportWorkflow()
      if(m_pModel->isWorkflowExists() == false)
          return;
 
-    auto protocolNames = m_pModel->getWorkflowNames();
-    QString protocolName = QString::fromStdString(m_pModel->getWorkflowName());
+    auto wfNames = m_pModel->getWorkflowNames();
+    QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
 
-    if(!protocolNames.contains(protocolName))
+    if(!wfNames.contains(wfName))
     {
-        CWorkflowNewDlg newWorkflowDlg(protocolName, protocolNames, this);
+        CWorkflowNewDlg newWorkflowDlg(wfName, wfNames, this);
         if(newWorkflowDlg.exec() == QDialog::Accepted)
         {
             m_pModel->setWorkflowName(newWorkflowDlg.getName().toStdString());
@@ -187,6 +206,17 @@ void CWorkflowModuleWidget::onExportWorkflow()
 
     IkomiaSettings.setValue(_defaultDirWorkflowExport, QFileInfo(fileName).path());
     m_pModel->saveWorkflow(fileName);
+}
+
+void CWorkflowModuleWidget::onPublishWorkflow()
+{
+    if (m_pModel == nullptr)
+        return;
+
+    if (m_pModel->isWorkflowExists() == false)
+        return;
+
+    m_pModel->requestScaleProjects();
 }
 
 void CWorkflowModuleWidget::onLoadWorkflow()
@@ -380,35 +410,36 @@ void CWorkflowModuleWidget::initLeftTab()
     // Add button to create new protocol
     auto pBtnNew = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/add.png"));
     assert(pBtnNew != nullptr);
-    //pBtnNew->setFlat(true);
     pBtnNew->setToolTip(tr("New workflow"));
     connect(pBtnNew, &QPushButton::clicked, this, &CWorkflowModuleWidget::onNewWorkflow);
 
     // Add button to load protocol from file
     auto pBtnLoad = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/open.png"));
     assert(pBtnLoad != nullptr);
-    //pBtnLoad->setFlat(true);
     pBtnLoad->setToolTip(tr("Load workflow"));
     connect(pBtnLoad, &QPushButton::clicked, this, &CWorkflowModuleWidget::onLoadWorkflow);
 
     // Add button to save current protocol
     auto pBtnSave = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/save.png"));
     assert(pBtnSave != nullptr);
-    //pBtnSave->setFlat(true);
     pBtnSave->setToolTip(tr("Save workflow"));
     connect(pBtnSave, &QPushButton::clicked, this, &CWorkflowModuleWidget::onSaveWorkflow);
 
     // Add button to export current protocol
     auto pBtnExport = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/export.png"));
     assert(pBtnExport != nullptr);
-    //pBtnExport->setFlat(true);
     pBtnExport->setToolTip(tr("Export workflow"));
     connect(pBtnExport, &QPushButton::clicked, this, &CWorkflowModuleWidget::onExportWorkflow);
+
+    // Add button to publish workflow to Scale
+    auto pBtnPublish = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/share.png"));
+    assert(pBtnPublish != nullptr);
+    pBtnPublish->setToolTip(tr("Publish workflow to Ikomia Scale"));
+    connect(pBtnPublish, &QPushButton::clicked, this, &CWorkflowModuleWidget::onPublishWorkflow);
 
     // Add button to close current protocol
     auto pBtnClose = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/close-workflow.png"));
     assert(pBtnClose != nullptr);
-    //pBtnClose->setFlat(true);
     pBtnClose->setToolTip(tr("Close workflow"));
     connect(pBtnClose, &QPushButton::clicked, this, &CWorkflowModuleWidget::onCloseWorkflow);
 }
@@ -477,6 +508,7 @@ void CWorkflowModuleWidget::initConnections()
     });
     connect(m_pModel, &CWorkflowManager::doUpdateTaskStateInfo, this, &CWorkflowModuleWidget::onUpdateTaskStateInfo);
     connect(m_pModel, &CWorkflowManager::doCloseWorkflow, this, &CWorkflowModuleWidget::onCloseWorkflow);
+    connect(m_pModel, &CWorkflowManager::doSetScaleProjects, this, &CWorkflowModuleWidget::onSetScaleProjects);
 
     //Model -> view
     connect(m_pModel, &CWorkflowManager::doInputChanged, m_pView, &CWorkflowView::onInputChanged);

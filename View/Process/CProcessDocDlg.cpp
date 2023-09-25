@@ -46,7 +46,7 @@ void CProcessDocDlg::setCurrentUser(const CUser &user)
 void CProcessDocDlg::setProcessInfo(const CTaskInfo &info)
 {
     if(m_pDocWidget)
-        m_pDocWidget->setProcessInfo(info);
+        m_pDocWidget->setProcessInfo(info, false);
 }
 
 CProcessDocWidget *CProcessDocDlg::getDocWidget()
@@ -56,7 +56,7 @@ CProcessDocWidget *CProcessDocDlg::getDocWidget()
 
 void CProcessDocDlg::initLayout()
 {
-    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::EDIT);
+    m_pDocWidget = new CProcessDocWidget(CProcessDocWidget::NONE);
     auto pMainLayout = getContentLayout();
     pMainLayout->addWidget(m_pDocWidget);
 }

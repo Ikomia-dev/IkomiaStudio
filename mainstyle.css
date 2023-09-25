@@ -314,6 +314,11 @@ QPushButton:focus
     border: 2px solid %1;
 }
 
+QPushButton:checked
+{
+    border: 2px solid %1;
+}
+
 QPushButton:!enabled
 {
     color: %8;

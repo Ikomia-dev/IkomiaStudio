@@ -50,6 +50,14 @@ std::string CWorkflowManager::getWorkflowName() const
         return "";
 }
 
+std::string CWorkflowManager::getWorkflowDescription() const
+{
+    if(m_pWorkflow)
+        return m_pWorkflow->getDescription();
+    else
+        return "";
+}
+
 WorkflowVertex CWorkflowManager::getRootId() const
 {
     if(m_pWorkflow)
@@ -79,10 +87,10 @@ WorkflowInputViewMode CWorkflowManager::getInputViewMode() const
     return m_inputViewMode;
 }
 
-void CWorkflowManager::setManagers(CProcessManager *pProcessMgr, CProjectManager *pProjectMgr,
-                                   CGraphicsManager *pGraphicsMgr, CResultManager *pResultsMgr,
-                                   CMainDataManager *pDataMgr, CProgressBarManager *pProgressMgr,
-                                   CSettingsManager *pSettingsMgr)
+void CWorkflowManager::setManagers(QNetworkAccessManager *pNetMgr, CProcessManager *pProcessMgr,
+                                   CProjectManager *pProjectMgr, CGraphicsManager *pGraphicsMgr,
+                                   CResultManager *pResultsMgr, CMainDataManager *pDataMgr,
+                                   CProgressBarManager *pProgressMgr, CSettingsManager *pSettingsMgr)
 {
     m_pProcessMgr = pProcessMgr;
     m_pProjectMgr = pProjectMgr;
@@ -94,6 +102,7 @@ void CWorkflowManager::setManagers(CProcessManager *pProcessMgr, CProjectManager
     m_runMgr.setManagers(pProjectMgr, pDataMgr, pProgressMgr);
     m_dbMgr.setManagers(pSettingsMgr);
     m_inputViewMgr.setManagers(pProjectMgr);
+    m_scaleMgr.setManagers(pNetMgr, pProgressMgr);
 
     if(m_pProgressMgr)
     {
@@ -137,6 +146,7 @@ void CWorkflowManager::setInputViewMode(WorkflowInputViewMode mode)
 void CWorkflowManager::setCurrentUser(const CUser &user)
 {
     m_currentUser = user;
+    m_scaleMgr.setCurrentUser(user);
 }
 
 void CWorkflowManager::setCurrentTaskAutoSave(size_t outputIndex, bool bAutoSave)
@@ -587,6 +597,35 @@ void CWorkflowManager::loadImageWorkflows(const QModelIndex &imageIndex)
     }
     m_pImageModel->setStringList(protocolNames);
     emit doSetNamesFromImageModel(m_pImageModel);
+}
+
+void CWorkflowManager::requestScaleProjects()
+{
+    m_scaleMgr.requestProjects();
+}
+
+void CWorkflowManager::publishWorkflow(const QString& name, const QString& description, bool bNewProject,
+                                       const QString& projectName, const QString &projectDescription, const QString& projectNamespace)
+{
+    assert(m_pWorkflow);
+    m_pWorkflow->setName(name.toStdString());
+    m_pWorkflow->setDescription(description.toStdString());
+    QString tmpPath =  Utils::File::conformName(
+                QString("%1/Workflows/%2_%3.json")
+                .arg(Utils::IkomiaApp::getQIkomiaFolder())
+                .arg(name)
+                .arg(QDateTime::currentDateTime().toString(Qt::ISODate)));
+
+    try
+    {
+        m_pWorkflow->save(tmpPath.toStdString());
+        m_scaleMgr.publishWorkflow(tmpPath, bNewProject, projectName, projectDescription, projectNamespace);
+        emit doNewWorkflowNotification(tr("Workflow %1 has been published successfully.").arg(name), Notification::INFO);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logWorkflow).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CWorkflowManager::onWorkflowClosed()
@@ -1080,8 +1119,8 @@ void CWorkflowManager::onLoadWorkflow(const QModelIndex &itemIndex)
         return;
     }
 
-    QString protocolName = itemIndex.data(Qt::DisplayRole).toString();
-    auto it = m_mapWorkflowNameToId.find(protocolName);
+    QString workflowlName = itemIndex.data(Qt::DisplayRole).toString();
+    auto it = m_mapWorkflowNameToId.find(workflowlName);
 
     if(it != m_mapWorkflowNameToId.end())
     {
@@ -1423,9 +1462,15 @@ void CWorkflowManager::onQueryProjectDataProxyModel(const std::vector<TreeItemTy
 
 void CWorkflowManager::initGlobalConnections()
 {
-    //Run manager -> protocol manager
+    //Run manager -> workflow manager
     connect(&m_runMgr, &CWorkflowRunManager::doSetElapsedTime, [&](double time){ emit doSetElapsedTime(time); });
     connect(&m_runMgr, &CWorkflowRunManager::doWorkflowLive, this, &CWorkflowManager::onWorkflowLive, Qt::BlockingQueuedConnection);
+
+    //Scale manager -> workflow manager
+    connect(&m_scaleMgr, &CWorkflowScaleManager::doSetProjects, [&](const QJsonArray& projects)
+    {
+        emit doSetScaleProjects(projects, m_currentUser.getNamespaceNames());
+    });
 }
 
 void CWorkflowManager::onQueryIOInfo(const WorkflowVertex &taskId, int index, bool bInput)

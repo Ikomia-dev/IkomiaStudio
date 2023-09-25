@@ -251,6 +251,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                         manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         break;
                     }
 

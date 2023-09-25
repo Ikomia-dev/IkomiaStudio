@@ -16,17 +16,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStorePluginListViewDelegate.h"
+#include "CHubPluginListViewDelegate.h"
 #include <QStaticText>
 #include <QTimer>
 #include "Main/CoreTools.hpp"
-#include "Model/Store/CStoreQueryModel.h"
+#include "Model/Hub/CHubQueryModel.h"
 #include "Task/CTaskFactory.hpp"
 
-CStorePluginListViewDelegate::CStorePluginListViewDelegate(int pluginSource, QObject *parent)
+CHubPluginListViewDelegate::CHubPluginListViewDelegate(int pluginSource, QObject *parent)
     : CListViewDelegate(parent)
 {
     m_source = pluginSource;
+    if (m_source == WORKSPACE)
+        m_actionBtnCount = 3;
 
     // Size redefinition
     m_sizeHint = QSize(400,200);
@@ -34,7 +36,7 @@ CStorePluginListViewDelegate::CStorePluginListViewDelegate(int pluginSource, QOb
     m_btnSize = QSize(32, 32);
 }
 
-void CStorePluginListViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void CHubPluginListViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     paintBoundingRect(painter, option);
     paintIcon(painter, option, index);
@@ -44,7 +46,7 @@ void CStorePluginListViewDelegate::paint(QPainter *painter, const QStyleOptionVi
     paintActionButtons(painter, option, index);
 }
 
-bool CStorePluginListViewDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool CHubPluginListViewDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     if(event->type() == QEvent::MouseMove)
     {
@@ -57,7 +59,7 @@ bool CStorePluginListViewDelegate::editorEvent(QEvent* event, QAbstractItemModel
     return CListViewDelegate::editorEvent(event, model, option, index);
 }
 
-QString CStorePluginListViewDelegate::getActionIconPath(int action) const
+QString CHubPluginListViewDelegate::getActionIconPath(int action) const
 {
     QString path;
     switch(action)
@@ -70,34 +72,26 @@ QString CStorePluginListViewDelegate::getActionIconPath(int action) const
     return path;
 }
 
-bool CStorePluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, int index) const
+bool CHubPluginListViewDelegate::isBtnEnabled(const QModelIndex &itemIndex, int index) const
 {
-    assert(itemIndex.isValid());
-    bool bEnable = true;
+    if (!itemIndex.isValid())
+        return false;
 
+    bool bEnable = true;
     switch(index)
     {
         case 0:
+        case 1:
             bEnable = true;
             break;
-
-        case 1:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(itemIndex.model());
-            int language = pModel->record(itemIndex.row()).value("language").toInt();
-            auto state = getProcessState(itemIndex);
-
-            if(language == ApiLanguage::CPP)
-                bEnable = (state == PluginState::VALID);
-            else
-                bEnable = (state == PluginState::VALID || state == PluginState::UPDATED);
+        case 2:
+            bEnable = (m_source == WORKSPACE);
             break;
-        }
     }
     return bEnable;
 }
 
-void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &index)
+void CHubPluginListViewDelegate::executeAction(int action, const QModelIndex &index)
 {
     assert(index.isValid());
 
@@ -107,33 +101,20 @@ void CStorePluginListViewDelegate::executeAction(int action, const QModelIndex &
             break;
 
         case INFO:
-            emit doShowInfo(index); break;
-
-        case INSTALL:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-            int language = pModel->record(index.row()).value("language").toInt();
-            auto state = getProcessState(index);
-
-            if( (language == ApiLanguage::CPP && state == PluginState::VALID) ||
-                (language == ApiLanguage::PYTHON && (state == PluginState::VALID || state == PluginState::UPDATED)))
-            {
-                emit doInstallPlugin(index);
-            }
+            emit doShowInfo(index);
             break;
-        }
 
-        case PUBLISH:
-        {
-            auto state = getProcessState(index);
-            if(state == PluginState::VALID)
-                emit doPublishPlugin(index);
+        case INSTALL:            
+            emit doInstallPlugin(index);
             break;
-        }
+
+        case PUBLISH:            
+            emit doPublishPlugin(index);
+            break;
     }
 }
 
-int CStorePluginListViewDelegate::getBtnAction(int index) const
+int CHubPluginListViewDelegate::getBtnAction(int index) const
 {
     int action = NONE;
     switch(index)
@@ -143,18 +124,18 @@ int CStorePluginListViewDelegate::getBtnAction(int index) const
             break;
 
         case 1:
-            if(m_source == SERVER)
-                action = INSTALL;
-            else
-                action = PUBLISH;
+            (m_source == HUB || m_source == WORKSPACE) ? action = INSTALL : action = PUBLISH;
+            break;
+
+        case 2:
+            action = PUBLISH;
             break;
     }
     return action;
 }
 
-QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem& option) const
+QPolygon CHubPluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem& option) const
 {
-    //QRect rcCertification(option.rect.right()-m_ribbonSize+9, option.rect.top()-9, m_ribbonSize, m_ribbonSize);
     QRect rcCertification(option.rect.right() - m_contentMargins.left() - m_btnSize.width(),
                           option.rect.top() + m_contentMargins.top(),
                           m_headerHeight,
@@ -165,54 +146,14 @@ QPolygon CStorePluginListViewDelegate::getRibbonRect(const QStyleOptionViewItem&
     return poly;
 }
 
-PluginState CStorePluginListViewDelegate::getProcessState(const QModelIndex &index) const
+void CHubPluginListViewDelegate::paintText(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    assert(index.isValid());
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
-    int language = pModel->record(index.row()).value("language").toInt();
-    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
+    if (!index.isValid())
+        return;
 
-    if(language == ApiLanguage::CPP)
-        return Utils::Plugin::getCppState(ikomiaVersion);
-    else
-        return Utils::Plugin::getPythonState(ikomiaVersion);
-}
-
-QString CStorePluginListViewDelegate::getStatusMessage(const QModelIndex &index) const
-{
-    // Check version compatibility with App & API
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
-
-    QString msg;
-    int language = pModel->record(index.row()).value("language").toInt();
-    auto ikomiaVersion = pModel->record(index.row()).value("ikomiaVersion").toString();
-
-    if(language == ApiLanguage::CPP)
-    {
-        auto state = Utils::Plugin::getCppState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
-        else if(state == PluginState::UPDATED)
-            msg = QString("<br><b><i><font color=#9a0000>Ikomia Studio update required</font></i></b>");
-    }
-    else
-    {
-        auto state = Utils::Plugin::getPythonState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-            msg = QString("<br><b><i><font color=#9a0000>Deprecated</font></i></b>");
-        else if(state == PluginState::UPDATED)
-            msg = QString("<br><b><i><font color=#de7207>Ikomia Studio update adviced</font></i></b>");
-    }
-    return msg;
-}
-
-void CStorePluginListViewDelegate::paintText(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    assert(index.isValid());
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
+    if (!pModel)
+        return;
 
     QBrush brushHighlight = option.palette.highlight();
     QColor colorHighlight = brushHighlight.color();
@@ -251,11 +192,14 @@ void CStorePluginListViewDelegate::paintText(QPainter *painter, const QStyleOpti
     paintCertification(painter, option, pModel, index);
 }
 
-void CStorePluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void CHubPluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    assert(index.isValid());
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
+    if (!index.isValid())
+        return;
+
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
+    if (!pModel)
+        return;
 
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
@@ -278,9 +222,15 @@ void CStorePluginListViewDelegate::paintLanguageIcon(QPainter *painter, const QS
     painter->restore();
 }
 
-void CStorePluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void CHubPluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    assert(index.isValid());
+    if (!index.isValid())
+        return;
+
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
+    if (!pModel)
+        return;
+
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
@@ -294,10 +244,9 @@ void CStorePluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOp
                 m_btnSize.width(),
                 m_btnSize.height());
 
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
     int os = pModel->record(index.row()).value("os").toInt();
-
     QString pixmapPath;
+
     if(os == OSType::LINUX)
         pixmapPath = ":/Images/linux.png";
     else if(os == OSType::WIN)
@@ -312,11 +261,15 @@ void CStorePluginListViewDelegate::paintOSIcon(QPainter* painter, const QStyleOp
     painter->restore();
 }
 
-void CStorePluginListViewDelegate::paintStars(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void CHubPluginListViewDelegate::paintStars(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    assert(index.isValid());
-    auto pModel = static_cast<const CStoreQueryModel*>(index.model());
-    assert(pModel);
+    if (!index.isValid())
+        return;
+
+    auto pModel = static_cast<const CHubQueryModel*>(index.model());
+    if (!pModel)
+        return;
+
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
@@ -341,38 +294,25 @@ void CStorePluginListViewDelegate::paintStars(QPainter* painter, const QStyleOpt
     painter->restore();
 }
 
-void CStorePluginListViewDelegate::showTooltip(const QModelIndex& modelIndex, const QPoint& pos, int index) const
+void CHubPluginListViewDelegate::showTooltip(const QModelIndex& modelIndex, const QPoint& pos, int index) const
 {
+    QString msg;
     switch(index)
     {
         case 0:
-            QToolTip::showText(pos, tr("Info"));
+            msg = tr("Info");
             break;
-
         case 1:
-            if(m_source == SERVER)
-                QToolTip::showText(pos, tr("Install"));
-            else
-                QToolTip::showText(pos, tr("Publish"));
+            (m_source == LOCAL) ? msg = tr("Publish") : msg = tr("Install");
             break;
         case 2:
-        {
-            auto pModel = static_cast<const CStoreQueryModel*>(modelIndex.model());
-            auto certification = pModel->record(modelIndex.row()).value("certification").toInt();
-
-            switch (certification)
-            {
-                case 0: break;
-                case 1: QToolTip::showText(pos, tr("Tested")); break;
-                case 2: QToolTip::showText(pos, tr("Certified")); break;
-                default: break;
-            }
+            msg = tr("Publish");
             break;
-        }
     }
+    QToolTip::showText(pos, msg);
 }
 
-QRect CStorePluginListViewDelegate::paintName(QPainter* painter, const QStyleOptionViewItem &option, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
+QRect CHubPluginListViewDelegate::paintName(QPainter* painter, const QStyleOptionViewItem &option, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
 {
     QRect rcName(option.rect.left() + m_contentMargins.left() + m_spacings.width(),
                  option.rect.top() + m_contentMargins.top(),
@@ -390,21 +330,19 @@ QRect CStorePluginListViewDelegate::paintName(QPainter* painter, const QStyleOpt
     return rcName;
 }
 
-QRect CStorePluginListViewDelegate::paintShortDescription(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
+QRect CHubPluginListViewDelegate::paintShortDescription(QPainter* painter, int left, int top, int width, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
 {
     auto shortDescription = pModel->record(index.row()).value("shortDescription").toString();
     if(shortDescription.isEmpty())
         shortDescription = pModel->record(index.row()).value("description").toString();
 
     QString displayShortDescription = Utils::String::getElidedString(shortDescription, font, width, 4);
-    displayShortDescription += getStatusMessage(index);
-
     auto shortDescriptionSize = paintStaticText(painter, left, top + m_contentMargins.top()*4, width, displayShortDescription, font, color);
     QRect rcShortDescription(left, top, width, shortDescriptionSize.height());
     return rcShortDescription;
 }
 
-QRect CStorePluginListViewDelegate::paintContributor(QPainter* painter, int left, int top, int width, const CStoreQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
+QRect CHubPluginListViewDelegate::paintContributor(QPainter* painter, int left, int top, int width, const CHubQueryModel* pModel, const QModelIndex& index, QFont font, const QColor& color) const
 {
     //QBrush brushHighlight = qApp->palette().highlight();
     //QColor colorHighlight = brushHighlight.color();
@@ -423,7 +361,7 @@ QRect CStorePluginListViewDelegate::paintContributor(QPainter* painter, int left
     return rcUser;
 }
 
-void CStorePluginListViewDelegate::paintCertification(QPainter* painter, const QStyleOptionViewItem& option, const CStoreQueryModel* pModel, const QModelIndex& index) const
+void CHubPluginListViewDelegate::paintCertification(QPainter* painter, const QStyleOptionViewItem& option, const CHubQueryModel* pModel, const QModelIndex& index) const
 {
     auto certification = pModel->record(index.row()).value("certification").toInt();
     if(certification != 0)
@@ -450,4 +388,4 @@ void CStorePluginListViewDelegate::paintCertification(QPainter* painter, const Q
     }
 }
 
-#include "moc_CStorePluginListViewDelegate.cpp"
+#include "moc_CHubPluginListViewDelegate.cpp"

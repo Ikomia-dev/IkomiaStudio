@@ -66,7 +66,7 @@
  * @details   Details
  */
 
-class CStoreDlg;
+class CHubDlg;
 class CProcessPopupDlg;
 
 namespace Ui
@@ -90,7 +90,7 @@ class CMainView : public QMainWindow
             BTN_OPEN_IMG,
             BTN_OPEN_VIDEO,
             BTN_OPEN_STREAM,
-            BTN_OPEN_STORE,
+            BTN_OPEN_HUB,
             BTN_OPEN_LOGIN,
             BTN_PROJECT_PANE,
             BTN_PROCESS_PANE,
@@ -127,7 +127,7 @@ class CMainView : public QMainWindow
         CNotificationPane*      getNotificationCenter();
         QAction*                getMainToolBarBtn(int id);
         QToolButton*            getBtn(int id);
-        CStoreDlg*              getStoreView() const;
+        CHubDlg*                getHubView() const;
         CProcessPopupDlg*       getProcessPopup() const;
         CPreferencesDlg*        getPreferenceDlg();
         CUserLoginDlg*          getUserLoginDlg() const;
@@ -198,7 +198,7 @@ class CMainView : public QMainWindow
         void                    onMinimizeWindow();
         void                    onExpandWindow();
         void                    onShowPreferences();
-        void                    onShowStore();
+        void                    onShowHub();
         void                    onShowProcessPopup();
 
     private:
@@ -221,7 +221,7 @@ class CMainView : public QMainWindow
         void                    initGraphicsToolbar();
         void                    initNotifications();
         void                    initProgressBar();
-        void                    initStoreView();
+        void                    initHubView();
         void                    initProcessPopup();
         void                    initLoginDialog();
         void                    initAllPath();
@@ -280,7 +280,7 @@ class CMainView : public QMainWindow
         QAction*                            m_pOpenCamAct = nullptr;
         QAction*                            m_pOpenFolderAct = nullptr;
         QAction*                            m_pNewProjectAct = nullptr;
-        QAction*                            m_pOpenStoreAct = nullptr;
+        QAction*                            m_pOpenHubAct = nullptr;
         QAction*                            m_pPluginAct = nullptr;
         QAction*                            m_pPreferencesAct = nullptr;
         CStackedPane*                       m_pLeftPanes = nullptr;
@@ -306,7 +306,7 @@ class CMainView : public QMainWindow
         CNotificationPopupFactory           m_notifFactory;
         CPreferencesDlg                     m_preferencesDlg;
         CUserLoginDlg*                      m_pUserLoginDlg = nullptr;
-        CStoreDlg*                          m_pStoreDlg = nullptr;
+        CHubDlg*                            m_pHubDlg = nullptr;
         CProcessPopupDlg*                   m_pProcessDlg = nullptr;
         QToolButton*                        m_pProjectBtn = nullptr;
         QToolButton*                        m_pProcessBtn = nullptr;

@@ -16,12 +16,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "CStorePluginListView.h"
-#include "CStorePluginListViewDelegate.h"
+#include "CHubPluginListView.h"
+#include "CHubPluginListViewDelegate.h"
 
-CStorePluginListView::CStorePluginListView(int pluginSource, QWidget *parent) : QListView(parent)
+CHubPluginListView::CHubPluginListView(int pluginSource, QWidget *parent) : QListView(parent)
 {
-    m_pDelegate = new CStorePluginListViewDelegate(pluginSource, this);
+    m_pDelegate = new CHubPluginListViewDelegate(pluginSource, this);
 
     setViewMode(QListView::IconMode);
     setMovement(QListView::Static);
@@ -34,16 +34,16 @@ CStorePluginListView::CStorePluginListView(int pluginSource, QWidget *parent) : 
     initConnections();
 }
 
-void CStorePluginListView::mouseMoveEvent(QMouseEvent *event)
+void CHubPluginListView::mouseMoveEvent(QMouseEvent *event)
 {
     // update each listview item delegate look when we move
     update();
     return QListView::mouseMoveEvent(event);
 }
 
-void CStorePluginListView::initConnections()
+void CHubPluginListView::initConnections()
 {
-    connect(m_pDelegate, &CStorePluginListViewDelegate::doShowInfo, [&](const QModelIndex& index){ emit doShowPluginInfo(index); });
-    connect(m_pDelegate, &CStorePluginListViewDelegate::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(index); });
-    connect(m_pDelegate, &CStorePluginListViewDelegate::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(index); });
+    connect(m_pDelegate, &CHubPluginListViewDelegate::doShowInfo, [&](const QModelIndex& index){ emit doShowPluginInfo(index); });
+    connect(m_pDelegate, &CHubPluginListViewDelegate::doInstallPlugin, [&](const QModelIndex& index){ emit doInstallPlugin(index); });
+    connect(m_pDelegate, &CHubPluginListViewDelegate::doPublishPlugin, [&](const QModelIndex& index){ emit doPublishPlugin(index); });
 }

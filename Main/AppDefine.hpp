@@ -100,8 +100,21 @@ namespace Ikomia
         OUTPUT
     };
 
+    const std::map<QString, QString> _officialLicenses =
+    {
+        {"AGPL_30", "AGPL 3.0"},
+        {"APACHE_20", "Apache 2.0"},
+        {"BSD_3_CLAUSE", "BSD 3-Clause"},
+        {"BSD_2_CLAUSE", "BSD 2-Clause"},
+        {"CC0_10", "Creative Commons 1.0"},
+        {"CC_BY_NC_40", "Creative Commons Non Commercial 4.0"},
+        {"GPL_30", "GPL 3.0"},
+        {"LGPL_30", "LGPL 3.0"},
+        {"MIT", "MIT"},
+        {"CUSTOM", "Custom"},
+    };
+
     constexpr int _NotifDefaultDuration = 1500; //1.5s
-    constexpr int _UserCheckFrequency = 600000; //10min
 
     constexpr auto _DefaultDirImg = "default_dir_img";
     constexpr auto _DefaultDirImgExport = "default_dir_img_export";

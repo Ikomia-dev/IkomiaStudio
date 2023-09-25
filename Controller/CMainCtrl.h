@@ -61,7 +61,7 @@ class CMainCtrl : public QObject
         void    initVideoConnections();
         void    initUserConnections();
         void    initDataConnections();
-        void    initStoreConnections();
+        void    initHubConnections();
         void    initWizardConnections();
         void    initSettingsConnections();
         void    initPluginConnections();

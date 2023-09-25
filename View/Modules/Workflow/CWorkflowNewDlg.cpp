@@ -27,7 +27,7 @@ CWorkflowNewDlg::CWorkflowNewDlg(const QString &name, const QStringList &names, 
     CDialog(tr("Workflow information"), parent, DEFAULT|EFFECT_ENABLED, f)
 {
     m_name = name;
-    m_protocolNames = names;
+    m_workflowNames = names;
     initLayout();
     initConnections();
 }
@@ -100,7 +100,7 @@ void CWorkflowNewDlg::validate()
         msgBox.setText(tr("You must at least set the workflow name please."));
         msgBox.exec();
     }
-    else if(m_protocolNames.contains(m_name))
+    else if(m_workflowNames.contains(m_name))
     {
         //Unicity constraint
         QMessageBox msgBox;

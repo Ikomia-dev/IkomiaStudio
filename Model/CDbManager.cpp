@@ -23,6 +23,10 @@
 
 CDbManager::CDbManager()
 {
+    m_migrationMap = {
+        {"0.3.0" , "migration0001.sql"},
+        {"0.10.0" , "migration0002.sql"},
+    };
 }
 
 void CDbManager::init()
@@ -73,8 +77,8 @@ QString CDbManager::getVersionNumber(const QString &component)
 
 void CDbManager::makeMigrations()
 {
-    QString currentDbVersion = getVersionNumber("global");
-    QString currentAppVersion = Utils::IkomiaApp::getCurrentVersionNumber();
+    CSemanticVersion currentDbVersion(getVersionNumber("global").toStdString());
+    CSemanticVersion currentAppVersion(Utils::IkomiaApp::getCurrentVersionNumber());
 
     if(currentDbVersion == currentAppVersion)
     {
@@ -90,10 +94,11 @@ void CDbManager::makeMigrations()
         // Make necessary migrations
         for(auto it=m_migrationMap.begin(); it!=m_migrationMap.end(); ++it)
         {
-            if(it.key() <= currentDbVersion)
+            CSemanticVersion migrationVersion(it.key().toStdString());
+            if(migrationVersion <= currentDbVersion)
                 continue;
 
-            if(it.key() > currentAppVersion)
+            if(migrationVersion > currentAppVersion)
                 break;
 
             try
@@ -118,7 +123,7 @@ void CDbManager::storeCurrentVersion()
         qCritical() << db.lastError().text();
 
     QSqlQuery q(db);
-    QString currentAppVersion = Utils::IkomiaApp::getCurrentVersionNumber();
+    QString currentAppVersion = QString::fromStdString(Utils::IkomiaApp::getCurrentVersionNumber());
 
     auto strQuery = QString("INSERT INTO version (component, number) VALUES ('%1', '%2') "
                        "ON CONFLICT(component) DO UPDATE SET number = excluded.number;")

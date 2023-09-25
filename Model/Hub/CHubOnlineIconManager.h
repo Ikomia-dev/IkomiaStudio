@@ -18,26 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSTOREONLINEICONMANAGER_H
-#define CSTOREONLINEICONMANAGER_H
+#ifndef CHUBONLINEICONMANAGER_H
+#define CHUBONLINEICONMANAGER_H
 
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
 #include "Model/User/CUser.h"
 
-class CStoreOnlineIconManager: public QObject
+class CPluginModel;
+
+class CHubOnlineIconManager: public QObject
 {
     Q_OBJECT
 
     public:
 
-        enum Request { GET_ICON_URL,
-                       DOWNLOAD_ICON
-                     };
+        CHubOnlineIconManager(CPluginModel* pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user);
 
-        CStoreOnlineIconManager(QNetworkAccessManager *pNetworkMgr, const CUser &user);
-
-        void    loadIcons(QJsonArray* pPlugins);
+        void    loadIcons();
 
     signals:
 
@@ -45,33 +43,25 @@ class CStoreOnlineIconManager: public QObject
 
     private:
 
-        void    setPluginIconPath(int index, const QString& path);
-
         QString getPluginIconPath(const QString& name) const;
 
         bool    isIconExists(const QString& pluginName);
 
-        bool    checkReply(QNetworkReply* pReply);
-
         void    incrementLoadedIcon();
 
-        void    downloadPluginIcon(int pluginIndex, const QString& iconUrl);
+        void    savePluginIcon(QNetworkReply *pReply, int pluginIndex);
 
     private slots:
 
-        void    onReplyFinished(QNetworkReply *pReply);
-        void    onGetIconUrlDone(QNetworkReply *pReply);
-        void    onDownloadIconDone(QNetworkReply *pReply);
+        void    onReplyReceived(QNetworkReply* pReply, int pluginIndex);
 
     private:
 
         QNetworkAccessManager*      m_pNetworkMgr = nullptr;
         CUser                       m_currentUser;
-        QJsonArray*                 m_pPlugins;
-        QMap<QNetworkReply*, int>   m_mapReplyType;
-        QMap<QNetworkReply*, int>   m_mapReplyPluginIndex;
+        CPluginModel*               m_pModel = nullptr;
         int                         m_nbIcons = 0;
         int                         m_nbLoadedIcons = 0;
 };
 
-#endif // CSTOREONLINEICONMANAGER_H
+#endif // CHUBONLINEICONMANAGER_H

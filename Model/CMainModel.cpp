@@ -54,7 +54,7 @@ CProcessManager* CMainModel::getProcessManager()
 
 CWorkflowManager* CMainModel::getWorkflowManager()
 {
-    return &m_protocolMgr;
+    return &m_workflowMgr;
 }
 
 CRenderManager* CMainModel::getRenderManager()
@@ -87,9 +87,9 @@ CMainDataManager* CMainModel::getDataManager()
     return &m_dataMgr;
 }
 
-CStoreManager *CMainModel::getStoreManager()
+CHubManager *CMainModel::getHubManager()
 {
-    return &m_storeMgr;
+    return &m_hubMgr;
 }
 
 CSettingsManager*CMainModel::getSettingsManager()
@@ -118,7 +118,7 @@ void CMainModel::init()
     initRenderManager();
     initDataManager();
     initUserManager();
-    initStoreManager();
+    initHubManager();
     initMatomo();
     initConnections();
 }
@@ -126,7 +126,7 @@ void CMainModel::init()
 void CMainModel::notifyViewShow()
 {
     m_processMgr.notifyViewShow();
-    m_protocolMgr.notifyViewShow();
+    m_workflowMgr.notifyViewShow();
     m_graphicsMgr.notifyViewShow();
     m_userMgr.notifyViewShow();
     m_pluginMgr.notifyViewShow();
@@ -148,8 +148,8 @@ void CMainModel::onSetCurrentUser(const CUser &user)
     //Take care of initialization order
     m_pluginMgr.setCurrentUser(user);
     m_processMgr.setCurrentUser(user);
-    m_storeMgr.setCurrentUser(user);
-    m_protocolMgr.setCurrentUser(user);
+    m_hubMgr.setCurrentUser(user);
+    m_workflowMgr.setCurrentUser(user);
 }
 
 void CMainModel::onStartJupyterLab()
@@ -231,20 +231,20 @@ void CMainModel::initDb()
 
 void CMainModel::initProjectManager()
 {
-    m_projectMgr.setManagers(&m_graphicsMgr, &m_renderMgr, &m_resultsMgr, &m_protocolMgr, &m_progressMgr, &m_dataMgr);
+    m_projectMgr.setManagers(&m_graphicsMgr, &m_renderMgr, &m_resultsMgr, &m_workflowMgr, &m_progressMgr, &m_dataMgr);
 }
 
 void CMainModel::initProcessManager()
 {
     emit doSetSplashMessage(tr("Load process library and plugins..."), Qt::AlignCenter, qApp->palette().highlight().color());
     QCoreApplication::processEvents();
-    m_processMgr.setManagers(&m_pluginMgr, &m_protocolMgr);
+    m_processMgr.setManagers(&m_pluginMgr, &m_workflowMgr);
     m_processMgr.init();
 }
 
 void CMainModel::initWorkflowManager()
 {
-    m_protocolMgr.setManagers(&m_processMgr, &m_projectMgr, &m_graphicsMgr,
+    m_workflowMgr.setManagers(&m_networkMgr, &m_processMgr, &m_projectMgr, &m_graphicsMgr,
                               &m_resultsMgr, &m_dataMgr, &m_progressMgr, &m_settingsMgr);
 
     CTrainingMonitoring monitor(&m_networkMgr);
@@ -259,13 +259,13 @@ void CMainModel::initWorkflowManager()
 
 void CMainModel::initGraphicsManager()
 {
-    m_graphicsMgr.setManagers(&m_projectMgr, &m_protocolMgr);
+    m_graphicsMgr.setManagers(&m_projectMgr, &m_workflowMgr);
 }
 
 void CMainModel::initResultsManager()
 {
     m_resultsMgr.init();
-    m_resultsMgr.setManagers(&m_projectMgr, &m_protocolMgr, &m_graphicsMgr, &m_renderMgr, &m_dataMgr, &m_progressMgr);
+    m_resultsMgr.setManagers(&m_projectMgr, &m_workflowMgr, &m_graphicsMgr, &m_renderMgr, &m_dataMgr, &m_progressMgr);
 }
 
 void CMainModel::initRenderManager()
@@ -275,7 +275,7 @@ void CMainModel::initRenderManager()
 
 void CMainModel::initDataManager()
 {
-    m_dataMgr.setManagers(&m_projectMgr, &m_protocolMgr, &m_graphicsMgr, &m_resultsMgr, &m_renderMgr, &m_progressMgr);
+    m_dataMgr.setManagers(&m_projectMgr, &m_workflowMgr, &m_graphicsMgr, &m_resultsMgr, &m_renderMgr, &m_progressMgr);
 }
 
 void CMainModel::initUserManager()
@@ -284,9 +284,9 @@ void CMainModel::initUserManager()
     m_userMgr.setManagers(&m_networkMgr);
 }
 
-void CMainModel::initStoreManager()
+void CMainModel::initHubManager()
 {
-    m_storeMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr);
+    m_hubMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr);
 }
 
 void CMainModel::initSettingsManager()
