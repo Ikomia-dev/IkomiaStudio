@@ -50,7 +50,6 @@ class CProcessDocWidget : public QWidget
     signals:
 
         void            doBack();
-        void            doSave(bool bFullEdit, const CTaskInfo& info);
         void            doInstallPlugin();
 
     private slots:

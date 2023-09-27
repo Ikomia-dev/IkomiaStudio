@@ -549,9 +549,6 @@ void CWorkflowModuleWidget::initConnections()
 
     //Scene -> main view
     connect(pScene, &CWorkflowScene::doShowProcessPopup, [&]{ emit doShowProcessPopup(); });
-
-    //Doc window -> model
-    connect(m_pProcessDocDlg->getDocWidget(), &CProcessDocWidget::doSave, m_pModel, &CWorkflowManager::onUpdateProcessInfo);
 }
 
 QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title, QWidget* pBtn)

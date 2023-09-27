@@ -175,14 +175,6 @@ void CHubManager::onInstallPlugin(CPluginModel::Type type, const QModelIndex &in
     queryServerInstallPlugin(pModel, pluginInfo["url"].toString());
 }
 
-void CHubManager::onUpdatePluginInfo(bool bFullEdit, const CTaskInfo &info)
-{
-    //Slot called if a user edit documentation and save modifications -> only available on local plugins
-    assert(m_pProcessMgr);
-    m_pProcessMgr->onUpdateProcessInfo(bFullEdit, info);
-    createQueryModel(&m_localPluginModel);
-}
-
 void CHubManager::onHubSearchChanged(const QString &text)
 {
     try
@@ -274,30 +266,36 @@ void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, H
     pReply->deleteLater();
 }
 
-void CHubManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
+void CHubManager::onUpdateProgress(qint64 bytesSent, qint64 bytesTotal, CProgressCircle* pProgress, const QString& msg)
 {
+    if (pProgress->maximum() == 0)
+        pProgress->setMaximum(bytesTotal/1024);
+
     const float factor = 1024.0*1024.0;
     QString sent = QString::number(bytesSent / factor, 'f', 1);
     QString total = QString::number(bytesTotal / factor, 'f', 1);
-    emit m_progressSignal.doSetMessage(QString("Uploading package: %1 Mb / %2 Mb").arg(sent).arg(total));
-    emit m_progressSignal.doSetValue(bytesSent / 1024);
+    emit pProgress->doSetMessage(QString("%1: %2 Mb / %3 Mb").arg(msg).arg(sent).arg(total));
+    emit pProgress->setValue(bytesSent / 1024);
 }
 
-void CHubManager::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+void CHubManager::initTransferProgress(QNetworkReply *pReply, const QString& msg, size_t steps)
 {
-    assert(m_pProgressMgr);
+    auto pProgressSignal = new CProgressSignalHandler;
+    pProgressSignal->setParent(pReply);
+    CProgressCircle* pProgress = m_pProgressMgr->launchProgress(pProgressSignal, steps, msg, false);
 
-    if(m_bDownloadStarted == false)
+    connect(pReply, &QNetworkReply::uploadProgress, [=](qint64 bytesSent, qint64 bytesTotal)
     {
-        m_pProgressMgr->launchProgress(&m_progressSignal, bytesTotal/1024, tr("Downloading algorithm..."), false);
-        m_bDownloadStarted = true;
-    }
-
-    const float factor = 1024.0*1024.0;
-    QString received = QString::number(bytesReceived / factor, 'f', 1);
-    QString total = QString::number(bytesTotal / factor, 'f', 1);
-    emit m_progressSignal.doSetMessage(QString("Downloading algorithm: %1 Mb / %2 Mb").arg(received).arg(total));
-    emit m_progressSignal.doSetValue(bytesReceived / 1024);
+        onUpdateProgress(bytesSent, bytesTotal, pProgress, msg);
+    });
+    connect(pReply, &QNetworkReply::downloadProgress, [=](qint64 bytesSent, qint64 bytesTotal)
+    {
+        onUpdateProgress(bytesSent, bytesTotal, pProgress, msg);
+    });
+    connect(pReply, &QNetworkReply::finished, [=](){
+       pProgressSignal->doFinish();
+       pProgressSignal->deleteLater();
+    });
 }
 
 QJsonObject CHubManager::getJsonObject(QNetworkReply *pReply, const QString &errorMsg) const
@@ -781,9 +779,31 @@ void CHubManager::checkInstalledModules(const QString &pluginDir)
 
 void CHubManager::updateWorkspacePlugin(const QString& name)
 {
-    // TODO: check if it's the selected workspace is the same
+    //Http request to update algorithm
+    QByteArray jsonPayload = createPluginPayload(&m_localPluginModel);
     QJsonObject plugin = m_workspacePluginModel.getJsonPlugin(name);
-    uploadPluginIcon(plugin["url"].toString());
+    QUrlQuery urlQuery(plugin["url"].toString());
+    QUrl url(urlQuery.query());
+
+    if(url.isValid() == false)
+    {
+        qCDebug(logHub) << url.errorString();
+        clearContext(&m_localPluginModel, true);
+        return;
+    }
+
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("User-Agent", "Ikomia Studio");
+    request.setRawHeader("Content-Type", "application/json");
+
+    if (m_currentUser.isConnected())
+        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
+
+    auto pReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", jsonPayload);
+    connect(pReply, &QNetworkReply::finished, [=](){
+       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
+    });
 }
 
 void CHubManager::updateLocalPlugin()
@@ -1158,16 +1178,15 @@ void CHubManager::uploadPluginPackage()
     filePart.setBodyDevice(m_pTranferFile);
     pMultiPart->append(filePart);
 
-    //Init progress: size in ko
-    m_pProgressMgr->launchProgress(&m_progressSignal, m_pTranferFile->size() / 1024, tr("Uploading algorithm package..."), false);
-
     auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
     pMultiPart->setParent(pNewReply);
+
+    //Init progress
+    initTransferProgress(pNewReply, tr("Uploading algorithm package"), m_pTranferFile->size() / 1024);
 
     connect(pNewReply, &QNetworkReply::finished, [=](){
        this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_PACKAGE);
     });
-    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CHubManager::onUploadProgress);
 }
 
 void CHubManager::uploadPluginIcon(QNetworkReply* pReply)
@@ -1231,16 +1250,15 @@ void CHubManager::uploadPluginIcon(const QString &strUrl)
     pMultiPart->append(filePart);
     pIconFile->setParent(pMultiPart);
 
-    //Init progress: size in ko
-    m_pProgressMgr->launchProgress(&m_progressSignal, pIconFile->size() / 1024, tr("Uploading icon..."), false);
-
     auto pNewReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", pMultiPart);
     pMultiPart->setParent(pNewReply);
+
+    //Init progress
+    initTransferProgress(pNewReply, tr("Uploading icon"), pIconFile->size() / 1024);
 
     connect(pNewReply, &QNetworkReply::finished, [=](){
        this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_ICON);
     });
-    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CHubManager::onUploadProgress);
 }
 
 void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pReply)
@@ -1277,18 +1295,18 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
         request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
 
     auto pNewReply = m_pNetworkMgr->get(request);
+
+    //Init progress
+    initTransferProgress(pNewReply, tr("Downloading algorithm package"), 0);
+
     connect(pNewReply, &QNetworkReply::finished, [=](){
        this->onReplyReceived(pNewReply, pModel, HubRequestType::DOWNLOAD_PACKAGE);
     });
-    connect(pNewReply, &QNetworkReply::downloadProgress, this, &CHubManager::onDownloadProgress);
 }
 
 void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
 {
     assert(m_pProcessMgr);
-
-    m_bDownloadStarted = false;
-    emit m_progressSignal.doFinish();
 
     //Save archive to disk
     QString packageFile = pModel->getPackageFile();
@@ -1423,7 +1441,6 @@ void CHubManager::clearContext(CPluginModel* pModel, bool bError)
 
 void CHubManager::finalyzePublishHub()
 {
-    emit m_progressSignal.doFinish();
     auto name = m_workspacePluginModel.getQStringField("name");
     qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to Ikomia HUB").arg(name);
     onRequestHubModel();
@@ -1434,7 +1451,6 @@ void CHubManager::finalizePublishWorkspace()
 {
     updateLocalPlugin();
     deleteTranferFile();
-    emit m_progressSignal.doFinish();
     auto name =  m_localPluginModel.getQStringField("name");
     qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
     clearContext(&m_localPluginModel, false);
@@ -1461,7 +1477,7 @@ void CHubManager::finalizePluginInstall(CPluginModel* pModel, const CTaskInfo& i
     bool bLoaded = m_pProcessMgr->reloadPlugin(name, info.m_language);
     if(bLoaded)
     {
-        createQueryModel(&m_localPluginModel);
+        onRequestLocalModel();
         qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully installed").arg(name);
     }
     else

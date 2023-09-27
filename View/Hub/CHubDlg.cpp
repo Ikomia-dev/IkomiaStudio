@@ -88,7 +88,9 @@ void CHubDlg::onSetPluginModel(CPluginModel *pModel)
         connect(pQueryModel, &CHubQueryModel::modelReset, updateLabelMsg);
         updateLabelMsg();
     }
-    requestHubModels();
+
+    if (m_bAllModelsRequested)
+        requestHubModels();
 }
 
 void CHubDlg::onModelError(CPluginModel *pModel)
@@ -187,10 +189,6 @@ void CHubDlg::initConnections()
     connect(m_pWorkspaceView, &CHubPluginListView::doPublishPlugin, [&](const QModelIndex& index){ emit doGetNextPublishInfo(index); });
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackWidget->setCurrentIndex(0); });
-    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
-    {
-        emit doUpdatePluginInfo(bFullEdit, info);
-    });
     connect(m_pDocWidget, &CProcessDocWidget::doInstallPlugin, this, &CHubDlg::onInstallPlugin);
 }
 
@@ -386,12 +384,14 @@ void CHubDlg::requestHubModels()
             break;
         case ModelRequestStage::WORKSPACE_DONE:
             m_modelRequestStage = ModelRequestStage::IDLE;
+            m_bAllModelsRequested = false;
             break;
     }
 }
 
 void CHubDlg::showEvent(QShowEvent *event)
 {
+    m_bAllModelsRequested = true;
     requestHubModels();
     QDialog::showEvent(event);
 }

@@ -53,11 +53,11 @@ void CProgressBarManager::onSetElapsedTime(double elapsedTime)
     emit doSetElapsedTime(elapsedTime);
 }
 
-void CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, size_t steps, const QString& msg, bool bMainThread)
+CProgressCircle* CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, size_t steps, const QString& msg, bool bMainThread)
 {
     assert(pSignal);
 
-    auto pProgress = m_progressCircleMgr.createProgress(pSignal, bMainThread);
+    CProgressCircle* pProgress = m_progressCircleMgr.createProgress(pSignal, bMainThread);
 
     //Connections
     connect(this, &CProgressBarManager::doAbortProgressBar, pProgress, &CProgressCircle::onAbort);
@@ -66,9 +66,11 @@ void CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, size_t
 
     //Set number of steps after initializing popup window to ensure signal connection validity
     emit pSignal->doSetTotalSteps(steps);
+
+    return pProgress;
 }
 
-void CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, const QString& msg, bool bMainThread)
+CProgressCircle* CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, const QString& msg, bool bMainThread)
 {
     assert(pSignal);
 
@@ -84,6 +86,7 @@ void CProgressBarManager::launchProgress(CProgressSignalHandler* pSignal, const 
     });
 
     emit doShowProgressNotification(msg, Notification::INFO, pProgress);
+    return pProgress;
 }
 
 void CProgressBarManager::launchInfiniteProgress(const QString &msg, bool bMainThread)

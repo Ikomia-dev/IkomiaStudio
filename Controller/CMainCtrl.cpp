@@ -457,7 +457,6 @@ void CMainCtrl::initHubConnections()
     connect(m_pView->getHubView(), &CHubDlg::doPublishHub, m_pModel->getHubManager(), &CHubManager::onPublishHub);
     connect(m_pView->getHubView(), &CHubDlg::doPublishWorkspace, m_pModel->getHubManager(), &CHubManager::onPublishWorkspace);
     connect(m_pView->getHubView(), &CHubDlg::doInstallPlugin, m_pModel->getHubManager(), &CHubManager::onInstallPlugin);
-    connect(m_pView->getHubView(), &CHubDlg::doUpdatePluginInfo, m_pModel->getHubManager(), &CHubManager::onUpdatePluginInfo);
     connect(m_pView->getHubView(), &CHubDlg::doHubSearchChanged, m_pModel->getHubManager(), &CHubManager::onHubSearchChanged);
     connect(m_pView->getHubView(), &CHubDlg::doWorkspaceSearchChanged, m_pModel->getHubManager(), &CHubManager::onWorkspaceSearchChanged);
     connect(m_pView->getHubView(), &CHubDlg::doLocalSearchChanged, m_pModel->getHubManager(), &CHubManager::onLocalSearchChanged);

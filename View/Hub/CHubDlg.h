@@ -61,7 +61,6 @@ class CHubDlg : public CDialog
         void            doPublishHub(const QModelIndex& index, const QJsonObject& info);
         void            doPublishWorkspace(const QModelIndex& index, const QString& workspace="");
         void            doInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
-        void            doUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            doHubSearchChanged(const QString& text);
         void            doWorkspaceSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
@@ -122,6 +121,7 @@ class CHubDlg : public CDialog
         CProcessDocWidget*      m_pDocWidget = nullptr;
         QPersistentModelIndex   m_currentModelIndex;
         ModelRequestStage       m_modelRequestStage = ModelRequestStage::IDLE;
+        bool                    m_bAllModelsRequested = false;
 };
 
 #endif // CHUBDLG_H

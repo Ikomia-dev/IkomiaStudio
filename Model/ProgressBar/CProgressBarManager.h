@@ -39,8 +39,8 @@ class CProgressBarManager : public QObject
         CProgressBarManager(bool bUnitTest);
 
         void    initProgress();
-        void    launchProgress(CProgressSignalHandler* pSignal, size_t steps, const QString& msg, bool bMainThread);
-        void    launchProgress(CProgressSignalHandler* pSignal, const QString& msg, bool bMainThread);
+        CProgressCircle*    launchProgress(CProgressSignalHandler* pSignal, size_t steps, const QString& msg, bool bMainThread);
+        CProgressCircle*    launchProgress(CProgressSignalHandler* pSignal, const QString& msg, bool bMainThread);
         void    launchInfiniteProgress(const QString& msg, bool bMainThread);
 
         void    endInfiniteProgress();

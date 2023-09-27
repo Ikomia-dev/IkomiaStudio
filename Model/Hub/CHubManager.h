@@ -31,6 +31,7 @@ class QNetworkAccessManager;
 class CProcessManager;
 class CPluginManager;
 class CProgressBarManager;
+class CProgressCircle;
 
 class CHubManager : public QObject
 {
@@ -74,7 +75,6 @@ class CHubManager : public QObject
         void            onPublishHub(const QModelIndex& index, const QJsonObject &info);
         void            onPublishWorkspace(const QModelIndex& index, const QString &workspace);
         void            onInstallPlugin(CPluginModel::Type type, const QModelIndex& index);
-        void            onUpdatePluginInfo(bool bFullEdit, const CTaskInfo& info);
         void            onHubSearchChanged(const QString& text);
         void            onWorkspaceSearchChanged(const QString& text);
         void            onLocalSearchChanged(const QString& text);
@@ -82,10 +82,11 @@ class CHubManager : public QObject
     private slots:
 
         void            onReplyReceived(QNetworkReply* pReply, CPluginModel *pModel, HubRequestType requestType);
-        void            onUploadProgress(qint64 bytesSent, qint64 bytesTotal);
-        void            onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+        void            onUpdateProgress(qint64 bytesSent, qint64 bytesTotal, CProgressCircle* pProgress, const QString &msg);
 
     private:
+
+        void            initTransferProgress(QNetworkReply *pReply, const QString &msg, size_t steps);
 
         QJsonObject     getJsonObject(QNetworkReply *pReply, const QString& errorMsg) const;
         QString         getQuery(CPluginModel::Type serverType, const QString &text) const;
@@ -153,7 +154,6 @@ class CHubManager : public QObject
         CProcessManager*        m_pProcessMgr = nullptr;
         CPluginManager*         m_pPluginMgr = nullptr;
         CProgressBarManager*    m_pProgressMgr = nullptr;
-        CProgressSignalHandler  m_progressSignal;
         CHubDbManager           m_dbMgr;
         CPluginModel            m_hubPluginModel;
         CPluginModel            m_workspacePluginModel;
@@ -161,7 +161,6 @@ class CHubManager : public QObject
         std::mutex              m_mutex;
         QFile*                  m_pTranferFile = nullptr;
         CUser                   m_currentUser;
-        bool                    m_bDownloadStarted = false;
         bool                    m_bBusy = false;
 };
 

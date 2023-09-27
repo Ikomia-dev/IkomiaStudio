@@ -79,10 +79,6 @@ void CProcessPopupDlg::initConnections()
     connect(m_pProcessView, &CProcessListView::doListViewLicked, this, &CProcessPopupDlg::onListViewClicked);
 
     connect(m_pDocWidget, &CProcessDocWidget::doBack, [&]{ m_pRightStackedWidget->setCurrentIndex(0); });
-    connect(m_pDocWidget, &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
-    {
-        emit doUpdateProcessInfo(bFullEdit, info);
-    });
 }
 
 void CProcessPopupDlg::setCurrentUser(const CUser &user)
