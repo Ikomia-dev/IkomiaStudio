@@ -63,7 +63,7 @@ void CUserLoginDlg::initLayout()
     m_pBtnConnect = new QPushButton(tr("Connect"));
 
     auto pLabelSignUp = new QLabel;
-    pLabelSignUp->setText(tr("<a href=\"https://members.ikomia.com/accounts/signup/\">Go to sign up page</a>"));
+    pLabelSignUp->setText(tr("<a href=\"https://app.ikomia.ai/signup/\">Go to sign up page</a>"));
     pLabelSignUp->setTextFormat(Qt::RichText);
     pLabelSignUp->setTextInteractionFlags(Qt::TextBrowserInteraction);
     pLabelSignUp->setOpenExternalLinks(true);
