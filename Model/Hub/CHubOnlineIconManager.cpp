@@ -77,9 +77,6 @@ void CHubOnlineIconManager::loadIcons()
             request.setUrl(url);
             request.setRawHeader("User-Agent", "Ikomia Studio");
 
-            if (m_pModel->getType() == CPluginModel::Type::WORKSPACE)
-                request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
             auto pReply = m_pNetworkMgr->get(request);
             connect(pReply, &QNetworkReply::finished, [=](){
                this->onReplyReceived(pReply, i);
