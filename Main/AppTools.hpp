@@ -397,9 +397,9 @@ namespace Ikomia
                 QSettings ikomiaSettings;
                 QString baseURL = ikomiaSettings.value(DEFAULT_BASE_URL).toString();
 
-                if(baseURL.isEmpty())
+                if(baseURL.isEmpty() || baseURL == "https://members.ikomia.com")
                 {
-                    baseURL = "https://members.ikomia.com";
+                    baseURL = "https://scale.ikomia.ai";
                     ikomiaSettings.setValue(DEFAULT_BASE_URL, baseURL);
                 }
                 return baseURL;
