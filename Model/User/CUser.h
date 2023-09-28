@@ -39,9 +39,10 @@ class CUser
         bool                    isConnected() const;
 
         QByteArray              getAuthHeader() const;
-        CUserNamespace          getNamespace(const QString& name) const;
+        size_t                  getNamespaceCount() const;
+        CUserNamespace          getNamespace(size_t index) const;
+        CUserNamespace          getNamespace(const QString& path) const;
         QString                 getMyNamespaceUrl() const;
-        std::vector<QString>    getNamespaceNames() const;
 
         void                    logout();
 

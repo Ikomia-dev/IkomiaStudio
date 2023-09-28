@@ -122,7 +122,7 @@ void CHubDlg::onPublishPluginToWorkspace(const QModelIndex& index)
     CWorkspaceChoiceDlg workspaceDlg(m_currentUser, this);
     if(workspaceDlg.exec() == QDialog::Accepted)
     {
-        QString workspace = workspaceDlg.getWorkspaceName();
+        QString workspace = workspaceDlg.getWorkspacePath();
         emit doPublishWorkspace(index, workspace);
     }
 }

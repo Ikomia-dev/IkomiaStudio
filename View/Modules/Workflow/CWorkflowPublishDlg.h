@@ -3,6 +3,7 @@
 
 #include "View/Common/CDialog.h"
 #include "View/Common/CResizeStackedWidget.h"
+#include "Model/User/CUser.h"
 
 class CWorkflowPublishDlg: public CDialog
 {
@@ -12,20 +13,20 @@ class CWorkflowPublishDlg: public CDialog
 
         CWorkflowPublishDlg(const QString& wfName, const QString& wfDescription,
                             const QJsonArray &projects,
-                            const std::vector<QString> &namespaces,
+                            const CUser& user,
                             QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         QString getWorkflowName() const;
         QString getWorkflowDescription() const;
         QString getProjectName() const;
         QString getProjectDescription() const;
-        QString getNamespaceName() const;
+        QString getNamespacePath() const;
 
         bool    isNewProject() const;
 
     private:
 
-        void    initLayout();
+        void    initLayout(const CUser &user);
         void    initConnections();
 
         QString getProjectDisplayName(const QJsonObject &project) const;
@@ -39,7 +40,6 @@ class CWorkflowPublishDlg: public CDialog
         QString                 m_workflowName;
         QString                 m_workflowDescription;
         QJsonArray              m_projects;
-        std::vector<QString>    m_namespaceNames;
         QLineEdit*              m_pEditWfName = nullptr;
         QLineEdit*              m_pNewProjectName = nullptr;
         QPlainTextEdit*         m_pEditDescription = nullptr;

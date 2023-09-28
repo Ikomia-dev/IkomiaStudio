@@ -63,7 +63,7 @@ void CWorkflowScaleManager::requestProjects()
 }
 
 void CWorkflowScaleManager::publishWorkflow(const QString &path, bool bNewProject, const QString &projectName,
-                                            const QString &projectDescription, const QString &projectNamespace)
+                                            const QString &projectDescription, const QString &namespacePath)
 {
     if (Utils::File::isFileExist(path.toStdString()) == false)
     {
@@ -73,7 +73,7 @@ void CWorkflowScaleManager::publishWorkflow(const QString &path, bool bNewProjec
     m_wfPath = path;
 
     if (bNewProject)
-        createProject(projectName, projectDescription, projectNamespace);
+        createProject(projectName, projectDescription, namespacePath);
     else
     {
         // Get project URL
@@ -173,9 +173,9 @@ void CWorkflowScaleManager::fillProjects(QNetworkReply *pReply)
     }
 }
 
-void CWorkflowScaleManager::createProject(const QString &name, const QString &description, const QString &namespaceName)
+void CWorkflowScaleManager::createProject(const QString &name, const QString &description, const QString &namespacePath)
 {
-    CUserNamespace ns = m_user.getNamespace(namespaceName);
+    CUserNamespace ns = m_user.getNamespace(namespacePath);
     QString strUrl = ns.m_url + "projects/";
 
     QUrlQuery urlQuery(strUrl);

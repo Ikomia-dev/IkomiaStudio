@@ -76,11 +76,11 @@ void CWorkflowModuleWidget::onAddCandidateTask(const WorkflowTaskPtr &pTask, con
     m_pView->addTask(pTask, id);
 }
 
-void CWorkflowModuleWidget::onSetScaleProjects(const QJsonArray &projects, const std::vector<QString> &namespaces)
+void CWorkflowModuleWidget::onSetScaleProjects(const QJsonArray &projects, const CUser& user)
 {
     QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
     QString wfDescription = QString::fromStdString(m_pModel->getWorkflowDescription());
-    CWorkflowPublishDlg publishFormDlg(wfName, wfDescription, projects, namespaces, this);
+    CWorkflowPublishDlg publishFormDlg(wfName, wfDescription, projects, user, this);
 
     if (publishFormDlg.exec() == QDialog::Accepted)
     {
@@ -89,8 +89,8 @@ void CWorkflowModuleWidget::onSetScaleProjects(const QJsonArray &projects, const
         bool bNewProject = publishFormDlg.isNewProject();
         QString projectName = publishFormDlg.getProjectName();
         QString projectDescription = publishFormDlg.getProjectDescription();
-        QString projectNamespace = publishFormDlg.getNamespaceName();
-        m_pModel->publishWorkflow(wfName, wfDescription, bNewProject, projectName, projectDescription, projectNamespace);
+        QString namespacePath = publishFormDlg.getNamespacePath();
+        m_pModel->publishWorkflow(wfName, wfDescription, bNewProject, projectName, projectDescription, namespacePath);
     }
 }
 

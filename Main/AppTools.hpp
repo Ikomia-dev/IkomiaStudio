@@ -377,6 +377,16 @@ namespace Ikomia
                 }
                 return roleName;
             }
+            inline QString getNamespaceDisplayName(const QString& namespacePath)
+            {
+                QString name;
+                QStringList pathItems = namespacePath.split("/", Qt::SkipEmptyParts);
+
+                for (int i=1; i<pathItems.size(); ++i)
+                    name += pathItems[i] + "/";
+
+                return name;
+            }
         }
 
         namespace Network

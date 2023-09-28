@@ -59,7 +59,7 @@ class CWorkflowModuleWidget : public QWidget
         void            onSetModel(CWorkflowManager* pModel);
         void            onAddTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id, const WorkflowVertex& parentId);
         void            onAddCandidateTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id);
-        void            onSetScaleProjects(const QJsonArray& projects, const std::vector<QString>& namespaces);
+        void            onSetScaleProjects(const QJsonArray& projects, const CUser& user);
         void            onUpdateTaskInfo(const WorkflowTaskPtr& pTask, const CTaskInfo &description);
         void            onUpdateTaskStateInfo(const VectorPairString& infoMap, const VectorPairString& customInfoMap);
         void            onWorkflowCreated();

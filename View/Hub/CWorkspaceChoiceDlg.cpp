@@ -1,25 +1,28 @@
 #include "CWorkspaceChoiceDlg.h"
+#include "Main/AppTools.hpp"
 
 CWorkspaceChoiceDlg::CWorkspaceChoiceDlg(const CUser &user, QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Destination workspace"), parent, DEFAULT|EFFECT_ENABLED, f)
 {
-    m_names = user.getNamespaceNames();
-    initLayout();
+    initLayout(user);
     initConnections();
 }
 
-QString CWorkspaceChoiceDlg::getWorkspaceName() const
+QString CWorkspaceChoiceDlg::getWorkspacePath() const
 {
-    return m_pComboNamespaces->currentText();
+    return m_pComboNamespaces->currentData().toString();
 }
 
-void CWorkspaceChoiceDlg::initLayout()
+void CWorkspaceChoiceDlg::initLayout(const CUser& user)
 {
     auto pLabel = new QLabel(tr("Available workspaces"));
 
     m_pComboNamespaces = new QComboBox;
-    for (size_t i=0; i<m_names.size(); ++i)
-        m_pComboNamespaces->addItem(m_names[i]);
+    for (size_t i=0; i<user.getNamespaceCount(); ++i)
+    {
+        auto ns = user.getNamespace(i);
+        m_pComboNamespaces->addItem(Utils::User::getNamespaceDisplayName(ns.m_path), ns.m_path);
+    }
 
     m_pComboNamespaces->view()->setMinimumWidth(100);
     m_pComboNamespaces->setCurrentIndex(0);

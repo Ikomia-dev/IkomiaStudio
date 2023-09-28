@@ -115,7 +115,7 @@ class CWorkflowManager : public QObject
 
         void                        requestScaleProjects();
         void                        publishWorkflow(const QString &name, const QString &description, bool bNewProject,
-                                                    const QString &projectName, const QString& projectDescription, const QString &projectNamespace);
+                                                    const QString &projectName, const QString& projectDescription, const QString &namespacePath);
 
         void                        updateDataInfo();
 
@@ -208,7 +208,7 @@ class CWorkflowManager : public QObject
         void                        doSetWorkflowChangedIcon();
         void                        doSetDescription(const QString& text);
         void                        doSetIOInfo(const CDataInfoPtr& info, const WorkflowVertex& taskId, int index, bool bInput);
-        void                        doSetScaleProjects(const QJsonArray& projects, const std::vector<QString>& namespaces);
+        void                        doSetScaleProjects(const QJsonArray& projects, const CUser& user);
 
         void                        doAddTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id, const WorkflowVertex& parentId);
         void                        doAddCandidateTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id);

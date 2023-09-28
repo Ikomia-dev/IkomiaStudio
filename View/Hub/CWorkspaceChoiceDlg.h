@@ -12,16 +12,15 @@ class CWorkspaceChoiceDlg : public CDialog
 
         CWorkspaceChoiceDlg(const CUser& user, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-        QString getWorkspaceName() const;
+        QString getWorkspacePath() const;
 
     private:
 
-        void    initLayout();
+        void    initLayout(const CUser &user);
         void    initConnections();
 
     private:
 
-        std::vector<QString>    m_names;
         QComboBox*              m_pComboNamespaces = nullptr;
         QPushButton*            m_pOkBtn = nullptr;
         QPushButton*            m_pCancelBtn = nullptr;

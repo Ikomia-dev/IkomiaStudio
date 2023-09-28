@@ -60,30 +60,34 @@ QByteArray CUser::getAuthHeader() const
     return QString("Token %1").arg(m_token).toLocal8Bit();
 }
 
-CUserNamespace CUser::getNamespace(const QString &name) const
+size_t CUser::getNamespaceCount() const
+{
+    return m_namespaces.size();
+}
+
+CUserNamespace CUser::getNamespace(size_t index) const
+{
+    if (index >= m_namespaces.size())
+        throw CException(CoreExCode::INDEX_OVERFLOW, "Invalid workspace index", __func__, __FILE__, __LINE__);
+
+    return m_namespaces[index];
+}
+
+CUserNamespace CUser::getNamespace(const QString &path) const
 {
     for (size_t i=0; i<m_namespaces.size(); ++i)
     {
-        if (m_namespaces[i].m_name == name)
+        if (m_namespaces[i].m_path == path)
             return m_namespaces[i];
     }
 
-    QString msg = QString("Namespace %1 not found for user %2").arg(name).arg(m_name);
+    QString msg = QString("Namespace %1 not found for user %2").arg(path).arg(m_name);
     throw CException(CoreExCode::NOT_FOUND, msg.toStdString(), __func__, __FILE__, __LINE__);
 }
 
 QString CUser::getMyNamespaceUrl() const
 {
     return m_namespaceUrl;
-}
-
-std::vector<QString> CUser::getNamespaceNames() const
-{
-    std::vector<QString> names;
-    for (size_t i=0; i<m_namespaces.size(); ++i)
-        names.push_back(m_namespaces[i].m_name);
-
-    return names;
 }
 
 void CUser::logout()

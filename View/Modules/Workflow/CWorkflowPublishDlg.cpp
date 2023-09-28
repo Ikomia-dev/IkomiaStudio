@@ -1,16 +1,16 @@
 #include "CWorkflowPublishDlg.h"
+#include "Main/AppTools.hpp"
 
 CWorkflowPublishDlg::CWorkflowPublishDlg(const QString& wfName, const QString& wfDescription,
                                          const QJsonArray &projects,
-                                         const std::vector<QString> &namespaces,
+                                         const CUser &user,
                                          QWidget *parent, Qt::WindowFlags f)
     : CDialog(tr("Workflow publication"), parent, DEFAULT|EFFECT_ENABLED, f)
 {
     m_workflowName = wfName;
     m_workflowDescription = wfDescription;
     m_projects = projects;
-    m_namespaceNames = namespaces;
-    initLayout();
+    initLayout(user);
     initConnections();
 }
 
@@ -40,10 +40,10 @@ QString CWorkflowPublishDlg::getProjectDescription() const
         return "";
 }
 
-QString CWorkflowPublishDlg::getNamespaceName() const
+QString CWorkflowPublishDlg::getNamespacePath() const
 {
     if (m_pRadioNewProject->isChecked())
-        return m_pComboNamespace->currentText();
+        return m_pComboNamespace->currentData().toString();
     else
         return "";
 }
@@ -53,7 +53,7 @@ bool CWorkflowPublishDlg::isNewProject() const
     return m_pRadioNewProject->isChecked();
 }
 
-void CWorkflowPublishDlg::initLayout()
+void CWorkflowPublishDlg::initLayout(const CUser &user)
 {
     const int minPlainTextEditHeight = 75;
     const int minCol1Width = 120;
@@ -104,8 +104,11 @@ void CWorkflowPublishDlg::initLayout()
     m_pComboNamespace = new QComboBox();
     m_pComboNamespace->setMinimumWidth(minCol2Width);
 
-    for (size_t i=0; i<m_namespaceNames.size(); ++i)
-        m_pComboNamespace->addItem(m_namespaceNames[i]);
+    for (size_t i=0; i<user.getNamespaceCount(); ++i)
+    {
+        auto ns = user.getNamespace(i);
+        m_pComboNamespace->addItem(Utils::User::getNamespaceDisplayName(ns.m_path), ns.m_path);
+    }
 
     auto pNewProjectLayout = new QGridLayout();
     pNewProjectLayout->addWidget(pLabelNewProjectName, 0, 0);

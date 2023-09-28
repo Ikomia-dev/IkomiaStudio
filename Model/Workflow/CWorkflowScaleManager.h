@@ -28,7 +28,7 @@ class CWorkflowScaleManager : public QObject
         void        requestProjects();
 
         void        publishWorkflow(const QString& path, bool bNewProject, const QString& projectName,
-                                    const QString& projectDescription, const QString& projectNamespace);
+                                    const QString& projectDescription, const QString& namespacePath);
 
     signals:
 
@@ -48,7 +48,7 @@ class CWorkflowScaleManager : public QObject
 
         void        fillProjects(QNetworkReply* pReply);
 
-        void        createProject(const QString& name, const QString& description, const QString& namespaceName);
+        void        createProject(const QString& name, const QString& description, const QString& namespacePath);
 
         void        addProject(QNetworkReply* pReply);
 

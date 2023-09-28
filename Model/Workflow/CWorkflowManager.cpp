@@ -605,7 +605,7 @@ void CWorkflowManager::requestScaleProjects()
 }
 
 void CWorkflowManager::publishWorkflow(const QString& name, const QString& description, bool bNewProject,
-                                       const QString& projectName, const QString &projectDescription, const QString& projectNamespace)
+                                       const QString& projectName, const QString &projectDescription, const QString& namespacePath)
 {
     assert(m_pWorkflow);
     m_pWorkflow->setName(name.toStdString());
@@ -619,7 +619,7 @@ void CWorkflowManager::publishWorkflow(const QString& name, const QString& descr
     try
     {
         m_pWorkflow->save(tmpPath.toStdString());
-        m_scaleMgr.publishWorkflow(tmpPath, bNewProject, projectName, projectDescription, projectNamespace);
+        m_scaleMgr.publishWorkflow(tmpPath, bNewProject, projectName, projectDescription, namespacePath);
         emit doNewWorkflowNotification(tr("Workflow %1 has been published successfully.").arg(name), Notification::INFO);
     }
     catch(std::exception& e)
@@ -1469,7 +1469,7 @@ void CWorkflowManager::initGlobalConnections()
     //Scale manager -> workflow manager
     connect(&m_scaleMgr, &CWorkflowScaleManager::doSetProjects, [&](const QJsonArray& projects)
     {
-        emit doSetScaleProjects(projects, m_currentUser.getNamespaceNames());
+        emit doSetScaleProjects(projects, m_currentUser);
     });
 }
 
