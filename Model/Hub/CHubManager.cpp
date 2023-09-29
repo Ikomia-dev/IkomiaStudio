@@ -531,6 +531,20 @@ QByteArray CHubManager::createPluginPayload(CPluginModel* pModel)
     auto language = static_cast<ApiLanguage>(pModel->getIntegerField("language"));
     plugin["language"] = QString::fromStdString(Utils::Plugin::getLanguageString(language));
 
+    //Algo type: DATASET, INFER, TRAIN, OTHER...
+    auto algoType = static_cast<AlgoType>(pModel->getIntegerField("algoType"));
+    plugin["algo_type"] = QString::fromStdString(Utils::Plugin::getAlgoTypeString(algoType));
+
+    //Algo tasks: object detection, instance segmentation...
+    QString algoTasks = pModel->getQStringField("algoTasks");
+    QStringList strTasks = algoTasks.split(",", Qt::SkipEmptyParts);
+
+    QJsonArray jsonTasks;
+    for (int i=0; i<strTasks.size(); ++i)
+        jsonTasks.append(strTasks[i]);
+
+    plugin["algo_task"] = jsonTasks;
+
     QJsonDocument doc(plugin);
     return doc.toJson();
 }
