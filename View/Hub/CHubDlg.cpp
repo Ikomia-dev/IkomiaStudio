@@ -391,8 +391,12 @@ void CHubDlg::requestHubModels()
 
 void CHubDlg::showEvent(QShowEvent *event)
 {
-    m_bAllModelsRequested = true;
-    requestHubModels();
+    if (!m_lastUpdateTime.isValid() || m_lastUpdateTime.hasExpired(m_updateFrequency))
+    {
+        m_lastUpdateTime.start();
+        m_bAllModelsRequested = true;
+        requestHubModels();
+    }
     QDialog::showEvent(event);
 }
 

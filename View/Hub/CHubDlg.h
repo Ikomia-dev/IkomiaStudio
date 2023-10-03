@@ -122,6 +122,8 @@ class CHubDlg : public CDialog
         QPersistentModelIndex   m_currentModelIndex;
         ModelRequestStage       m_modelRequestStage = ModelRequestStage::IDLE;
         bool                    m_bAllModelsRequested = false;
+        QElapsedTimer           m_lastUpdateTime;
+        const int               m_updateFrequency = 3600000; //1 hour
 };
 
 #endif // CHUBDLG_H
