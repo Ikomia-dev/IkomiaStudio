@@ -15,8 +15,8 @@ ALTER TABLE process ADD algoType INTEGER;
 --Add algorithme tasks
 ALTER TABLE process ADD algoTasks TEXT;
 --Remove algorithm serverId
-ALTER TABLE process DROP serverId;
+-- Not supported on Windows (sqlite 3.27.2 - required >= 3.35.0) ALTER TABLE process DROP serverId;
 --Remove algorithm userId
-ALTER TABLE process DROP userId;
+-- Not supported on Windows (sqlite 3.27.2 - required >= 3.35.0) ALTER TABLE process DROP userId;
 --Add authentication token in User table
 ALTER TABLE user ADD token BLOB;
