@@ -610,11 +610,10 @@ void CWorkflowManager::publishWorkflow(const QString& name, const QString& descr
     assert(m_pWorkflow);
     m_pWorkflow->setName(name.toStdString());
     m_pWorkflow->setDescription(description.toStdString());
-    QString tmpPath =  Utils::File::conformName(
-                QString("%1/Workflows/%2_%3.json")
-                .arg(Utils::IkomiaApp::getQIkomiaFolder())
-                .arg(name)
-                .arg(QDateTime::currentDateTime().toString(Qt::ISODate)));
+    QString filename = Utils::File::conformName(name + "_" + QDateTime::currentDateTime().toString(Qt::ISODate));
+    QString tmpPath = QString("%1/Workflows/%2.json")
+                        .arg(Utils::IkomiaApp::getQIkomiaFolder())
+                        .arg(filename);
 
     try
     {
