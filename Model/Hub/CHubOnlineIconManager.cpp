@@ -119,6 +119,7 @@ void CHubOnlineIconManager::onReplyReceived(QNetworkReply *pReply, int pluginInd
     {
         qCCritical(logHub).noquote() << pReply->errorString();
         pReply->deleteLater();
+        incrementLoadedIcon();
         return;
     }
 
