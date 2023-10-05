@@ -60,10 +60,6 @@ namespace Ikomia
                         color = QColor(240, 240, 0);
                         break;
 
-                    case IODataType::POSITION:
-                        color = QColor(25, 200, 25);
-                        break;
-
                     case IODataType::INPUT_GRAPHICS:
                     case IODataType::OUTPUT_GRAPHICS:
                         color = QColor(65, 80, 200);
@@ -137,8 +133,8 @@ namespace Ikomia
                         color = QColor(30,130,255);
                         break;
 
-                    case IODataType::JSON:
-                        color = QColor(180,45,255);
+                    case IODataType::SCENE_3D:
+                        color = QColor(45,45,255);
                         break;
                 }
                 return color;
@@ -159,7 +155,6 @@ namespace Ikomia
                     case IODataType::VOLUME:
                     case IODataType::VOLUME_BINARY:
                     case IODataType::VOLUME_LABEL:
-                    case IODataType::POSITION:
                     case IODataType::BLOB_VALUES:
                     case IODataType::NUMERIC_VALUES:
                     case IODataType::VIDEO:
@@ -180,7 +175,7 @@ namespace Ikomia
                     case IODataType::SEMANTIC_SEGMENTATION:
                     case IODataType::KEYPOINTS:
                     case IODataType::TEXT:
-                    case IODataType::JSON:
+                    case IODataType::SCENE_3D:
                         bClickable = false;
                         break;
 

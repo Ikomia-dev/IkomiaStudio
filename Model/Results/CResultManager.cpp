@@ -19,6 +19,7 @@
 #include "CResultManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "IO/CScene3dIO.h"
 #include "IO/CImageIO.h"
 #include "IO/CGraphicsOutput.h"
 #include "IO/CBlobMeasureIO.h"
@@ -31,7 +32,6 @@
 #include "IO/CSemanticSegIO.h"
 #include "IO/CKeypointsIO.h"
 #include "IO/CTextIO.h"
-#include "IO/CJsonIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -106,8 +106,7 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
     {
         auto dataType = pTask->getOutputDataType(i);
         if((dataType == IODataType::VOLUME || 
-            dataType == IODataType::VOLUME_BINARY ||
-            dataType == IODataType::POSITION) &&
+            dataType == IODataType::VOLUME_BINARY) &&
             pTask->getOutput(i)->isDataAvailable())
         {
             auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));
@@ -275,11 +274,11 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         break;
                     }
 
-                    case IODataType::JSON:
+                    case IODataType::SCENE_3D:
                     {
-                        auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
+                        auto outPtr = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
                         assert(outPtr);
-                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                        manageScene3dOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
                     }
 
@@ -803,7 +802,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
         case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
-        case IODataType::JSON: viewType = DisplayType::TEXT_DISPLAY; break;
+        case IODataType::SCENE_3D: viewType = DisplayType::SCENE_3D_DISPLAY; break;
     }
     return viewType;
 }
@@ -1029,6 +1028,7 @@ void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const s
         qCCritical(logResults).noquote() << tr("Process output management: invalid image buffer");
         return;
     }
+
 
     CMat image;
     if(pOut->getDataType() == IODataType::IMAGE_LABEL)
@@ -1330,6 +1330,34 @@ void CResultManager::manageTextOutput(const WorkflowTaskIOPtr &pOutput, const st
     }
     std::vector<std::string> options =   {"json_format", "indented"};
     emit doDisplayText(index, QString::fromStdString(pOutput->toJson(options)), QString::fromStdString(taskName), pViewProp);
+}
+
+void CResultManager::manageScene3dOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp)
+{
+    assert(m_pRenderMgr);
+    assert(outputPtr);
+
+    auto pOut = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
+    if(!pOut)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid scene");
+        return;
+    }
+
+    if(pOut->isDataAvailable() == false)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid scene content");
+        return;
+    }
+
+    try
+    {
+        emit doDisplayScene3d(pOut->getScene3d(), index, QString::fromStdString(taskName), pViewProp);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logResults).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 QModelIndex CResultManager::findResultFromName(const QString &name, QModelIndex startIndex) const

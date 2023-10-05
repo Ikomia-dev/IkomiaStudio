@@ -36,6 +36,7 @@
 #include "Model/Data/CMultiImageModel.h"
 #include "View/DoubleView/Plot/CPlotDisplay.h"
 #include "View/DoubleView/CStaticDisplay.h"
+#include "View/DoubleView/3D/CScene3dDisplay.h"
 #include "View/DoubleView/Image/CImageDisplay.h"
 #include "View/DoubleView/Image/CImageViewSync.h"
 #include "View/DoubleView/Image/CMultiImageDisplay.h"
@@ -45,6 +46,7 @@
 #include "View/DoubleView/CWidgetDataDisplay.h"
 #include "View/DoubleView/CTextDisplay.h"
 #include "Workflow/CViewPropertyIO.h"
+
 
 CResultsViewer::CResultsViewer(CImageViewSync* pViewSync, CVideoViewSync* pVideoViewSync, QWidget* parent) : QWidget(parent)
 {
@@ -219,6 +221,37 @@ CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, 
     return pDisplay;
 }
 
+CScene3dDisplay *CResultsViewer::displayScene3d(const CScene3d& scene3d, int index, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::SCENE_3D_DISPLAY) == false)
+        addTabToResults(DisplayType::SCENE_3D_DISPLAY);
+
+    CScene3dDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::SCENE_3D_DISPLAY);
+
+    if(index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating image display : invalid index");
+            return nullptr;
+        }
+
+        pDisplay = new CScene3dDisplay(nullptr);
+        pDisplay->setSelectOnClick(true);
+
+        addDataViewToTab(DisplayType::SCENE_3D_DISPLAY, pDisplay);
+    }
+    else
+        pDisplay = static_cast<CScene3dDisplay*>(displays[index]);
+
+    //Set image after making the display visible to have a good fit in view behaviour
+    pDisplay->setScene3d(scene3d);
+    pDisplay->setName(name);
+    pDisplay->setViewProperty(pViewProperty);
+    return pDisplay;
+}
+
 CWidgetDataDisplay *CResultsViewer::addWidgetDisplay(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty)
 {
     if(hasTab(DisplayType::WIDGET_DISPLAY) == false)
@@ -318,6 +351,13 @@ int CResultsViewer::addTabToResults(DisplayType type)
             indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/text-editor.png"), tr("Text Results"));
             m_pTabWidget->setIconSize(QSize(16,16));
             m_pTabWidget->setTabToolTip(indTab, tr("Text Results"));
+            m_mapTypeIndex.insert(type, indTab);
+            break;
+
+        case DisplayType::SCENE_3D_DISPLAY:
+            indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/text-editor.png"), tr("3D Scene"));
+            m_pTabWidget->setIconSize(QSize(16,16));
+            m_pTabWidget->setTabToolTip(indTab, tr("3D Scene"));
             m_mapTypeIndex.insert(type, indTab);
             break;
 

@@ -38,6 +38,9 @@
 #include "3D/CVolumeViewSync.h"
 #include "Model/Results/CResultManager.h"
 
+#include "IO/CScene3dIO.h"
+
+
 /**
  * @brief
  *
@@ -88,6 +91,7 @@ class CDoubleView : public QWidget
         void            onDisplayMultiImage(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void            onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int> &syncToIndices, CViewPropertyIO *pViewProperty);
         void            onDisplayResultText(int index, const QString& text, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void            onDisplayResultScene3d(const CScene3d& scene, int index, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void            onAddResultWidget(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
 

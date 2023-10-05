@@ -295,12 +295,20 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Common/CSvgButton.h
     View/Common/CToolbarBorderLayout.cpp
     View/Common/CToolbarBorderLayout.h
+    View/Common/VTK/CVTKCustomInteractorStyle2d.cpp
+    View/Common/VTK/CVTKCustomInteractorStyle2d.h
+    View/Common/VTK/CVTKViewer.cpp
+    View/Common/VTK/CVTKViewer.h
+    View/Common/VTK/CVTKWidget.cpp
+    View/Common/VTK/CVTKWidget.h
     View/DoubleView/3D/C3dAnimationDlg.cpp
     View/DoubleView/3D/C3dAnimationDlg.h
     View/DoubleView/3D/C3dDisplay.cpp
     View/DoubleView/3D/C3dDisplay.h
     View/DoubleView/3D/CPositionDisplay.cpp
     View/DoubleView/3D/CPositionDisplay.h
+    View/DoubleView/3D/CScene3dDisplay.cpp
+    View/DoubleView/3D/CScene3dDisplay.cpp
     View/DoubleView/3D/CVolumeDisplay.cpp
     View/DoubleView/3D/CVolumeDisplay.h
     View/DoubleView/3D/CVolumeViewSync.cpp

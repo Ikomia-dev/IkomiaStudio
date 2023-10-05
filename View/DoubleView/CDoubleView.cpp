@@ -287,6 +287,12 @@ void CDoubleView::onDisplayMultiImage(CMultiImageModel *pModel, const QString &t
     applyViewModeProperty(pViewProperty);
 }
 
+void CDoubleView::onDisplayResultScene3d(const CScene3d& scene, int index, const QString &taskName, CViewPropertyIO *pViewProperty)
+{
+    m_pResultsViewer->displayScene3d(scene, index, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
+}
+
 void CDoubleView::onUpdateIndex(const QModelIndex& index)
 {
     emit doUpdateIndex(index);
