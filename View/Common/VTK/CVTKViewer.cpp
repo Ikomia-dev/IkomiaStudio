@@ -393,7 +393,7 @@ void CVTKViewer::displayScene3d(const CScene3d &scene3d)
                         lstShapePolysLines->InsertNextCell(polyLine);
 
                     } else {
-                        throw CException(CoreExCode::INVALID_PARAMETER, "Object kind unknown during the computation of the 3D scene", __func__, __FILE__, __LINE__);
+                        throw CException(CoreExCode::INVALID_PARAMETER, "Object type unknown during the computation of the 3D scene", __func__, __FILE__, __LINE__);
                     }
                 }
             }
