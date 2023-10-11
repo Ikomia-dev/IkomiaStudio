@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+set(IkomiaStudio_DIR @PACKAGE_IKOMIA_STUDIO_DIR@)
+set(IKOMIA_STUDIO_DIR @PACKAGE_IKOMIA_STUDIO_DIR@)
+
+# If we are here: always true
+set(IkomiaStudio_FOUND YES)
+
+# Package’s binary directory
+set(IkomiaStudio_BINARY_DIR @PACKAGE_IKOMIA_STUDIO_DIR@/Bin)
+
+# Preprocessor definitions to use when compiling code that uses 'IkomiaStudio'
+set(IkomiaStudio_DEFINITIONS "")
+
+# Location of the binary file
+set(IkomiaStudio_EXECUTABLE @PACKAGE_IKOMIA_STUDIO_DIR@/Bin/IkomiaStudio)
+
+# Base directory of the installation of 'IkomiaStudio'
+set(IkomiaStudio_ROOT_DIR @PACKAGE_IKOMIA_STUDIO_DIR@/Build)
+
+# Version of the package. Here, only one version of the package is available
+set(IkomiaStudio_VERSION_@IkomiaStudio_UNDERSCORE_VERSION@ YES)
