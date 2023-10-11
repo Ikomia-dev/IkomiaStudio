@@ -349,6 +349,7 @@ void CMainCtrl::initResultsConnections()
     connect(m_pModel->getResultManager(), &CResultManager::doAddResultWidget, m_pView->getDoubleView(), &CDoubleView::onAddResultWidget);
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayDnnDataset, m_pView->getDoubleView(), &CDoubleView::onDisplayMultiImage);
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayText, m_pView->getDoubleView(), &CDoubleView::onDisplayResultText);
+    connect(m_pModel->getResultManager(), &CResultManager::doDisplayScene3d, m_pView->getDoubleView(), &CDoubleView::onDisplayResultScene3d);
 
     //Result manager -> result viewer
     connect(m_pModel->getResultManager(), &CResultManager::doApplyViewProperty, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onApplyViewProperty); 
@@ -528,6 +529,7 @@ void CMainCtrl::initDataConnections()
 
     //Image manager -> Double view
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayVolume, m_pView->getDoubleView(), &CDoubleView::onDisplayVolume);
+    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayPosition, m_pView->getDoubleView(), &CDoubleView::onDisplayPosition);
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);    
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);
 

@@ -141,6 +141,18 @@ void CMainDataManager::displayVolumeImage(CImageScene* pScene, const QModelIndex
     }
 }
 
+void CMainDataManager::displayPositionImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence)
+{
+    try
+    {
+        m_imgMgr.displayPositionImage(pScene, index, wrapIndex, bNewSequence);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logImage).noquote() << QString::fromStdString(e.what());
+    }
+}
+
 void CMainDataManager::displayVideoImage(const QModelIndex& index, size_t inputIndex, bool bNewSequence)
 {
     try
@@ -192,6 +204,8 @@ void CMainDataManager::reloadCurrent()
             displayVolumeImage(imgItemPtr->getScene(), currentIndex, currentWrapIndex, true);
         else if(pDataset->hasDimension(DataDimension::TIME)) // Video image sequence
             displayImageSequence(currentIndex, 0, true);
+        else if(pDataset->hasDimension(DataDimension::POSITION)) // Position image sequence
+            displayPositionImage(imgItemPtr->getScene(), currentIndex, currentWrapIndex, true);
         else if(pDataset->hasDimension(DataDimension::IMAGE)) // Simple image
             displaySimpleImage(imgItemPtr->getScene(), currentIndex, currentWrapIndex, 0, true);
     }

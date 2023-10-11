@@ -56,8 +56,53 @@ else()
     find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
 endif()
 
-# VTK
-find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED)
+
+
+###################################################
+##                                               ##
+##          Looking for the VTK library          ##
+##                                               ##
+###################################################
+
+find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
+    COMPONENTS
+        vtkCommonCore
+        vtkCommonColor
+        vtkCommonDataModel
+        vtkCommonExecutionModel
+        vtkCommonMath
+        vtkCommonSystem
+        vtkCommonTransforms
+        vtkDICOM
+        vtkFiltersCore
+        vtkFiltersGeneral
+        vtkFiltersImaging
+        vtkGUISupportQt
+        vtkImagingColor
+        vtkImagingCore
+        vtkImagingGeneral
+        vtkImagingMath
+        vtkImagingSources
+        vtkInteractionImage
+        vtkInteractionStyle
+        vtkIOCore
+        vtkIOImage
+        vtkRenderingContext2D
+        vtkRenderingCore
+        vtkRenderingImage
+        vtkRenderingOpenGL2
+        vtksys
+        vtkViewsCore
+)
+
+if(VTK_FOUND)
+    include(${VTK_USE_FILE})
+    message("-- Found VTK: " ${VTK_USE_FILE} " (found suitable exact version \"${VTK_VERSION}\")")
+else()
+	message ("-- VTK not found")
+endif(VTK_FOUND)
+
+
 
 add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Controller/CMainCtrl.cpp
@@ -250,10 +295,20 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Common/CSvgButton.h
     View/Common/CToolbarBorderLayout.cpp
     View/Common/CToolbarBorderLayout.h
+    View/Common/VTK/CVTKCustomInteractorStyle2d.cpp
+    View/Common/VTK/CVTKCustomInteractorStyle2d.h
+    View/Common/VTK/CVTKViewer.cpp
+    View/Common/VTK/CVTKViewer.h
+    View/Common/VTK/CVTKWidget.cpp
+    View/Common/VTK/CVTKWidget.h
     View/DoubleView/3D/C3dAnimationDlg.cpp
     View/DoubleView/3D/C3dAnimationDlg.h
     View/DoubleView/3D/C3dDisplay.cpp
     View/DoubleView/3D/C3dDisplay.h
+    View/DoubleView/3D/CPositionDisplay.cpp
+    View/DoubleView/3D/CPositionDisplay.h
+    View/DoubleView/3D/CScene3dDisplay.cpp
+    View/DoubleView/3D/CScene3dDisplay.cpp
     View/DoubleView/3D/CVolumeDisplay.cpp
     View/DoubleView/3D/CVolumeDisplay.h
     View/DoubleView/3D/CVolumeViewSync.cpp
@@ -523,6 +578,8 @@ target_link_libraries(IkomiaStudio PRIVATE
     OpenMP::OpenMP_CXX
     # OpenGL
     OpenGL::GL
+    # VTK
+    ${VTK_LIBRARIES}
     # OpenCV
     opencv_core
     opencv_imgcodecs
@@ -616,32 +673,6 @@ if(UNIX)
         curl
         # Linux only OpenCV libs
         opencv_freetype
-        # VTK
-        vtkCommonCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkCommonDataModel-${VTK_MAJOR_MINOR_VERSION}
-        vtkCommonExecutionModel-${VTK_MAJOR_MINOR_VERSION}
-        vtkCommonMath-${VTK_MAJOR_MINOR_VERSION}
-        vtkCommonSystem-${VTK_MAJOR_MINOR_VERSION}
-        vtkCommonTransforms-${VTK_MAJOR_MINOR_VERSION}
-        vtkFiltersCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkFiltersGeneral-${VTK_MAJOR_MINOR_VERSION}
-        vtkFiltersImaging-${VTK_MAJOR_MINOR_VERSION}
-        vtkImagingColor-${VTK_MAJOR_MINOR_VERSION}
-        vtkImagingCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkImagingGeneral-${VTK_MAJOR_MINOR_VERSION}
-        vtkImagingMath-${VTK_MAJOR_MINOR_VERSION}
-        vtkImagingSources-${VTK_MAJOR_MINOR_VERSION}
-        vtkInteractionImage-${VTK_MAJOR_MINOR_VERSION}
-        vtkInteractionStyle-${VTK_MAJOR_MINOR_VERSION}
-        vtkIOCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkIOImage-${VTK_MAJOR_MINOR_VERSION}
-        vtkRenderingContext2D-${VTK_MAJOR_MINOR_VERSION}
-        vtkRenderingCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkRenderingImage-${VTK_MAJOR_MINOR_VERSION}
-        vtkRenderingOpenGL2-${VTK_MAJOR_MINOR_VERSION}
-        vtksys-${VTK_MAJOR_MINOR_VERSION}
-        vtkViewsCore-${VTK_MAJOR_MINOR_VERSION}
-        vtkDICOM-${VTK_MAJOR_MINOR_VERSION}
         # Breakpad
         breakpad_client
     )
@@ -683,32 +714,6 @@ if(WIN32)
     )
 
     target_link_directories(IkomiaStudio PRIVATE
-        # VTK
-        vtkCommonCore
-        vtkCommonDataModel
-        vtkCommonExecutionModel
-        vtkCommonMath
-        vtkCommonSystem
-        vtkCommonTransforms
-        vtkFiltersCore
-        vtkFiltersGeneral
-        vtkFiltersImaging
-        vtkImagingColor
-        vtkImagingCore
-        vtkImagingGeneral
-        vtkImagingMath
-        vtkImagingSources
-        vtkInteractionImage
-        vtkInteractionStyle
-        vtkIOCore
-        vtkIOImage
-        vtkRenderingContext2D
-        vtkRenderingCore
-        vtkRenderingImage
-        vtkRenderingOpenGL2
-        vtksys
-        vtkViewsCore
-        vtkDICOM
         # GMIC
         $ENV{ProgramW6432}/gmic/bin
         $ENV{ProgramW6432}/gmic/lib

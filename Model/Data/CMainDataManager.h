@@ -53,6 +53,7 @@ class CMainDataManager : public QObject
 
         void            displaySimpleImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, size_t inputIndex, bool bNewSequence);
         void            displayVolumeImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence);
+        void            displayPositionImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence);
         void            displayVideoImage(const QModelIndex& index, size_t inputIndex, bool bNewSequence);
         void            displayImageSequence(const QModelIndex& index, size_t inputIndex, bool bNewSequence);
 

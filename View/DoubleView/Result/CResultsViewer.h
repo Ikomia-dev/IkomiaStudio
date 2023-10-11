@@ -34,6 +34,9 @@
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
 #include "CDataVideoBuffer.h"
 
+#include "IO/CScene3dIO.h"
+
+
 class CResultTableDisplay;
 class CImageViewSync;
 class CVideoViewSync;
@@ -47,6 +50,7 @@ class CDataPlot;
 class CMultiImageDisplay;
 class CMultiImageModel;
 class CTextDisplay;
+class CScene3dDisplay;
 
 /**
  * @brief
@@ -69,6 +73,7 @@ class CResultsViewer : public QWidget
         CPlotDisplay*           displayPlot(int index, const QString& name, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         CTextDisplay*           displayText(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
+        CScene3dDisplay*        displayScene3d(const CScene3d& scene, int index, const QString &name, CViewPropertyIO *pViewProperty);
 
         CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
 

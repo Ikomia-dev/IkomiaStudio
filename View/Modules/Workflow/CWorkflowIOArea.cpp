@@ -355,6 +355,7 @@ QPixmap CWorkflowIOArea::getThumbnailIcon(const std::shared_ptr<CWorkflowTaskIO>
         case IODataType::DESCRIPTORS:
         case IODataType::DNN_DATASET:
         case IODataType::ARRAY:
+        case IODataType::SCENE_3D:
             return QPixmap(":/Images/help.png").scaled(m_thumbnailSize);
     }
     return QPixmap();
