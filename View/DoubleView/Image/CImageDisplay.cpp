@@ -178,7 +178,7 @@ void CImageDisplay::setToolbarSpacing(int size)
 
 void CImageDisplay::setSliderRange(size_t max)
 {
-    if (m_pSlider)
+    if (m_pSlider && m_pSpinBox)
     {
         m_pSlider->setRange(0, (int)max-1);
         m_pSpinBox->setRange(0, (int)max-1);
