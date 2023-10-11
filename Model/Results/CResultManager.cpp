@@ -32,6 +32,7 @@
 #include "IO/CSemanticSegIO.h"
 #include "IO/CKeypointsIO.h"
 #include "IO/CTextIO.h"
+#include "IO/CJsonIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -106,7 +107,8 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
     {
         auto dataType = pTask->getOutputDataType(i);
         if((dataType == IODataType::VOLUME || 
-            dataType == IODataType::VOLUME_BINARY) &&
+            dataType == IODataType::VOLUME_BINARY ||
+            dataType == IODataType::POSITION) &&
             pTask->getOutput(i)->isDataAvailable())
         {
             auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));
@@ -169,6 +171,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                     case IODataType::IMAGE:
                     case IODataType::IMAGE_BINARY:
                     case IODataType::IMAGE_LABEL:
+                    case IODataType::POSITION:
                         manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
 
@@ -271,6 +274,14 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
+                    }
+
+                    case IODataType::JSON:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
+                        assert(outPtr);
+                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
                         break;
                     }
 
@@ -783,6 +794,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::VOLUME: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VOLUME_BINARY: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VOLUME_LABEL: viewType = DisplayType::IMAGE_DISPLAY; break;
+        case IODataType::POSITION: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VIDEO: viewType = DisplayType::VIDEO_DISPLAY; break;
         case IODataType::VIDEO_BINARY: viewType = DisplayType::VIDEO_DISPLAY; break;
         case IODataType::VIDEO_LABEL: viewType = DisplayType::VIDEO_DISPLAY; break;
@@ -802,6 +814,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
         case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
+        case IODataType::JSON: viewType = DisplayType::TEXT_DISPLAY; break;
         case IODataType::SCENE_3D: viewType = DisplayType::SCENE_3D_DISPLAY; break;
     }
     return viewType;
@@ -816,6 +829,7 @@ std::set<IODataType> CResultManager::getImageBasedDataTypes() const
         IODataType::VOLUME,
         IODataType::VOLUME_BINARY,
         IODataType::VOLUME_LABEL,
+        IODataType::POSITION,
         IODataType::VIDEO,
         IODataType::VIDEO_BINARY,
         IODataType::VIDEO_LABEL,
@@ -1032,9 +1046,17 @@ void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const s
 
     CMat image;
     if(pOut->getDataType() == IODataType::IMAGE_LABEL)
+    {
         CDataConversion::grayscaleToAlpha(pOut->getImage(), image);
+    }
+    else if(pOut->getDataType() == IODataType::POSITION)
+    {
+        image = pOut->getData().getPlane(index);
+    }
     else
+    {
         image = pOut->getImage();
+    }
 
     //Emit signal to display result
     emit doDisplayImage(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), pViewProp);
