@@ -687,7 +687,7 @@ void CDataViewer::displayPosition(CImageScene *pScene, QImage image, QString nam
     auto displays = getPositionDisplays();
 
     if(displays.size() > 0)
-            pDisplay = displays[0];
+        pDisplay = displays[0];
     else
     {
         m_pDataDisplay->removeAll();
