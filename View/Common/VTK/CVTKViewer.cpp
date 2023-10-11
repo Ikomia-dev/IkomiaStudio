@@ -59,7 +59,7 @@ CVTKViewer::CVTKViewer(QWidget* parent, Qt::WindowFlags flags) :
     m_pBtnDisplayAxes(nullptr),
     m_pBtnResetView(nullptr),
     m_pCmbDisplayMode(nullptr),
-	m_pVTKWidget(nullptr)
+    m_pVTKWidget(nullptr)
 {
     // Initialization of the layout's widgets
     initLayout();
@@ -70,11 +70,11 @@ CVTKViewer::CVTKViewer(QWidget* parent, Qt::WindowFlags flags) :
 
 CVTKViewer::~CVTKViewer()
 {
-	if(m_pVTKWidget)
-	{
-		delete m_pVTKWidget;
-		m_pVTKWidget = nullptr;
-	}
+    if(m_pVTKWidget)
+    {
+        delete m_pVTKWidget;
+        m_pVTKWidget = nullptr;
+    }
 }
 
 void CVTKViewer::initLayout()
