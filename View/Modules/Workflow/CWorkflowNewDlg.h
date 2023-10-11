@@ -28,7 +28,7 @@ class CWorkflowNewDlg : public CDialog
 {
     public:
 
-        CWorkflowNewDlg(const QString &name, const QStringList& names, QWidget * parent = 0, Qt::WindowFlags f = 0);
+        CWorkflowNewDlg(const QString &name, const QStringList& names, QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags());
 
         QString         getName() const;
         QString         getKeywords() const;

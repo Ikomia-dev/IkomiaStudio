@@ -29,7 +29,7 @@ class CDatasetLoadPolicyDlg : public CDialog
 {
     public:
 
-        CDatasetLoadPolicyDlg(TreeItemType srcType, QWidget * parent = 0, Qt::WindowFlags f = 0);
+        CDatasetLoadPolicyDlg(TreeItemType srcType, QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags());
 
         DatasetLoadPolicy   getLoadPolicy();
 
