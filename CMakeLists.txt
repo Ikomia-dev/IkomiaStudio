@@ -734,6 +734,48 @@ install(TARGETS IkomiaStudio
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+
+
+###############################################
+##                                           ##
+##     Generation of the package's files     ##
+##                                           ##
+###############################################
+
+include(CMakePackageConfigHelpers)
+
+set(IKOMIA_STUDIO_DIR
+    ${CMAKE_CURRENT_LIST_DIR}
+    CACHE PATH "Location of root directory"
+)
+
+set(IkomiaStudio_UNDERSCORE_VERSION
+    ${IkomiaStudio_VERSION_MAJOR}_${IkomiaStudio_VERSION_MINOR}_${IkomiaStudio_VERSION_PATCH}
+    CACHE STRING "Version of the project where dots are replaced by underscore (X.X.X -> 'X_X_X')"
+)
+
+configure_package_config_file(
+    IkomiaStudioConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/IkomiaStudioConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/IkomiaStudio-${IKOMIA_VERSION}
+    PATH_VARS IKOMIA_STUDIO_DIR CMAKE_INSTALL_PREFIX CMAKE_INSTALL_BINDIR
+)
+
+write_basic_package_version_file(
+    IkomiaStudioConfigVersion.cmake
+    VERSION ${IKOMIA_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/IkomiaStudioConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/IkomiaStudioConfigVersion.cmake
+    DESTINATION
+        ${CMAKE_INSTALL_LIBDIR}/cmake/IkomiaStudio-${IKOMIA_VERSION}
+)
+
+
 #------------------------------------------------------------------------
 #- Run on WINDOWS
 #- To run with QtCreator directly, following paths must be added to PATH:
