@@ -49,6 +49,16 @@ public:
     virtual ~CVTKViewer();
 
     /**
+     * @brief Initialize the widget's layout.
+     */
+    void initLayout();
+
+    /**
+     * @brief Initialize the widget's connections.
+     */
+    void initConnections();
+
+    /**
      * @brief Convert the given 3D scene into VTK primitives and send the result to the 'CVTKWidget' class.
      * @param scene3d: 3D scene to draw
      */

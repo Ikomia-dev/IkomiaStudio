@@ -61,7 +61,25 @@ CVTKViewer::CVTKViewer(QWidget* parent, Qt::WindowFlags flags) :
     m_pCmbDisplayMode(nullptr),
 	m_pVTKWidget(nullptr)
 {
-	// Initialization of the widget used to display a VTK scene inside a QT window
+    // Initialization of the layout's widgets
+    initLayout();
+
+    // Initialization of the layout's connections
+    initConnections();
+}
+
+CVTKViewer::~CVTKViewer()
+{
+	if(m_pVTKWidget)
+	{
+		delete m_pVTKWidget;
+		m_pVTKWidget = nullptr;
+	}
+}
+
+void CVTKViewer::initLayout()
+{
+    // Initialization of the widget used to display a VTK scene inside a QT window
     m_pVTKWidget = new CVTKWidget(this);
 
     // This widget must take as more spaces as possible
@@ -109,24 +127,17 @@ CVTKViewer::CVTKViewer(QWidget* parent, Qt::WindowFlags flags) :
 
     m_pVTKWidget->setBackgroundColor(70.0/255.0, 70.0/255.0, 70.0/255.0);
     m_pVTKWidget->displayAxes(m_pBtnDisplayAxes->isChecked());
-
-
-    // Creation of the connections used by the toolbar's components
-	connect(m_pBtnAxesOxy,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxyReleased);
-	connect(m_pBtnAxesOxz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxzReleased);
-	connect(m_pBtnAxesOyz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOyzReleased);
-	connect(m_pBtnDisplayAxes,                    &QPushButton::released,           this, &CVTKViewer::onBtnDisplayAxesReleased);
-	connect(m_pBtnResetView,                      &QPushButton::released,           this, &CVTKViewer::onBtnResetReleased);
-    connect(m_pCmbDisplayMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CVTKViewer::onCmbDisplayModeCurrentIndexChanged);
 }
 
-CVTKViewer::~CVTKViewer()
+void CVTKViewer::initConnections()
 {
-	if(m_pVTKWidget)
-	{
-		delete m_pVTKWidget;
-		m_pVTKWidget = nullptr;
-	}
+    // Creation of the connections used by the toolbar's components
+    connect(m_pBtnAxesOxy,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxyReleased);
+    connect(m_pBtnAxesOxz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxzReleased);
+    connect(m_pBtnAxesOyz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOyzReleased);
+    connect(m_pBtnDisplayAxes,                    &QPushButton::released,           this, &CVTKViewer::onBtnDisplayAxesReleased);
+    connect(m_pBtnResetView,                      &QPushButton::released,           this, &CVTKViewer::onBtnResetReleased);
+    connect(m_pCmbDisplayMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CVTKViewer::onCmbDisplayModeCurrentIndexChanged);
 }
 
 void CVTKViewer::displayScene3d(const CScene3d &scene3d)
