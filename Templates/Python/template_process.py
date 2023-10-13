@@ -92,7 +92,6 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         # Set algorithm information/metadata here
         self.info.name = "_PluginName_"
         self.info.short_description = "your short description"
-        self.info.description = "your description"
         # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.path = "Plugins/Python"
         self.info.version = "1.0.0"
@@ -106,8 +105,13 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         self.info.documentation_link = ""
         # Code source repository
         self.info.repository = ""
+        self.info.original_repository = ""
         # Keywords used for search
         self.info.keywords = "your,keywords,here"
+        # General type
+        self.info.algo_type = core.AlgoType.OTHER
+        # Algorithms tasks
+        self.info.algo_tasks = ""
 
     def create(self, param=None):
         # Create algorithm object
