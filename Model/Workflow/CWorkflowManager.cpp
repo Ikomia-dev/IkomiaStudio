@@ -756,26 +756,25 @@ void CWorkflowManager::onAllProcessReloaded()
 
 void CWorkflowManager::onProcessReloaded(const QString &name)
 {
+    assert(m_pProcessMgr);
     if(m_pWorkflow == nullptr)
         return;
 
-    assert(m_pProcessMgr);
-
-    auto taskId = m_pWorkflow->getTaskId(name.toStdString());
-    if(taskId == boost::graph_traits<WorkflowGraph>::null_vertex())
-        return;
-
-    auto taskPtr = m_pWorkflow->getTask(taskId);
-    auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
-    //Create new instance
-    //We pass nullptr as parameter because we want to take into account possible modifications
-    //in implementation side -> in this case new instance must be created
-    auto newTaskPtr = m_pProcessMgr->createObject(taskPtr->getName(), nullptr);
-    if(newTaskPtr)
+    auto taskIds = m_pWorkflow->getTaskIdList(name.toStdString());
+    for (size_t i=0; i<taskIds.size(); ++i)
     {
-        m_pWorkflow->replaceTask(newTaskPtr, taskId);
-        if(m_pWorkflow->getActiveTaskId() == taskId)
-            emit doUpdateTaskInfo(newTaskPtr, processInfo);
+        auto taskPtr = m_pWorkflow->getTask(taskIds[i]);
+        auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
+        //Create new instance
+        //We pass nullptr as parameter because we want to take into account possible modifications
+        //in implementation side -> in this case new instance must be created
+        auto newTaskPtr = m_pProcessMgr->createObject(taskPtr->getName(), nullptr);
+        if (newTaskPtr)
+        {
+            m_pWorkflow->replaceTask(newTaskPtr, taskIds[i]);
+            if (m_pWorkflow->getActiveTaskId() == taskIds[i])
+                emit doUpdateTaskInfo(newTaskPtr, processInfo);
+        }
     }
 }
 
@@ -1901,20 +1900,35 @@ void CWorkflowManager::updateDataInfo()
 
 void CWorkflowManager::reloadCurrentPlugins()
 {
+    assert(m_pProcessMgr);
+
     CPyEnsureGIL gil;
-    if(m_pWorkflow == nullptr)
+    if (m_pWorkflow == nullptr)
         return;
 
-    assert(m_pProcessMgr);
     auto rangeIt = m_pWorkflow->getVertices();
-
-    for(auto it=rangeIt.first; it!=rangeIt.second; ++it)
+    for (auto it=rangeIt.first; it!=rangeIt.second; ++it)
     {
-        auto taskPtr = m_pWorkflow->getTask(*it);
+        WorkflowVertex taskId = *it;
+        WorkflowTaskPtr taskPtr = m_pWorkflow->getTask(taskId);
         auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
 
-        if(processInfo.isInternal() == false)
+        if (processInfo.isInternal() == false)
+        {
+            // Save parameters
+            UMapString paramValues = taskPtr->getParamValues();
+            // Reload plugin
             m_pProcessMgr->onReloadPlugin(QString::fromStdString(taskPtr->getName()), processInfo.getLanguage());
+            // Get fresh task instance
+            taskPtr = m_pWorkflow->getTask(taskId);
+            if (paramValues != taskPtr->getParamValues())
+            {
+                // Reset saved parameters
+                taskPtr->setParamValues(paramValues);
+                if (m_pWorkflow->getActiveTaskId() == taskId)
+                    emit doUpdateTaskInfo(taskPtr, m_pProcessMgr->getProcessInfo(taskPtr->getName()));
+            }
+        }
     }
 }
 
