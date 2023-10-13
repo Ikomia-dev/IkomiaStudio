@@ -397,6 +397,11 @@ void CHubDlg::showEvent(QShowEvent *event)
         m_bAllModelsRequested = true;
         requestHubModels();
     }
+    else
+    {
+        // Generate local model to keep it up to date
+        emit doGetLocalModel();
+    }
     QDialog::showEvent(event);
 }
 
