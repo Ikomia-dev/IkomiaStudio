@@ -152,7 +152,7 @@ void CDbManager::executeSqlFile(const QString &path, QSqlDatabase &db)
         queryStr = queryStr.trimmed();
 
         //Extracting queries -> basic parsing, write SQL with caution...
-        QStringList qList = queryStr.split(';', QString::SkipEmptyParts);
+        QStringList qList = queryStr.split(';', Qt::SkipEmptyParts);
 
         //Initialize regular expression for detecting special queries (`begin transaction` and `commit`).
         //NOTE: I used new regular expression for Qt5 as recommended by Qt documentation.
@@ -193,7 +193,7 @@ void CDbManager::executeSqlFile(const QString &path, QSqlDatabase &db)
         queryStr = queryStr.trimmed();
 
         //Execute each individual queries
-        QStringList qList = queryStr.split(';', QString::SkipEmptyParts);
+        QStringList qList = queryStr.split(';', Qt::SkipEmptyParts);
         foreach(const QString &s, qList)
         {
             QSqlQuery query(db);

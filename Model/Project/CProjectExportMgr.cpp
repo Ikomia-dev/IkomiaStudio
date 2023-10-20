@@ -149,7 +149,7 @@ QModelIndex CProjectExportMgr::addItem(const QModelIndex& srcIndex, const QModel
             // Copy file
             try
             {
-                boost::filesystem::copy_file(srcPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+                boost::filesystem::copy_file(srcPath, newPath, boost::filesystem::copy_options::overwrite_existing);
             }
             catch (const boost::filesystem::filesystem_error& e)
             {
@@ -177,7 +177,7 @@ QModelIndex CProjectExportMgr::addItem(const QModelIndex& srcIndex, const QModel
             // Copy file
             try
             {
-                boost::filesystem::copy_file(srcPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+                boost::filesystem::copy_file(srcPath, newPath, boost::filesystem::copy_options::overwrite_existing);
             }
             catch (const boost::filesystem::filesystem_error& e)
             {

@@ -465,7 +465,7 @@ void CGLWidget::paintGL()
 void CGLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_mousePressPos = event->localPos();
-    if(event->buttons() == Qt::MidButton)
+    if(event->buttons() == Qt::MiddleButton)
     {
         m_modelMat.setToIdentity();
         initCamera();
