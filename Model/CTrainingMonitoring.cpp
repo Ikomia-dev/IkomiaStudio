@@ -95,7 +95,9 @@ void CTrainingMonitoring::checkMLflowServer()
     {
         Utils::print(tr("MLflow server started successfully."), QtInfoMsg);
     });
-    pProcess->startDetached(cmd, args);
+
+    if (!pProcess->startDetached(cmd, args))
+        Utils::print(tr("Failed to start MLflow server."), QtInfoMsg);
 }
 
 void CTrainingMonitoring::checkTensorboardServer()
