@@ -19,6 +19,7 @@
 #include "CMainModel.h"
 #include "PythonThread.hpp"
 #include "Main/AppTools.hpp"
+#include "Main/LogCategory.h"
 #include "Model/Matomo/piwiktracker.h"
 #include "CLogManager.h"
 #include "CTrainingMonitoring.h"
@@ -399,8 +400,8 @@ void CMainModel::initPython()
 
     //Set sys.stdout and sys.stderr redirection
     CPyEnsureGIL gil;
-    tyti::pylog::redirect_stdout([&](const char* w){ qInfo().noquote() << QString(w); });
-    tyti::pylog::redirect_stderr([&](const char* w){ qCritical().noquote() << QString(w); });
+    tyti::pylog::redirect_stdout([&](const char* w){ qCInfo(logPython).noquote() << QString(w); });
+    tyti::pylog::redirect_stderr([&](const char* w){ qCCritical(logPython).noquote() << QString(w); });
 }
 
 void CMainModel::initMatomo()
