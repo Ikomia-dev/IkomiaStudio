@@ -39,7 +39,6 @@ pip install ikomia
 [Change the sample image URL to fit algorithm purpose]
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
 
 # Init your workflow
@@ -67,7 +66,6 @@ Ikomia Studio offers a friendly UI with the same features as the API.
 [Change the sample image URL to fit algorithm purpose]
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
 
 # Init your workflow
@@ -92,7 +90,6 @@ wf.run_on(url="example_image.png")
 Every algorithm produces specific outputs, yet they can be explored them the same way using the Ikomia API. For a more in-depth understanding of managing algorithm outputs, please refer to the [documentation](https://ikomia-dev.github.io/python-api-documentation/advanced_guide/IO_management.html).
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
 
 # Init your workflow
@@ -105,7 +102,7 @@ algo = wf.add_task(name="_algorithm_name_", auto_connect=True)
 wf.run_on(url="example_image.png")
 
 # Iterate over outputs
-for output in algo.get_outputs()
+for output in algo.get_outputs():
     # Print information
     print(output)
     # Export it to JSON
