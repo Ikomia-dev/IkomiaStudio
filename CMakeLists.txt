@@ -595,7 +595,6 @@ target_link_libraries(IkomiaStudio PRIVATE
     opencv_text
     opencv_tracking
     opencv_videostab
-    opencv_viz
     opencv_xfeatures2d
     opencv_ximgproc
     opencv_xobjdetect
@@ -628,32 +627,72 @@ if(UNIX)
         curl
         # Linux only OpenCV libs
         opencv_freetype
+        # GDCM
+        gdcmMSFF
+        gdcmDICT
+        gdcmIOD
+        gdcmDSED
+        gdcmCommon
+        gdcmjpeg8
+        gdcmjpeg12
+        gdcmjpeg16
+        gdcmopenjp2
+        gdcmcharls
+        gdcmuuid
+        gdcmexpat
         # VTK
+        vtkalglib-${VTK_MAJOR_MINOR_VERSION}
+        vtkCommonComputationalGeometry-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonCore-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonDataModel-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonExecutionModel-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonMath-${VTK_MAJOR_MINOR_VERSION}
+        vtkCommonMisc-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonSystem-${VTK_MAJOR_MINOR_VERSION}
         vtkCommonTransforms-${VTK_MAJOR_MINOR_VERSION}
         vtkFiltersCore-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersExtraction-${VTK_MAJOR_MINOR_VERSION}
         vtkFiltersGeneral-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersGeometry-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersHybrid-${VTK_MAJOR_MINOR_VERSION}
         vtkFiltersImaging-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersModeling-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersSources-${VTK_MAJOR_MINOR_VERSION}
+        vtkFiltersStatistics-${VTK_MAJOR_MINOR_VERSION}
+        vtkfreetype-${VTK_MAJOR_MINOR_VERSION}
         vtkImagingColor-${VTK_MAJOR_MINOR_VERSION}
         vtkImagingCore-${VTK_MAJOR_MINOR_VERSION}
         vtkImagingGeneral-${VTK_MAJOR_MINOR_VERSION}
+        vtkImagingFourier-${VTK_MAJOR_MINOR_VERSION}
+        vtkImagingHybrid-${VTK_MAJOR_MINOR_VERSION}
         vtkImagingMath-${VTK_MAJOR_MINOR_VERSION}
         vtkImagingSources-${VTK_MAJOR_MINOR_VERSION}
         vtkInteractionImage-${VTK_MAJOR_MINOR_VERSION}
         vtkInteractionStyle-${VTK_MAJOR_MINOR_VERSION}
+        vtkInteractionWidgets-${VTK_MAJOR_MINOR_VERSION}
         vtkIOCore-${VTK_MAJOR_MINOR_VERSION}
+        vtkIOSQL-${VTK_MAJOR_MINOR_VERSION}
         vtkIOImage-${VTK_MAJOR_MINOR_VERSION}
+        vtkIOXML-${VTK_MAJOR_MINOR_VERSION}
+        vtkIOXMLParser-${VTK_MAJOR_MINOR_VERSION}
+        vtkRenderingAnnotation-${VTK_MAJOR_MINOR_VERSION}
         vtkRenderingContext2D-${VTK_MAJOR_MINOR_VERSION}
         vtkRenderingCore-${VTK_MAJOR_MINOR_VERSION}
+        vtkRenderingFreeType-${VTK_MAJOR_MINOR_VERSION}
         vtkRenderingImage-${VTK_MAJOR_MINOR_VERSION}
         vtkRenderingOpenGL2-${VTK_MAJOR_MINOR_VERSION}
+        vtkRenderingVolume-${VTK_MAJOR_MINOR_VERSION}
         vtksys-${VTK_MAJOR_MINOR_VERSION}
         vtkViewsCore-${VTK_MAJOR_MINOR_VERSION}
         vtkDICOM-${VTK_MAJOR_MINOR_VERSION}
+        vtklz4-${VTK_MAJOR_MINOR_VERSION}
+        vtkDICOMParser-${VTK_MAJOR_MINOR_VERSION}
+        vtkmetaio-${VTK_MAJOR_MINOR_VERSION}
+        vtkCommonColor-${VTK_MAJOR_MINOR_VERSION}
+        vtkglew-${VTK_MAJOR_MINOR_VERSION}
+        vtkexpat-${VTK_MAJOR_MINOR_VERSION}
+        vtksqlite-${VTK_MAJOR_MINOR_VERSION}
+
         # Breakpad
         breakpad_client
     )
