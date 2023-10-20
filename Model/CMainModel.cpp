@@ -306,124 +306,78 @@ void CMainModel::initPython()
 
     emit doSetSplashMessage(tr("Configure Python environment..."), Qt::AlignCenter, qApp->palette().highlight().color());
     QCoreApplication::processEvents();
-    QString pythonPath = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
-    std::string pythonExe;
-    std::string pythonLib;
-    std::string pythonDynload;
-    std::string pythonSitePackages;
-    std::string ikomiaApi;
+    std::string pythonExe = Utils::Python::getPythonInterpreterPath();
     std::string pluginsPath = Utils::IkomiaApp::getIkomiaFolder() + "/Plugins/Python";
 
-    // Set program if existing
-    QDir pythonDir(pythonPath);
-    if(pythonDir.exists())
-    {
-        //Define embedded Python paths
-#if defined(Q_OS_MACOS)
-        QString delimiter = ":";
-        pythonExe = pythonPath.toStdString() + "/bin/python" + Utils::Python::_python_bin_prod_version;
-        pythonLib = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        pythonDynload = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        pythonSitePackages = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
-        pluginsPath += ":";
-#elif defined(Q_OS_LINUX)
-        QString delimiter = ":";
-        pythonExe = pythonPath.toStdString() + "/bin/python" + Utils::Python::_python_bin_prod_version;
-        pythonLib = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        pythonDynload = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        pythonSitePackages = pythonPath.toStdString() + "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
-        pluginsPath += ":";
+#if defined(Q_OS_LINUX)
+    std::string delimiter = ":";
 #elif defined(Q_OS_WIN64)
-        QString delimiter = ";";
-        pythonExe = pythonPath.toStdString() + "/python.exe";
-        pythonLib = pythonPath.toStdString() + "/lib;";
-        pythonDynload = pythonPath.toStdString() + "/DLLs;";
-        pythonSitePackages = pythonPath.toStdString() + "/lib/site-packages;";
-        pluginsPath += ";";
+    std::string delimiter = ";";
 #endif
-        //Embedded Python executable
-        auto s = pythonExe.size();
-        Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &s));
 
-        //Set Python path
-        std::string modulePath = pythonLib;
-        modulePath += pythonDynload;
-        modulePath += pythonSitePackages;
-        modulePath += pluginsPath;
+    std::string modulePath = Utils::Python::getPythonLibPath() + delimiter;
+    modulePath += Utils::Python::getPythonDynLoadPath() + delimiter;
+    modulePath += Utils::Python::getPythonSitePackagesPath() + delimiter;
+    modulePath += Utils::Python::getPythonIkomiaApiFolder() + delimiter;
+    modulePath += pluginsPath;
 
-        // Ikomia API
-        std::string ikomiaApiDir = Utils::IkomiaApp::getIkomiaFolder() + "/Api";
-        QDir ikomiaApiQDir(QString::fromStdString(ikomiaApiDir));
+    // Add python bin path to $PATH (for tools like MLflow)
+    QString pathenv = qEnvironmentVariable("PATH");
+    pathenv = QString::fromStdString(Utils::Python::getPythonBinPath() + delimiter) + pathenv;
+    qputenv("PATH", pathenv.toUtf8());
 
-        if (ikomiaApiQDir.exists())
-            modulePath += ikomiaApiDir;
-        else
+    // Embedded Python executable
+    CSemanticVersion newInitVersion("3.11");
+    CSemanticVersion currentVersion(Utils::Python::getPythonVersion());
+
+    if (currentVersion >= newInitVersion)
+    {
+        PyStatus status;
+        PyConfig config;
+        PyConfig_InitPythonConfig(&config);
+
+        status = PyConfig_SetBytesString(&config, &config.program_name, pythonExe.c_str());
+        if (PyStatus_Exception(status))
         {
-            //Developpment configuration
-#ifdef Q_OS_WIN64
-            modulePath += "C:/Developpement/IkomiaApi;";
-#else
-            modulePath += QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
-#endif
+            qCritical() << "Failed to set Python program name";
+            PyConfig_Clear(&config);
+            return;
         }
-        qInfo().noquote() << "Python path:" << QString::fromStdString(modulePath);
 
-        auto sp = modulePath.size();
-        Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &sp));
+        status = PyConfig_SetBytesString(&config, &config.pythonpath_env, modulePath.c_str());
+        if (PyStatus_Exception(status))
+        {
+            qCritical() << "Failed to set Python path";
+            PyConfig_Clear(&config);
+            return;
+        }
 
-        //Add $HOME/python/bin to $PATH
-        QString pathenv = qEnvironmentVariable("PATH");
-        pathenv = pythonPath + "/bin" + delimiter + pathenv;
-        qputenv("PATH", pathenv.toUtf8());
+        status = Py_InitializeFromConfig(&config);
+        if (PyStatus_Exception(status))
+        {
+            qCritical() << "Failed to initialize Python";
+            PyConfig_Clear(&config);
+            return;
+        }
+        PyConfig_Clear(&config);
     }
     else
     {
-        qWarning().noquote() << "Embedded Python not found:" << pythonPath;
+        auto pythonExeSize = pythonExe.size();
+        Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &pythonExeSize));
 
-#if defined(Q_OS_MACOS)
-        pythonExe = "/bin/python" + Utils::Python::_python_bin_prod_version;
-        pythonLib = "/lib/python" + Utils::Python::_python_lib_prod_version + ":";
-        pythonDynload = "/lib/python" + Utils::Python::_python_lib_prod_version + "/lib-dynload:";
-        pythonSitePackages = "/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages:";
-        ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi/Build/Lib/Python:";
-#elif defined(Q_OS_LINUX)
-        pythonExe = "/usr/bin/python" + Utils::Python::getDevBinVersion();
-        pythonLib = ":/usr/lib/python" + Utils::Python::getDevLibVersion() + ":";
-        pythonDynload = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/lib-dynload:";
-        pythonSitePackages = "/usr/lib/python" + Utils::Python::getDevLibVersion() + "/site-packages:";
-        pythonSitePackages += "/usr/local/lib/python" + Utils::Python::getDevLibVersion() + "/dist-packages:";
-        pythonSitePackages += "/usr/lib/python3/dist-packages:";
-        ikomiaApi = QDir::homePath().toStdString() + "/Developpement/IkomiaApi:";
-#elif defined(Q_OS_WIN64)
-        std::string programFilesPath = getenv("PROGRAMFILES");
-        std::string pythonFolder = programFilesPath + "/Python" + Utils::Python::getDevBinVersion();
-        pythonExe = pythonFolder + "/python.exe";
-        pythonLib = ";" + pythonFolder + "/Lib;";
-        pythonDynload = pythonFolder + "/DLLs;";
-        pythonSitePackages = pythonFolder + "/Lib/site-packages;";
-        ikomiaApi = "C:/Developpement/IkomiaApi;";
-#endif
-        auto s = pythonExe.size();
-        Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &s));
+        // Set Python path
+        auto modulePathSize = modulePath.size();
+        Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &modulePathSize));
 
-        //Set Python path
-        std::string modulePath = pythonExe;
-        modulePath += pythonLib;
-        modulePath += pythonDynload;
-        modulePath += pythonSitePackages;
-        modulePath += ikomiaApi;
-        modulePath += pluginsPath;
-        auto sp = modulePath.size();
-        Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &sp));
+        //Initialize Python interpreter
+        Py_Initialize();
     }
 
-    //Initialize Python interpreter
-    Py_Initialize();
-
-    // Set multiprocessing executable to launch python interpreter
-    // for subprocess instead of Ikomia App...
     try
     {
+        // Set multiprocessing executable to launch python interpreter
+        // for subprocess instead of Ikomia App...
         boost::python::object main_module = boost::python::import("__main__");
         boost::python::object main_namespace = main_module.attr("__dict__");
         boost::python::object multiprocessing = boost::python::import("multiprocessing");
@@ -485,21 +439,15 @@ void CMainModel::checkUserInstall()
     QString srcResourcesFolder = QCoreApplication::applicationDirPath() + "/Resources";
 #elif defined(Q_OS_LINUX)
     QString srcPythonFolder = "/opt/Ikomia/Python";
-    QString srcSitePackagesFolder = "/opt/Ikomia/Python/lib/python" + QString::fromStdString(Utils::Python::_python_lib_prod_version) + "/site-packages";
-    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + QString::fromStdString(Utils::Python::_python_lib_prod_version) + "/site-packages";
+    QString srcSitePackagesFolder = "/opt/Ikomia/Python/lib/python" + QString::fromStdString(Utils::Python::getPythonVersion()) + "/site-packages";
+    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + QString::fromStdString(Utils::Python::getPythonVersion()) + "/site-packages";
     QString srcApiFolder = "/opt/Ikomia/Api";
     QString srcResourcesFolder = "/opt/Resources";
-#elif defined(Q_OS_MACOS)
-    QString srcPythonFolder = "/usr/local/Ikomia/Python";
-    QString srcSitePackagesFolder = "/usr/local/Ikomia/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
-    QString userSitePackagesFolder = appFolder + "/Python/lib/python" + Utils::Python::_python_lib_prod_version + "/site-packages";
-    QString srcApiFolder = "/usr/local/Ikomia/Api";
-    QString srcResourcesFolder = "/usr/local/Resources";
 #endif
 
     //Python
     QString userPythonFolder = appFolder + "/Python";
-    if(QDir(userPythonFolder).exists() == false)
+    if (QDir(srcPythonFolder).exists() && QDir(userPythonFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Python environment...\n(Please be patient, this may take a while)"), Qt::AlignCenter, qApp->palette().highlight().color());
         QCoreApplication::processEvents();
@@ -509,7 +457,7 @@ void CMainModel::checkUserInstall()
         //Install Python required packages
         installPythonRequirements();
     }
-    else if (QDir(userSitePackagesFolder).exists() == false)
+    else if (QDir(srcSitePackagesFolder).exists() && QDir(userSitePackagesFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Python environment...\n(Please be patient, this may take a while)"), Qt::AlignCenter, qApp->palette().highlight().color());
         QCoreApplication::processEvents();
@@ -522,7 +470,7 @@ void CMainModel::checkUserInstall()
 
     //Copy Ikomia API
     QString userApiFolder = appFolder + "/Api";
-    if(QDir(userApiFolder).exists() == false)
+    if (QDir(srcApiFolder).exists() && QDir(userApiFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Ikomia API..."), Qt::AlignCenter, qApp->palette().highlight().color());
         QCoreApplication::processEvents();
@@ -531,7 +479,7 @@ void CMainModel::checkUserInstall()
 
     // Copy Resources
     QString userResourcesFolder = appFolder + "/Resources";
-    if(QDir(userResourcesFolder).exists() == false)
+    if (QDir(srcResourcesFolder).exists() && QDir(userResourcesFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Ikomia Resources..."), Qt::AlignCenter, qApp->palette().highlight().color());
         QCoreApplication::processEvents();
@@ -539,7 +487,7 @@ void CMainModel::checkUserInstall()
     }
 
     QString userGmicFolder = Utils::IkomiaApp::getGmicFolder();
-    if(QDir(userGmicFolder).exists() == false)
+    if (QDir(srcResourcesFolder).exists() && QDir(userGmicFolder).exists() == false)
     {
         emit doSetSplashMessage(tr("Install Gmic resources..."), Qt::AlignCenter, qApp->palette().highlight().color());
         QCoreApplication::processEvents();
