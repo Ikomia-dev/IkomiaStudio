@@ -54,10 +54,17 @@ void CProcessDocFrame::initLayout()
     QHBoxLayout* pMainLayout = new QHBoxLayout;
     pMainLayout->setContentsMargins(0, 0, 0, 0);
 
+    m_pBrowserHeader = new QTextBrowser;
+    m_pHeaderDoc = new QTextDocument;
+    m_pBrowserHeader->setOpenExternalLinks(true);
+    m_pBrowserHeader->setDocument(m_pHeaderDoc);
+
     m_pBrowser = new QTextBrowser;
     m_pDoc = new QTextDocument;
     m_pBrowser->setOpenExternalLinks(true);
     m_pBrowser->setDocument(m_pDoc);
+
+    pMainLayout->addWidget(m_pBrowserHeader);
     pMainLayout->addWidget(m_pBrowser);
 
     setLayout(pMainLayout);
@@ -65,119 +72,51 @@ void CProcessDocFrame::initLayout()
 
 void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
 {
-    QString pluginDir;
-    QString pluginName = QString::fromStdString(info.m_name);
+    // Generate header doc from plugin metadata
+    QString qmdContent = generateMarkdown(info);
+    m_pHeaderDoc->setMarkdown(qmdContent);
 
-    if(info.m_language == ApiLanguage::CPP)
-        pluginDir = Utils::CPluginTools::getCppPluginFolder(pluginName);
+    std::string mdContent = Utils::CPluginTools::getReadmeDescription(info.m_name);
+    if (mdContent.empty())
+        mdContent = info.getDescription();
+
+    if (!mdContent.empty())
+    {
+        // Remove HTML part
+        QRegularExpression re("<(?s).+</.+>");
+        QString qmdContent = QString::fromStdString(mdContent);
+        qmdContent.replace(re, "");
+        // Remove Github emojis
+        qmdContent.replace(":rocket:", "");
+        qmdContent.replace(":sunny:", "");
+        qmdContent.replace(":pencil:", "");
+        qmdContent.replace(":mag:", "");
+        m_pDoc->setMarkdown(qmdContent, QTextDocument::MarkdownFeature::MarkdownDialectGitHub);
+    }
     else
-        pluginDir = Utils::CPluginTools::getPythonPluginFolder(pluginName);
-
-    QString docFilePath;
-    QDir qpluginDir(pluginDir);
-
-    // Check if local doc file exists
-    foreach (QString fileName, qpluginDir.entryList(QDir::Files|QDir::NoSymLinks))
-    {
-        if(m_docFiles.contains(fileName))
-        {
-            docFilePath = qpluginDir.absoluteFilePath(fileName);
-            break;
-        }
-    }
-
-    if(!docFilePath.isEmpty())
-    {
-        // Load doc file
-        QFile file(docFilePath);
-        if(file.open(QFile::ReadOnly | QFile::Text) == false)
-        {
-            docFilePath.clear();
-            qWarning().noquote() << tr("Found local document file for plugin %1 but loading failed.").arg(pluginName);
-        }
-        else
-        {
-            QString mdContent(file.readAll());
-            updateLocalPath(mdContent, pluginName);
-            m_pDoc->setMarkdown(mdContent);
-        }
-    }
-
-    if(docFilePath.isEmpty())
-    {
-        // Generate doc from plugin metadata
-        QString mdContent = generateMarkdown(info);
-        m_pDoc->setMarkdown(mdContent);
-    }
+        m_pDoc->clear();
 }
 
 QString CProcessDocFrame::getMarkdownTemplate() const
 {
     return QString("_icon_ \n\n"
                    "<span style=\"color:#cc5a20\"><h1>_name_</h1></span> ![Language logo](_languageIcon_)  \n\n"
+                   "_shortDescription_  \n"
                    "**Version**: _version_  \n"
                    "**_modifiedTxt_**: _modified_  \n"
                    "**_createdTxt_**: _created_  \n"
-                   "**_statusLabel_**: _status_  \n"
-                   "_description_\n\n"
                    "_docLink_ \n\n"
                    "<span style=\"color:#cc5a20\"><h2>Publication</h2></span> \n\n"
                    "_article_ \n\n"
                    "*_authors_* \n\n"
                    "_journal_ \n\n"
                    "_year_ \n\n"
-                   "_repo_ \n\n"
-                   "_license_"
+                   "<span style=\"color:#cc5a20\"><h2>_sourceCodeTxt_</h2></span> \n\n"
+                   "**_repoTxt_**: _repo_ \n\n"
+                   "**_originalRepoTxt_**: _originalRepo_ \n\n"
+                   "**_licenseTxt**: _license_ \n\n"
                    "<span style=\"color:#cc5a20\"><h2>_keywordsTxt_</h2></span> \n\n"
                    "_keywords_");
-}
-
-QString CProcessDocFrame::getStatus(const CTaskInfo &info) const
-{
-    QString status;
-    QString ikomiaVersion = QString::fromStdString(info.m_ikomiaVersion);
-
-    if(info.m_language == ApiLanguage::CPP)
-    {
-        PluginState state = Utils::Plugin::getCppState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-        {
-            status = tr("<span style=\"color:#9a0000\">deprecated</span>(based on Ikomia version %1 while the current is %2)")
-                    .arg(ikomiaVersion)
-                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
-        }
-        else if(state == PluginState::UPDATED)
-        {
-            status = tr("<span style=\"color:#9a0000\">Ikomia Studio update required</span>(based on Ikomia version %1 while the current is %2)")
-                    .arg(ikomiaVersion)
-                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
-        }
-        else
-        {
-            status = tr("<span style=\"color:#008f00\">OK</span> (based on Ikomia version %1)").arg(ikomiaVersion);
-        }
-    }
-    else
-    {
-        PluginState state = Utils::Plugin::getPythonState(ikomiaVersion);
-        if(state == PluginState::DEPRECATED)
-        {
-            status = tr("<span style=\"color:#9a0000\">deprecated</span>(based on Ikomia version %1 while the current is %2)")
-                    .arg(ikomiaVersion)
-                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
-        }
-        else if(state == PluginState::UPDATED)
-        {
-            status = tr("<span style=\"color:#de7207\">Ikomia Studio update adviced</span>(based on Ikomia version %1 while the current is %2)")
-                    .arg(ikomiaVersion)
-                    .arg(Utils::IkomiaApp::getCurrentVersionNumber());
-        }
-        else
-        {
-            status = tr("<span style=\"color:#008f00\">OK</span> (based on Ikomia version %1)").arg(ikomiaVersion);
-        }
-    }
-    return status;
 }
 
 QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
@@ -186,12 +125,15 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
 
     QString languageIconPath;
     if(info.m_language == ApiLanguage::PYTHON)
-        languageIconPath = "qrc:/Images/python-language-logo-32.png";
+        languageIconPath = ":/Images/python-language-logo-32.png";
     else
-        languageIconPath = "qrc:/Images/C++-language-logo-32.png";
+        languageIconPath = ":/Images/C++-language-logo-32.png";
 
     //Process name
     auto newContent = templateContent.replace("_name_", QString::fromStdString(info.m_name));
+
+    //Description
+    newContent = newContent.replace("_shortDescription_", QString::fromStdString(info.m_shortDescription));
 
     //Language icon
     newContent = newContent.replace("_languageIcon_", languageIconPath);
@@ -214,14 +156,6 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     QString createdTxt = tr("Created");
     newContent = newContent.replace("_createdTxt_", createdTxt);
     newContent = newContent.replace("_created_", QString::fromStdString(info.m_createdDate));
-
-    //Status: deprecated or not
-    auto status = getStatus(info);
-    newContent = newContent.replace("_statusLabel_", tr("Status"));
-    newContent = newContent.replace("_status_", status);
-
-    //Description
-    newContent = newContent.replace("_description_", QString::fromStdString(info.m_description));
 
     //Documentation link
     if(info.m_docLink.empty() == false)
@@ -246,21 +180,27 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     else
         newContent = newContent.replace("_year_", "");
 
-    if(info.m_repo.empty() == false)
-    {
-        auto repoStr = QString("<span style=\"color:#cc5a20\"><h2>Repository</h2></span> \n\n [%1](%1) \n\n").arg(QString::fromStdString(info.m_repo));
-        newContent = newContent.replace("_repo_", repoStr);
-    }
-    else
-        newContent = newContent.replace("_repo_", "");
+    // Source code
+    QString sourceCodeTxt = tr("Source code");
+    newContent = newContent.replace("_sourceCodeTxt_", sourceCodeTxt);
+    QString repoTxt = tr("Repository");
+    newContent = newContent.replace("_repoTxt_", repoTxt);
+    newContent = newContent.replace("_repo_", QString::fromStdString(info.m_repo));
+    QString originalRepoTxt = tr("Original repository");
+    newContent = newContent.replace("_originalRepoTxt_", originalRepoTxt);
+    newContent = newContent.replace("_originalRepo_", QString::fromStdString(info.m_originalRepo));
+    QString licenseTxt = tr("License");
+    newContent = newContent.replace("_licenseTxt", licenseTxt);
 
     if(info.m_license.empty() == false)
     {
-        auto licenceStr = QString("<span style=\"color:#cc5a20\"><h2>License</h2></span> \n\n %1 \n\n").arg(QString::fromStdString(info.m_license));
-        newContent = newContent.replace("_license_", licenceStr);
+        QString licenseName = QString::fromStdString(info.m_license);
+        auto it = _officialLicenses.find(licenseName);
+        if (it != _officialLicenses.end())
+            licenseName = it->second;
+
+        newContent = newContent.replace("_license_", licenseName);
     }
-    else
-        newContent = newContent.replace("_license_", "");
 
     //Keywords
     QString keywordsTxt = tr("Keywords");
@@ -268,20 +208,4 @@ QString CProcessDocFrame::generateMarkdown(const CTaskInfo &info) const
     newContent = newContent.replace("_keywords_", QString::fromStdString(info.m_keywords));
 
     return newContent;
-}
-
-void CProcessDocFrame::updateLocalPath(QString &content, const QString& name)
-{
-    QString reStr = QString("file:(.*\\/Ikomia)\\/Plugins\\/.*\\/%1\\/.*\\.[a-zA-Z0-9]*").arg(name);
-    QRegularExpression re(reStr);
-    QRegularExpressionMatchIterator matchIt = re.globalMatch(content);
-
-    while(matchIt.hasNext())
-    {
-        QRegularExpressionMatch match = matchIt.next();
-        auto fullMatch = match.captured(0);
-        auto homeDir = match.captured(1);
-        fullMatch.replace(homeDir, Utils::IkomiaApp::getQIkomiaFolder());
-        content.replace(match.captured(0), fullMatch);
-    }
 }

@@ -19,7 +19,7 @@
 #include "CResultManager.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
-#include "IO/CScene3dIO.h"
+#include "DataProcessTools.hpp"
 #include "IO/CImageIO.h"
 #include "IO/CGraphicsOutput.h"
 #include "IO/CBlobMeasureIO.h"
@@ -33,6 +33,7 @@
 #include "IO/CKeypointsIO.h"
 #include "IO/CTextIO.h"
 #include "IO/CJsonIO.h"
+#include "IO/CScene3dIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -130,13 +131,13 @@ QModelIndex CResultManager::getRootIndex() const
 
 void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const WorkflowVertex& taskId, const QModelIndex& itemIndex)
 {
+    CPyEnsureGIL gil;
     m_bWorkflowInProgress = true;
     size_t outputCount = taskPtr->getOutputCount();
+    clearPreviousOutputs();
 
     if(m_pCurrentTask != taskPtr || m_currentInputIndex != itemIndex || m_currentOutputCount != outputCount)
     {
-        CPyEnsureGIL gil;
-        clearPreviousOutputs();
         m_pCurrentTask = taskPtr;
         m_currentInputIndex = itemIndex;
         m_currentOutputCount = (int)outputCount;
@@ -255,6 +256,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
                         manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         break;
                     }
 
@@ -856,96 +858,6 @@ CViewPropertyIO::ViewMode CResultManager::getViewMode(const WorkflowTaskPtr &tas
     return mode;
 }
 
-InputOutputVect CResultManager::getImageOutputsFromComposite(const std::shared_ptr<CWorkflowTaskIO> &ioPtr)
-{
-    InputOutputVect outputs;
-
-    if (ioPtr->getDataType() == IODataType::INSTANCE_SEGMENTATION)
-    {
-        auto instanceSegIOPtr = std::static_pointer_cast<CInstanceSegIO>(ioPtr);
-        outputs.push_back(instanceSegIOPtr->getMaskImageIO());
-    }
-    else if (ioPtr->getDataType() == IODataType::SEMANTIC_SEGMENTATION)
-    {
-        auto semanticSegIOPtr = std::static_pointer_cast<CSemanticSegIO>(ioPtr);
-        outputs.push_back(semanticSegIOPtr->getMaskImageIO());
-        outputs.push_back(semanticSegIOPtr->getLegendImageIO());
-    }
-    return outputs;
-}
-
-InputOutputVect CResultManager::getImageOutputs(const WorkflowTaskPtr &taskPtr)
-{
-    InputOutputVect imgOutputs;
-    auto outputs = taskPtr->getOutputs(getImageBasedDataTypes());
-
-    // Get image from possible outputs: composite outputs may have more than 1 CImageIO
-    for (size_t i=0; i<outputs.size(); ++i)
-    {
-        if (outputs[i]->isComposite())
-        {
-            auto compositeOuputs = getImageOutputsFromComposite(outputs[i]);
-            imgOutputs.insert(imgOutputs.end(), compositeOuputs.begin(), compositeOuputs.end());
-        }
-        else
-        {
-            imgOutputs.push_back(outputs[i]);
-        }
-    }
-    return imgOutputs;
-}
-
-InputOutputVect CResultManager::getGraphicsOutputsFromComposite(const std::shared_ptr<CWorkflowTaskIO> &ioPtr)
-{
-    InputOutputVect outputs;
-    IODataType dataType = ioPtr->getDataType();
-
-    if (dataType == IODataType::OBJECT_DETECTION)
-    {
-        auto objDetectionIOPtr = std::static_pointer_cast<CObjectDetectionIO>(ioPtr);
-        outputs.push_back(objDetectionIOPtr->getGraphicsIO());
-    }
-    else if (dataType == IODataType::INSTANCE_SEGMENTATION)
-    {
-        auto instanceSegIOPtr = std::static_pointer_cast<CInstanceSegIO>(ioPtr);
-        outputs.push_back(instanceSegIOPtr->getGraphicsIO());
-    }
-    else if (dataType == IODataType::KEYPOINTS)
-    {
-        auto keyptsIOPtr = std::static_pointer_cast<CKeypointsIO>(ioPtr);
-        outputs.push_back(keyptsIOPtr->getGraphicsIO());
-    }
-    else if (dataType == IODataType::TEXT)
-    {
-        auto textIOPtr = std::static_pointer_cast<CTextIO>(ioPtr);
-        outputs.push_back(textIOPtr->getGraphicsIO());
-    }
-    return outputs;
-}
-
-InputOutputVect CResultManager::getGraphicsOutputs(const WorkflowTaskPtr &taskPtr)
-{
-    InputOutputVect graphicsOutputs;
-    auto outputs = taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS, IODataType::OBJECT_DETECTION,
-                                        IODataType::INSTANCE_SEGMENTATION, IODataType::KEYPOINTS,
-                                        IODataType::TEXT});
-
-    // Get graphics from possible outputs: composite outputs may have more than 1 CGraphicsOutput
-    for (size_t i=0; i<outputs.size(); ++i)
-    {
-        if (outputs[i]->isComposite())
-        {
-            auto compositeOuputs = getGraphicsOutputsFromComposite(outputs[i]);
-            graphicsOutputs.insert(graphicsOutputs.end(), compositeOuputs.begin(), compositeOuputs.end());
-        }
-        else
-        {
-            graphicsOutputs.push_back(outputs[i]);
-        }
-    }
-    return graphicsOutputs;
-}
-
 bool CResultManager::isResultFromCurrentImage(const QModelIndex &index) const
 {
     //Retrieve image QModelIndex
@@ -1505,7 +1417,7 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
         throw CException(CoreExCode::NULL_POINTER, tr("Invalid current task").toStdString(), __func__, __FILE__, __LINE__);
 
     // Get image from possible outputs: composite outputs may have more than 1 CImageIO
-    auto outputs = getImageOutputs(taskPtr);
+    auto outputs = taskPtr->getOutputs(getImageBasedDataTypes());
     if(index >= (int)outputs.size())
         throw CException(CoreExCode::INVALID_PARAMETER, tr("Invalid output index").toStdString(), __func__, __FILE__, __LINE__);
 
@@ -1516,16 +1428,16 @@ void CResultManager::saveOutputImage(int index, const std::string &path, bool bW
     if(bWithGraphics)
     {
         img = srcImg.clone();
-        auto graphicsOutputs = getGraphicsOutputs(taskPtr);
+        auto graphicsOutputs =  taskPtr->getOutputs({IODataType::OUTPUT_GRAPHICS});
         for(size_t i=0; i<graphicsOutputs.size(); ++i)
         {
             auto graphicsOutPtr = std::static_pointer_cast<CGraphicsOutput>(graphicsOutputs[i]);
             if(graphicsOutPtr->getImageIndex() == index)
-            {
-                m_pGraphicsMgr->burnGraphicsToImage(graphicsOutPtr->getItems(), img);
-                break;
-            }
+                Utils::Image::burnGraphics(img, graphicsOutPtr->getItems());
         }
+
+        if (pImageIO->isOverlayAvailable())
+            img = Utils::Image::mergeColorMask(img, pImageIO->getOverlayMask(), 0.7, true);
     }
     else
         img = srcImg;

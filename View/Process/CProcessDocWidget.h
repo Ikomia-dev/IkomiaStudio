@@ -40,23 +40,21 @@ class CProcessDocWidget : public QWidget
         {
             NONE = 0x00000000,
             BACK = 0x00000001,
-            EDIT = 0x00000002
         };
 
         CProcessDocWidget(int actions, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void            setCurrentUser(const CUser& user);
-        void            setProcessInfo(const CTaskInfo &info);
+        void            setProcessInfo(const CTaskInfo &info, bool bFromHub);
 
     signals:
 
         void            doBack();
-        void            doSave(bool bFullEdit, const CTaskInfo& info);
+        void            doInstallPlugin();
 
     private slots:
 
         void            onShowSourceCode();
-        void            onExportDocumentation();
 
     protected:
 
@@ -65,17 +63,16 @@ class CProcessDocWidget : public QWidget
     private:
 
         void            initLayout();
-        void            initConnections();
 
     private:
 
-        int                     m_actions = EDIT;
+        int                     m_actions = NONE;
         CUser                   m_currentUser;
         QStackedWidget*         m_pStackWidget = nullptr;
         CProcessDocFrame*       m_pDocFrame = nullptr;
-        CProcessEditDocFrame*   m_pEditDocFrame = nullptr;
         CTaskInfo               m_processInfo;
-        QPushButton*            m_pExportDocBtn = nullptr;
+        QPushButton*            m_pInstallBtn = nullptr;
+        QPersistentModelIndex   m_currentIndex;
 };
 
 #endif // CPROCESSDOCWIDGET_H

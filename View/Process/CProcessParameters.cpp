@@ -173,10 +173,6 @@ void CProcessParameters::initLayout()
 void CProcessParameters::initConnections()
 {
     connect(m_pBtnDocumentation, &QPushButton::clicked, this, &CProcessParameters::onShowDocumentation);
-    connect(m_pDocDlg->getDocWidget(), &CProcessDocWidget::doSave, [&](bool bFullEdit, const CTaskInfo& info)
-    {
-        emit doUpdateProcessInfo(bFullEdit, info);
-    });
 }
 
 QFrame *CProcessParameters::createLine()

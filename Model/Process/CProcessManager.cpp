@@ -82,18 +82,24 @@ CTaskInfo CProcessManager::getProcessInfo(const std::string &processName) const
         info.m_keywords = q.value("keywords").toString().toStdString();
         info.m_authors = q.value("authors").toString().toStdString();
         info.m_article = q.value("article").toString().toStdString();
+        info.m_articleUrl = q.value("articleUrl").toString().toStdString();
         info.m_journal = q.value("journal").toString().toStdString();
+        info.m_year = q.value("year").toInt();
         info.m_version = q.value("version").toString().toStdString();
-        info.m_ikomiaVersion = q.value("ikomiaVersion").toString().toStdString();
+        info.m_minIkomiaVersion = q.value("minIkomiaVersion").toString().toStdString();
+        info.m_maxIkomiaVersion = q.value("maxIkomiaVersion").toString().toStdString();
+        info.m_minPythonVersion = q.value("minPythonVersion").toString().toStdString();
+        info.m_maxPythonVersion = q.value("maxPythonVersion").toString().toStdString();
         info.m_license = q.value("license").toString().toStdString();
         info.m_repo = q.value("repository").toString().toStdString();
+        info.m_originalRepo = q.value("repository").toString().toStdString();
         info.m_createdDate = q.value("createdDate").toString().toStdString();
         info.m_modifiedDate = q.value("modifiedDate").toString().toStdString();
-        info.m_year = q.value("year").toInt();
         info.m_language = q.value("language").toInt() == 0 ? ApiLanguage::CPP : ApiLanguage::PYTHON;
         info.m_bInternal = q.value("isInternal").toInt();
-        info.m_userId = q.value("userId").toInt();
-        info.m_os = q.value("os").toInt();
+        info.m_os = static_cast<OSType>(q.value("os").toInt());
+        info.m_algoType = static_cast<AlgoType>(q.value("algoType").toInt());
+        info.m_algoTasks = q.value("algoTasks").toString().toStdString();
     }
     return info;
 }
@@ -132,7 +138,7 @@ void CProcessManager::updateTableModelQuery()
         m_processTableList[id]->select();
 }
 
-void CProcessManager::updateProcessInfo(const CTaskInfo &info)
+void CProcessManager::updateProcessInfo(const CTaskInfo &info, bool bFull)
 {
     makeCurrentDb();
     QSqlQuery q(m_db);
@@ -152,31 +158,62 @@ void CProcessManager::updateProcessInfo(const CTaskInfo &info)
 
     auto name = QString::fromStdString(Utils::String::dbFormat(info.getName()));
     auto description = QString::fromStdString(Utils::String::dbFormat(info.getDescription()));
+    auto shortDescription = QString::fromStdString(Utils::String::dbFormat(info.getShortDescription()));
     auto keywords = QString::fromStdString(Utils::String::dbFormat(info.getKeywords()));
     auto authors = QString::fromStdString(Utils::String::dbFormat(info.getAuthors()));
     auto article = QString::fromStdString(Utils::String::dbFormat(info.getArticle()));
+    auto articleUrl = QString::fromStdString(Utils::String::dbFormat(info.getArticleUrl()));
     auto journal = QString::fromStdString(Utils::String::dbFormat(info.getJournal()));
     auto docLink = QString::fromStdString(Utils::String::dbFormat(info.getDocumentationLink()));
     auto version = QString::fromStdString(Utils::String::dbFormat(info.getVersion()));
+    auto minIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinIkomiaVersion()));
+    auto maxIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxIkomiaVersion()));
+    auto minPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinPythonVersion()));
+    auto maxPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxPythonVersion()));
     auto license = QString::fromStdString(Utils::String::dbFormat(info.getLicense()));
     auto repo = QString::fromStdString(Utils::String::dbFormat(info.getRepository()));
+    auto originalRepo = QString::fromStdString(Utils::String::dbFormat(info.getOriginalRepository()));
+    auto algoTasks = QString::fromStdString(Utils::String::dbFormat(info.getAlgoTasks()));
 
-    if (!q.exec(QString("UPDATE process "
-                        "SET description='%1', keywords='%2', authors='%3', article='%4', journal='%5', "
-                        "year=%6, docLink='%7', version='%8', iconPath='%9', license='%10', repository='%11' "
-                        "WHERE name = '%12';")
-                .arg(description).arg(keywords).arg(authors).arg(article).arg(journal)
-                .arg(info.getYear()).arg(docLink).arg(version).arg(iconPath).arg(license).arg(repo).arg(name)))
+    if (bFull)
     {
-        throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        if (!q.exec(QString("UPDATE process SET "
+                            "description='%1', shortDescription='%2', keywords='%3', authors='%4', article='%5', articleUrl='%6', "
+                            "journal='%7', year=%8, docLink='%9', version='%10', minIkomiaVersion='%11', maxIkomiaVersion='%12', "
+                            "minPythonVersion='%13', maxPythonVersion='%14', iconPath='%15', license='%16', repository='%17', "
+                            "originalRepository='%18', algoType=%19, algoTasks='%20' "
+                            "WHERE name = '%21';")
+                    .arg(description).arg(shortDescription).arg(keywords).arg(authors).arg(article).arg(articleUrl)
+                    .arg(journal).arg(info.m_year).arg(docLink).arg(version).arg(minIkVersion).arg(maxIkVersion)
+                    .arg(minPythonVersion).arg(maxPythonVersion).arg(iconPath).arg(license).arg(repo)
+                    .arg(originalRepo).arg((int)info.m_algoType).arg(algoTasks).arg(name)))
+        {
+            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        }
+
+        if (!q.exec(QString("UPDATE processFTS "
+                            "SET description='%1', shortDescription='%2', keywords='%3', authors='%4', article='%5', journal='%6' "
+                            "WHERE name = '%7';")
+                    .arg(description).arg(shortDescription).arg(keywords).arg(authors).arg(article).arg(journal).arg(name)))
+        {
+            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        }
     }
-
-    if (!q.exec(QString("UPDATE processFTS "
-                        "SET description='%1', keywords='%2', authors='%3', article='%4', journal='%5' "
-                        "WHERE name = '%6';")
-                .arg(description).arg(keywords).arg(authors).arg(article).arg(journal).arg(name)))
+    else
     {
-        throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        //Table process
+        if(!q.exec(QString("UPDATE process SET keywords = '%1' WHERE id = %2;")
+                .arg(keywords).arg(info.m_id)))
+        {
+            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        }
+
+        //Table processFTS (Full Text Search)
+        if(!q.exec(QString("UPDATE processFTS SET keywords = '%1' WHERE id = %2;")
+                .arg(keywords).arg(info.m_id)))
+        {
+            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+        }
     }
 }
 
@@ -381,63 +418,27 @@ void CProcessManager::onQueryProcessInfo(const std::string &processName)
 void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
 {
     //Db string format check
-    QString shortDescription = QString::fromStdString(Utils::String::dbFormat(info.m_shortDescription));
-    QString description = QString::fromStdString(Utils::String::dbFormat(info.m_description));
-    QString keywords = QString::fromStdString(Utils::String::dbFormat(info.m_keywords));
-    QString authors = QString::fromStdString(Utils::String::dbFormat(info.m_authors));
-    QString article = QString::fromStdString(Utils::String::dbFormat(info.m_article));
-    QString journal = QString::fromStdString(Utils::String::dbFormat(info.m_journal));
-    QString docLink = QString::fromStdString(Utils::String::dbFormat(info.m_docLink));
-    QString version = QString::fromStdString(Utils::String::dbFormat(info.m_version));
-    QString ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(info.m_ikomiaVersion));
-    QString iconPath = QString::fromStdString(Utils::String::dbFormat(info.m_iconPath));
-    QString license = QString::fromStdString(Utils::String::dbFormat(info.m_license));
-    QString repository = QString::fromStdString(Utils::String::dbFormat(info.m_repo));
+    auto shortDescription = QString::fromStdString(Utils::String::dbFormat(info.m_shortDescription));
+    auto description = QString::fromStdString(Utils::String::dbFormat(info.m_description));
+    auto keywords = QString::fromStdString(Utils::String::dbFormat(info.m_keywords));
+    auto authors = QString::fromStdString(Utils::String::dbFormat(info.m_authors));
+    auto article = QString::fromStdString(Utils::String::dbFormat(info.m_article));
+    auto articleUrl = QString::fromStdString(Utils::String::dbFormat(info.getArticleUrl()));
+    auto journal = QString::fromStdString(Utils::String::dbFormat(info.m_journal));
+    auto docLink = QString::fromStdString(Utils::String::dbFormat(info.m_docLink));
+    auto version = QString::fromStdString(Utils::String::dbFormat(info.m_version));
+    auto minIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinIkomiaVersion()));
+    auto maxIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxIkomiaVersion()));
+    auto minPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinPythonVersion()));
+    auto maxPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxPythonVersion()));
+    auto iconPath = QString::fromStdString(Utils::String::dbFormat(info.m_iconPath));
+    auto license = QString::fromStdString(Utils::String::dbFormat(info.m_license));
+    auto repository = QString::fromStdString(Utils::String::dbFormat(info.m_repo));
+    auto originalRepo = QString::fromStdString(Utils::String::dbFormat(info.getOriginalRepository()));
+    auto algoTasks = QString::fromStdString(Utils::String::dbFormat(info.getAlgoTasks()));
 
     //Update memory database
-    if(bFullEdit == true)
-    {
-        QSqlQuery q(m_db);
-
-        //Table process
-        if(!q.exec(QString("UPDATE process SET "
-                           "shortDescription = '%1', description = '%2', keywords = '%3', authors = '%4', article = '%5', "
-                           "journal = '%6', year = %7, docLink = '%8', version = '%9', iconPath = '%10', os = %11 , license = '%12', "
-                           "repository = '%13', ikomiaVersion = %14 "
-                           "WHERE id = %15;")
-                .arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal).arg(info.m_year)
-                .arg(docLink).arg(version).arg(iconPath).arg(info.m_os).arg(license).arg(repository).arg(ikomiaVersion).arg(info.m_id)))
-        {
-            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-        }
-
-        //Table processFTS (Full Text Search)
-        if(!q.exec(QString("UPDATE processFTS SET "
-                           "shortDescription = '%1', description = '%2', keywords = '%3', authors = '%4', article = '%5', journal = '%6' "
-                           "WHERE id = %7;")
-                .arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal).arg(info.m_id)))
-        {
-            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-        }
-    }
-    else
-    {
-        QSqlQuery q(m_db);
-
-        //Table process
-        if(!q.exec(QString("UPDATE process SET keywords = '%1' WHERE id = %2;")
-                .arg(keywords).arg(info.m_id)))
-        {
-            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-        }
-
-        //Table processFTS (Full Text Search)
-        if(!q.exec(QString("UPDATE processFTS SET keywords = '%1' WHERE id = %2;")
-                .arg(keywords).arg(info.m_id)))
-        {
-            throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
-        }
-    }
+    updateProcessInfo(info, bFullEdit);
 
     //Insert or update in file database
     auto db = Utils::Database::connect(Utils::Database::getMainPath(), Utils::Database::getMainConnectionName());
@@ -448,26 +449,39 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
     if(bFullEdit == true)
     {
         strQuery = QString("INSERT INTO process "
-                           "(name, shortDescription, description, keywords, authors, article, journal, year, docLink, version, ikomiaVersion, iconPath, os, license, repository) "
-                           "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', %8, '%9', '%10', '%11', %12, '%13', '%14', '%15') "
+                           "(name, shortDescription, description, keywords, authors, article, articleUrl, journal, year, docLink, version, "
+                           "minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, iconPath, os, license, "
+                           "repository, originalRepository, algoType, algoTasks) "
+                           "VALUES "
+                           "('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', "
+                           "'%12', '%13', '%14', '%15', '%16', %17, '%18', "
+                           "'%19', '%20', %21, '%22') "
                            "ON CONFLICT(name) DO UPDATE SET "
                            "shortDescription = excluded.shortDescription, "
                            "description = excluded.description, "
                            "keywords = excluded.keywords, "
                            "authors = excluded.authors, "
                            "article = excluded.article, "
+                           "articleUrl = excluded.articleUrl, "
                            "journal = excluded.journal, "
                            "year = excluded.year, "
                            "docLink = excluded.docLink, "
                            "version = excluded.version, "
-                           "ikomiaVersion = excluded.ikomiaVersion, "
+                           "minIkomiaVersion = excluded.minIkomiaVersion, "
+                           "maxIkomiaVersion = excluded.maxIkomiaVersion, "
+                           "minPythonVersion = excluded.minPythonVersion, "
+                           "maxPythonVersion = excluded.maxPythonVersion, "
                            "iconPath = excluded.iconPath, "
                            "os = excluded.os, "
                            "license = excluded.license, "
-                           "repository = excluded.repository;")
-                .arg(QString::fromStdString(info.m_name)).arg(description).arg(keywords).arg(authors)
-                .arg(article).arg(journal).arg(info.m_year).arg(docLink).arg(version).arg(ikomiaVersion)
-                .arg(iconPath).arg(info.m_os).arg(license).arg(repository);
+                           "repository = excluded.repository, "
+                           "originalRepository = excluded.originalRepository, "
+                           "algoType = excluded.algoType, "
+                           "algoTasks = excluded.algoTasks;")
+                .arg(QString::fromStdString(info.m_name)).arg(shortDescription).arg(description).arg(keywords).arg(authors)
+                .arg(article).arg(articleUrl).arg(journal).arg(info.m_year).arg(docLink).arg(version)
+                .arg(minIkVersion).arg(maxIkVersion).arg(minPythonVersion).arg(maxPythonVersion).arg(iconPath).arg(info.m_os)
+                .arg(license).arg(repository).arg(originalRepo).arg((int)info.m_algoType).arg(algoTasks);
     }
     else
     {
@@ -626,10 +640,11 @@ void CProcessManager::createProcessTable(QSqlDatabase &db)
     QSqlQuery q(db);
     if(!q.exec("CREATE TABLE process ("
                "id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, shortDescription TEXTE, description TEXT, keywords TEXT, user TEXT, "
-               "authors TEXT, article TEXT, journal TEXT, year INTEGER, docLink TEXT, createdDate TEXT, modifiedDate TEXT, version TEXT, "
-               "ikomiaVersion TEXT, language INTEGER, os INTEGER, isInternal INTEGER, iconPath TEXT, certification INTEGER DEFAULT 0, "
-               "votes INTEGER DEFAULT 0, license TEXT, repository TEXT, "
-               "folderId INTEGER, serverId INTEGER DEFAULT -1, userId INTEGER DEFAULT -1, userReputation INTEGER DEFAULT 0);"))
+               "authors TEXT, article TEXT, journal TEXT, year INTEGER, articleUrl TEXT, docLink TEXT, createdDate TEXT, modifiedDate TEXT, "
+               "version TEXT, minIkomiaVersion TEXT, maxIkomiaVersion TEXT, minPythonVersion TEXT, maxPythonVersion TEXT, "
+               "language INTEGER, os INTEGER, isInternal INTEGER, iconPath TEXT, certification INTEGER DEFAULT 0, votes INTEGER DEFAULT 0, "
+               "license TEXT, repository TEXT, originalRepository TEXT, algoType INTEGER, algoTasks TEXT, "
+               "folderId INTEGER, userReputation INTEGER DEFAULT 0);"))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -703,7 +718,7 @@ void CProcessManager::createModel()
         addFoldersInfo();
 
         //Synchronise memory database with file database (main)
-        synCTaskInfo();
+        syncTaskInfo();
 
         // Fill all models from database
         for(const auto& id : m_viewIds)
@@ -789,49 +804,60 @@ void CProcessManager::addProcessInfo(const TaskFactoryPtr& process, size_t id, s
     makeCurrentDb();
     QSqlQuery q(m_db);
 
+    CTaskInfo info = process->getInfo();
     //Internal Process or plugin
-    bool bInternal = process->getInfo().isInternal();
+    bool bInternal = info.isInternal();
     //Get process language C++ or Python
-    int language = process->getInfo().getLanguage();
+    int language = info.getLanguage();
     //Get operating system
-    int os = process->getInfo().getOS();
+    int os = info.getOS();
 
     //Icon path
-    QString iconPath = QString::fromStdString(process->getInfo().getIconPath());
+    QString iconPath = QString::fromStdString(info.getIconPath());
     if(iconPath.isEmpty() == false && bInternal == false)
     {
-        QString pluginDir = QString::fromStdString(Utils::CPluginTools::getDirectory(process->getInfo().getName(), language));
+        QString pluginDir = QString::fromStdString(Utils::CPluginTools::getDirectory(info.getName(), language));
         iconPath = pluginDir + "/" + iconPath;
     }
 
-    auto name = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getName()));
-    auto shortDescription = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getShortDescription()));
-    auto description = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getDescription()));
-    auto keywords = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getKeywords()));
-    auto authors = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getAuthors()));
-    auto article = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getArticle()));
-    auto journal = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getJournal()));
-    auto docLink = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getDocumentationLink()));
-    auto version = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getVersion()));
-    auto ikomiaVersion = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getIkomiaVersion()));
-    auto license = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getLicense()));
-    auto repo = QString::fromStdString(Utils::String::dbFormat(process->getInfo().getRepository()));
+    auto name = QString::fromStdString(Utils::String::dbFormat(info.getName()));
+    auto shortDescription = QString::fromStdString(Utils::String::dbFormat(info.getShortDescription()));
+    auto description = QString::fromStdString(Utils::String::dbFormat(info.getDescription()));
+    auto keywords = QString::fromStdString(Utils::String::dbFormat(info.getKeywords()));
+    auto authors = QString::fromStdString(Utils::String::dbFormat(info.getAuthors()));
+    auto article = QString::fromStdString(Utils::String::dbFormat(info.getArticle()));
+    auto articleUrl = QString::fromStdString(Utils::String::dbFormat(info.getArticleUrl()));
+    auto journal = QString::fromStdString(Utils::String::dbFormat(info.getJournal()));
+    auto docLink = QString::fromStdString(Utils::String::dbFormat(info.getDocumentationLink()));
+    auto version = QString::fromStdString(Utils::String::dbFormat(info.getVersion()));
+    auto minIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinIkomiaVersion()));
+    auto maxIkVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxIkomiaVersion()));
+    auto minPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMinPythonVersion()));
+    auto maxPythonVersion = QString::fromStdString(Utils::String::dbFormat(info.getMaxPythonVersion()));
+    auto license = QString::fromStdString(Utils::String::dbFormat(info.getLicense()));
+    auto repo = QString::fromStdString(Utils::String::dbFormat(info.getRepository()));
+    auto originalRepo = QString::fromStdString(Utils::String::dbFormat(info.getRepository()));
+    auto algoTasks = QString::fromStdString(Utils::String::dbFormat(info.getAlgoTasks()));
 
     if (!q.exec(QString("INSERT INTO process"
-                        "(id, name, shortDescription, description, keywords, authors, article, journal, year, "
-                        "docLink, version, ikomiaVersion, language, os, isInternal, iconPath, folderId, license, repository) "
-                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8', %9, '%10', '%11', '%12', %13, %14, %15, '%16', %17, '%18', '%19');")
-                .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal)
-                .arg(process->getInfo().getYear()).arg(docLink).arg(version).arg(ikomiaVersion).arg(language).arg(os).arg(bInternal)
-                .arg(iconPath).arg(folderId).arg(license).arg(repo)))
+                        "(id, name, shortDescription, description, keywords, authors, article, articleUrl, journal, year, "
+                        "docLink, version, minIkomiaVersion, maxIkomiaVersion, minPythonVersion, maxPythonVersion, language, "
+                        "os, isInternal, iconPath, folderId, license, repository, originalRepository, algoType, algoTasks) "
+                        "VALUES "
+                        "(%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', %10, "
+                        "'%11', '%12', '%13', '%14', '%15', '%16', %17, "
+                        "%18, %19, '%20', %21, '%22', '%23', '%24', %25, '%26');")
+                .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(articleUrl).arg(journal).arg(info.getYear())
+                .arg(docLink).arg(version).arg(minIkVersion).arg(maxIkVersion).arg(minPythonVersion).arg(maxPythonVersion).arg(language)
+                .arg(os).arg(bInternal).arg(iconPath).arg(folderId).arg(license).arg(repo).arg(originalRepo).arg((int)info.m_algoType).arg(algoTasks)))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
 
     if (!q.exec(QString("INSERT INTO processFTS "
-                        "(id, name, shortDescription, description, keywords, authors, article, journal) "
-                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7', '%8');")
-                .arg(id).arg(name).arg(shortDescription).arg(description).arg(keywords).arg(authors).arg(article).arg(journal)))
+                        "(id, name, shortDescription, keywords, authors, article, journal) "
+                        "VALUES (%1, '%2', '%3', '%4', '%5', '%6', '%7');")
+                .arg(id).arg(name).arg(shortDescription).arg(keywords).arg(authors).arg(article).arg(journal)))
     {
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
     }
@@ -869,7 +895,7 @@ void CProcessManager::addFoldersInfo()
         throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 }
 
-void CProcessManager::synCTaskInfo()
+void CProcessManager::syncTaskInfo()
 {
     auto db = QSqlDatabase::database(Utils::Database::getMainConnectionName());
     if(!db.isValid())
@@ -887,8 +913,9 @@ void CProcessManager::synCTaskInfo()
     if(!q1.exec("SELECT * FROM process;"))
         throw CException(DatabaseExCode::INVALID_QUERY, q1.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
 
-    QVariantList names, shortDescriptions, descriptions, keywords, users, authors, articles, journals, years,
-            docLinks, createdDates, modifiedDates, versions, licenses, repositories, serverIds, userIds, os;
+    QVariantList names, shortDescriptions, descriptions, keywords, users, authors, articles, articleUrls, journals, years,
+            docLinks, createdDates, modifiedDates, versions, minIkVersions, maxIkVersions, minPythonVersions, maxPythonVersions,
+            os, certifications, votes, licenses, repositories, originalRepositories;
 
     while(q1.next())
     {
@@ -899,17 +926,23 @@ void CProcessManager::synCTaskInfo()
         users << q1.value("user");
         authors << q1.value("authors");
         articles << q1.value("article");
+        articleUrls << q1.value("articleUrl");
         journals << q1.value("journal");
         years << q1.value("year");
         docLinks << q1.value("docLink");
         createdDates << q1.value("createdDate");
         modifiedDates << q1.value("modifiedDate");
         versions << q1.value("version");
+        minIkVersions << q1.value("minIkomiaVersion");
+        maxIkVersions << q1.value("maxIkomiaVersion");
+        minPythonVersions << q1.value("minPythonVersion");
+        maxPythonVersions << q1.value("maxPythonVersion");
+        os << q1.value("os");
+        certifications << q1.value("certification");
+        votes << q1.value("votes");
         licenses << q1.value("license");
         repositories << q1.value("repository");
-        serverIds << q1.value("serverId");
-        userIds << q1.value("userId");
-        os << q1.value("os");
+        originalRepositories << q1.value("originalRepository");
     }
 
     //Update memory databases accordingly
@@ -922,17 +955,23 @@ void CProcessManager::synCTaskInfo()
                        "user = IFNULL(:user, user), "
                        "authors = IFNULL(:authors, authors), "
                        "article = IFNULL(:article, article), "
+                       "articleUrl = IFNULL(:articleUrl, articleUrl), "
                        "journal = IFNULL(:journal, journal), "
                        "year = IFNULL(:year, year), "
                        "docLink = IFNULL(:docLink, docLink), "
                        "createdDate = IFNULL(:createdDate, createdDate), "
                        "modifiedDate = IFNULL(:modifiedDate, modifiedDate), "
-                       "version = MAX(IFNULL(version, :version), IFNULL(:version, version)), "
+                       "version = IFNULL(:version, version), "
+                       "minIkomiaVersion = IFNULL(:minIkomiaVersion, minIkomiaVersion), "
+                       "maxIkomiaVersion = IFNULL(:maxIkomiaVersion, maxIkomiaVersion), "
+                       "minPythonVersion = IFNULL(:minPythonVersion, minPythonVersion), "
+                       "maxPythonVersion = IFNULL(:maxPythonVersion, maxPythonVersion), "
+                       "os = IFNULL(:os, os), "
+                       "certification = IFNULL(:certification, certification), "
+                       "votes = IFNULL(:votes, votes), "
                        "license = IFNULL(:license, license), "
                        "repository = IFNULL(:repository, repository), "
-                       "serverId = IFNULL(:serverId, serverId), "
-                       "userId = IFNULL(:userId, userId), "
-                       "os = IFNULL(:os, os) "
+                       "originalRepository = IFNULL(:originalRepository, originalRepository) "
                        "WHERE name = :name;"));
 
     q2.bindValue(":shortDescription", shortDescriptions);
@@ -941,17 +980,23 @@ void CProcessManager::synCTaskInfo()
     q2.bindValue(":user", users);
     q2.bindValue(":authors", authors);
     q2.bindValue(":article", articles);
+    q2.bindValue(":articleUrl", articleUrls);
     q2.bindValue(":journal", journals);
     q2.bindValue(":year", years);
     q2.bindValue(":docLink", docLinks);
     q2.bindValue(":createdDate", createdDates);
     q2.bindValue(":modifiedDate", modifiedDates);
     q2.bindValue(":version", versions);
+    q2.bindValue(":minIkomiaVersion", minIkVersions);
+    q2.bindValue(":maxIkomiaVersion", maxIkVersions);
+    q2.bindValue(":minPythonVersion", minPythonVersions);
+    q2.bindValue(":maxPythonVersion", maxPythonVersions);
+    q2.bindValue(":os", os);
+    q2.bindValue(":certification", certifications);
+    q2.bindValue(":votes", votes);
     q2.bindValue(":license", licenses);
     q2.bindValue(":repository", repositories);
-    q2.bindValue(":serverId", serverIds);
-    q2.bindValue(":userId", userIds);
-    q2.bindValue(":os", os);
+    q2.bindValue(":originalRepository", originalRepositories);
     q2.bindValue(":name", names);
 
     if(!q2.execBatch())

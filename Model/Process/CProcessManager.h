@@ -337,9 +337,9 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         void                    notifyTableModelUpdate();
 
         void                    updateTableModelQuery();
-        void                    updateProcessInfo(const CTaskInfo& info);
+        void                    updateProcessInfo(const CTaskInfo& info, bool bFull=true);
 
-        void                    synCTaskInfo();
+        void                    syncTaskInfo();
 
     public:
 

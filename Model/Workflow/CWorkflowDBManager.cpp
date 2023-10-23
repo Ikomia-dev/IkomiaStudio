@@ -279,7 +279,7 @@ std::unique_ptr<CWorkflow> CWorkflowDBManager::load(QSqlDatabase& db, int protoc
         pWorkflow->setKeywords(q.value("keywords").toString().toStdString());
 
     if(!q.isNull("description"))
-        pWorkflow->setKeywords(q.value("description").toString().toStdString());
+        pWorkflow->setDescription(q.value("description").toString().toStdString());
 
     CPyEnsureGIL gil;
     do

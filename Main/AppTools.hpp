@@ -392,6 +392,16 @@ namespace Ikomia
                 }
                 return roleName;
             }
+            inline QString getNamespaceDisplayName(const QString& namespacePath)
+            {
+                QString name;
+                QStringList pathItems = namespacePath.split("/", Qt::SkipEmptyParts);
+
+                for (int i=1; i<pathItems.size(); ++i)
+                    name += pathItems[i] + "/";
+
+                return name;
+            }
         }
 
         namespace Network
@@ -402,9 +412,9 @@ namespace Ikomia
                 QSettings ikomiaSettings;
                 QString baseURL = ikomiaSettings.value(DEFAULT_BASE_URL).toString();
 
-                if(baseURL.isEmpty())
+                if(baseURL.isEmpty() || baseURL == "https://members.ikomia.com")
                 {
-                    baseURL = "https://members.ikomia.com";
+                    baseURL = "https://scale.ikomia.ai";
                     ikomiaSettings.setValue(DEFAULT_BASE_URL, baseURL);
                 }
                 return baseURL;
@@ -421,7 +431,7 @@ namespace Ikomia
 
                 if(url.isEmpty())
                 {
-                    url = "http://ikomia.com:1127/crashreports";
+                    url = "http://members.ikomia.com:1127/crashreports";
                     ikomiaSettings.setValue(BREAKPAD_SERVER_URL, url);
                 }
                 return url;

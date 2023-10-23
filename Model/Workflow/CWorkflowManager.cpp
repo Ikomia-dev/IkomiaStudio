@@ -50,6 +50,14 @@ std::string CWorkflowManager::getWorkflowName() const
         return "";
 }
 
+std::string CWorkflowManager::getWorkflowDescription() const
+{
+    if(m_pWorkflow)
+        return m_pWorkflow->getDescription();
+    else
+        return "";
+}
+
 WorkflowVertex CWorkflowManager::getRootId() const
 {
     if(m_pWorkflow)
@@ -79,10 +87,10 @@ WorkflowInputViewMode CWorkflowManager::getInputViewMode() const
     return m_inputViewMode;
 }
 
-void CWorkflowManager::setManagers(CProcessManager *pProcessMgr, CProjectManager *pProjectMgr,
-                                   CGraphicsManager *pGraphicsMgr, CResultManager *pResultsMgr,
-                                   CMainDataManager *pDataMgr, CProgressBarManager *pProgressMgr,
-                                   CSettingsManager *pSettingsMgr)
+void CWorkflowManager::setManagers(QNetworkAccessManager *pNetMgr, CProcessManager *pProcessMgr,
+                                   CProjectManager *pProjectMgr, CGraphicsManager *pGraphicsMgr,
+                                   CResultManager *pResultsMgr, CMainDataManager *pDataMgr,
+                                   CProgressBarManager *pProgressMgr, CSettingsManager *pSettingsMgr)
 {
     m_pProcessMgr = pProcessMgr;
     m_pProjectMgr = pProjectMgr;
@@ -94,6 +102,7 @@ void CWorkflowManager::setManagers(CProcessManager *pProcessMgr, CProjectManager
     m_runMgr.setManagers(pProjectMgr, pDataMgr, pProgressMgr);
     m_dbMgr.setManagers(pSettingsMgr);
     m_inputViewMgr.setManagers(pProjectMgr);
+    m_scaleMgr.setManagers(pNetMgr, pProgressMgr);
 
     if(m_pProgressMgr)
     {
@@ -137,6 +146,7 @@ void CWorkflowManager::setInputViewMode(WorkflowInputViewMode mode)
 void CWorkflowManager::setCurrentUser(const CUser &user)
 {
     m_currentUser = user;
+    m_scaleMgr.setCurrentUser(user);
 }
 
 void CWorkflowManager::setCurrentTaskAutoSave(size_t outputIndex, bool bAutoSave)
@@ -589,6 +599,34 @@ void CWorkflowManager::loadImageWorkflows(const QModelIndex &imageIndex)
     emit doSetNamesFromImageModel(m_pImageModel);
 }
 
+void CWorkflowManager::requestScaleProjects()
+{
+    m_scaleMgr.requestProjects();
+}
+
+void CWorkflowManager::publishWorkflow(const QString& name, const QString& description, bool bNewProject,
+                                       const QString& projectName, const QString &projectDescription, const QString& namespacePath)
+{
+    assert(m_pWorkflow);
+    m_pWorkflow->setName(name.toStdString());
+    m_pWorkflow->setDescription(description.toStdString());
+    QString filename = Utils::File::conformName(name + "_" + QDateTime::currentDateTime().toString(Qt::ISODate));
+    QString tmpPath = QString("%1/Workflows/%2.json")
+                        .arg(Utils::IkomiaApp::getQIkomiaFolder())
+                        .arg(filename);
+
+    try
+    {
+        m_pWorkflow->save(tmpPath.toStdString());
+        m_scaleMgr.publishWorkflow(tmpPath, bNewProject, projectName, projectDescription, namespacePath);
+        emit doNewWorkflowNotification(tr("Workflow %1 has been published successfully.").arg(name), Notification::INFO);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logWorkflow).noquote() << QString::fromStdString(e.what());
+    }
+}
+
 void CWorkflowManager::onWorkflowClosed()
 {
     if(m_pWorkflow == nullptr)
@@ -718,26 +756,25 @@ void CWorkflowManager::onAllProcessReloaded()
 
 void CWorkflowManager::onProcessReloaded(const QString &name)
 {
+    assert(m_pProcessMgr);
     if(m_pWorkflow == nullptr)
         return;
 
-    assert(m_pProcessMgr);
-
-    auto taskId = m_pWorkflow->getTaskId(name.toStdString());
-    if(taskId == boost::graph_traits<WorkflowGraph>::null_vertex())
-        return;
-
-    auto taskPtr = m_pWorkflow->getTask(taskId);
-    auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
-    //Create new instance
-    //We pass nullptr as parameter because we want to take into account possible modifications
-    //in implementation side -> in this case new instance must be created
-    auto newTaskPtr = m_pProcessMgr->createObject(taskPtr->getName(), nullptr);
-    if(newTaskPtr)
+    auto taskIds = m_pWorkflow->getTaskIdList(name.toStdString());
+    for (size_t i=0; i<taskIds.size(); ++i)
     {
-        m_pWorkflow->replaceTask(newTaskPtr, taskId);
-        if(m_pWorkflow->getActiveTaskId() == taskId)
-            emit doUpdateTaskInfo(newTaskPtr, processInfo);
+        auto taskPtr = m_pWorkflow->getTask(taskIds[i]);
+        auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
+        //Create new instance
+        //We pass nullptr as parameter because we want to take into account possible modifications
+        //in implementation side -> in this case new instance must be created
+        auto newTaskPtr = m_pProcessMgr->createObject(taskPtr->getName(), nullptr);
+        if (newTaskPtr)
+        {
+            m_pWorkflow->replaceTask(newTaskPtr, taskIds[i]);
+            if (m_pWorkflow->getActiveTaskId() == taskIds[i])
+                emit doUpdateTaskInfo(newTaskPtr, processInfo);
+        }
     }
 }
 
@@ -1080,8 +1117,8 @@ void CWorkflowManager::onLoadWorkflow(const QModelIndex &itemIndex)
         return;
     }
 
-    QString protocolName = itemIndex.data(Qt::DisplayRole).toString();
-    auto it = m_mapWorkflowNameToId.find(protocolName);
+    QString workflowlName = itemIndex.data(Qt::DisplayRole).toString();
+    auto it = m_mapWorkflowNameToId.find(workflowlName);
 
     if(it != m_mapWorkflowNameToId.end())
     {
@@ -1423,9 +1460,15 @@ void CWorkflowManager::onQueryProjectDataProxyModel(const std::vector<TreeItemTy
 
 void CWorkflowManager::initGlobalConnections()
 {
-    //Run manager -> protocol manager
+    //Run manager -> workflow manager
     connect(&m_runMgr, &CWorkflowRunManager::doSetElapsedTime, [&](double time){ emit doSetElapsedTime(time); });
     connect(&m_runMgr, &CWorkflowRunManager::doWorkflowLive, this, &CWorkflowManager::onWorkflowLive, Qt::BlockingQueuedConnection);
+
+    //Scale manager -> workflow manager
+    connect(&m_scaleMgr, &CWorkflowScaleManager::doSetProjects, [&](const QJsonArray& projects)
+    {
+        emit doSetScaleProjects(projects, m_currentUser);
+    });
 }
 
 void CWorkflowManager::onQueryIOInfo(const WorkflowVertex &taskId, int index, bool bInput)
@@ -1857,20 +1900,35 @@ void CWorkflowManager::updateDataInfo()
 
 void CWorkflowManager::reloadCurrentPlugins()
 {
+    assert(m_pProcessMgr);
+
     CPyEnsureGIL gil;
-    if(m_pWorkflow == nullptr)
+    if (m_pWorkflow == nullptr)
         return;
 
-    assert(m_pProcessMgr);
     auto rangeIt = m_pWorkflow->getVertices();
-
-    for(auto it=rangeIt.first; it!=rangeIt.second; ++it)
+    for (auto it=rangeIt.first; it!=rangeIt.second; ++it)
     {
-        auto taskPtr = m_pWorkflow->getTask(*it);
+        WorkflowVertex taskId = *it;
+        WorkflowTaskPtr taskPtr = m_pWorkflow->getTask(taskId);
         auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
 
-        if(processInfo.isInternal() == false)
+        if (processInfo.isInternal() == false)
+        {
+            // Save parameters
+            UMapString paramValues = taskPtr->getParamValues();
+            // Reload plugin
             m_pProcessMgr->onReloadPlugin(QString::fromStdString(taskPtr->getName()), processInfo.getLanguage());
+            // Get fresh task instance
+            taskPtr = m_pWorkflow->getTask(taskId);
+            if (paramValues != taskPtr->getParamValues())
+            {
+                // Reset saved parameters
+                taskPtr->setParamValues(paramValues);
+                if (m_pWorkflow->getActiveTaskId() == taskId)
+                    emit doUpdateTaskInfo(taskPtr, m_pProcessMgr->getProcessInfo(taskPtr->getName()));
+            }
+        }
     }
 }
 

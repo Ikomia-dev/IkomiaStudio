@@ -38,7 +38,7 @@ inline int myErrorHandler(int /*status*/, const char* /*func_name*/, const char*
 
 int main(int argc, char *argv[])
 {
-    const QColor orange(204,90,32,255);
+    const QColor orange(255,122,0,255);
 
 #ifdef Q_OS_MACOS
     QSurfaceFormat format;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     pSplash->show();
 
     // Show splash message at center
-    pSplash->showMessage(QObject::tr("Welcome to Ikomia software"), Qt::AlignCenter, orange);
+    pSplash->showMessage(QObject::tr("Welcome to Ikomia Studio"), Qt::AlignCenter, orange);
     app.processEvents();
 
     // OpenCV redirectoring error (assert)
@@ -128,9 +128,10 @@ int main(int argc, char *argv[])
     QApplication::setFont(font);
 
     // QSettings
+    QApplication::setWindowIcon(QIcon(":/Images/app.ico"));
     QApplication::setOrganizationName("Ikomia");
     QApplication::setOrganizationDomain("ikomia.ai");
-    QApplication::setApplicationVersion(Utils::IkomiaApp::getCurrentVersionName());
+    QApplication::setApplicationVersion(QString::fromStdString(Utils::IkomiaApp::getCurrentVersionName()));
     QApplication::setApplicationName("Ikomia Studio");
 
     // Instantiate CMainView first to have initialization messages in the notification center

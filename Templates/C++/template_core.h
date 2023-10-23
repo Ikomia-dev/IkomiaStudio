@@ -72,8 +72,12 @@ class _PluginNameUpperCase_SHARED_EXPORT C_PluginName_Factory : public CTaskFact
         {
             //Mandatory fields
             m_info.m_name = "_PluginName_";
-            m_info.m_description = "Your description";
+            m_info.m_shortDescription = "Your description";
             m_info.m_authors = "Authors";
+            m_info.m_article = "";
+            m_info.m_articleUrl = "";
+            m_info.m_journal = "";
+            m_info.m_year = 2020;
             m_info.m_version = "1.0.0";
             //Relative path -> as displayed in Ikomia application process tree
             m_info.m_path = "Plugins";

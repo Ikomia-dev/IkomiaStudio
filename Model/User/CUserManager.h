@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QNetworkCookie>
 #include "CUser.h"
 #include "Main/AppDefine.hpp"
 
@@ -39,7 +40,7 @@ class CUserManager : public QObject
     public:
 
         enum Role { ADMINISTRATOR, USER };
-        enum Request { LOGIN, LOGOUT, GET_USER };
+        enum Request { AUTH_TOKEN, GET_USER, GET_NAMESPACES };
 
         CUserManager();
         ~CUserManager();
@@ -60,30 +61,33 @@ class CUserManager : public QObject
 
     public slots:
 
-        void            onConnectUser(const QString& login, const QString& pwd, bool bRememberMe);
+        void            onConnectUser(const QString& username, const QString& pwd, bool bRememberMe);
         void            onDisconnectUser();
 
     private slots:
 
-        void            onLoginDone();
-        void            onLogoutDone();
-        void            onRetrieveUserInfoDone();
-        void            onCheckSingleConnection();
+        void            onReplyReceived(QNetworkReply* pReply, Request requestType);
 
     private:
 
         void            initDb();
-        void            initConnections();
+
+        void            createAuthToken(const QString &username, const QString &pwd);
 
         QByteArray      getBytesFromImage(const QString& path) const;
 
-        void            connectUser(const QString &login, const QString &pwd);
-        void            disconnectUser(bool bSynchronous);
+        void            connectUser(const QString &username, const QString &pwd, const QString &token);
+        void            disconnectUser();
 
-        QNetworkReply*  checkReply(int type) const;
         void            checkAutoLogin();
 
+        void            loginDone(QNetworkReply *pReply);
+
         void            retrieveUserInfo();
+        void            retrieveUserNamespaces(const QString &strUrl);
+
+        void            fillUserInfo(QNetworkReply *pReply);
+        void            fillUserNamespaces(QNetworkReply* pReply);
 
         void            manageGetUserInfoError();
 
@@ -95,11 +99,10 @@ class CUserManager : public QObject
 
         QNetworkAccessManager*      m_pNetworkMgr = nullptr;
         CUser                       m_currentUser;
-        QString                     m_sessionToken;
-        QString                     m_loginTmp;
+        QString                     m_usernameTmp;
         QString                     m_pwdTmp;
-        QMap<int, QNetworkReply*>   m_mapTypeRequest;
-        QTimer*                     m_pTimerSingleConnection = nullptr;
+        bool                        m_bRememberMe = false;
+        const int                   m_tokenTTL = 28800;
 };
 
 #endif // CUSERMANAGER_H

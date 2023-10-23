@@ -25,7 +25,7 @@
  */
 #include "CMainView.h"
 #include "Main/AppTools.hpp"
-#include "View/Store/CStoreDlg.h"
+#include "View/Hub/CHubDlg.h"
 #include "View/Process/CProcessPopupDlg.h"
 #include "Model/Project/CProjectViewProxyModel.h"
 #include "CLogManager.h"
@@ -34,7 +34,6 @@ bool CMainView::bUseOpenGL_330;
 
 CMainView::CMainView(QWidget *parent) : QMainWindow(parent), ui(new Ui::CMainView)
 {
-    setWindowIcon(QIcon(":/Images/app.png"));
     setAcceptDrops(true);
 
     // Disable default title bar
@@ -147,8 +146,8 @@ QAction* CMainView::getMainToolBarBtn(int id)
         case BTN_OPEN_STREAM:
             pAct = m_pOpenCamAct;
             break;
-        case BTN_OPEN_STORE:
-            pAct = m_pOpenStoreAct;
+        case BTN_OPEN_HUB:
+            pAct = m_pOpenHubAct;
             break;
     }
 
@@ -165,7 +164,7 @@ QToolButton* CMainView::getBtn(int id)
         case BTN_OPEN_IMG:
         case BTN_OPEN_VIDEO:
         case BTN_OPEN_STREAM:
-        case BTN_OPEN_STORE:
+        case BTN_OPEN_HUB:
             pBtn = static_cast<QToolButton*>(getMainToolBarBtn(id)->associatedWidgets().back());
             break;
         case BTN_OPEN_LOGIN:
@@ -205,9 +204,9 @@ QToolButton* CMainView::getBtn(int id)
     return pBtn;
 }
 
-CStoreDlg *CMainView::getStoreView() const
+CHubDlg *CMainView::getHubView() const
 {
-    return m_pStoreDlg;
+    return m_pHubDlg;
 }
 
 CProcessPopupDlg *CMainView::getProcessPopup() const
@@ -270,8 +269,8 @@ void CMainView::init()
     // Init login dialog
     initLoginDialog();
 
-    // Init store view
-    initStoreView();
+    // Init Hub view
+    initHubView();
 
     //Init process popup
     initProcessPopup();
@@ -355,7 +354,7 @@ void CMainView::initBottomView()
 void CMainView::initWorkflowModule()
 {
     m_pWorkflowModule = new CWorkflowModuleWidget(this);
-    m_pModuleDock->addModuleWidget(m_pWorkflowModule, QIcon(":/Images/module_protocol.png"));
+    m_pModuleDock->addModuleWidget(m_pWorkflowModule, QIcon(":/Images/module_workflow.png"));
 }
 
 void CMainView::initPluginMakerModule()
@@ -422,7 +421,7 @@ void CMainView::initConnections()
     {
         QSettings IkomiaSettings;
         QStringList files = QFileDialog::getOpenFileNames(  this, tr("Choose image files"), IkomiaSettings.value(_DefaultDirImg).toString(),
-                                                            tr("All images (*.jpg *.jpeg *.tif *.tiff *.png *.bmp *.jp2 *.pgm *.exr *.hdr *.ppm *.webp)"), nullptr,
+                                                            tr("All images (*.jpg * JPG *.jpeg *.JPEG *.tif *.TIF *.tiff *.TIFF *.png *.PNG *.bmp *.BMP *.jp2 *.JP2 *.pgm *.PGM *.exr *.EXR *.hdr *.HDR *.ppm *.PPM *.webp *.WEBP)"), nullptr,
                                                             CSettingsManager::dialogOptions() );
         if(files.size() > 0)
         {
@@ -469,7 +468,7 @@ void CMainView::initConnections()
             openFolder(dir);
         }
     });
-    connect(m_pOpenStoreAct, &QAction::triggered, this, &CMainView::onShowStore);
+    connect(m_pOpenHubAct, &QAction::triggered, this, &CMainView::onShowHub);
     connect(m_pPluginAct, &QAction::triggered, [this]{ emit doLoadPlugin(); });
     connect(m_pPreferencesAct, &QAction::triggered, this, &CMainView::onShowPreferences);
 
@@ -584,14 +583,14 @@ void CMainView::initMainToolBar()
     m_pOpenFolderAct->setStatusTip(tr("Open image folder"));
     m_pCentralViewLayout->addActionToMenu(m_pOpenFolderAct);
 
-    //Open plugin store
-    const QIcon storeIcon(":/Images/store-color.png");
-    m_pOpenStoreAct = new QAction(storeIcon, tr("&Open Ikomia HUB..."), this);
-    m_pOpenStoreAct->setStatusTip(tr("Open Ikomia HUB"));
-    m_pCentralViewLayout->addActionToMenu(m_pOpenStoreAct);
-    QToolButton* pOpenStore = m_pCentralViewLayout->addButtonToUpperBar("", itemSize, storeIcon, Qt::AlignRight);
-    pOpenStore->setToolTip(tr("Open Ikomia HUB"));
-    pOpenStore->setDefaultAction(m_pOpenStoreAct);
+    //Open plugin Hub
+    const QIcon hubIcon(":/Images/hub-color.png");
+    m_pOpenHubAct = new QAction(hubIcon, tr("&Open Ikomia HUB..."), this);
+    m_pOpenHubAct->setStatusTip(tr("Open Ikomia HUB"));
+    m_pCentralViewLayout->addActionToMenu(m_pOpenHubAct);
+    QToolButton* pOpenHub = m_pCentralViewLayout->addButtonToUpperBar("", itemSize, hubIcon, Qt::AlignRight);
+    pOpenHub->setToolTip(tr("Open Ikomia HUB"));
+    pOpenHub->setDefaultAction(m_pOpenHubAct);
 
     //Load plugins : action only
     const QIcon pluginImgIcon(":/Images/update-color.png");
@@ -624,7 +623,7 @@ void CMainView::initLeftTab()
     m_pProcessBtn = createLeftTabBtn(tr("Process"), tr("Process"), QIcon(":/Images/process.png"), m_pProcessPane);
 
     // Add button to show/hide protocol pane
-    m_pWorkflowBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/protocols.png"), m_pWorkflowPane);
+    m_pWorkflowBtn = createLeftTabBtn(tr("Workflows"), tr("Workflows"), QIcon(":/Images/workflow.png"), m_pWorkflowPane);
 
     // Add button to show/hide protocol pane
     m_pPropertiesBtn = createLeftTabBtn(tr("Properties"), tr("Data properties"), QIcon(":/Images/info-color.png"), m_pInfoPane); 
@@ -698,7 +697,7 @@ void CMainView::initNotifications()
         m_pNotifier->show();
         connect(m_pNotifier, &QSystemTrayIcon::activated, [this]{
             auto title = "Ikomia Studio";
-            auto msg = "Version " + Utils::IkomiaApp::getCurrentVersionName();
+            auto msg = QString("Version %1").arg(QString::fromStdString(Utils::IkomiaApp::getCurrentVersionName()));
             m_pNotifier->showMessage(title, msg, QIcon(":/Images/app.png"));
         });
     }
@@ -720,9 +719,9 @@ void CMainView::initProgressBar()
     m_circleProgressMgr.setColorInner(colorInner);
 }
 
-void CMainView::initStoreView()
+void CMainView::initHubView()
 {
-    m_pStoreDlg = new CStoreDlg(this);
+    m_pHubDlg = new CHubDlg(this);
 }
 
 void CMainView::initProcessPopup()
@@ -849,18 +848,17 @@ void CMainView::setAppStyle(const QString& style)
         QPalette p = qApp->palette();
 
         QColor selCol, sunkCol, baseCol, raisedCol, txtCol, intCol, kfCol, disCol, eCol, altCol, lightSelCol;
-        //selCol = QColor(142,45,197).lighter();
-        selCol = QColor(204,90,32);
+        selCol = QColor(255,122,0);
         sunkCol = QColor(70,70,70);
         baseCol = QColor(48,48,48);
         raisedCol = QColor(70,70,70);
-        txtCol = QColor(177,177,177);
+        txtCol = QColor(179,181,180);
         intCol = Qt::white;
         kfCol = Qt::white;
         disCol = Qt::black;
         eCol = Qt::white;
         altCol = QColor(200,200,200);
-        lightSelCol = QColor(204,90,32);
+        lightSelCol = QColor(255,122,0);
 
         p.setBrush( QPalette::Window, sunkCol );
         p.setBrush( QPalette::WindowText, txtCol );
@@ -936,8 +934,8 @@ void CMainView::onSetCurrentUser(const CUser& user)
     if(m_pUserLoginDlg)
         m_pUserLoginDlg->setCurrentUser(user.m_name);
 
-    if(m_pStoreDlg)
-        m_pStoreDlg->setCurrentUser(user);
+    if(m_pHubDlg)
+        m_pHubDlg->setCurrentUser(user);
 
     if(m_pWorkflowModule)
         m_pWorkflowModule->setCurrentUser(user);
@@ -954,7 +952,7 @@ void CMainView::onSetCurrentUser(const CUser& user)
 void CMainView::onSetWorkflowChangedIcon()
 {
     if(m_pModuleDock->isModuleOpen(0))
-        m_pModuleDock->getModuleBtn(0)->setIcon(QIcon(":/Images/module_protocol_warning.png"));
+        m_pModuleDock->getModuleBtn(0)->setIcon(QIcon(":/Images/module_workflow_warning.png"));
 }
 
 void CMainView::onGraphicsContextChanged()
@@ -1058,8 +1056,8 @@ void CMainView::onRestartIkomia()
 
 void CMainView::onClose()
 {
-    if(m_pStoreDlg)
-        delete m_pStoreDlg;
+    if(m_pHubDlg)
+        delete m_pHubDlg;
 
     if(m_pProcessDlg)
         delete m_pProcessDlg;
@@ -1110,12 +1108,12 @@ void CMainView::onShowPreferences()
     m_preferencesDlg.exec();
 }
 
-void CMainView::onShowStore()
+void CMainView::onShowHub()
 {
-    if(m_pStoreDlg->isHidden())
-        m_pStoreDlg->show();
+    if(m_pHubDlg->isHidden())
+        m_pHubDlg->show();
     else
-        m_pStoreDlg->hide();
+        m_pHubDlg->hide();
 }
 
 void CMainView::onShowProcessPopup()
@@ -1245,11 +1243,6 @@ void CMainView::showNotificationProgress(const QString& title, const QString& de
 
 void CMainView::showNotificationCenter()
 {
-    /*if(m_pNotificationCenter->isHidden())
-        m_pNotificationCenter->show();
-    else
-        m_pNotificationCenter->hide();
-    m_pNotificationCenter->animate();*/
     m_pNotifyBtn->setIcon(QIcon(":/Images/notification.png"));
 }
 

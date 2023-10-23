@@ -82,10 +82,12 @@ void CLiveStreamItemDbMgr::save(std::shared_ptr<ProjectTreeItem> itemPtr, int db
     auto id = itemPtr->getId();
     m_mapPaths.insert(id, path);
 
-    //Insert protocol ids associated with current Video into the global map
-    auto protocolIds = QVector<int>::fromStdVector(pItem->getWorkflowDbIds());
-    if(protocolIds.size() > 0)
-        m_mapWorkflowIds.insert(id, protocolIds);
+    //Insert workflow ids associated with current Video into the global map
+    auto ids = pItem->getWorkflowDbIds();
+    auto workflowIds = QVector<int>(ids.begin(), ids.end());
+
+    if(workflowIds.size() > 0)
+        m_mapWorkflowIds.insert(id, workflowIds);
 }
 
 void CLiveStreamItemDbMgr::batchSave()

@@ -59,14 +59,10 @@ class CWorkflowModuleWidget : public QWidget
         void            onSetModel(CWorkflowManager* pModel);
         void            onAddTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id, const WorkflowVertex& parentId);
         void            onAddCandidateTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id);
+        void            onSetScaleProjects(const QJsonArray& projects, const CUser& user);
         void            onUpdateTaskInfo(const WorkflowTaskPtr& pTask, const CTaskInfo &description);
         void            onUpdateTaskStateInfo(const VectorPairString& infoMap, const VectorPairString& customInfoMap);
         void            onWorkflowCreated();
-        void            onSaveWorkflow();
-        void            onExportWorkflow();
-        void            onLoadWorkflow();
-        void            onCloseWorkflow();
-        void            onNewWorkflow();
 
     protected:
 
@@ -74,6 +70,12 @@ class CWorkflowModuleWidget : public QWidget
 
     private slots:
 
+        void            onNewWorkflow();
+        void            onLoadWorkflow();
+        void            onSaveWorkflow();
+        void            onExportWorkflow();
+        void            onPublishWorkflow();
+        void            onCloseWorkflow();
         void            onShowProcessInfo();
         void            onIOPropertyValueChanged(QtProperty* pProperty, const QVariant& value);
 

@@ -77,7 +77,7 @@ void CPluginPythonModel::fillLoadedPlugins()
         addItem(i, 2, modified);
         QString version = q.value("version").toString();
         addItem(i, 3, version);
-        m_loadedPluginsFolder.insert(Utils::CPluginTools::getPythonPluginFolder(name));
+        m_loadedPluginsFolder.insert(QString::fromStdString(Utils::CPluginTools::getPythonPluginFolder(name.toStdString())));
         i++;
     }
 }

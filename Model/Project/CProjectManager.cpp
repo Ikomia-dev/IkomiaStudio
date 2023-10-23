@@ -237,7 +237,7 @@ void CProjectManager::onSaveProjectAs(const QModelIndex& index, const QString& f
         //Copie du fichier source pour conserver les éléments non chargés en mémoire
         auto currentProjectPath = pProjectModel->getPath().toStdString();
         if(!currentProjectPath.empty())
-            boost::filesystem::copy_file(currentProjectPath, fileName.toStdString(), boost::filesystem::copy_option::overwrite_if_exists);
+            boost::filesystem::copy_file(currentProjectPath, fileName.toStdString(), boost::filesystem::copy_options::overwrite_existing);
 
         pProjectModel->setPath(fileName);
         pProjectModel->getRoot()->getChild(0)->setName(name.toStdString());

@@ -28,7 +28,7 @@
 #include "View/Modules/Workflow/CWorkflowScene.h"
 #include "View/Workflow/CWorkflowPane.h"
 #include "View/Graphics/CGraphicsToolbar.h"
-#include "View/Store/CStoreDlg.h"
+#include "View/Hub/CHubDlg.h"
 #include "View/Wizard/CWizardPane.h"
 #include "View/Preferences/CWorkflowSettingsWidget.h"
 #include "Model/Data/CFeaturesTableModel.h"
@@ -93,8 +93,8 @@ void CMainCtrl::initConnections()
     // User connections
     initUserConnections();
 
-    // Plugins store connections
-    initStoreConnections();
+    // Plugins hub connections
+    initHubConnections();
 
     // Wizard connections
     initWizardConnections();
@@ -449,21 +449,26 @@ void CMainCtrl::initUserConnections()
     connect(m_pModel->getUserManager(), &CUserManager::doShowNotification, m_pView, &CMainView::onNewNotification);
 }
 
-void CMainCtrl::initStoreConnections()
+void CMainCtrl::initHubConnections()
 {
     //View -> model
-    connect(m_pView->getStoreView(), &CStoreDlg::doGetServerModel, m_pModel->getStoreManager(), &CStoreManager::onRequestServerModel);
-    connect(m_pView->getStoreView(), &CStoreDlg::doGetLocalModel, m_pModel->getStoreManager(), &CStoreManager::onRequestLocalModel);
-    connect(m_pView->getStoreView(), &CStoreDlg::doPublishPlugin, m_pModel->getStoreManager(), &CStoreManager::onPublishPlugin);
-    connect(m_pView->getStoreView(), &CStoreDlg::doInstallPlugin, m_pModel->getStoreManager(), &CStoreManager::onInstallPlugin);
-    connect(m_pView->getStoreView(), &CStoreDlg::doUpdatePluginInfo, m_pModel->getStoreManager(), &CStoreManager::onUpdatePluginInfo);
-    connect(m_pView->getStoreView(), &CStoreDlg::doServerSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onServerSearchChanged);
-    connect(m_pView->getStoreView(), &CStoreDlg::doLocalSearchChanged, m_pModel->getStoreManager(), &CStoreManager::onLocalSearchChanged);
+    connect(m_pView->getHubView(), &CHubDlg::doGetHubModel, m_pModel->getHubManager(), &CHubManager::onRequestHubModel);
+    connect(m_pView->getHubView(), &CHubDlg::doGetWorkspaceModel, m_pModel->getHubManager(), &CHubManager::onRequestWorkspaceModel);
+    connect(m_pView->getHubView(), &CHubDlg::doGetLocalModel, m_pModel->getHubManager(), &CHubManager::onRequestLocalModel);
+    connect(m_pView->getHubView(), &CHubDlg::doPublishHub, m_pModel->getHubManager(), &CHubManager::onPublishHub);
+    connect(m_pView->getHubView(), &CHubDlg::doPublishWorkspace, m_pModel->getHubManager(), &CHubManager::onPublishWorkspace);
+    connect(m_pView->getHubView(), &CHubDlg::doInstallPlugin, m_pModel->getHubManager(), &CHubManager::onInstallPlugin);
+    connect(m_pView->getHubView(), &CHubDlg::doHubSearchChanged, m_pModel->getHubManager(), &CHubManager::onHubSearchChanged);
+    connect(m_pView->getHubView(), &CHubDlg::doWorkspaceSearchChanged, m_pModel->getHubManager(), &CHubManager::onWorkspaceSearchChanged);
+    connect(m_pView->getHubView(), &CHubDlg::doLocalSearchChanged, m_pModel->getHubManager(), &CHubManager::onLocalSearchChanged);
+    connect(m_pView->getHubView(), &CHubDlg::doGetNextPublishInfo, m_pModel->getHubManager(), &CHubManager::onRequestNextPublishInfo);
 
     //Model -> view
-    connect(m_pModel->getStoreManager(), &CStoreManager::doSetServerPluginModel, m_pView->getStoreView(), &CStoreDlg::onSetServerPluginModel);
-    connect(m_pModel->getStoreManager(), &CStoreManager::doSetLocalPluginModel, m_pView->getStoreView(), &CStoreDlg::onSetLocalPluginModel);
-    connect(m_pModel->getStoreManager(), &CStoreManager::doRestartIkomia, m_pView, &CMainView::onRestartIkomia, Qt::QueuedConnection);
+    connect(m_pModel->getHubManager(), &CHubManager::doSetPluginModel, m_pView->getHubView(), &CHubDlg::onSetPluginModel);
+    connect(m_pModel->getHubManager(), &CHubManager::doNotifyModelError, m_pView->getHubView(), &CHubDlg::onModelError);
+    connect(m_pModel->getHubManager(), &CHubManager::doSetNextPublishInfo, m_pView->getHubView(), &CHubDlg::onSetNextPublishInfo);
+
+    connect(m_pModel->getHubManager(), &CHubManager::doRestartIkomia, m_pView, &CMainView::onRestartIkomia, Qt::QueuedConnection);
 }
 
 void CMainCtrl::initWizardConnections()

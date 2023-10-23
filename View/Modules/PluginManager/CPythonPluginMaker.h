@@ -49,6 +49,8 @@ class CPythonPluginMaker
         void    createProcessFile(const QString& folder);
         void    createWidgetFile(const QString &folder);
         void    createTestFile(const QString& folder);
+        void    createReadmeFile(const QString& folder);
+        void    createImageFolder(const QString& folder);
 
         QString getProcessBaseClass() const;
         QString getWidgetBaseClass() const;

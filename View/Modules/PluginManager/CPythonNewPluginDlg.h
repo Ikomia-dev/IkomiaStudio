@@ -30,7 +30,7 @@ class CPythonNewPluginDlg : public CDialog
 
     public:
 
-        explicit CPythonNewPluginDlg(QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+        explicit CPythonNewPluginDlg(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
         QString getName() const;
 

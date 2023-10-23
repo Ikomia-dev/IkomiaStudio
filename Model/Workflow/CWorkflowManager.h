@@ -22,6 +22,7 @@
 #define CWORKFLOWMANAGER_H
 
 #include <QObject>
+#include <QNetworkAccessManager>
 #include "Core/CWorkflow.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
@@ -29,6 +30,7 @@
 #include "Model/User/CUser.h"
 #include "CWorkflowInputViewManager.h"
 #include "CWorkflowDBManager.h"
+#include "CWorkflowScaleManager.h"
 
 class CProcessManager;
 class CProjectManager;
@@ -50,6 +52,7 @@ class CWorkflowManager : public QObject
 
         //Getters
         std::string                 getWorkflowName() const;
+        std::string                 getWorkflowDescription() const;
         WorkflowVertex              getRootId() const;
         WorkflowTaskIOPtr           getInput(size_t index) const;
         IODataType                  getInputDataType(size_t index) const;
@@ -64,7 +67,7 @@ class CWorkflowManager : public QObject
         std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
 
         //Setters
-        void                        setManagers(CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
+        void                        setManagers(QNetworkAccessManager *pNetMgr, CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
                                                 CResultManager* pResultsMgr, CMainDataManager* pDataMgr, CProgressBarManager* pProgressMgr,
                                                 CSettingsManager* pSettingsMgr);
         void                        setWorkflowName(const std::string& name);
@@ -109,6 +112,10 @@ class CWorkflowManager : public QObject
 
         void                        loadWorkflow(const QString& path);
         void                        loadImageWorkflows(const QModelIndex& imageIndex);
+
+        void                        requestScaleProjects();
+        void                        publishWorkflow(const QString &name, const QString &description, bool bNewProject,
+                                                    const QString &projectName, const QString& projectDescription, const QString &namespacePath);
 
         void                        updateDataInfo();
 
@@ -201,6 +208,7 @@ class CWorkflowManager : public QObject
         void                        doSetWorkflowChangedIcon();
         void                        doSetDescription(const QString& text);
         void                        doSetIOInfo(const CDataInfoPtr& info, const WorkflowVertex& taskId, int index, bool bInput);
+        void                        doSetScaleProjects(const QJsonArray& projects, const CUser& user);
 
         void                        doAddTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id, const WorkflowVertex& parentId);
         void                        doAddCandidateTask(const WorkflowTaskPtr& pTask, const WorkflowVertex& id);
@@ -276,7 +284,7 @@ class CWorkflowManager : public QObject
         std::mutex                  m_mutex;
         QStringListModel*           m_pModel = nullptr;
         QStringListModel*           m_pImageModel = nullptr;
-        //We ensure protocol name unicity by design
+        //We ensure workflow name unicity by design
         std::map<QString, int>      m_mapWorkflowNameToId;
         std::map<int, QString>      m_mapWorkflowIdToName;
         CWorkflowRunManager         m_runMgr;
@@ -289,6 +297,7 @@ class CWorkflowManager : public QObject
         CMainDataManager*           m_pDataMgr = nullptr;
         CSettingsManager*           m_pSettingsMgr = nullptr;
         CWorkflowInputViewManager   m_inputViewMgr;
+        CWorkflowScaleManager       m_scaleMgr;
         WorkflowPtr                 m_pWorkflow = nullptr;
         CUser                       m_currentUser;
         QFutureSynchronizer<void>   m_sync;
