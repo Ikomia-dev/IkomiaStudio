@@ -319,6 +319,7 @@ void CMainModel::initPython()
     std::string modulePath = Utils::Python::getPythonLibPath() + delimiter;
     modulePath += Utils::Python::getPythonDynLoadPath() + delimiter;
     modulePath += Utils::Python::getPythonSitePackagesPath() + delimiter;
+    // API dev folder: optional if Ikomia dev package has been installed into the venv (pip install -e .)
     modulePath += Utils::Python::getPythonIkomiaApiFolder() + delimiter;
     modulePath += pluginsPath;
 
@@ -328,7 +329,7 @@ void CMainModel::initPython()
     qputenv("PATH", pathenv.toUtf8());
 
     // Embedded Python executable
-    CSemanticVersion newInitVersion("3.11");
+    CSemanticVersion newInitVersion("3.8");
     CSemanticVersion currentVersion(Utils::Python::getPythonVersion());
 
     if (currentVersion >= newInitVersion)
@@ -364,6 +365,7 @@ void CMainModel::initPython()
     }
     else
     {
+        // Python 3.7 C API
         auto pythonExeSize = pythonExe.size();
         Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &pythonExeSize));
 
