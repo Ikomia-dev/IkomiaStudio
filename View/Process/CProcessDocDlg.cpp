@@ -19,18 +19,11 @@
 #include "CProcessDocDlg.h"
 #include "CProcessDocWidget.h"
 
-CProcessDocDlg::CProcessDocDlg(QWidget *parent, Qt::WindowFlags f)
-    : CDialog(tr("Documentation"), parent, NO_TITLE_BAR, f)
-{
-    initLayout();
-    resize(QSize(500, 500));
-}
-
-CProcessDocDlg::CProcessDocDlg(int style, QWidget *parent, Qt::WindowFlags f)
+CProcessDocDlg::CProcessDocDlg(QWidget *parent, int style, int width, int height, Qt::WindowFlags f)
     : CDialog(tr("Documentation"), parent, style, f)
 {
     initLayout();
-    resize(QSize(500, 500));
+    resize(QSize(width, height));
 }
 
 CProcessDocDlg::~CProcessDocDlg()

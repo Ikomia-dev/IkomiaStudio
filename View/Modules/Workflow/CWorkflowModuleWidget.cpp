@@ -337,7 +337,7 @@ void CWorkflowModuleWidget::initLayout()
     m_pView = new CWorkflowView;
 
     //Popup process info - non modal
-    m_pProcessDocDlg = new CProcessDocDlg(CDialog::DEFAULT_FIXED, this);
+    m_pProcessDocDlg = new CProcessDocDlg(this);
 
     m_pTab = new QTabWidget;
     m_pTab->setMinimumWidth(300);
