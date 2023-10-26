@@ -23,10 +23,12 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-CWorkflowNewDlg::CWorkflowNewDlg(const QString &name, const QStringList &names, QWidget *parent, Qt::WindowFlags f) :
+CWorkflowNewDlg::CWorkflowNewDlg(const QString &name, const QString &description, const QString &keywords, const QStringList &names, QWidget *parent, Qt::WindowFlags f) :
     CDialog(tr("Workflow information"), parent, DEFAULT|EFFECT_ENABLED, f)
 {
     m_name = name;
+    m_description = description;
+    m_keywords = keywords;
     m_workflowNames = names;
     initLayout();
     initConnections();
@@ -47,36 +49,63 @@ QString CWorkflowNewDlg::getDescription() const
     return m_description;
 }
 
+void CWorkflowNewDlg::onDescriptionTabChanged(int index)
+{
+    if (index == 0)
+        m_pPreviewDescription->setMarkdown(m_pEditDescription->toPlainText());
+}
+
 void CWorkflowNewDlg::initLayout()
 {
+    setMinimumWidth(500);
+
+    // Name
     QLabel* pLabelName = new QLabel(tr("Name"));
     m_pEditName = new QLineEdit;
     m_pEditName->setText(m_name);
     QTimer::singleShot(0, m_pEditName, SLOT(setFocus()));
 
-    QLabel* pLabelKeywords = new QLabel(tr("Keywords"));
-    m_pEditKeywords = new QPlainTextEdit;
-
+    // Description with preview/code options
     QLabel* pLabelDescription = new QLabel(tr("Description"));
-    m_pEditDescription = new QPlainTextEdit;
 
-    QGridLayout* pCentralLayout = new QGridLayout;
-    pCentralLayout->addWidget(pLabelName, 0, 0);
-    pCentralLayout->addWidget(m_pEditName, 0, 1);
-    pCentralLayout->addWidget(pLabelKeywords, 1, 0);
-    pCentralLayout->addWidget(m_pEditKeywords, 1, 1);
-    pCentralLayout->addWidget(pLabelDescription, 2, 0);
-    pCentralLayout->addWidget(m_pEditDescription, 2, 1);
+    m_pTabDescription = new QTabWidget;
+    m_pTabDescription->setStyleSheet("QTabWidget::tab-bar { alignment: left; }");
+    m_pTabDescription->setMinimumHeight(300);
 
+    m_pPreviewDescription = new QTextEdit;
+    m_pPreviewDescription->setMarkdown(m_description);
+    m_pPreviewDescription->setReadOnly(true);
+
+    m_pEditDescription = new QTextEdit;
+    m_pEditDescription->setPlainText(m_description);
+
+    m_pTabDescription->addTab(m_pPreviewDescription, "Preview");
+    m_pTabDescription->addTab(m_pEditDescription, "Editor");
+
+    QLabel* pLabelKeywords = new QLabel(tr("Keywords"));
+    m_pEditKeywords = new QLineEdit;
+    m_pEditKeywords->setText(m_keywords);
+
+    // Central layout
+    QVBoxLayout* pCentralLayout = new QVBoxLayout;
+    pCentralLayout->addWidget(pLabelName);
+    pCentralLayout->addWidget(m_pEditName);
+    pCentralLayout->addWidget(pLabelDescription);
+    pCentralLayout->addWidget(m_pTabDescription);
+    pCentralLayout->addWidget(pLabelKeywords);
+    pCentralLayout->addWidget(m_pEditKeywords);
+
+    // OK-Cancel layout
     m_pBtnOk = new QPushButton(tr("OK"));
     m_pBtnOk->setDefault(true);
-
     m_pBtnCancel = new QPushButton(tr("Cancel"));
 
     QHBoxLayout* pBtnLayout = new QHBoxLayout;
-    pBtnLayout->addWidget(m_pBtnOk);
-    pBtnLayout->addWidget(m_pBtnCancel);
+    pBtnLayout->addStretch(1);
+    pBtnLayout->addWidget(m_pBtnOk, 1);
+    pBtnLayout->addWidget(m_pBtnCancel, 1);
 
+    // Main layout
     QVBoxLayout* pMainLayout = getContentLayout();
     pMainLayout->addLayout(pCentralLayout);
     pMainLayout->addLayout(pBtnLayout);
@@ -84,6 +113,7 @@ void CWorkflowNewDlg::initLayout()
 
 void CWorkflowNewDlg::initConnections()
 {
+    connect(m_pTabDescription, &QTabWidget::currentChanged, this, &CWorkflowNewDlg::onDescriptionTabChanged);
     connect(m_pBtnOk, &QPushButton::clicked, this, &CWorkflowNewDlg::validate);
     connect(m_pBtnCancel, &QPushButton::clicked, this, &CWorkflowNewDlg::reject);
 }
@@ -91,7 +121,7 @@ void CWorkflowNewDlg::initConnections()
 void CWorkflowNewDlg::validate()
 {
     m_name = m_pEditName->text();
-    m_keywords = m_pEditKeywords->toPlainText();
+    m_keywords = m_pEditKeywords->text();
     m_description = m_pEditDescription->toPlainText();
 
     if(m_name.isEmpty())

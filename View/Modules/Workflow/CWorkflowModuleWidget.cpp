@@ -148,19 +148,22 @@ void CWorkflowModuleWidget::onWorkflowCreated()
 
 void CWorkflowModuleWidget::onSaveWorkflow()
 {
-    if(m_pModel == nullptr)
+    if (m_pModel == nullptr)
         return;
 
-     if(m_pModel->isWorkflowExists() == false)
+    if (m_pModel->isWorkflowExists() == false)
          return;
 
     auto wfNames = m_pModel->getWorkflowNames();
     QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
 
-    if(!wfNames.contains(wfName))
+    if (!wfNames.contains(wfName))
     {
-        CWorkflowNewDlg newWorkflowDlg(wfName, wfNames, this);
-        if(newWorkflowDlg.exec() == QDialog::Accepted)
+        QString wfDescription = QString::fromStdString(m_pModel->getWorkflowDescription());
+        QString wfKeywords = QString::fromStdString(m_pModel->getWorkflowKeywords());
+
+        CWorkflowNewDlg newWorkflowDlg(wfName, wfDescription, wfKeywords, wfNames, this);
+        if (newWorkflowDlg.exec() == QDialog::Accepted)
         {
             m_pModel->setWorkflowName(newWorkflowDlg.getName().toStdString());
             m_pModel->setWorkflowKeywords(newWorkflowDlg.getKeywords().toStdString());
@@ -175,23 +178,25 @@ void CWorkflowModuleWidget::onSaveWorkflow()
 
 void CWorkflowModuleWidget::onExportWorkflow()
 {
-    if(m_pModel == nullptr)
+    if (m_pModel == nullptr)
         return;
 
-     if(m_pModel->isWorkflowExists() == false)
-         return;
+    if (m_pModel->isWorkflowExists() == false)
+        return;
 
-    auto wfNames = m_pModel->getWorkflowNames();
     QString wfName = QString::fromStdString(m_pModel->getWorkflowName());
+    QString wfDescription = QString::fromStdString(m_pModel->getWorkflowDescription());
 
-    if(!wfNames.contains(wfName))
+    if (wfName.isEmpty() || wfDescription.isEmpty())
     {
-        CWorkflowNewDlg newWorkflowDlg(wfName, wfNames, this);
-        if(newWorkflowDlg.exec() == QDialog::Accepted)
+        QString wfKeywords = QString::fromStdString(m_pModel->getWorkflowKeywords());
+        CWorkflowNewDlg newWorkflowDlg(wfName, wfDescription, wfKeywords, QStringList(), this);
+
+        if (newWorkflowDlg.exec() == QDialog::Accepted)
         {
             m_pModel->setWorkflowName(newWorkflowDlg.getName().toStdString());
-            m_pModel->setWorkflowKeywords(newWorkflowDlg.getKeywords().toStdString());
             m_pModel->setWorkflowDescription(newWorkflowDlg.getDescription().toStdString());
+            m_pModel->setWorkflowKeywords(newWorkflowDlg.getKeywords().toStdString());
         }
         else
             return;
@@ -201,7 +206,7 @@ void CWorkflowModuleWidget::onExportWorkflow()
     QStringList extensions = {"json", "pcl"};
 
     auto fileName = Utils::File::saveFile(this, tr("Export workflow"), IkomiaSettings.value(_defaultDirWorkflowExport).toString(), tr("Workflow (*.json *.pcl)"), extensions, ".json");
-    if(fileName.isEmpty())
+    if (fileName.isEmpty())
         return;
 
     IkomiaSettings.setValue(_defaultDirWorkflowExport, QFileInfo(fileName).path());
@@ -266,6 +271,27 @@ void CWorkflowModuleWidget::onCloseWorkflow()
     emit doNotifyWorkflowClosed();
 }
 
+void CWorkflowModuleWidget::onShowWorkflowInfo()
+{
+    if (m_pModel == nullptr)
+        return;
+
+    if (m_pModel->isWorkflowExists() == false)
+        return;
+
+    QString name = QString::fromStdString(m_pModel->getWorkflowName());
+    QString description = QString::fromStdString(m_pModel->getWorkflowDescription());
+    QString keywords = QString::fromStdString(m_pModel->getWorkflowKeywords());
+
+    CWorkflowNewDlg newWorkflowDlg(name, description, keywords, QStringList(), this);
+    if(newWorkflowDlg.exec() == QDialog::Accepted)
+    {
+        m_pModel->setWorkflowName(newWorkflowDlg.getName().toStdString());
+        m_pModel->setWorkflowKeywords(newWorkflowDlg.getKeywords().toStdString());
+        m_pModel->setWorkflowDescription(newWorkflowDlg.getDescription().toStdString());
+    }
+}
+
 void CWorkflowModuleWidget::onNewWorkflow()
 {
     assert(m_pModel);
@@ -273,7 +299,7 @@ void CWorkflowModuleWidget::onNewWorkflow()
     if(m_pModel->isWorkflowExists())
         onCloseWorkflow();
 
-    CWorkflowNewDlg newWorkflowDlg("", m_pModel->getWorkflowNames(), this);
+    CWorkflowNewDlg newWorkflowDlg("Untitled", "", "", m_pModel->getWorkflowNames(), this);
     if(newWorkflowDlg.exec() == QDialog::Accepted)
     {
         m_pModel->createWorkflow(newWorkflowDlg.getName().toStdString(),
@@ -430,6 +456,12 @@ void CWorkflowModuleWidget::initLeftTab()
     assert(pBtnExport != nullptr);
     pBtnExport->setToolTip(tr("Export workflow"));
     connect(pBtnExport, &QPushButton::clicked, this, &CWorkflowModuleWidget::onExportWorkflow);
+
+    // Add button to publish workflow to Scale
+    auto pBtnInfo = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/info-white.png"));
+    assert(pBtnInfo != nullptr);
+    pBtnInfo->setToolTip(tr("Workflow information"));
+    connect(pBtnInfo, &QPushButton::clicked, this, &CWorkflowModuleWidget::onShowWorkflowInfo);
 
     // Add button to publish workflow to Scale
     auto pBtnPublish = pLayout->addButtonToLeft("", btnSize, QIcon(":Images/share.png"));

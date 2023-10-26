@@ -76,6 +76,7 @@ class CWorkflowModuleWidget : public QWidget
         void            onExportWorkflow();
         void            onPublishWorkflow();
         void            onCloseWorkflow();
+        void            onShowWorkflowInfo();
         void            onShowProcessInfo();
         void            onIOPropertyValueChanged(QtProperty* pProperty, const QVariant& value);
 

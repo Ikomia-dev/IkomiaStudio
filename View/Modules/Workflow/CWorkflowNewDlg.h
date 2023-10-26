@@ -28,11 +28,15 @@ class CWorkflowNewDlg : public CDialog
 {
     public:
 
-        CWorkflowNewDlg(const QString &name, const QStringList& names, QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags());
+        CWorkflowNewDlg(const QString &name, const QString& description="", const QString& keywords="", const QStringList& names=QStringList(), QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags());
 
         QString         getName() const;
         QString         getKeywords() const;
         QString         getDescription() const;
+
+    private slots:
+
+        void            onDescriptionTabChanged(int index);
 
     private:
 
@@ -44,8 +48,10 @@ class CWorkflowNewDlg : public CDialog
     private:
 
         QLineEdit*      m_pEditName = nullptr;
-        QPlainTextEdit* m_pEditKeywords = nullptr;
-        QPlainTextEdit* m_pEditDescription = nullptr;
+        QTabWidget*     m_pTabDescription = nullptr;
+        QTextEdit*      m_pPreviewDescription = nullptr;
+        QTextEdit*      m_pEditDescription = nullptr;
+        QLineEdit*      m_pEditKeywords = nullptr;
         QPushButton*    m_pBtnOk = nullptr;
         QPushButton*    m_pBtnCancel = nullptr;
         QString         m_name;

@@ -234,8 +234,7 @@ void CMainCtrl::initWorkflowConnections()
 
     //Workflow manager -> workflow pane
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetModel);
-    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetNamesFromImageModel, m_pView->getWorkflowPane(), &CWorkflowPane::onSetFromImageModel);
-    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetDescription, m_pView->getWorkflowPane(), &CWorkflowPane::onSetDescription);
+    connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doSetWorkflowInfo, m_pView->getWorkflowPane(), &CWorkflowPane::onSetWorkflowInfo);
 
     //Workflow manager -> main view
     connect(m_pModel->getWorkflowManager(), &CWorkflowManager::doNewWorkflowNotification, m_pView, &CMainView::onNewNotification);

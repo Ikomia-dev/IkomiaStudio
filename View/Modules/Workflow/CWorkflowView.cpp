@@ -274,7 +274,7 @@ void CWorkflowView::wheelEvent(QWheelEvent *event)
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     //Scale the view / do the zoom
-    if(event->delta() > 0)
+    if(event->angleDelta().y() > 0)
         scale(m_scaleFactor, m_scaleFactor);                // Zoom in
     else
         scale(1.0 / m_scaleFactor, 1.0 / m_scaleFactor);    // Zooming out

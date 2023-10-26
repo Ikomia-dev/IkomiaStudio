@@ -73,6 +73,23 @@ QString CWorkflowDBManager::getWorkflowDescription(const int protocolId)
     return description;
 }
 
+void CWorkflowDBManager::getWorkflowInfo(const int protocolId, QString &description, QString &keywords)
+{
+    auto db = initDB(m_path, Utils::Database::getMainConnectionName());
+    if(!db.isValid())
+        throw CException(DatabaseExCode::INVALID_QUERY, db.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+
+    QSqlQuery q(db);
+    if(!q.exec(QString("SELECT description, keywords FROM protocol WHERE id=%1").arg(protocolId)))
+        throw CException(DatabaseExCode::INVALID_QUERY, q.lastError().text().toStdString(), __func__, __FILE__, __LINE__);
+
+    if(q.next())
+    {
+        description = q.value("description").toString();
+        keywords = q.value("keywords").toString();
+    }
+}
+
 QStringList CWorkflowDBManager::searchWorkflows(const QString &text)
 {
     auto db = initDB(m_path, Utils::Database::getMainConnectionName());

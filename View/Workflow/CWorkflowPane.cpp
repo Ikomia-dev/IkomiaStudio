@@ -19,6 +19,7 @@
 #include "CWorkflowPane.h"
 #include <QListView>
 #include "CWorkflowInfoDlg.h"
+#include "View/Modules/Workflow/CWorkflowNewDlg.h"
 
 CWorkflowPane::CWorkflowPane(QWidget *parent) : QWidget(parent)
 {
@@ -33,13 +34,7 @@ void CWorkflowPane::onSetModel(QStringListModel *pModel)
     m_pListView->setModel(pModel);
 }
 
-void CWorkflowPane::onSetFromImageModel(QStringListModel *pModel)
-{
-    // Current img standby
-    //m_pFromImageListView->setModel(pModel);
-}
-
-void CWorkflowPane::onSetDescription(const QString &text)
+void CWorkflowPane::onSetWorkflowInfo(const QString &text, const QString& keywords)
 {
     if(m_pInfoDlg == nullptr)
     {
@@ -64,7 +59,8 @@ void CWorkflowPane::onSetDescription(const QString &text)
     m_pInfoDlg->setDescription(description);
     m_pInfoDlg->show();
 
-    m_pWorkflowDesc->setHtml(description);
+    m_pWorkflowDesc->setMarkdown(description);
+    m_pWorkflowKeywords->setText(keywords);
 
     QRect rcItem = m_pListView->visualRect(indexes[0]);
     QPoint position((rcItem.left()+rcItem.right()) / 2, (rcItem.top()+rcItem.bottom()) / 2);
@@ -91,8 +87,8 @@ void CWorkflowPane::onShowWorkflowInfo(const QModelIndex &index)
     if(indexes.size() == 0)
         return;
 
-    auto protocolName = indexes[0].data(Qt::DisplayRole).toString();
-    if(m_pInfoDlg && m_pInfoDlg->isHidden() == false && protocolName == m_pInfoDlg->getName())
+    auto workflowName = indexes[0].data(Qt::DisplayRole).toString();
+    if(m_pInfoDlg && m_pInfoDlg->isHidden() == false && workflowName == m_pInfoDlg->getName())
         m_pInfoDlg->hide();
     else
         emit doGetWorkflowInfo(index);
@@ -160,7 +156,7 @@ void CWorkflowPane::initLayout()
     m_pSearchBox = new QLineEdit;
     m_pSearchBox->setPlaceholderText(tr("<Search by keywords>"));
 
-    m_pListView = new QListView(this);
+    m_pListView = new QListView;
     m_pListView->setSelectionMode(QListView::SingleSelection);
     m_pListView->setEditTriggers(QListView::EditKeyPressed);
     m_pListView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -170,32 +166,29 @@ void CWorkflowPane::initLayout()
     pContainerLayout->addWidget(pToolbar);
     pContainerLayout->addWidget(m_pSearchBox);
     pContainerLayout->addWidget(m_pListView);
-    pContainerLayout->setStretchFactor(m_pListView, 3);
+    pContainerLayout->setStretchFactor(m_pListView, 2);
     pContainer->setLayout(pContainerLayout);
 
     // Workflow description
-    auto pWorkflowDescription =  new QLabel(tr("Workflow description"));
+    auto pWorkflowDescription =  new QLabel(tr("Description"));
     pWorkflowDescription->setAlignment(Qt::AlignLeft);
-
     pContainerLayout->addWidget(pWorkflowDescription);
 
-    m_pWorkflowDesc = new QTextEdit(this);
+    m_pWorkflowDesc = new QTextEdit;
     m_pWorkflowDesc->setObjectName("CDataDisplay");
+    m_pWorkflowDesc->setReadOnly(true);
     pContainerLayout->addWidget(m_pWorkflowDesc);
-    pContainerLayout->setStretchFactor(m_pWorkflowDesc, 1);
+    pContainerLayout->setStretchFactor(m_pWorkflowDesc, 3);
 
-    // Current img standby
-    /*m_pFromImageListView = new QListView(this);
-    m_pFromImageListView->setSelectionMode(QListView::SingleSelection);
-    m_pFromImageListView->setEditTriggers(QListView::EditKeyPressed);
+    // Workflow keywords
+    auto pKeywordsLabel =  new QLabel(tr("Keywords"));
+    pKeywordsLabel->setAlignment(Qt::AlignLeft);
+    pContainerLayout->addWidget(pKeywordsLabel);
 
-    auto pFromImageListLabel =  new QLabel(tr("Used with current image"));
-    pFromImageListLabel->setAlignment(Qt::AlignLeft);
-
-    pContainerLayout->addWidget(pFromImageListLabel);
-
-    pContainerLayout->addWidget(m_pFromImageListView);
-    pContainerLayout->setStretchFactor(m_pFromImageListView, 1);*/
+    m_pWorkflowKeywords = new QLineEdit;
+    m_pWorkflowKeywords->setObjectName("CDataDisplay");
+    m_pWorkflowKeywords->setReadOnly(true);
+    pContainerLayout->addWidget(m_pWorkflowKeywords);
 
     QToolBox* pToolBox = new QToolBox;
     pToolBox->addItem(pContainer, tr("Workflow"));

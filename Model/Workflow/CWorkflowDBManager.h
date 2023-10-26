@@ -41,6 +41,7 @@ class CWorkflowDBManager
 
         std::map<QString, int>      getWorkflows();
         QString                     getWorkflowDescription(const int protocolId);
+        void                        getWorkflowInfo(const int protocolId, QString& description, QString& keywords);
 
         QStringList                 searchWorkflows(const QString& text);
 

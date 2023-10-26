@@ -58,6 +58,14 @@ std::string CWorkflowManager::getWorkflowDescription() const
         return "";
 }
 
+std::string CWorkflowManager::getWorkflowKeywords() const
+{
+    if (m_pWorkflow)
+        return m_pWorkflow->getKeywords();
+    else
+        return std::string();
+}
+
 WorkflowVertex CWorkflowManager::getRootId() const
 {
     if(m_pWorkflow)
@@ -1321,15 +1329,16 @@ void CWorkflowManager::onGetWorkflowInfo(const QModelIndex &index)
         return;
     }
 
-    QString protocolName = index.data(Qt::DisplayRole).toString();
-    auto it = m_mapWorkflowNameToId.find(protocolName);
+    QString name = index.data(Qt::DisplayRole).toString();
+    auto it = m_mapWorkflowNameToId.find(name);
 
     if(it != m_mapWorkflowNameToId.end())
     {
         try
         {
-            auto description = m_dbMgr.getWorkflowDescription(it->second);
-            emit doSetDescription(description);
+            QString description, keywords;
+            m_dbMgr.getWorkflowInfo(it->second, description, keywords);
+            emit doSetWorkflowInfo(description, keywords);
         }
         catch(std::exception& e)
         {

@@ -52,6 +52,7 @@ class CWorkflowInfoDlg : public CDialog
         QLabel*         m_pLabel = nullptr;
         QLabel*         m_pLabelDescription = nullptr;
         QPushButton*    m_pLoadBtn = nullptr;
+        const int       m_textMaxWidth = 150;
 };
 
 #endif // CWORKFLOWINFODLG_H
