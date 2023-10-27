@@ -566,15 +566,15 @@ void CResultsViewer::onApplyViewProperty()
 
 void CResultsViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
 {
-    if (layerInfo.m_refImageType == DisplayType::IMAGE_DISPLAY)
+    if (layerInfo.m_refImageDisplayType == DisplayType::IMAGE_DISPLAY)
     {
-        auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageIndex));
+        auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageDisplayIndex));
         if(pImageView)
             pImageView->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
     }
-    else if (layerInfo.m_refImageType == DisplayType::VIDEO_DISPLAY)
+    else if (layerInfo.m_refImageDisplayType == DisplayType::VIDEO_DISPLAY)
     {
-        auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageIndex));
+        auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageDisplayIndex));
         if(pVideoView)
             pVideoView->getImageDisplay()->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
     }
@@ -582,15 +582,15 @@ void CResultsViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
 
 void CResultsViewer::onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete)
 {
-    if (layerInfo.m_refImageType == DisplayType::IMAGE_DISPLAY)
+    if (layerInfo.m_refImageDisplayType == DisplayType::IMAGE_DISPLAY)
     {
-        auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageIndex));
+        auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageDisplayIndex));
         if(pImageView)
             pImageView->getView()->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
     }
-    else if (layerInfo.m_refImageType == DisplayType::VIDEO_DISPLAY)
+    else if (layerInfo.m_refImageDisplayType == DisplayType::VIDEO_DISPLAY)
     {
-        auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageIndex));
+        auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageDisplayIndex));
         if(pVideoView)
             pVideoView->getImageDisplay()->getView()->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
     }

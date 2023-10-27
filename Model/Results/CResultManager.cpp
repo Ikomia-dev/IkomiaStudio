@@ -833,6 +833,21 @@ CViewPropertyIO::ViewMode CResultManager::getViewMode(const WorkflowTaskPtr &tas
     return mode;
 }
 
+int CResultManager::getImageDisplayIndex(const WorkflowTaskPtr &taskPtr, int outputIndex) const
+{
+    int imageDisplayCount = 0;
+    for (size_t i=0; i<taskPtr->getOutputCount(); i++)
+    {
+        auto dataType = taskPtr->getOutputDataType(i);
+        if (dataType == IODataType::IMAGE || dataType == IODataType::IMAGE_LABEL || dataType == IODataType::IMAGE_BINARY)
+            imageDisplayCount++;
+
+        if (i == outputIndex)
+            return imageDisplayCount - 1;
+    }
+    return 0;
+}
+
 bool CResultManager::isResultFromCurrentImage(const QModelIndex &index) const
 {
     //Retrieve image QModelIndex
@@ -1004,8 +1019,8 @@ void CResultManager::manageGraphicsOutput(const WorkflowTaskPtr &taskPtr, const 
 
     //Display graphics layer
     m_tempGraphicsLayerInfo.m_pLayer = pOut->createLayer(m_pGraphicsMgr->getContext());
-    m_tempGraphicsLayerInfo.m_refImageIndex = pOut->getImageIndex();
-    m_tempGraphicsLayerInfo.m_refImageType = getResultViewType(taskPtr->getOutputDataType(pOut->getImageIndex()));
+    m_tempGraphicsLayerInfo.m_refImageDisplayIndex = getImageDisplayIndex(taskPtr, pOut->getImageIndex());
+    m_tempGraphicsLayerInfo.m_refImageDisplayType = getResultViewType(taskPtr->getOutputDataType(pOut->getImageIndex()));
     m_tempGraphicsLayerInfo.m_displayTarget = CGraphicsLayerInfo::RESULT;
     m_tempGraphicsLayerInfo.m_bTopMost = false;
     m_pGraphicsMgr->addTemporaryLayer(m_tempGraphicsLayerInfo);

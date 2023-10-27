@@ -28,19 +28,19 @@ class CGraphicsLayerInfo
         enum DisplayTarget { SOURCE, RESULT };
 
         CGraphicsLayerInfo(){}
-        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgIndex, DisplayType refImgType, int displayTarget, bool bTopMost)
+        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgDisplayIndex, DisplayType refImgDisplayType, int displayTarget, bool bTopMost)
         {
             m_pLayer = pLayer;
-            m_refImageIndex = refImgIndex;
-            m_refImageType = refImgType;
+            m_refImageDisplayIndex = refImgDisplayIndex;
+            m_refImageDisplayType = refImgDisplayType;
             m_displayTarget = displayTarget;
             m_bTopMost = bTopMost;
         }
-        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgIndex, DisplayType refImgType, int displayTarget)
+        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgDisplayIndex, DisplayType refImgDisplayType, int displayTarget)
         {
             m_pLayer = pLayer;
-            m_refImageIndex = refImgIndex;
-            m_refImageType = refImgType;
+            m_refImageDisplayIndex = refImgDisplayIndex;
+            m_refImageDisplayType = refImgDisplayType;
             m_displayTarget = displayTarget;
         }
 
@@ -55,8 +55,8 @@ class CGraphicsLayerInfo
 
         //Weak pointer
         CGraphicsLayer* m_pLayer = nullptr;
-        int             m_refImageIndex = 0;
-        DisplayType     m_refImageType = DisplayType::IMAGE_DISPLAY;
+        int             m_refImageDisplayIndex = 0;
+        DisplayType     m_refImageDisplayType = DisplayType::IMAGE_DISPLAY;
         int             m_displayTarget = SOURCE;
         bool            m_bTopMost = false;
 };
