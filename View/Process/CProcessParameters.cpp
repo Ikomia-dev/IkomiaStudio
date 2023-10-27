@@ -140,7 +140,7 @@ void CProcessParameters::onShowDocumentation()
 void CProcessParameters::initLayout()
 {
     //Popup documentation - non modal
-    m_pDocDlg = new CProcessDocDlg(this);
+    m_pDocDlg = new CProcessDocDlg(this, NO_TITLE_BAR);
 
     //Label + doc button with line underneath
     m_pLabel = new QLabel(tr("Process parameters"));

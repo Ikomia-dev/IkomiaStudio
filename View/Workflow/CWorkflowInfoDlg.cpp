@@ -17,6 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CWorkflowInfoDlg.h"
+#include "Main/CoreTools.hpp"
 
 CWorkflowInfoDlg::CWorkflowInfoDlg(QWidget *parent, Qt::WindowFlags f)
     : CDialog(parent, NO_TITLE_BAR, f | Qt::FramelessWindowHint)
@@ -34,7 +35,7 @@ void CWorkflowInfoDlg::setName(const QString &name)
 
 void CWorkflowInfoDlg::setDescription(const QString &text)
 {
-    m_pLabelDescription->setText(text);
+    m_pLabelDescription->setText(Utils::String::getElidedString(text, qApp->font(), m_textMaxWidth, 3));
 }
 
 QString CWorkflowInfoDlg::getName() const

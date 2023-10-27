@@ -92,9 +92,13 @@ void CProcessDocFrame::fillDocumentation(const CTaskInfo &info)
         qmdContent.replace(":pencil:", "");
         qmdContent.replace(":mag:", "");
         m_pDoc->setMarkdown(qmdContent, QTextDocument::MarkdownFeature::MarkdownDialectGitHub);
+        m_pBrowser->setVisible(true);
     }
     else
+    {
         m_pDoc->clear();
+        m_pBrowser->setVisible(false);
+    }
 }
 
 QString CProcessDocFrame::getMarkdownTemplate() const

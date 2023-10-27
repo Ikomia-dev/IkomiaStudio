@@ -53,6 +53,7 @@ class CWorkflowManager : public QObject
         //Getters
         std::string                 getWorkflowName() const;
         std::string                 getWorkflowDescription() const;
+        std::string                 getWorkflowKeywords() const;
         WorkflowVertex              getRootId() const;
         WorkflowTaskIOPtr           getInput(size_t index) const;
         IODataType                  getInputDataType(size_t index) const;
@@ -206,7 +207,7 @@ class CWorkflowManager : public QObject
         void                        doSetGraphicsProxyModel(CProjectGraphicsProxyModel* pModel);
         void                        doSetProjectDataProxyModel(CProjectDataProxyModel* pModel);
         void                        doSetWorkflowChangedIcon();
-        void                        doSetDescription(const QString& text);
+        void                        doSetWorkflowInfo(const QString& description, const QString& keywords);
         void                        doSetIOInfo(const CDataInfoPtr& info, const WorkflowVertex& taskId, int index, bool bInput);
         void                        doSetScaleProjects(const QJsonArray& projects, const CUser& user);
 

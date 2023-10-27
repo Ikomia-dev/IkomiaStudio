@@ -38,11 +38,13 @@ class CWorkflowPane : public QWidget
     public slots:
 
         void    onSetModel(QStringListModel* pModel);
-        void    onSetFromImageModel(QStringListModel* pModel);
-        void    onSetDescription(const QString& text);
+        void    onSetWorkflowInfo(const QString& text, const QString &keywords);
         void    onSearchWorkflow(const QString& text);
         void    onShowContextMenu(const QPoint &pos);
         void    onShowWorkflowInfo(const QModelIndex& index);
+
+    private slots:
+
         void    onLoadSelectedWorkflow();
         void    onDeleteSelectedWorkflow();
 
@@ -73,8 +75,8 @@ class CWorkflowPane : public QWidget
 
         QLineEdit*                  m_pSearchBox = nullptr;
         QListView*                  m_pListView = nullptr;
-        QListView*                  m_pFromImageListView = nullptr;
         QTextEdit*                  m_pWorkflowDesc = nullptr;
+        QLineEdit*                  m_pWorkflowKeywords = nullptr;
         CMultiContextMenu<menu_sig> m_contextMenu;
         CWorkflowInfoDlg*           m_pInfoDlg = nullptr;
 };

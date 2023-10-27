@@ -203,69 +203,117 @@ namespace Ikomia
         {
             using namespace boost::python;
 
-            const std::string _python_bin_prod_version = "3.8";
-            const std::string _python_lib_prod_version = "3.8";
-
-            inline std::string  getDevBinVersion()
+            inline std::string  getPythonVersion()
             {
-                QSettings ikomiaSettings;
-                const QString PYTHON_BIN_VERSION("python_bin_version");
-                QString binVersion = ikomiaSettings.value(PYTHON_BIN_VERSION).toString();
-
-                if(binVersion.isEmpty())
+                QString pythonPath = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
+                QDir pythonDir(pythonPath);
+                if(pythonDir.exists())
+                    return "3.8";
+                else
                 {
-                    binVersion = "3.9";
-                    ikomiaSettings.setValue(PYTHON_BIN_VERSION, binVersion);
+                    QSettings ikomiaSettings;
+                    const QString PYTHON_BIN_VERSION("python_dev_version");
+                    return ikomiaSettings.value(PYTHON_BIN_VERSION, "").toString().toStdString();
                 }
-                return binVersion.toStdString();
             }
-            inline std::string  getDevLibVersion()
+            inline std::string  getPythonEnvPath()
             {
-                QSettings ikomiaSettings;
-                const QString PYTHON_LIB_VERSION("python_lib_version");
-                QString libVersion = ikomiaSettings.value(PYTHON_LIB_VERSION).toString();
-
-                if(libVersion.isEmpty())
+                QString pythonPath = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
+                QDir pythonDir(pythonPath);
+                if(pythonDir.exists())
+                    return pythonPath.toStdString();
+                else
                 {
-                    libVersion = "3.9";
-                    ikomiaSettings.setValue(PYTHON_LIB_VERSION, libVersion);
+                    QSettings ikomiaSettings;
+                    const QString PYTHON_INTERPRETER_PATH("python_dev_env_path");
+                    return ikomiaSettings.value(PYTHON_INTERPRETER_PATH, "").toString().toStdString();
                 }
-                return libVersion.toStdString();
             }
+            inline std::string  getPythonInterpreterPath()
+            {
+#if defined(Q_OS_LINUX)
+                return getPythonEnvPath() + "/bin/python" + getPythonVersion();
+#elif defined(Q_OS_WIN64)
+                std::string envPath = getPythonEnvPath();
+                std::string interpreterPath = envPath + "/python.exe";
 
+                if (QFile::exists(QString::fromStdString(interpreterPath)))
+                    return interpreterPath;
+                else
+                    return envPath + "/Scripts/python.exe";
+#endif
+            }
+            inline std::string  getPythonLibPath()
+            {
+#if defined(Q_OS_LINUX)
+                return getPythonEnvPath() + "/lib/python" + getPythonVersion();
+#elif defined(Q_OS_WIN64)
+                return getPythonEnvPath() + "/Lib";
+#endif
+            }
+            inline std::string  getPythonDynLoadPath()
+            {
+#if defined(Q_OS_LINUX)
+                std::string dynloadPath = getPythonEnvPath() + "/lib/python" + getPythonVersion() + "/lib-dynload";
+#elif defined(Q_OS_WIN64)
+                std::string dynloadPath = getPythonEnvPath() + "/DLLs";
+#endif
+                QDir qDynloadDir(QString::fromStdString(dynloadPath));
+                if (qDynloadDir.exists())
+                    return dynloadPath;
+                else
+                {
+                    QSettings ikomiaSettings;
+                    const QString PYTHON_ROOT_LIB_PATH("python_dev_root_lib_path");
+                    return ikomiaSettings.value(PYTHON_ROOT_LIB_PATH, "").toString().toStdString();
+                }
+            }
+            inline std::string  getPythonSitePackagesPath()
+            {
+#if defined(Q_OS_LINUX)
+                return getPythonEnvPath() + "/lib/python" + getPythonVersion() + "/site-packages";
+#elif defined(Q_OS_WIN64)
+                return getPythonEnvPath() + "/Lib/site-packages";
+#endif
+            }
+            inline std::string  getPythonBinPath()
+            {
+#if defined(Q_OS_LINUX)
+                return getPythonEnvPath() + "/bin";
+#elif defined(Q_OS_WIN64)
+                return getPythonEnvPath() + "/Scripts";
+#endif
+            }
+            inline std::string  getPythonIkomiaApiFolder()
+            {
+                std::string apiDir = Utils::IkomiaApp::getIkomiaFolder() + "/Api";
+                QDir qApiDir(QString::fromStdString(apiDir));
+
+                if (qApiDir.exists())
+                    return apiDir;
+                else
+                {
+#if defined(Q_OS_LINUX)
+                    QString defaultApiPath = QDir::homePath() + "/Developpement/IkomiaApi";
+#elif defined(Q_OS_WIN64)
+                    QString defaultApiPath = "C:/Developpement/IkomiaApi;";
+#endif
+                    QSettings ikomiaSettings;
+                    const QString IKOMIA_API_PATH("ikomia_python_api_dev_path");
+                    return ikomiaSettings.value(IKOMIA_API_PATH, defaultApiPath).toString().toStdString();
+                }
+            }
 
             inline void         prepareQCommand(QString& cmd, QStringList& args)
             {
-                QString userPythonFolder = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
-                QDir pythonDir(userPythonFolder);
-
-                if(pythonDir.exists())
-                {
-    #if defined(Q_OS_WIN64)
-                    cmd = "cmd.exe";
-                    QString pythonExePath = userPythonFolder + "/python.exe";
-                    args << "/c" << pythonExePath;
-    #elif defined(Q_OS_LINUX)
-                    Q_UNUSED(args);
-                    cmd = userPythonFolder + "/bin/python" + QString::fromStdString(_python_bin_prod_version);
-    #elif defined(Q_OS_MACOS)
-                    Q_UNUSED(args);
-                    cmd = userPythonFolder + "/bin/python" + QString::fromStdString(_python_bin_prod_version);
-    #endif
-                }
-                else
-                {
-    #if defined(Q_OS_WIN64)
-                    cmd = "cmd.exe";
-                    args << "/c" << "python";
-    #elif defined(Q_OS_LINUX)
-                    Q_UNUSED(args);
-                    cmd = "python" + QString::fromStdString(getDevBinVersion());
-    #elif defined(Q_OS_MACOS)
-                    Q_UNUSED(args);
-                    cmd = "python" + QString::fromStdString(getDevBinVersion());;
-    #endif
-                }
+#if defined(Q_OS_LINUX)
+                Q_UNUSED(args);
+                cmd = QString::fromStdString(getPythonInterpreterPath());
+#elif defined(Q_OS_WIN64)
+                cmd = "cmd.exe";
+                QString pythonExePath = QString::fromStdString(getPythonInterpreterPath());
+                args << "/c" << pythonExePath;
+#endif
             }
 
             inline object       runCommand(const std::vector<std::string>& args)

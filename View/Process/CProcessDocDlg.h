@@ -31,8 +31,7 @@ class CProcessDocDlg : public CDialog
 {
     public:
 
-        CProcessDocDlg(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
-        CProcessDocDlg(int style = DEFAULT_FIXED, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        CProcessDocDlg(QWidget *parent = Q_NULLPTR, int style = DEFAULT_MOVABLE, int width=800, int height=500, Qt::WindowFlags f = Qt::WindowFlags());
         ~CProcessDocDlg();
 
         void                setCurrentUser(const CUser& user);
