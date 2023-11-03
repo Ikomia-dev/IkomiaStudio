@@ -21,11 +21,11 @@
 #ifndef CVTKVIEWER_H
 #define CVTKVIEWER_H
 
-
 #include <QtWidgets>
 
 #include "CVTKWidget.h"
 #include "IO/CScene3dIO.h"
+
 
 
 /**
@@ -59,10 +59,15 @@ public:
     void initConnections();
 
     /**
-     * @brief Convert the given 3D scene into VTK primitives and send the result to the 'CVTKWidget' class.
+     * @brief Set a given 3D scene.
      * @param scene3d: 3D scene to draw
      */
-	void displayScene3d(const CScene3d &scene3d);
+    void setScene3d(const CScene3d &scene3d);
+
+    /**
+     * @brief Convert the 3D scene into VTK primitives and send the result to the 'CVTKWidget' class.
+     */
+	void displayScene3d();
 
 
 public slots:
@@ -71,7 +76,8 @@ public slots:
 	void onBtnAxesOyzReleased();
 	void onBtnDisplayAxesReleased();
 	void onBtnResetReleased();
-	void onCmbDisplayModeCurrentIndexChanged(int index);
+    void onCmbDisplayModeCurrentIndexChanged(int index);
+    void onBtnSelectLayersReleased();
 
 protected:
 	/**
@@ -112,12 +118,22 @@ protected:
     /**
      * @brief Combo-box used to change the view mode (2D/3D).
      */
-	QComboBox   *m_pCmbDisplayMode;
+	QComboBox *m_pCmbDisplayMode;
+
+    /**
+     * @brief Button opening a dialog box used to select 3D scene's visible layouts.
+     */
+    QPushButton *m_pBtnSelectLayers;
 
     /**
      * @brief Widget used to display the VTK scene into a QT window.
      */
-    CVTKWidget  *m_pVTKWidget;
+    CVTKWidget *m_pVTKWidget;
+
+    /**
+     * @brief 3D scene to display.
+     */
+    CScene3d m_scene3d;
 };
 
 #endif   // CVTKVIEWER_H
