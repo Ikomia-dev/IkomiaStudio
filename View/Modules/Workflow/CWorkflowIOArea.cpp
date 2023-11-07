@@ -332,6 +332,7 @@ QPixmap CWorkflowIOArea::getThumbnailIcon(const std::shared_ptr<CWorkflowTaskIO>
         case IODataType::VIDEO:
         case IODataType::VIDEO_LABEL:
         case IODataType::VIDEO_BINARY:
+        case IODataType::POSITION:
             return getImageIcon(std::dynamic_pointer_cast<CImageIO>(inputPtr), isBatch);
 
         case IODataType::LIVE_STREAM:
