@@ -40,7 +40,7 @@ class CTextDisplay : public CDataDisplay
 
     private:
 
-        QTextEdit*      m_pTextEdit = nullptr;
+        QPlainTextEdit* m_pTextEdit = nullptr;
         QPushButton*    m_pExportBtn = nullptr;
 };
 
