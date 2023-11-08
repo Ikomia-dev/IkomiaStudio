@@ -467,10 +467,7 @@ void CWorkflowRunManager::notifyGraphicsChanged()
 
     auto taskPtr = m_workflowPtr->getTask(m_workflowPtr->getActiveTaskId());
     if(taskPtr->isGraphicsChangedListening() == false)
-        return;
-
-    auto pSignal = static_cast<CWorkflowSignalHandler*>(m_workflowPtr->getSignalRawPtr());
-    m_pProgressMgr->launchProgress(pSignal, QString("The workflow %1 is running.").arg(QString::fromStdString(m_workflowPtr->getName())), true);
+        return;    
 
     auto future = QtConcurrent::run([&]
     {

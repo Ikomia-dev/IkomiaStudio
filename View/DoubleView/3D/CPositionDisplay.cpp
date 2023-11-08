@@ -58,7 +58,7 @@ void CPositionDisplay::initLayout()
 {
     setObjectName("CVolumeDisplay");
 
-    m_pView2D = new CImageDisplay(this, "", CImageDisplay::DEFAULT_3D);
+    m_pView2D = new CImageDisplay(this, "", CImageDisplay::DEFAULT_3D | CImageDisplay::GRAPHICS_BUTTON);
     m_pView2D->setSelectOnClick(false);
 
     m_pLayout->addWidget(m_pView2D);
