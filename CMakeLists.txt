@@ -305,6 +305,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Common/CToolbarBorderLayout.h
     View/Common/VTK/CVTKCustomInteractorStyle2d.cpp
     View/Common/VTK/CVTKCustomInteractorStyle2d.h
+    View/Common/VTK/CVTKSelectVisibleLayersDlg.cpp
+    View/Common/VTK/CVTKSelectVisibleLayersDlg.h
     View/Common/VTK/CVTKViewer.cpp
     View/Common/VTK/CVTKViewer.h
     View/Common/VTK/CVTKWidget.cpp

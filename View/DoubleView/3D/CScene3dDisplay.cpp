@@ -50,5 +50,6 @@ bool CScene3dDisplay::eventFilter(QObject* obj, QEvent* event)
 void CScene3dDisplay::setScene3d(const CScene3d &scene3d)
 {
     // The 3d scene is sent to the viewer
-    m_pVTKViewer->displayScene3d(scene3d);
+    m_pVTKViewer->setScene3d(scene3d);
+    m_pVTKViewer->displayScene3d();
 }

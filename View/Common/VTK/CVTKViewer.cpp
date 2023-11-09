@@ -48,6 +48,8 @@
 #include <vtkTransform.h>
 #include <vtkUnsignedCharArray.h>
 
+#include "CVTKSelectVisibleLayersDlg.h"
+
 
 CVTKViewer::CVTKViewer(QWidget* parent, Qt::WindowFlags flags) :
 	QWidget(parent, flags),
@@ -107,6 +109,10 @@ void CVTKViewer::initLayout()
     m_pCmbDisplayMode->setCurrentIndex(1);
 
 
+    m_pBtnSelectLayers = new QPushButton("Layers", this);
+
+
+
     // Creation of the toolbar
     m_pLytToolbar = new QHBoxLayout();
     m_pLytToolbar->addWidget(m_pBtnAxesOxy);
@@ -115,6 +121,7 @@ void CVTKViewer::initLayout()
     m_pLytToolbar->addWidget(m_pBtnDisplayAxes);
     m_pLytToolbar->addWidget(m_pBtnResetView);
     m_pLytToolbar->addWidget(m_pCmbDisplayMode);
+    m_pLytToolbar->addWidget(m_pBtnSelectLayers);
 
 
     // Creation of the main layout of this component
@@ -132,22 +139,27 @@ void CVTKViewer::initLayout()
 void CVTKViewer::initConnections()
 {
     // Creation of the connections used by the toolbar's components
-    connect(m_pBtnAxesOxy,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxyReleased);
-    connect(m_pBtnAxesOxz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOxzReleased);
-    connect(m_pBtnAxesOyz,                        &QPushButton::released,           this, &CVTKViewer::onBtnAxesOyzReleased);
-    connect(m_pBtnDisplayAxes,                    &QPushButton::released,           this, &CVTKViewer::onBtnDisplayAxesReleased);
-    connect(m_pBtnResetView,                      &QPushButton::released,           this, &CVTKViewer::onBtnResetReleased);
-    connect(m_pCmbDisplayMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CVTKViewer::onCmbDisplayModeCurrentIndexChanged);
+    connect(m_pBtnAxesOxy,                           &QPushButton::released,             this, &CVTKViewer::onBtnAxesOxyReleased);
+    connect(m_pBtnAxesOxz,                           &QPushButton::released,             this, &CVTKViewer::onBtnAxesOxzReleased);
+    connect(m_pBtnAxesOyz,                           &QPushButton::released,             this, &CVTKViewer::onBtnAxesOyzReleased);
+    connect(m_pBtnDisplayAxes,                       &QPushButton::released,             this, &CVTKViewer::onBtnDisplayAxesReleased);
+    connect(m_pBtnResetView,                         &QPushButton::released,             this, &CVTKViewer::onBtnResetReleased);
+    connect(m_pCmbDisplayMode,    QOverload<int>::of(&QComboBox::currentIndexChanged),   this, &CVTKViewer::onCmbDisplayModeCurrentIndexChanged);
+    connect(m_pBtnSelectLayers,                      &QPushButton::released,             this, &CVTKViewer::onBtnSelectLayersReleased);
 }
 
-void CVTKViewer::displayScene3d(const CScene3d &scene3d)
+void CVTKViewer::setScene3d(const CScene3d &scene3d)
+{
+    m_scene3d = scene3d;
+}
+
+void CVTKViewer::displayScene3d()
 {
     const int CIRCLE_NB_SIDES = 50;
     const double CIRCLE_LINE_WIDTH = 1.0;
 
     // The whole scene is cleared
     m_pVTKWidget->clear();
-
 
 
     // Array used to store positions of the points (= 'CScene3dShapePoint')
@@ -191,11 +203,11 @@ void CVTKViewer::displayScene3d(const CScene3d &scene3d)
 
 
     // Position of the image 2d coordinate system's origin
-    CScene3dCoord sceneOrigin = scene3d.getImage2dCoordSystemOrigin();
+    CScene3dCoord sceneOrigin = m_scene3d.getImage2dCoordSystemOrigin();
 
 
     // For each layer in the 3D scene...
-    for(auto layer: scene3d.getLstLayers())
+    for(auto layer: m_scene3d.getLstLayers())
     {
         // if this layer is visible...
         if(layer.isVisible())
@@ -546,5 +558,29 @@ void CVTKViewer::onCmbDisplayModeCurrentIndexChanged(int index)
     {
         // No: an exception is thrown
         throw CException(CoreExCode::INVALID_PARAMETER, "Invalid view mode", __func__, __FILE__, __LINE__);
+    }
+}
+
+void CVTKViewer::onBtnSelectLayersReleased()
+{
+    // Initialization of the dialog box used to select visible layers
+    CVTKSelectVisibleLayersDlg dlg;
+
+    // Initialization of the list widget
+    dlg.setLstLayers(m_scene3d.getLstLayers());
+
+    // The dialog box is displayed...
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        // ... and if the user has clicked into the 'Ok' button,
+        // the visibility of each 3D scene's layer is updated...
+        std::vector<bool> checkedLayers = dlg.getCheckedLayers();
+        for(int i = 0; i < checkedLayers.size(); ++i)
+        {
+            m_scene3d.setLayerVisibility(i, checkedLayers[i]);
+        }
+
+        // ... and the 3D scene is redrawn
+        displayScene3d();
     }
 }
