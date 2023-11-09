@@ -30,6 +30,7 @@
  */
 #include <QWidget>
 #include <QTabWidget>
+#include <QJsonDocument>
 #include "View/DoubleView/CDataDisplay.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
 #include "CDataVideoBuffer.h"
@@ -47,6 +48,7 @@ class CMeasuresTableModel;
 class CFeaturesTableModel;
 class CPlotDisplay;
 class CDataPlot;
+class CJsonDisplay;
 class CMultiImageDisplay;
 class CMultiImageModel;
 class CTextDisplay;
@@ -72,6 +74,7 @@ class CResultsViewer : public QWidget
         CResultTableDisplay*    displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
         CPlotDisplay*           displayPlot(int index, const QString& name, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         CTextDisplay*           displayText(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
+        CJsonDisplay*           displayJson(int index, const QJsonDocument &jsonDocument, const QString& name, CViewPropertyIO *pViewProperty);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
         CScene3dDisplay*        displayScene3d(const CScene3d& scene, int index, const QString &name, CViewPropertyIO *pViewProperty);
 
@@ -156,6 +159,7 @@ class CResultsViewer : public QWidget
         CVideoDisplay*          createVideoDisplay();
         CResultTableDisplay*    createTableDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
         CPlotDisplay*           createPlotDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
+        CJsonDisplay*           createJsonDisplay(int index, const QJsonDocument &jsonDocument, const QString& name, CViewPropertyIO *pViewProperty);
         CTextDisplay*           createTextDisplay(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
 
         void                    addDefaultDisplay(int tabIndex);
