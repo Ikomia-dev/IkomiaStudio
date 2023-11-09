@@ -223,6 +223,10 @@
         <file>Images/share.png</file>
         <file>Images/app.ico</file>
         <file>Templates/Python/template_readme.md</file>
+        <file>Images/plain-text-view.svg</file>
+        <file>Images/json-viewer.png</file>
+        <file>Images/stretch.svg</file>
+        <file>Images/treeview.svg</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

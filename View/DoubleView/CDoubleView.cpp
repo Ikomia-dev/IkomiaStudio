@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QSplitter>
 #include <memory>
+#include <QJsonDocument>
 #include "CDataListView.h"
 #include "Image/CImageDisplay.h"
 #include "Result/CResultTableDisplay.h"
@@ -260,6 +261,12 @@ void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& i
 void CDoubleView::onDisplayResultText(int index, const QString &text, const QString &taskName, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayText(index, text, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
+}
+
+void CDoubleView::onDisplayResultJson(int index, const QJsonDocument &jsonDocument, const QString &taskName, CViewPropertyIO *pViewProperty)
+{
+    m_pResultsViewer->displayJson(index, jsonDocument, taskName, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 

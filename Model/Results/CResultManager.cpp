@@ -283,7 +283,7 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                     {
                         auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
                         assert(outPtr);
-                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                        manageJsonOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
                         break;
                     }
 
@@ -816,7 +816,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
         case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
-        case IODataType::JSON: viewType = DisplayType::TEXT_DISPLAY; break;
+        case IODataType::JSON: viewType = DisplayType::JSON_DISPLAY; break;
         case IODataType::SCENE_3D: viewType = DisplayType::SCENE_3D_DISPLAY; break;
     }
     return viewType;
@@ -1264,6 +1264,33 @@ void CResultManager::manageTextOutput(const WorkflowTaskIOPtr &pOutput, const st
     }
     std::vector<std::string> options =   {"json_format", "indented"};
     emit doDisplayText(index, QString::fromStdString(pOutput->toJson(options)), QString::fromStdString(taskName), pViewProp);
+}
+
+void CResultManager::manageJsonOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp)
+{
+    auto pOut = std::dynamic_pointer_cast<CJsonIO>(pOutput);
+
+    if(!pOut)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid JSON data");
+        return;
+    }
+
+    if(pOut->isDataAvailable() == false)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: no JSON data available");
+        return;
+    }
+
+    try
+    {
+        // WARNING: don't use 'toJson()' methods because they return 'std::string' instead of 'QJsonDocument'
+        emit doDisplayJson(index, pOut->getData(), QString::fromStdString(taskName), pViewProp);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logResults).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 void CResultManager::manageScene3dOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp)

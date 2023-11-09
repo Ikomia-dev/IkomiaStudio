@@ -333,6 +333,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/DoubleView/CDataViewer.h
     View/DoubleView/CDoubleView.cpp
     View/DoubleView/CDoubleView.h
+    View/DoubleView/CJsonDisplay.cpp
+    View/DoubleView/CJsonDisplay.h
     View/DoubleView/CPathNavigator.cpp
     View/DoubleView/CPathNavigator.h
     View/DoubleView/CStaticDisplay.cpp

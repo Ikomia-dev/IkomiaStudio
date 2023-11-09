@@ -31,6 +31,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QFileDialog>
+#include <QJsonDocument>
 #include "Model/Data/CFeaturesTableModel.h"
 #include "Model/Data/CMeasuresTableModel.h"
 #include "Model/Data/CMultiImageModel.h"
@@ -44,6 +45,7 @@
 #include "View/DoubleView/Result/CResultTableDisplay.h"
 #include "View/DoubleView/Video/CVideoDisplay.h"
 #include "View/DoubleView/CWidgetDataDisplay.h"
+#include "View/DoubleView/CJsonDisplay.h"
 #include "View/DoubleView/CTextDisplay.h"
 #include "Workflow/CViewPropertyIO.h"
 
@@ -198,6 +200,13 @@ CTextDisplay *CResultsViewer::displayText(int index, const QString &text, const 
     return pTextDisplay;
 }
 
+CJsonDisplay *CResultsViewer::displayJson(int index, const QJsonDocument &jsonDocument, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    CJsonDisplay* pJsonDisplay = createJsonDisplay(index, jsonDocument, name, pViewProperty);
+    pJsonDisplay->show();
+    return pJsonDisplay;
+}
+
 CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty)
 {
     if(hasTab(DisplayType::MULTI_IMAGE_DISPLAY) == false)
@@ -344,6 +353,13 @@ int CResultsViewer::addTabToResults(DisplayType type)
             indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/view-image-color.png"), tr("Dataset Results"));
             m_pTabWidget->setIconSize(QSize(16,16));
             m_pTabWidget->setTabToolTip(indTab, tr("Dnn Datatset Results"));
+            m_mapTypeIndex.insert(type, indTab);
+            break;
+
+        case DisplayType::JSON_DISPLAY:
+            indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/json-viewer.png"), tr("JSON data"));
+            m_pTabWidget->setIconSize(QSize(16,16));
+            m_pTabWidget->setTabToolTip(indTab, tr("JSON data"));
             m_mapTypeIndex.insert(type, indTab);
             break;
 
@@ -931,6 +947,36 @@ CPlotDisplay *CResultsViewer::createPlotDisplay(int index, const QString &name, 
         pDisplay = static_cast<CPlotDisplay*>(displays[index]);
 
     pDisplay->setName(name);
+    return pDisplay;
+}
+
+CJsonDisplay *CResultsViewer::createJsonDisplay(int index, const QJsonDocument &jsonDocument, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::JSON_DISPLAY) == false)
+        addTabToResults(DisplayType::JSON_DISPLAY);
+
+    CJsonDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::JSON_DISPLAY);
+
+    if((int)index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating json display : invalid index");
+            return nullptr;
+        }
+
+        //Create new one
+        pDisplay = new CJsonDisplay(name, jsonDocument);
+        pDisplay->setViewProperty(pViewProperty);
+        addDataViewToTab(DisplayType::JSON_DISPLAY, pDisplay);
+    }
+    else
+    {
+        pDisplay = static_cast<CJsonDisplay*>(displays[index]);
+        pDisplay->setName(name);
+        pDisplay->setJsonDocument(jsonDocument);
+    }
     return pDisplay;
 }
 
