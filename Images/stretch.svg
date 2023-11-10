@@ -28,7 +28,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="4.7572176"
-     inkscape:cx="13.873656"
+     inkscape:cx="7.882759"
      inkscape:cy="77.986763"
      inkscape:window-width="1866"
      inkscape:window-height="1131"
@@ -40,33 +40,13 @@
      id="defs2">
     <marker
        style="overflow:visible"
-       id="Arrow3"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       inkscape:stockid="Arrow3"
-       markerWidth="4"
-       markerHeight="5"
-       viewBox="0 0 4.2071068 7"
-       inkscape:isstock="true"
-       inkscape:collect="always"
-       preserveAspectRatio="none">
-      <path
-         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:round"
-         d="M 3,-3 0,0 3,3"
-         id="arrow3"
-         transform="rotate(180,0.125,0)"
-         sodipodi:nodetypes="ccc" />
-    </marker>
-    <marker
-       style="overflow:visible"
        id="Arrow3-3"
        refX="0"
        refY="0"
        orient="auto-start-reverse"
        inkscape:stockid="Arrow3"
-       markerWidth="4"
-       markerHeight="5"
+       markerWidth="4.5"
+       markerHeight="7.5"
        viewBox="0 0 4.2071068 7"
        inkscape:isstock="true"
        inkscape:collect="always"
@@ -78,27 +58,47 @@
          transform="rotate(180,0.125,0)"
          sodipodi:nodetypes="ccc" />
     </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow3-3-3"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow3"
+       markerWidth="4.5"
+       markerHeight="7.5"
+       viewBox="0 0 4.2071068 7"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="none">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:round"
+         d="M 3,-3 0,0 3,3"
+         id="arrow3-3-6"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc" />
+    </marker>
   </defs>
   <g
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1">
     <circle
-       style="fill:#ff7a00;fill-opacity:1;stroke:#ff7a00;stroke-width:3.23669;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#d2ccc1;fill-opacity:1;stroke:#d2ccc1;stroke-width:3.23669;stroke-dasharray:none;stroke-opacity:1"
        id="path327"
-       cx="-0.025454929"
-       cy="24.027309"
+       cx="-5.1917489e-08"
+       cy="23.94735"
        r="1.2098664"
        transform="rotate(-45)" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#ff7a00;stroke-width:2.58934;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow3)"
-       d="M 3.6192108,30.225317 14.004117,19.894974"
-       id="path383"
+       style="fill:#d2ccc1;fill-opacity:1;stroke:#d2ccc1;stroke-width:2.32539;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow3-3)"
+       d="M 31.874211,1.8879712 19.863171,13.962449"
+       id="path383-9"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#ff7a00;stroke-width:2.589;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow3-3)"
-       d="M 30.191659,3.6575526 19.861314,14.042459"
-       id="path383-9"
+       style="fill:#d2ccc1;fill-opacity:1;stroke:#d2ccc1;stroke-width:2.32539;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow3-3-3)"
+       d="M 1.9924561,31.978695 14.003497,19.904217"
+       id="path383-9-7"
        sodipodi:nodetypes="cc" />
   </g>
 </svg>
