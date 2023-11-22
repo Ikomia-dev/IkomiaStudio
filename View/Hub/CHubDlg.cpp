@@ -48,6 +48,29 @@ void CHubDlg::setCurrentUser(const CUser &user)
         requestHubModels();
 }
 
+void CHubDlg::showAlgorithm(const QString &name)
+{
+    assert(m_pHubView);
+
+    // Single shot connection to display algorithm page when model is generated
+    QMetaObject::Connection* pConnection = new QMetaObject::Connection;
+    *pConnection = connect(this, &CHubDlg::doHandleHubModelSet, [this, name, pConnection](){
+        QObject::disconnect(*pConnection);
+        delete pConnection;
+
+        auto pModel = dynamic_cast<CHubQueryModel*>(m_pHubView->model());
+        if (pModel)
+        {
+            QModelIndex index = pModel->getAlgorithmIndex(name);
+            if (index.isValid())
+                onShowPluginInfo(index);
+        }
+    });
+
+    m_pPluginStackWidget->setCurrentIndex(0);
+    show();
+}
+
 void CHubDlg::onSetPluginModel(CPluginModel *pModel)
 {
     assert(pModel);
@@ -379,6 +402,7 @@ void CHubDlg::requestHubModels()
             m_modelRequestStage = ModelRequestStage::HUB_SENT;
             break;
         case ModelRequestStage::HUB_DONE:
+            emit doHandleHubModelSet();
             emit doGetWorkspaceModel();
             m_modelRequestStage = ModelRequestStage::WORKSPACE_SENT;
             break;
