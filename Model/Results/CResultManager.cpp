@@ -115,7 +115,7 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
             auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));
             if(pOut)
             {
-                pOut->setCurrentImage(currentImgIndex);
+                pOut->setCurrentImageIndex(currentImgIndex);
                 //Emit signal to display result
                 emit doDisplayImage(volumeIndex++, CDataConversion::CMatToQImage(pOut->getImage()), QString::fromStdString(pTask->getName()), pTask->getOutputViewProperty(i));
             }
@@ -1003,7 +1003,7 @@ void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, cons
     {
         DimensionIndices indices = CProjectUtils::getIndicesInDataset(m_pProjectMgr->wrapIndex(m_currentInputIndex));
         auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
-        pOut->setCurrentImage(currentImgIndex);
+        pOut->setCurrentImageIndex(currentImgIndex);
 
         //Emit signal to display result
         emit doDisplayImage(index, CDataConversion::CMatToQImage(pOut->getImage()), QString::fromStdString(taskName), pViewProp);

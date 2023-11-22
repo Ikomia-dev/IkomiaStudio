@@ -224,7 +224,7 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
             DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapInd);
             auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
             inputPtr = std::make_shared<CImageIO>(IODataType::VOLUME, image);
-            std::static_pointer_cast<CImageIO>(inputPtr)->setCurrentImage(currentImgIndex);
+            std::static_pointer_cast<CImageIO>(inputPtr)->setCurrentImageIndex(currentImgIndex);
         }
         else if(pDataset->hasDimension(DataDimension::TIME))
         {
@@ -249,7 +249,7 @@ WorkflowTaskIOPtr CWorkflowRunManager::createIOFromDataItem(const QModelIndex &i
             DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapInd);
             auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
             inputPtr = std::make_shared<CImageIO>(IODataType::POSITION, image);
-            std::static_pointer_cast<CImageIO>(inputPtr)->setCurrentImage(currentImgIndex);
+            std::static_pointer_cast<CImageIO>(inputPtr)->setCurrentImageIndex(currentImgIndex);
         }
         else
         {
