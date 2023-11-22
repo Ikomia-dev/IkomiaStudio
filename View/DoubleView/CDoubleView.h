@@ -96,6 +96,9 @@ class CDoubleView : public QWidget
         void            onDisplayResultScene3d(const CScene3d& scene, int index, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void            onAddResultWidget(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
+        void            onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo);
+
+        void            onRemoveGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete);
 
         void            onUpdateIndex(const QModelIndex& index);
 

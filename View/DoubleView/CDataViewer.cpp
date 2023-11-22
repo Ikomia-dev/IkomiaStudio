@@ -473,6 +473,20 @@ void CDataViewer::addDataView(CDataDisplay* pData, int r, int c)
     m_pDataDisplay->addDataView(pData, r, c);
 }
 
+void CDataViewer::addGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
+{
+    auto imageViews = getImageViews();
+    for(int i=0; i<imageViews.size(); ++i)
+        imageViews[i]->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
+}
+
+void CDataViewer::removeGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete)
+{
+    auto imageViews = getImageViews();
+    for(int i=0; i<imageViews.size(); ++i)
+        imageViews[i]->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
+}
+
 void CDataViewer::updateDataListViewIndex(const QModelIndex& index)
 {
     if(index.isValid())
@@ -912,25 +926,11 @@ void CDataViewer::onSetCurrentGraphicsLayer(CGraphicsLayer *pLayer)
         imageViews[i]->setCurrentGraphicsLayer(pLayer);
 }
 
-void CDataViewer::onRemoveGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete)
-{
-    auto imageViews = getImageViews();
-    for(int i=0; i<imageViews.size(); ++i)
-        imageViews[i]->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
-}
-
 void CDataViewer::onAddGraphicsItem(QGraphicsItem *pItem, bool bForceParent)
 {
     auto imageViews = getImageViews();
     for(int i=0; i<imageViews.size(); ++i)
         imageViews[i]->addGraphicsItem(pItem, bForceParent);
-}
-
-void CDataViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
-{
-    auto imageViews = getImageViews();
-    for(int i=0; i<imageViews.size(); ++i)
-        imageViews[i]->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
 }
 
 void CDataViewer::onSetVideoSliderLength(int index, size_t length)

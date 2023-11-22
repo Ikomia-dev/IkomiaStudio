@@ -79,11 +79,11 @@ class CResultsViewer : public QWidget
         CScene3dDisplay*        displayScene3d(const CScene3d& scene, int index, const QString &name, CViewPropertyIO *pViewProperty);
 
         CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
-
         int                     addTabToResults(DisplayType type);
         int                     addTabToResults(DisplayType type, const QString& name, const QIcon& icon);
         void                    addDataViewToTab(DisplayType type, CDataDisplay* pData);
         void                    addDataViewToTab(int indTab, CDataDisplay* pData, int r = 0, int c = 0);
+        void                    addGraphicsLayer(const CGraphicsLayerInfo &layerInfo);
 
         int                     getTabCount() const;
         int                     getTabIndex(DisplayType type) const;
@@ -96,6 +96,7 @@ class CResultsViewer : public QWidget
         bool                    hasTab(DisplayType type) const;
 
         void                    removeTab(DisplayType type);
+        void                    removeGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
 
         void                    clearAll();
 
@@ -122,8 +123,6 @@ class CResultsViewer : public QWidget
     public slots:
 
         void                    onApplyViewProperty();
-        void                    onAddGraphicsLayer(const CGraphicsLayerInfo &layerInfo);
-        void                    onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
         void                    onDisplayOverlay(const QImage& image, int refImageIndex, DisplayType refImageType);
         void                    onClearOverlay();
 

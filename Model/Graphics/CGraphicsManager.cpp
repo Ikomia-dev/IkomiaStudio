@@ -144,7 +144,10 @@ void CGraphicsManager::setCurrentLayer(const QModelIndex &index, bool bNotifyVie
     }
 
     if(bNotifyView)
+    {
+        // Set view (CImageScene) current layer
         emit doSetCurrentLayer(pLayer);
+    }
 }
 
 void CGraphicsManager::setCurrentLayer(CGraphicsLayer *pLayer)
@@ -154,6 +157,8 @@ void CGraphicsManager::setCurrentLayer(CGraphicsLayer *pLayer)
         qCCritical(logGraphics).noquote() << tr("Current graphics layer not set: invalid layer");
         return;
     }
+
+    // Set view (CImageScene) current layer
     emit doSetCurrentLayer(pLayer);
 }
 
@@ -200,7 +205,6 @@ QModelIndex CGraphicsManager::addLayer(CGraphicsLayer *pLayer)
     }
 
     QModelIndex newLayerIndex = addLayer(pLayer, parentLayerIndex);
-    setCurrentLayer(newLayerIndex, true);
     return newLayerIndex;
 }
 
@@ -231,11 +235,8 @@ void CGraphicsManager::addTemporaryLayer(const CGraphicsLayerInfo& layerInfo)
 
     //Add graphics layer to the image view
     //No copy since pLayer is temporary and the ownership returns to caller when this layer is removed from the image scene
-    switch(layerInfo.m_displayTarget)
-    {
-        case CGraphicsLayerInfo::SOURCE: emit doAddTemporaryLayerToSource(layerInfo); break;
-        case CGraphicsLayerInfo::RESULT: emit doAddTemporaryLayerToResult(layerInfo); break;
-    }
+    emit doAddTemporaryLayer(layerInfo);
+    m_tmpLayersInfo.push_back(layerInfo);
 }
 
 QModelIndex CGraphicsManager::findLayerFromName(const QString &name, QModelIndex startIndex) const
@@ -370,7 +371,7 @@ void CGraphicsManager::removeLayer(const QModelIndex &itemIndex)
         DisplayType refDataType = Utils::Data::treeItemTypeToDisplayType(m_pProjectMgr->getItemType(refDataIndex));
         m_pWorkflowMgr->beforeGraphicsLayerRemoved(pLayer);
         CGraphicsLayerInfo info(pLayer, 0, refDataType, CGraphicsLayerInfo::SOURCE);
-        emit doRemoveGraphicsLayerToSource(info, true);
+        emit doRemoveGraphicsLayer(info, true);
         emit doGraphicsSceneChanged();
     }
 
@@ -384,15 +385,16 @@ void CGraphicsManager::removeTemporaryLayer(const CGraphicsLayerInfo& layerInfo)
     if(layerInfo.m_pLayer == nullptr)
         return;
 
-    switch(layerInfo.m_displayTarget)
+    for (size_t i=m_tmpLayersInfo.size() - 1; i>=0; i--)
     {
-        case CGraphicsLayerInfo::SOURCE:
-            emit doRemoveGraphicsLayerToSource(layerInfo, false);
-            setCurrentLayer(m_currentLayerIndex, true);
-            break;
-        case CGraphicsLayerInfo::RESULT:
-            emit doRemoveGraphicsLayerToResult(layerInfo, false);
-            break;
+        if (m_tmpLayersInfo[i] == layerInfo)
+        {
+            emit doRemoveGraphicsLayer(m_tmpLayersInfo[i], false);
+            if (m_tmpLayersInfo[i].m_displayTarget == CGraphicsLayerInfo::SOURCE)
+                setCurrentLayer(m_currentLayerIndex, true);
+
+            m_tmpLayersInfo.erase(m_tmpLayersInfo.begin() + i);
+        }
     }
 }
 
@@ -485,6 +487,19 @@ void CGraphicsManager::onGraphicsRemoved(const QSet<CGraphicsLayer *> &layers)
 
     m_pProjectMgr->notifyDataChanged();
     m_pWorkflowMgr->notifyGraphicsChanged();
+}
+
+void CGraphicsManager::onInputDataChanged(const QModelIndex &itemIndex, int inputIndex, bool bNewSequence)
+{
+    // If temporary layers from plugins are active, we add them in the current view (CImageScene)
+    for (size_t i=0; i<m_tmpLayersInfo.size(); ++i)
+    {
+        if (m_tmpLayersInfo[i].m_pLayer != nullptr)
+        {
+            emit doAddTemporaryLayer(m_tmpLayersInfo[i]);
+            setCurrentLayer(m_tmpLayersInfo[i].m_pLayer);
+        }
+    }
 }
 
 void CGraphicsManager::setLayerHighlighted(const QModelIndex &index, bool bHighlighted)

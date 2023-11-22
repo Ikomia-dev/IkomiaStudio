@@ -1620,25 +1620,26 @@ void CResultManager::saveOutputGraphics()
     }
 
     //Set the structure of the graphics tree for protocol: WorkflowLayer -> TaskLayer
-    auto protocolName = QString::fromStdString(m_pWorkflowMgr->getWorkflowName());
-    auto protocolLayerIndex = m_pGraphicsMgr->findLayerFromName(protocolName);
+    auto wfName = QString::fromStdString(m_pWorkflowMgr->getWorkflowName());
+    auto wfLayerIndex = m_pGraphicsMgr->findLayerFromName(wfName);
     auto currentLayerIndex = m_pGraphicsMgr->getCurrentLayerIndex();
 
-    if(!protocolLayerIndex.isValid())
+    if(!wfLayerIndex.isValid())
     {
-        //Create protocol layer if it does not exist
-        auto pWorkflowLayer = new CGraphicsLayer(protocolName);
+        //Create workflow layer if it does not exist
+        auto pWorkflowLayer = new CGraphicsLayer(wfName);
         auto rootLayerIndex = m_pGraphicsMgr->getRootLayerIndex();
 
         if(rootLayerIndex.isValid())
             m_pGraphicsMgr->setCurrentLayer(m_pGraphicsMgr->getRootLayerIndex(), true);
 
-        protocolLayerIndex = m_pGraphicsMgr->addLayer(pWorkflowLayer);
+        wfLayerIndex = m_pGraphicsMgr->addLayer(pWorkflowLayer);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
-    else if(protocolLayerIndex != currentLayerIndex && !m_pGraphicsMgr->isChildLayer(currentLayerIndex, protocolLayerIndex))
+    else if(wfLayerIndex != currentLayerIndex && !m_pGraphicsMgr->isChildLayer(currentLayerIndex, wfLayerIndex))
     {
         //If current layer is not child of the protocol layer, protocol layer becomes the current
-        m_pGraphicsMgr->setCurrentLayer(protocolLayerIndex, true);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
 
     //Add to project and image scene
@@ -1647,8 +1648,8 @@ void CResultManager::saveOutputGraphics()
     {
         //We have to create new layer from output objects
         CGraphicsLayer* pSavedLayer = pOut->createLayer(m_pGraphicsMgr->getContext());
-        m_pGraphicsMgr->addLayer(pSavedLayer);
-        m_pGraphicsMgr->setCurrentLayer(protocolLayerIndex, true);
+        wfLayerIndex = m_pGraphicsMgr->addLayer(pSavedLayer);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
 }
 

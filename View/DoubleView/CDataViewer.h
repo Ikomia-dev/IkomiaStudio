@@ -68,6 +68,9 @@ class CDataViewer : public QWidget
         void                    fillZoomProperties(CViewPropertyIO* pViewProp);
 
         void                    addDataView(CDataDisplay* pData, int r, int c);
+        void                    addGraphicsLayer(const CGraphicsLayerInfo& layerInfo);
+
+        void                    removeGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
 
         void                    updateDataListViewIndex(const QModelIndex& index);
         void                    updateDataListViewModel(QAbstractItemModel* pModel);
@@ -151,9 +154,7 @@ class CDataViewer : public QWidget
         //Graphics
         void                    onChangeGraphicsActivationState(bool bActivate);
         void                    onSetCurrentGraphicsLayer(CGraphicsLayer* pLayer);
-        void                    onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
         void                    onAddGraphicsItem(QGraphicsItem* pItem, bool bForceParent);
-        void                    onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo);
 
         //Video
         void                    onSetVideoSliderLength(int index, size_t length);

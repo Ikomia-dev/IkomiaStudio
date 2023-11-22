@@ -138,6 +138,7 @@ class CGraphicsManager : public QObject
         void                    onAddLayer(const QModelIndex& parentIndex);
         void                    onGraphicsChanged();
         void                    onGraphicsRemoved(const QSet<CGraphicsLayer*>& layers);
+        void                    onInputDataChanged(const QModelIndex& itemIndex, int inputIndex, bool bNewSequence);
 
     signals:
 
@@ -145,10 +146,8 @@ class CGraphicsManager : public QObject
         void                    doSetGraphicsTool(GraphicsShape tool);
         void                    doSetCurrentLayer(CGraphicsLayer* pLayer);
         void                    doAddGraphicsItem(QGraphicsItem* pItem, bool bForceParent);
-        void                    doAddTemporaryLayerToSource(const CGraphicsLayerInfo& layerInfo);
-        void                    doAddTemporaryLayerToResult(const CGraphicsLayerInfo& layerInfo);
-        void                    doRemoveGraphicsLayerToSource(const CGraphicsLayerInfo& layerInfo, bool bDelete);
-        void                    doRemoveGraphicsLayerToResult(const CGraphicsLayerInfo& layerInfo, bool bDelete);
+        void                    doAddTemporaryLayer(const CGraphicsLayerInfo& layerInfo);
+        void                    doRemoveGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete);
         void                    doGraphicsSceneChanged();
         void                    doGraphicsContextChanged();
 
@@ -174,14 +173,15 @@ class CGraphicsManager : public QObject
 
     private:
 
-        CProjectManager*        m_pProjectMgr = nullptr;
-        CWorkflowManager*       m_pWorkflowMgr = nullptr;
-        QPersistentModelIndex   m_currentLayerIndex = QPersistentModelIndex();
-        QPersistentModelIndex   m_currentImgIndex = QPersistentModelIndex();
-        CGraphicsRegistration   m_registration;
+        CProjectManager*                            m_pProjectMgr = nullptr;
+        CWorkflowManager*                           m_pWorkflowMgr = nullptr;
+        QPersistentModelIndex                       m_currentLayerIndex = QPersistentModelIndex();
+        QPersistentModelIndex                       m_currentImgIndex = QPersistentModelIndex();
+        CGraphicsRegistration                       m_registration;
         //Layer database ids per project to be removed
         std::unordered_map<int, std::vector<int>>   m_removedLayers;
-        GraphicsContextPtr      m_contextPtr;
+        GraphicsContextPtr                          m_contextPtr;
+        std::vector<CGraphicsLayerInfo>             m_tmpLayersInfo;
 };
 
 #endif // CGRAPHICSMANAGER_H

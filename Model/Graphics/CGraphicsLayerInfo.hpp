@@ -44,6 +44,14 @@ class CGraphicsLayerInfo
             m_displayTarget = displayTarget;
         }
 
+        bool operator==(const CGraphicsLayerInfo& info) const
+        {
+            return (m_pLayer == info.m_pLayer &&
+                    m_refImageIndex == info.m_refImageIndex &&
+                    m_refImageType == info.m_refImageType &&
+                    m_displayTarget == info.m_displayTarget);
+        }
+
         void    deleteLayer()
         {
             m_pLayer->deleteChildItems();

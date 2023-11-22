@@ -248,6 +248,32 @@ void CDoubleView::onAddResultWidget(int index, QWidget* pWidget, bool bDeleteOnC
     applyViewModeProperty(pViewProperty);
 }
 
+void CDoubleView::onAddGraphicsLayer(const CGraphicsLayerInfo &layerInfo)
+{
+    switch (layerInfo.m_displayTarget)
+    {
+        case CGraphicsLayerInfo::SOURCE:
+            m_pDataViewer->addGraphicsLayer(layerInfo);
+            break;
+        case CGraphicsLayerInfo::RESULT:
+            m_pResultsViewer->addGraphicsLayer(layerInfo);
+            break;
+    }
+}
+
+void CDoubleView::onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete)
+{
+    switch (layerInfo.m_displayTarget)
+    {
+        case CGraphicsLayerInfo::SOURCE:
+            m_pDataViewer->removeGraphicsLayer(layerInfo, bDelete);
+            break;
+        case CGraphicsLayerInfo::RESULT:
+            m_pResultsViewer->removeGraphicsLayer(layerInfo, bDelete);
+            break;
+    }
+}
+
 void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int>& syncToIndices, CViewPropertyIO* pViewProperty)
 {
     // Add video display to result viewer
