@@ -385,7 +385,8 @@ void CGraphicsManager::removeTemporaryLayer(const CGraphicsLayerInfo& layerInfo)
     if(layerInfo.m_pLayer == nullptr)
         return;
 
-    for (size_t i=m_tmpLayersInfo.size() - 1; i>=0; i--)
+    int layerCount = static_cast<int>(m_tmpLayersInfo.size());
+    for (int i=layerCount - 1; i>=0; i--)
     {
         if (m_tmpLayersInfo[i] == layerInfo)
         {
