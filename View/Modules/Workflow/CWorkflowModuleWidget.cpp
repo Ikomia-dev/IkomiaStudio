@@ -590,7 +590,7 @@ void CWorkflowModuleWidget::initWidgetConnections(const WorkflowTaskWidgetPtr& w
         emit doSetGraphicsCategory(category);
     });
     // Task -> widget connections
-    connect(taskPtr->getSignalRawPtr(), &CSignalHandler::doParametersModified, widgetPtr.get(), &CWorkflowTaskWidget::onParametersModified);
+    connect(taskPtr->getSignalRawPtr(), &CSignalHandler::doParametersChanged, widgetPtr.get(), &CWorkflowTaskWidget::onParametersChanged);
 }
 
 QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title, QWidget* pBtn)
