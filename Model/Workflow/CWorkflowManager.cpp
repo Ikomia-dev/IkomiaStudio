@@ -1491,7 +1491,7 @@ void CWorkflowManager::onQueryIOInfo(const WorkflowVertex &taskId, int index, bo
 
 void CWorkflowManager::initConnections()
 {
-    //Workflow run manager -> protocol manager
+    //Workflow run manager -> workflow manager
     connect(&m_runMgr, &CWorkflowRunManager::doWorkflowFinished, this, &CWorkflowManager::onRunWorkflowFinished);
     connect(&m_runMgr, &CWorkflowRunManager::doWorkflowFailed, this, &CWorkflowManager::onRunWorkflowFailed);
 
