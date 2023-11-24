@@ -857,25 +857,25 @@ void CMainView::setAppStyle(const QString& style)
         altCol = QColor(200,200,200);
         lightSelCol = QColor(255,122,0);
 
-        p.setBrush( QPalette::Window, sunkCol );
-        p.setBrush( QPalette::WindowText, txtCol );
-        p.setBrush( QPalette::Base, baseCol );
-        p.setBrush( QPalette::AlternateBase, raisedCol );
-        p.setBrush( QPalette::ToolTipBase, baseCol );
-        p.setBrush( QPalette::ToolTipText, txtCol );
-        p.setBrush( QPalette::Text, txtCol );
-        p.setBrush( QPalette::Button, baseCol );
-        p.setBrush( QPalette::ButtonText, txtCol );
-        p.setBrush( QPalette::Light, baseCol.lighter() );
-        p.setBrush( QPalette::Midlight, baseCol.lighter() );
-        p.setBrush( QPalette::Mid, selCol.lighter(100) ); // For QToolBox tab line
-        p.setBrush( QPalette::Dark, baseCol.darker(150) );
-        p.setBrush( QPalette::Shadow, sunkCol );
-        p.setBrush( QPalette::BrightText, txtCol );
+        p.setBrush(QPalette::Window, sunkCol);
+        p.setBrush(QPalette::WindowText, txtCol);
+        p.setBrush(QPalette::Base, baseCol);
+        p.setBrush(QPalette::AlternateBase, raisedCol);
+        p.setBrush(QPalette::ToolTipBase, baseCol);
+        p.setBrush(QPalette::ToolTipText, txtCol);
+        p.setBrush(QPalette::Text, txtCol);
+        p.setBrush(QPalette::Button, baseCol);
+        p.setBrush(QPalette::ButtonText, txtCol);
+        p.setBrush(QPalette::Light, baseCol.lighter());
+        p.setBrush(QPalette::Midlight, baseCol.lighter());
+        p.setBrush(QPalette::Mid, selCol.lighter(100)); // For QToolBox tab line
+        p.setBrush(QPalette::Dark, baseCol.darker(150));
+        p.setBrush(QPalette::Shadow, sunkCol);
+        p.setBrush(QPalette::BrightText, txtCol );
         p.setColor(QPalette::Highlight, lightSelCol);
         p.setColor(QPalette::HighlightedText, Qt::black);
-        p.setBrush( QPalette::Link, selCol ); // can only be set via palette
-        p.setBrush( QPalette::LinkVisited, selCol ); // can only be set via palette
+        p.setBrush(QPalette::Link, selCol); // can only be set via palette
+        p.setBrush(QPalette::LinkVisited, selCol); // can only be set via palette
         qApp->setPalette( p );
 
         QFile qss;
