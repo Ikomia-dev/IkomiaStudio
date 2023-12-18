@@ -36,6 +36,8 @@ class CHubQueryModel : public QSqlQueryModel
 
         CUser       getCurrentUser() const;
 
+        QModelIndex getAlgorithmIndex(const QString& name) const;
+
     private:
 
         CUser       m_user;

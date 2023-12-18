@@ -28,27 +28,27 @@ class CGraphicsLayerInfo
         enum DisplayTarget { SOURCE, RESULT };
 
         CGraphicsLayerInfo(){}
-        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgIndex, DisplayType refImgType, int displayTarget, bool bTopMost)
+        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgDisplayIndex, DisplayType refImgDisplayType, int displayTarget, bool bTopMost)
         {
             m_pLayer = pLayer;
-            m_refImageIndex = refImgIndex;
-            m_refImageType = refImgType;
+            m_refImageDisplayIndex = refImgDisplayIndex;
+            m_refImageDisplayType = refImgDisplayType;
             m_displayTarget = displayTarget;
             m_bTopMost = bTopMost;
         }
-        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgIndex, DisplayType refImgType, int displayTarget)
+        CGraphicsLayerInfo(CGraphicsLayer* pLayer, int refImgDisplayIndex, DisplayType refImgDisplayType, int displayTarget)
         {
             m_pLayer = pLayer;
-            m_refImageIndex = refImgIndex;
-            m_refImageType = refImgType;
+            m_refImageDisplayIndex = refImgDisplayIndex;
+            m_refImageDisplayType = refImgDisplayType;
             m_displayTarget = displayTarget;
         }
 
         bool operator==(const CGraphicsLayerInfo& info) const
         {
             return (m_pLayer == info.m_pLayer &&
-                    m_refImageIndex == info.m_refImageIndex &&
-                    m_refImageType == info.m_refImageType &&
+                    m_refImageDisplayIndex == info.m_refImageDisplayIndex &&
+                    m_refImageDisplayType == info.m_refImageDisplayType &&
                     m_displayTarget == info.m_displayTarget);
         }
 
@@ -63,8 +63,8 @@ class CGraphicsLayerInfo
 
         //Weak pointer
         CGraphicsLayer* m_pLayer = nullptr;
-        int             m_refImageIndex = 0;
-        DisplayType     m_refImageType = DisplayType::IMAGE_DISPLAY;
+        int             m_refImageDisplayIndex = 0;
+        DisplayType     m_refImageDisplayType = DisplayType::IMAGE_DISPLAY;
         int             m_displayTarget = SOURCE;
         bool            m_bTopMost = false;
 };

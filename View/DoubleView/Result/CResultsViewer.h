@@ -123,6 +123,8 @@ class CResultsViewer : public QWidget
     public slots:
 
         void                    onApplyViewProperty();
+        void                    onAddGraphicsLayer(const CGraphicsLayerInfo &layerInfo);
+        void                    onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
         void                    onDisplayOverlay(const QImage& image, int refImageIndex, DisplayType refImageType);
         void                    onClearOverlay();
 

@@ -148,6 +148,7 @@ class CResultManager : public QObject
         DisplayType         getResultViewType(IODataType type) const;
         std::set<IODataType>        getImageBasedDataTypes() const;
         CViewPropertyIO::ViewMode   getViewMode(const WorkflowTaskPtr& taskPtr);
+        int                 getImageDisplayIndex(const WorkflowTaskPtr &taskPtr, int outputIndex) const;
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;

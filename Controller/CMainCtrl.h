@@ -67,6 +67,8 @@ class CMainCtrl : public QObject
         void    initPluginConnections();
         void    initActionConnections();
 
+        void    handleArgs();
+
     private:
 
         CMainModel*         m_pModel = nullptr;

@@ -52,6 +52,8 @@ class CHubDlg : public CDialog
 
         void            setCurrentUser(const CUser& user);
 
+        void            showAlgorithm(const QString& name);
+
     signals:
 
         void            doGetHubModel();
@@ -65,6 +67,7 @@ class CHubDlg : public CDialog
         void            doWorkspaceSearchChanged(const QString& text);
         void            doLocalSearchChanged(const QString& text);
         void            doClose();
+        void            doHandleHubModelSet();
 
     public slots:
 

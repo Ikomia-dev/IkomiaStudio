@@ -84,7 +84,7 @@ Distributed under the AGPL-3.0 License. See `LICENSE.md` for more information.
 <!-- STARGAZERS -->
 ## They like us, we love them :heart_eyes:
 
-[![Stargazers repo roster for @Ikomia-dev/IkomiaStudio](https://reporoster.com/stars/Ikomia-dev/IkomiaStudio)](https://github.com/Ikomia-dev/IkomiaStudio/stargazers)
+[![Stargazers repo roster for @Ikomia-dev/IkomiaStudio](http://reporoster.com/stars/Ikomia-dev/IkomiaStudio)](https://github.com/Ikomia-dev/IkomiaStudio/stargazers)
 
 ## Star History
 

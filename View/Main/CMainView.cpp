@@ -1406,21 +1406,27 @@ void CMainView::dragEnterEvent(QDragEnterEvent* e)
 }
 
 void CMainView::dropEvent(QDropEvent* e)
- {
-   const QMimeData* mimeData = e->mimeData();
+{
+    const QMimeData* mimeData = e->mimeData();
 
-   // check for our needed mime type, here a file or a list of files
-   if (mimeData->hasUrls())
-   {
-     QStringList pathList;
+    // check for our needed mime type, here a file or a list of files
+    if (mimeData->hasUrls())
+    {
+        QStringList pathList;
 
-     // extract the local paths of the files
-     foreach(const QUrl & url, e->mimeData()->urls())
-       pathList.append(url.toLocalFile());
+        // extract the local paths of the files
+        foreach(const QUrl & url, e->mimeData()->urls())
+            pathList.append(url.toLocalFile());
 
-     // call a function to open the files
-     manageOpenFiles(pathList);
-   }
- }
+        // call a function to open the files
+        manageOpenFiles(pathList);
+    }
+}
+
+void CMainView::openHUB(const QString &algoName)
+{
+    if (m_pHubDlg)
+        m_pHubDlg->showAlgorithm(algoName);
+}
 
 #include "moc_CMainView.cpp"

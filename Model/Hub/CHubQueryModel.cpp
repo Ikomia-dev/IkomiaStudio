@@ -46,3 +46,14 @@ CUser CHubQueryModel::getCurrentUser() const
 {
     return m_user;
 }
+
+QModelIndex CHubQueryModel::getAlgorithmIndex(const QString &name) const
+{
+    for (int i=0; i<rowCount(); ++i)
+    {
+        QString algoName = record(i).value("name").toString();
+        if (algoName == name)
+            return index(i, 0);
+    }
+    return QModelIndex();
+}

@@ -524,6 +524,17 @@ void CMainCtrl::initActionConnections()
     connect(m_pView, &CMainView::doStartJupyterLab, m_pModel, &CMainModel::onStartJupyterLab);
 }
 
+void CMainCtrl::handleArgs()
+{
+    QStringList args = QApplication::arguments();
+    if (args.size() > 1)
+    {
+        // First argument is the executable path
+        // Second argument is the name of the wanted algorithm
+        m_pView->openHUB(args[1]);
+    }
+}
+
 void CMainCtrl::initDataConnections()
 {
     //Image manager -> Data viewer
@@ -566,6 +577,9 @@ void CMainCtrl::show()
 
     // Tutorials wizard
     launchWizard();
+
+    // Handle application arguments
+    handleArgs();
 }
 
 void CMainCtrl::launchWizard()

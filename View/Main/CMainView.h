@@ -83,6 +83,7 @@ class CMainView : public QMainWindow
     Q_OBJECT
 
     public:
+
         static bool bUseOpenGL_330;
 
         enum {
@@ -135,6 +136,8 @@ class CMainView : public QMainWindow
         void                    resizeEvent(QResizeEvent* event) override;
         void                    dragEnterEvent(QDragEnterEvent* e);
         void                    dropEvent(QDropEvent* e);
+
+        void                    openHUB(const QString& algoName);
 
     signals:
 
