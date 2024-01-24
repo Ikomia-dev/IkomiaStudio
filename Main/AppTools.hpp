@@ -452,9 +452,9 @@ namespace Ikomia
                 }
                 return baseURL;
             }
-            inline QString getMatomoUrl()
+            inline QString getPiwikUrl()
             {
-                return "https://mamoto.ikomia.com";
+                return "https://ikomia.piwik.pro";
             }
             inline QString getBreakPadServerUrl()
             {

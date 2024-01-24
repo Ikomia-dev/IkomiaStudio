@@ -148,8 +148,8 @@ int main(int argc, char *argv[])
         int ret = dlg.exec();
         if(ret == QDialog::Accepted)
         {
-            PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getMatomoUrl()), MATOMO_APP_ID);
-            pPiwikTracker->sendVisit("main", "Application_Crashed");
+            PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getPiwikUrl()), _piwik_site_id);
+            pPiwikTracker->sendEvent("main", "general", "error", "application-crashed");
         }
     }
 

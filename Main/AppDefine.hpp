@@ -22,7 +22,6 @@
 #include "Main/CoreDefine.hpp"
 #include "Workflow/CViewPropertyIO.h"
 
-#define MATOMO_APP_ID   3
 
 namespace Ikomia
 {
@@ -126,6 +125,7 @@ namespace Ikomia
     constexpr auto _DefaultDirProjectExport = "default_dir_project_export";
     constexpr auto _defaultDirWorkflow = "default_dir_protocol";
     constexpr auto _defaultDirWorkflowExport = "default_dir_protocol_export";
+    constexpr auto _piwik_site_id = "28030f37-3b03-4551-821e-77ea4e2c5d96";
 
     //Structure to manage loading of multiple data sources into a dataset
     using DatasetLoadPolicy = std::pair<Relationship, DataDimension>;

@@ -52,7 +52,7 @@
 
 PiwikTracker::PiwikTracker(QCoreApplication * parent,
                            QUrl trackerUrl,
-                           int siteId,
+                           QString siteId,
                            QString clientId) :
         QObject(parent),
         _networkAccessManager(this),
@@ -66,7 +66,7 @@ PiwikTracker::PiwikTracker(QCoreApplication * parent,
             SLOT(replyFinished(QNetworkReply *)));
 
     if (parent) {
-        _appName = parent->applicationName();
+        _appName = parent->applicationName().replace(" ", "");
     }
 
     // if no client id was set let's search in the settings
@@ -151,7 +151,7 @@ PiwikTracker::PiwikTracker(QCoreApplication * parent,
  */
 QUrlQuery PiwikTracker::prepareUrlQuery(const QString& path) {
     QUrlQuery q;
-    q.addQueryItem("idsite", QString::number(_siteId));
+    q.addQueryItem("idsite", _siteId);
     q.addQueryItem("_id", _clientId);
     q.addQueryItem("cid", _clientId);
     q.addQueryItem("url", "http://" + _appName + "/" + path);
@@ -214,7 +214,7 @@ QString PiwikTracker::getVisitVariables()
  * Sends a visit request with visit variables
  */
 void PiwikTracker::sendVisit(const QString& path, const QString& actionName) {
-    QUrl url(_trackerUrl.toString() + "/piwik.php");
+    QUrl url(_trackerUrl.toString() + "/" + _trackerPage);
     QUrlQuery q = prepareUrlQuery(path);
     QString visitVars=getVisitVariables();
 
@@ -251,7 +251,7 @@ void PiwikTracker::sendVisit(const QString& path, const QString& actionName) {
  * Sends a ping request
  */
 void PiwikTracker::sendPing() {
-    QUrl url(_trackerUrl.toString() + "/piwik.php");
+    QUrl url(_trackerUrl.toString() + "/" + _trackerPage);
     QUrlQuery q = prepareUrlQuery("");
     q.addQueryItem("ping", "1");
     url.setQuery(q);
@@ -283,7 +283,7 @@ void PiwikTracker::sendEvent(
         const QString& eventAction,
         const QString& eventName,
         int eventValue) {
-    QUrl url(_trackerUrl.toString() + "/piwik.php");
+    QUrl url(_trackerUrl.toString() + "/" + _trackerPage);
     QUrlQuery q = prepareUrlQuery(path);
 
     if (!eventCategory.isEmpty()) {
@@ -340,7 +340,7 @@ void PiwikTracker::replyFinished(QNetworkReply * reply) {
 #if PIWIK_TRACKER_DEBUG
     qDebug() << "Reply from " << reply->url().path();
     if(reply->error() != QNetworkReply::NoError)
-        qDebug() << "Matomo error: " << reply->errorString();
+        qDebug() << "Piwik Pro error: " << reply->errorString();
 #else
     Q_UNUSED(reply);
 #endif

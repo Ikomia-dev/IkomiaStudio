@@ -129,11 +129,7 @@ void CUserManager::loginDone(QNetworkReply* pReply)
     qCInfo(logUser).noquote() << tr("Connection successfull");
 
     if(m_bRememberMe)
-        saveLoginInfo();
-
-    //Notify Matomo server
-    PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getMatomoUrl()), MATOMO_APP_ID);
-    pPiwikTracker->sendEvent("main/user", "user", "connection", "User_Connected");
+        saveLoginInfo();    
 
     emit doShowNotification(tr("Connection successfull"), Notification::INFO);
 }
@@ -201,6 +197,10 @@ void CUserManager::fillUserNamespaces(QNetworkReply *pReply)
             m_currentUser.addNamespace(ns);
         }
         emit doSetCurrentUser(m_currentUser);
+
+        //Notify Piwik server
+        PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getPiwikUrl()), _piwik_site_id);
+        pPiwikTracker->sendEvent("main/user", "user", "connection", "user-connected");
     }
 }
 
