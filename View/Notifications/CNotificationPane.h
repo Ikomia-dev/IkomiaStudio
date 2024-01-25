@@ -68,7 +68,6 @@ class CNotificationModel : public QStringListModel
 
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole) override
         {
-            //std::lock_guard<std::mutex> lock(m_mutex);
             if (role == categoryRole)
             {
                 m_categoryMap[index.row()] = value.toString();
@@ -128,12 +127,10 @@ class CNotificationProxyModel : public QSortFilterProxyModel
 
         QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
         {
-            //std::lock_guard<std::mutex> lock(m_mutex);
             return QSortFilterProxyModel::data(proxyIndex, role);
         }
         void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE
         {
-            //std::lock_guard<std::mutex> lock(m_mutex);
             QSortFilterProxyModel::setSourceModel(sourceModel);
         }
 

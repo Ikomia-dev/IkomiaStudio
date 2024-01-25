@@ -20,16 +20,16 @@
 
 //Define Log category
 Q_LOGGING_CATEGORY(logGraphics, "Graphics")
+Q_LOGGING_CATEGORY(logHub, "Hub")
 Q_LOGGING_CATEGORY(logImage, "Image")
 Q_LOGGING_CATEGORY(logPlugin, "Plugin")
 Q_LOGGING_CATEGORY(logProcess, "Process")
 Q_LOGGING_CATEGORY(logProgress, "Progress")
 Q_LOGGING_CATEGORY(logProject, "Project")
+Q_LOGGING_CATEGORY(logPython, "Python")
 Q_LOGGING_CATEGORY(logRender, "Render")
 Q_LOGGING_CATEGORY(logResults, "Results")
-Q_LOGGING_CATEGORY(logHub, "Hub")
 Q_LOGGING_CATEGORY(logUser, "User")
 Q_LOGGING_CATEGORY(logVideo, "Video")
 Q_LOGGING_CATEGORY(logWizard, "Wizard")
 Q_LOGGING_CATEGORY(logWorkflow, "Workflow")
-Q_LOGGING_CATEGORY(logPython, "Python")
