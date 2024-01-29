@@ -1416,22 +1416,7 @@ void CHubManager::installPythonPluginDependencies(CPluginModel* pModel, const QS
             return;
 
         //Requirements files
-        std::set<QString> requirements;
-        QDir dir(directory);
-        QRegularExpression re("[rR]equirements[0-9]*.txt");
-
-        foreach (QString fileName, dir.entryList(QDir::Files|QDir::NoSymLinks))
-        {
-            if(fileName.contains(re))
-                requirements.insert(fileName);
-        }
-
-        for(auto&& name : requirements)
-        {
-            QString requirementFile = directory + "/" + name;
-            qCInfo(logHub()).noquote() << "Algorithm dependencies installation from " + requirementFile;
-            Utils::Python::installRequirements(requirementFile);
-        }
+        Utils::Plugin::installRequirements(info.m_name);
     });
     pWatcher->setFuture(future);
 }

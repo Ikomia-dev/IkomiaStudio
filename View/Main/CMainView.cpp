@@ -370,6 +370,7 @@ void CMainView::initPluginMakerModule()
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doGetPythonQueryModel, [&]{ emit doGetPythonQueryModel(); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doReloadAll, [&]{ emit doReloadAllPlugins(); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doReload, [&](const QString& pluginName, int language){ emit doReloadPlugin(pluginName, language); });
+        connect(m_pPluginMgrModule, &CPluginManagerWidget::doInstallRequirements, [&](const QString& pluginName){ emit doInstallPluginRequirements(pluginName); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doEditPythonPlugin, [&](const QString& pluginName){ emit doEditPythonPlugin(pluginName); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doShowLocation, [&](const QString& pluginName, int language){ emit doShowPluginLocation(pluginName, language); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doGetPythonDependencyModel, [&](const QString& pluginName){ emit doGetPythonDependencyModel(pluginName); });

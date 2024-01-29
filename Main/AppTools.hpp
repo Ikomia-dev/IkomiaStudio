@@ -618,6 +618,40 @@ namespace Ikomia
                 return fileName;
             }
         }
+
+        namespace Plugin
+        {
+            inline void installRequirements(const std::string& name)
+            {
+                std::string pluginDir = Utils::Plugin::getPythonPath() + "/" + name;
+                boost::filesystem::path pluginPath(pluginDir);
+
+                if(boost::filesystem::exists(pluginPath) == false)
+                {
+                    std::string error = "Algorithm " + name + " not found in " + pluginDir;
+                    throw CException(CoreExCode::NOT_FOUND, error);
+                }
+
+                //Requirements files
+                std::set<QString> requirements;
+                QString qpluginDir = QString::fromStdString(pluginDir);
+                QDir dir(qpluginDir);
+                QRegularExpression re("[rR]equirements[0-9]*.txt");
+
+                foreach (QString fileName, dir.entryList(QDir::Files|QDir::NoSymLinks))
+                {
+                    if(fileName.contains(re))
+                        requirements.insert(fileName);
+                }
+
+                for(auto&& name : requirements)
+                {
+                    QString requirementFile = qpluginDir + "/" + name;
+                    Utils::print("Algorithm dependencies installation from " + requirementFile, QtInfoMsg);
+                    Utils::Python::installRequirements(requirementFile);
+                }
+            }
+        }
     }
 }
 

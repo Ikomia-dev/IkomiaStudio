@@ -173,6 +173,7 @@ class CMainView : public QMainWindow
         void                    doGetPythonDependencyModel(const QString& pluginName);
         void                    doInstallPythonPkg(const QString& moduleName);
         void                    doUpdatePythonPkg(const QString& moduleName);
+        void                    doInstallPluginRequirements(const QString& pluginName);
 
     public slots:
 
