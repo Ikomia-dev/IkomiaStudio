@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866666"
+   version="1.1"
+   id="svg6586"
+   inkscape:version="1.3.1 (9b9bdc1480, 2023-11-25, custom)"
+   sodipodi:docname="target.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview6588"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="4.7572176"
+     inkscape:cx="79.563314"
+     inkscape:cy="66.530486"
+     inkscape:window-width="1866"
+     inkscape:window-height="1131"
+     inkscape:window-x="54"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs6583" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:none;stroke:#d2ccc1;stroke-width:1.85578;stroke-linejoin:round"
+       id="path1"
+       cx="16.933332"
+       cy="16.933332"
+       r="12.288128" />
+    <path
+       style="fill:none;stroke:#d2ccc1;stroke-width:1.99496;stroke-linecap:round;stroke-linejoin:round"
+       d="m 1.5414414,16.913688 10.2167666,0.03929"
+       id="path2"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d2ccc1;stroke-width:1.99496;stroke-linecap:round;stroke-linejoin:round"
+       d="m 22.08698,16.913688 10.216766,0.03929"
+       id="path2-3"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d2ccc1;stroke-width:1.99496;stroke-linecap:round;stroke-linejoin:round"
+       d="M 16.913688,11.776058 16.952978,1.5592916"
+       id="path2-3-6"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d2ccc1;stroke-width:1.99496;stroke-linecap:round;stroke-linejoin:round"
+       d="m 16.913688,32.335373 0.03929,-10.216766"
+       id="path2-3-6-7"
+       sodipodi:nodetypes="cc" />
+  </g>
+</svg>

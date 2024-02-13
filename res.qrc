@@ -227,6 +227,7 @@
         <file>Images/json-viewer.png</file>
         <file>Images/stretch.svg</file>
         <file>Images/treeview.svg</file>
+        <file>Images/target.svg</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>
