@@ -24,6 +24,7 @@
 #include "IO/Scene3d/CScene3dShapeCircle.h"
 #include "IO/Scene3d/CScene3dShapePoint.h"
 #include "IO/Scene3d/CScene3dShapePoly.h"
+#include "IO/Scene3d/CScene3dVectorField.h"
 #include "CException.h"
 #include "ExceptionCode.hpp"
 
@@ -32,6 +33,7 @@
 #include <memory>
 
 #include <vtkActor.h>
+#include <vtkArrowSource.h>
 #include <vtkDoubleArray.h>
 #include <vtkGlyph3DMapper.h>
 #include <vtkImageActor.h>
@@ -39,14 +41,15 @@
 #include <vtkImageProperty.h>
 #include <vtkImageSliceMapper.h>
 #include <vtkNew.h>
-#include <vtkPoints.h>
 #include <vtkPointData.h>
+#include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkPolyLine.h>
 #include <vtkRegularPolygonSource.h>
 #include <vtkTransform.h>
 #include <vtkUnsignedCharArray.h>
+
 
 #include "CVTKSelectVisibleLayersDlg.h"
 
@@ -403,6 +406,103 @@ void CVTKViewer::displayScene3d()
                         polyLine->GetPointIds()->SetId(lstPts.size(), firstId);
 
                         lstShapePolysLines->InsertNextCell(polyLine);
+
+                    } else if (std::dynamic_pointer_cast<CScene3dVectorField>(x)) {
+
+                        // The current object is a 'CScene3dVectorField'
+                        auto obj = std::dynamic_pointer_cast<CScene3dVectorField>(x);
+
+
+                        // Vector's data
+                        CMat data = obj->getData();
+
+                        // Global scale factor
+                        double scaleFactor = obj->getScaleFactor();
+
+
+                        // Array used to store positions
+                        vtkNew<vtkPoints> vectorFieldCenter;
+
+                        // Array used to store colors
+                        vtkNew<vtkUnsignedCharArray> vectorFieldColorArray;
+                        vectorFieldColorArray->SetName("colorArray");
+                        vectorFieldColorArray->SetNumberOfComponents(3);
+
+                        // Array used to store sizes
+                        vtkNew<vtkDoubleArray> vectorFieldScaleArray;
+                        vectorFieldScaleArray->SetName("scaleArray");
+                        vectorFieldScaleArray->SetNumberOfComponents(1);
+
+                        // Array used to store orientations
+                        vtkNew<vtkDoubleArray> vectorFieldOrientationArray;
+                        vectorFieldOrientationArray->SetName("orientationArray");
+                        vectorFieldOrientationArray->SetNumberOfComponents(3);
+
+                        // For each vector...
+                        for(std::size_t currentRow = 0; currentRow < data.rows; ++currentRow)
+                        {
+                            auto ptrDataCurrentRow = data.ptr<double>(currentRow);
+
+                            // Positions
+                            vectorFieldCenter->InsertNextPoint(
+                                ptrDataCurrentRow[0],
+                                ptrDataCurrentRow[1],
+                                ptrDataCurrentRow[2]
+                            );
+
+                            // Orientations
+                            vectorFieldOrientationArray->InsertNextTuple3(
+                                ptrDataCurrentRow[3],
+                                ptrDataCurrentRow[4],
+                                ptrDataCurrentRow[5]
+                            );
+
+                            // Sizes
+                            vectorFieldScaleArray->InsertNextTuple1(
+                                ptrDataCurrentRow[6]
+                            );
+
+                            // Colors
+                            vectorFieldColorArray->InsertNextTuple3(
+                                ptrDataCurrentRow[7],
+                                ptrDataCurrentRow[8],
+                                ptrDataCurrentRow[9]
+                            );
+                        }
+
+                        // Creation of the PolyData
+                        vtkNew<vtkPolyData> vectorFieldPolydata;
+                        vectorFieldPolydata->SetPoints(vectorFieldCenter);
+                        vectorFieldPolydata->GetPointData()->AddArray(vectorFieldColorArray);
+                        vectorFieldPolydata->GetPointData()->AddArray(vectorFieldScaleArray);
+                        vectorFieldPolydata->GetPointData()->AddArray(vectorFieldOrientationArray);
+
+                        // Source
+                        vtkNew<vtkArrowSource> vectorFieldArrowSource;
+                        vectorFieldArrowSource->Update();
+
+                        // 3D Mapper
+                        vtkNew<vtkGlyph3DMapper> vectorFieldGlyph3Dmapper;
+                        vectorFieldGlyph3Dmapper->SetSourceConnection(vectorFieldArrowSource->GetOutputPort());
+                        vectorFieldGlyph3Dmapper->SetInputData(vectorFieldPolydata);
+                        vectorFieldGlyph3Dmapper->SetScalarModeToUsePointFieldData();
+
+                        vectorFieldGlyph3Dmapper->SetScaling(true); // To enable/disable scaling
+                        vectorFieldGlyph3Dmapper->SetScaleFactor(scaleFactor); // Scale factor used to scale the whole vector field
+                        vectorFieldGlyph3Dmapper->SetScaleModeToScaleByMagnitude();
+                        vectorFieldGlyph3Dmapper->SetScaleArray("scaleArray");
+
+                        vectorFieldGlyph3Dmapper->SelectColorArray("colorArray");
+                        vectorFieldGlyph3Dmapper->SetOrientationModeToDirection();
+                        vectorFieldGlyph3Dmapper->SetOrientationArray("orientationArray");
+
+                        vectorFieldGlyph3Dmapper->Update();
+
+                        // Actor
+                        vtkNew<vtkActor> vectorFieldActor;
+                        vectorFieldActor->SetMapper(vectorFieldGlyph3Dmapper);
+
+                        m_pVTKWidget->getRenderer()->AddActor(vectorFieldActor);
 
                     } else {
                         throw CException(CoreExCode::INVALID_PARAMETER, "Object type unknown during the computation of the 3D scene", __func__, __FILE__, __LINE__);
