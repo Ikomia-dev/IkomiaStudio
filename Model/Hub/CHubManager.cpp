@@ -29,7 +29,7 @@
 #include "Model/Process/CProcessManager.h"
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
-#include "JlCompress.h"
+#include <quazip/JlCompress.h>
 #include "Core/CIkomiaRegistry.h"
 
 //---------------//
