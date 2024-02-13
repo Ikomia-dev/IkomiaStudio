@@ -1,6 +1,6 @@
 #include "CWorkflowPackage.h"
 #include "Main/AppTools.hpp"
-#include "JlCompress.h"
+#include <quazip/JlCompress.h>
 
 CWorkflowPackage::CWorkflowPackage(const QString &wfPath)
 {
