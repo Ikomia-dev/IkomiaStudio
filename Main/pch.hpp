@@ -44,7 +44,7 @@
 #include <functional>
 #include <QDebug>
 #include <cassert>
-#include <CException.h>
+#include "Utils/CException.h"
 #include "Main/CoreDefine.hpp"
 #include "Main/AppDefine.hpp"
 
