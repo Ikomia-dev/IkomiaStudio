@@ -87,6 +87,9 @@ void CJsonDisplay::initConnections()
 
 void CJsonDisplay::computeTreeModel()
 {
+    // Old data are removed
+    m_pTreeModel->removeRows(0, m_pTreeModel->rowCount());
+
     // Creation of the root node. Here, this node is not shown.
     QStandardItem *root = m_pTreeModel->invisibleRootItem();
     root->setFlags(Qt::NoItemFlags);
