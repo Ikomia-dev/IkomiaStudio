@@ -16,24 +16,25 @@ class CWorkflowPublishDlg: public CDialog
                             const CUser& user,
                             QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-        QString getWorkflowName() const;
-        QString getWorkflowDescription() const;
-        QString getProjectName() const;
-        QString getProjectDescription() const;
-        QString getNamespacePath() const;
+        QString     getWorkflowName() const;
+        QString     getWorkflowDescription() const;
+        QString     getProjectName() const;
+        QString     getProjectDescription() const;
+        QString     getNamespacePath() const;
 
-        bool    isNewProject() const;
+        bool        isNewProject() const;
 
     private:
 
-        void    initLayout(const CUser &user);
-        void    initConnections();
+        void        initLayout(const CUser &user);
+        void        initConnections();
 
-        QString getProjectDisplayName(const QJsonObject &project) const;
+        QString     getProjectDisplayName(const QJsonObject &project) const;
+        QJsonObject getProjectFromPath(const QString& path) const;
 
     private slots:
 
-        void    validate();
+        void        validate();
 
     private:
 
