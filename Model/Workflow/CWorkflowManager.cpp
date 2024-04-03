@@ -250,6 +250,16 @@ std::vector<int> CWorkflowManager::getDisplayedInputIndices(const WorkflowTaskPt
     return inputIndices;
 }
 
+CWorkflow::ExposedParams CWorkflowManager::getWorflowExposedParams() const
+{
+    if (m_pWorkflow == nullptr)
+    {
+        qCCritical(logWorkflow()).noquote() << tr("No workflow instance found.");
+        return CWorkflow::ExposedParams();
+    }
+    return m_pWorkflow->getExposedParameters();
+}
+
 void CWorkflowManager::notifyViewShow()
 {
     loadWorkflows();
@@ -832,6 +842,14 @@ WorkflowTaskPtr CWorkflowManager::getActiveTask() const
         auto pCurrentTask = m_pWorkflow->getTask(id);
         return pCurrentTask;
     }
+}
+
+WorkflowVertex CWorkflowManager::getActiveTaskId() const
+{
+    if(m_pWorkflow)
+        return m_pWorkflow->getActiveTaskId();
+    else
+        return boost::graph_traits<WorkflowGraph>::null_vertex();
 }
 
 int CWorkflowManager::getWorkflowDbId() const
@@ -1999,6 +2017,24 @@ void CWorkflowManager::playVideoInput(size_t index)
 
     updateVideoInputIndex(index);
     m_pDataMgr->getVideoMgr()->play(m_inputs[m_currentVideoInputIndex].getModelIndex(0), index);
+}
+
+void CWorkflowManager::exposeTaskParameters(const WorkflowVertex &taskId, const CWorkflow::ExposedParams &params)
+{
+    assert(m_pWorkflow);
+
+    // Remove previous exposed parameters for this task
+    CWorkflow::ExposedParams exposedParams = m_pWorkflow->getExposedParameters();
+    for (auto it=exposedParams.begin(); it!=exposedParams.end(); ++it)
+    {
+        auto id = reinterpret_cast<WorkflowVertex>(it->second.getTaskId());
+        if (id == taskId)
+            m_pWorkflow->removeParameter(it->first);
+    }
+
+    // Add exposed parameters for the given task
+    for (auto it=params.begin(); it!=params.end(); ++it)
+        m_pWorkflow->addParameter(it->second.getName(), it->second.getDescription(), taskId, it->second.getTaskParamName());
 }
 
 #include "moc_CWorkflowManager.cpp"

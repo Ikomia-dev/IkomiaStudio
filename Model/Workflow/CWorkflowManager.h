@@ -61,11 +61,13 @@ class CWorkflowManager : public QObject
         std::vector<WorkflowVertex> getAllChilds(const WorkflowVertex& id) const;
         QStringList                 getWorkflowNames() const;
         WorkflowTaskPtr             getActiveTask() const;
+        WorkflowVertex              getActiveTaskId() const;
         int                         getWorkflowDbId() const;
         CWorkflowInputViewManager*  getInputViewManager();
         int                         getCurrentFPS() const;
         QModelIndex                 getCurrentVideoInputModelIndex() const;
         std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
+        CWorkflow::ExposedParams    getWorflowExposedParams() const;
 
         //Setters
         void                        setManagers(QNetworkAccessManager *pNetMgr, CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
@@ -126,6 +128,8 @@ class CWorkflowManager : public QObject
         void                        exportCurrentInputImage(size_t index, const QString& path, bool bWithGraphics);
 
         void                        playVideoInput(size_t index);
+
+        void                        exposeTaskParameters(const WorkflowVertex &taskId, const CWorkflow::ExposedParams& params);
 
     public slots:
 

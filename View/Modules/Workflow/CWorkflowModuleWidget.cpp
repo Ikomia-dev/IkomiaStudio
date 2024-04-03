@@ -24,6 +24,7 @@
 #include "CWorkflowScene.h"
 #include "CWorkflowNewDlg.h"
 #include "CWorkflowPublishDlg.h"
+#include "CWorkflowExposeParamsDlg.h"
 #include "View/Common/CToolbarBorderLayout.h"
 #include "View/Common/CRollupWidget.h"
 #include "View/Process/CProcessDocDlg.h"
@@ -327,6 +328,23 @@ void CWorkflowModuleWidget::onShowProcessInfo()
         m_pProcessDocDlg->hide();
 }
 
+void CWorkflowModuleWidget::onShowExposedParameter()
+{
+    if (m_pModel->isWorkflowExists() == false)
+        return;
+
+    auto exposedParams = m_pModel->getWorflowExposedParams();
+    auto currentTaskPtr = m_pModel->getActiveTask();
+    auto taskId = m_pModel->getActiveTaskId();
+
+    CWorkflowExposeParamsDlg exposeParamDlg(currentTaskPtr, taskId, exposedParams, this);
+    if (exposeParamDlg.exec() == QDialog::Accepted)
+    {
+        auto exposedParams = exposeParamDlg.getExposedParams();
+        m_pModel->exposeTaskParameters(taskId, exposedParams);
+    }
+}
+
 void CWorkflowModuleWidget::onIOPropertyValueChanged(QtProperty *pProperty, const QVariant &value)
 {
     assert(m_pModel);
@@ -366,7 +384,7 @@ void CWorkflowModuleWidget::initLayout()
     m_pProcessDocDlg = new CProcessDocDlg(this);
 
     m_pTab = new QTabWidget;
-    m_pTab->setMinimumWidth(300);
+    m_pTab->setMinimumWidth(400);
     m_pTab->setMinimumHeight(250);
 
     QWidget* pContainerTab = new QWidget;
@@ -379,30 +397,29 @@ void CWorkflowModuleWidget::initLayout()
     pContainerViewLayout->addWidget(m_pView);
     pContainerView->setLayout(pContainerViewLayout);
 
+    //--- Init parameters layout
+    m_pParamLayout = createTab(QIcon(":/Images/preferences.png"), tr("Parameters"));
     //Process information button
-    QPushButton* pInfoBtn = new QPushButton(QIcon(":/Images/info-color2.png"), "");
-    pInfoBtn->setFixedSize(22, 22);
-    pInfoBtn->setToolTip(tr("Documentation"));
-    pInfoBtn->setStyleSheet(QString("QPushButton { background: transparent; border: none;} QPushButton:hover {border: 1px solid %1;}")
-                                       .arg(qApp->palette().highlight().color().name()));
+    QPushButton* pExposeBtn = createTabButton(QIcon(":/Images/eye-color.png"), tr("Expose parameters"));
+    addTabBarButton(0, pExposeBtn);
+    connect(pExposeBtn, &QPushButton::clicked, this, &CWorkflowModuleWidget::onShowExposedParameter);
+
+    //--- Init info layout
+    m_pInfoLayout = createTab(QIcon(":/Images/info-white.png"), tr("Info"));
+    auto pInfoBtn = new QPushButton(tr("Documentation"));
+    pInfoBtn->setObjectName("CProcessBtn");
     connect(pInfoBtn, &QPushButton::clicked, this, &CWorkflowModuleWidget::onShowProcessInfo);
-
-    // Create custom tab and get layout for later modifications
-    m_pParamLayout = createTab(QIcon(":/Images/properties_white.png"), tr("Parameters"), pInfoBtn);
-    m_pInfoLayout = createTab(QIcon(":/Images/info-white.png"), tr("Info"), nullptr);
-    m_pIOLayout = createTab(QIcon(":/Images/io.png"), tr("I/O"), nullptr);
-
-    // Object to create property for QtTreePropertyBrowser
-    m_pVariantManager = new QtVariantPropertyManager(this);
-    connect(m_pVariantManager, &QtVariantPropertyManager::valueChanged, this, &CWorkflowModuleWidget::onIOPropertyValueChanged);
-
-    // Init info layout
     m_pInfoPropertyList = new QtTreePropertyBrowser(this);
     m_pInfoPropertyList->setHeaderVisible(false);
     m_pInfoPropertyList->setPropertiesWithoutValueMarked(true);
     m_pInfoLayout->addWidget(m_pInfoPropertyList);
+    m_pInfoLayout->addWidget(pInfoBtn);
 
-    // Init IO layout
+    //--- Init IO layout
+    m_pIOLayout = createTab(QIcon(":/Images/io.png"), tr("I/O"));
+    // Object to create property for QtTreePropertyBrowser
+    m_pVariantManager = new QtVariantPropertyManager(this);
+    connect(m_pVariantManager, &QtVariantPropertyManager::valueChanged, this, &CWorkflowModuleWidget::onIOPropertyValueChanged);
     m_pIOPropertyList = new QtTreePropertyBrowser(this);
     QtVariantEditorFactory* pEditorFactory = new QtVariantEditorFactory();
     m_pIOPropertyList->setFactoryForManager(m_pVariantManager, pEditorFactory);
@@ -411,6 +428,7 @@ void CWorkflowModuleWidget::initLayout()
     m_pIOPropertyList->setPropertiesWithoutValueMarked(true);
     m_pIOLayout->addWidget(m_pIOPropertyList);
 
+    //--- Main splitter
     QSplitter* pSplitter = new QSplitter(this);
     pSplitter->setOrientation(Qt::Horizontal);
     pSplitter->addWidget(pContainerView);
@@ -583,7 +601,7 @@ void CWorkflowModuleWidget::initConnections()
     connect(pScene, &CWorkflowScene::doShowProcessPopup, [&]{ emit doShowProcessPopup(); });
 }
 
-QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title, QWidget* pBtn)
+QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title)
 {
     assert(m_pTab);
 
@@ -610,15 +628,26 @@ QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title, QWidget
     pOuterLayout->addWidget(pScrollArea);
 
     pWidget->setLayout(pOuterLayout);
-
     m_pTab->addTab(pWidget, icon, title);
-
-    if(pBtn != nullptr)
-    {
-        auto pTabBar = m_pTab->tabBar();
-        pTabBar->setTabButton(pTabBar->count() - 1, QTabBar::RightSide, pBtn);
-    }
     return pLayout;
+}
+
+QPushButton *CWorkflowModuleWidget::createTabButton(const QIcon& icon, const QString& tooltip)
+{
+    QPushButton* pBtn = new QPushButton(icon, "");
+    pBtn->setFixedSize(22, 22);
+    pBtn->setToolTip(tooltip);
+    pBtn->setStyleSheet(QString("QPushButton { background: transparent; border: none;} QPushButton:hover {border: 1px solid %1;}")
+                            .arg(qApp->palette().highlight().color().name()));
+    return pBtn;
+}
+
+void CWorkflowModuleWidget::addTabBarButton(int tabIndex, QWidget *pBtn)
+{
+    assert(m_pTab);
+    assert(pBtn);
+    auto pTabBar = m_pTab->tabBar();
+    pTabBar->setTabButton(tabIndex, QTabBar::RightSide, pBtn);
 }
 
 QToolButton *CWorkflowModuleWidget::addButtonToTop(const QSize& size, const QIcon &icon, const QString& tooltip, bool bCheckable)

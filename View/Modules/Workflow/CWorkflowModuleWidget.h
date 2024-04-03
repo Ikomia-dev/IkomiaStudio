@@ -78,6 +78,7 @@ class CWorkflowModuleWidget : public QWidget
         void            onCloseWorkflow();
         void            onShowWorkflowInfo();
         void            onShowProcessInfo();
+        void            onShowExposedParameter();
         void            onIOPropertyValueChanged(QtProperty* pProperty, const QVariant& value);
 
     private:
@@ -87,8 +88,10 @@ class CWorkflowModuleWidget : public QWidget
         void            initTopTab();
         void            initConnections();
 
-        QVBoxLayout*    createTab(QIcon icon, QString title, QWidget* pBtn);
+        QVBoxLayout*    createTab(QIcon icon, QString title);
+        QPushButton*    createTabButton(const QIcon &icon, const QString &tooltip);
 
+        void            addTabBarButton(int tabIndex, QWidget* pBtn);
         QToolButton*    addButtonToTop(const QSize& size, const QIcon& icon, const QString& tooltip, bool bCheckable = false);
 
         void            setTitle(const QString& title);
