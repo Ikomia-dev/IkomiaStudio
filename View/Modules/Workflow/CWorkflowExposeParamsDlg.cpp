@@ -86,13 +86,18 @@ void CWorkflowExposeParamsDlg::fillParamsTable(const WorkflowTaskPtr &taskPtr)
         pContainerWidget->setLayout(pCheckLayout);
         m_pParamsTable->setCellWidget(i, 0, pContainerWidget);
 
-        m_pParamsTable->setItem(i, 1, new QTableWidgetItem(paramName));
+        // Task param name: read-only
+        QTableWidgetItem* pTaskParamName = new QTableWidgetItem(paramName);
+        pTaskParamName->setFlags(pTaskParamName->flags() & !Qt::ItemIsEditable);
+        m_pParamsTable->setItem(i, 1, pTaskParamName);
 
-        QLineEdit* pParamNameEdit = new QLineEdit(exposedName);
-        m_pParamsTable->setCellWidget(i, 2, pParamNameEdit);
+        // Workflow param name: editable
+        QTableWidgetItem* pParamNameEdit = new QTableWidgetItem(exposedName);
+        m_pParamsTable->setItem(i, 2, pParamNameEdit);
 
-        QLineEdit* pParamDescriptionEdit = new QLineEdit(description);
-        m_pParamsTable->setCellWidget(i, 3, pParamDescriptionEdit);
+        // Workflow param description: editable
+        QTableWidgetItem* pParamDescriptionEdit = new QTableWidgetItem(description);
+        m_pParamsTable->setItem(i, 3, pParamDescriptionEdit);
         i++;
     }
 }
