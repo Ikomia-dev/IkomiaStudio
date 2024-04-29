@@ -210,6 +210,12 @@ void CWorkflowManager::setCurrentTaskSaveFormat(size_t outputIndex, DataFileForm
         outputPtr->setSaveFormat(format);
 }
 
+void CWorkflowManager::setCurrentTaskExposedOutputDescription(int index, const std::string &description)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->setExposedOutputDescription(taskId, index, description);
+}
+
 void CWorkflowManager::setWorkflowConfig(const std::string &key, const std::string &value)
 {
     if(m_pWorkflow)
@@ -396,6 +402,20 @@ bool CWorkflowManager::isBatchInput(size_t index) const
     }
     else
         return false;
+}
+
+bool CWorkflowManager::isCurrentTaskOutputExposed(size_t index) const
+{
+    auto activeTaskId = getActiveTaskId();
+    std::vector<CWorkflowOutput> outputs = m_pWorkflow->getExposedOutputs();
+
+    for (size_t i=0; i<outputs.size(); ++i)
+    {
+        auto taskId = reinterpret_cast<WorkflowVertex>(outputs[i].getTaskId());
+        if (taskId == activeTaskId && outputs[i].getTaskOutputIndex() == index)
+            return true;
+    }
+    return false;
 }
 
 void CWorkflowManager::createWorkflow(const std::string &name, const std::string &keywords, const std::string &description)
@@ -2035,6 +2055,18 @@ void CWorkflowManager::exposeTaskParameters(const WorkflowVertex &taskId, const 
     // Add exposed parameters for the given task
     for (auto it=params.begin(); it!=params.end(); ++it)
         m_pWorkflow->addParameter(it->second.getName(), it->second.getDescription(), taskId, it->second.getTaskParamName());
+}
+
+void CWorkflowManager::exposeCurrentTaskOutput(int outputIndex)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->addOutput("", taskId, outputIndex);
+}
+
+void CWorkflowManager::removeCurrentTaskExposedOutput(int outputIndex)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->removeOutput(taskId, outputIndex);
 }
 
 #include "moc_CWorkflowManager.cpp"

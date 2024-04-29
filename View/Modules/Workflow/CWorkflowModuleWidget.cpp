@@ -356,6 +356,12 @@ void CWorkflowModuleWidget::onIOPropertyValueChanged(QtProperty *pProperty, cons
     auto type = it.value().type;
     switch(type)
     {
+        case IOPropType::DESCRIPTION:
+        {
+            auto outputIndex = it.value().data.toInt();
+            m_pModel->setCurrentTaskExposedOutputDescription(outputIndex, value.toString().toStdString());
+            break;
+        }
         case IOPropType::AUTO_SAVE:
         {
             auto outputIndex = (size_t)it.value().data.toInt();
@@ -372,6 +378,19 @@ void CWorkflowModuleWidget::onIOPropertyValueChanged(QtProperty *pProperty, cons
             auto outputIndex = (size_t)it.value().data.toInt();
             m_pModel->setCurrentTaskSaveFormat(outputIndex, value.toInt());
             break;
+        }
+        case IOPropType::EXPOSE:
+        {
+            auto outputIndex = it.value().data.toInt();
+            bool bExposed = value.toBool();
+
+            if (bExposed)
+                m_pModel->exposeCurrentTaskOutput(outputIndex);
+            else
+                m_pModel->removeCurrentTaskExposedOutput(outputIndex);
+
+            auto pDescProp = findProperty(IOPropType::DESCRIPTION, it.value().data);
+            pDescProp->setEnabled(bExposed);
         }
     }
 }
@@ -751,20 +770,26 @@ void CWorkflowModuleWidget::fillIOProperties(const WorkflowTaskPtr &taskPtr)
         if(!outputPtr)
             continue;
 
+        bool isOutputExposed = m_pModel->isCurrentTaskOutputExposed(i);
+
         auto outputName = QString("#%1 - ").arg(i+1) + Utils::Workflow::getIODataName(outputPtr->getDataType());
         QtProperty* pOutputGroup = m_pVariantManager->addProperty(QtVariantPropertyManager::groupTypeId(), outputName);
         pOutputsGroup->addSubProperty(pOutputGroup);
 
         // Description
+        QString description = QString::fromStdString(outputPtr->getDescription());
         QtVariantProperty* pDescProp = m_pVariantManager->addProperty(QVariant::String, tr("Description"));
-        pDescProp->setValue(QString::fromStdString(outputPtr->getDescription()));
-        pDescProp->setEnabled(false);
+        pDescProp->setValue(description);
+        pDescProp->setEnabled(isOutputExposed);
+        PropAttribute propAttr;
+        propAttr.type = IOPropType::DESCRIPTION;
+        propAttr.data = (int)i;
+        m_ioProperties.insert(pDescProp, propAttr);
         pOutputGroup->addSubProperty(pDescProp);
 
         // Auto-save property
         QtVariantProperty* pAutoSaveProp = m_pVariantManager->addProperty(QVariant::Bool, tr("Auto save"));
         pAutoSaveProp->setValue(outputPtr->isAutoSave());
-        PropAttribute propAttr;
         propAttr.type = IOPropType::AUTO_SAVE;
         propAttr.data = (int)i;
         m_ioProperties.insert(pAutoSaveProp, propAttr);
@@ -795,6 +820,14 @@ void CWorkflowModuleWidget::fillIOProperties(const WorkflowTaskPtr &taskPtr)
             propAttr.data = (int)i;
             m_ioProperties.insert(pSaveFormatProp, propAttr);
         }
+
+        // Expose at workflow level
+        QtVariantProperty* pExposeProp = m_pVariantManager->addProperty(QVariant::Bool, tr("Expose"));
+        pExposeProp->setValue(isOutputExposed);
+        propAttr.type = IOPropType::EXPOSE;
+        propAttr.data = (int)i;
+        m_ioProperties.insert(pExposeProp, propAttr);
+        pOutputGroup->addSubProperty(pExposeProp);
     }
 
     // Export options
@@ -863,6 +896,16 @@ void CWorkflowModuleWidget::adjustProcessDocDlgPos()
     int x = screen.right() - rect.width() + m_pProcessDocDlg->getBorderSize();
     int y = screen.bottom() - rect.height();
     m_pProcessDocDlg->move(x, y);
+}
+
+QtProperty *CWorkflowModuleWidget::findProperty(IOPropType type, const QVariant& data)
+{
+    for (auto it=m_ioProperties.begin(); it!=m_ioProperties.end(); ++it)
+    {
+        if (it.value().type == type && it.value().data == data)
+            return it.key();
+    }
+    return nullptr;
 }
 
 #include "moc_CWorkflowModuleWidget.cpp"

@@ -28,6 +28,7 @@
 
 class QtVariantPropertyManager;
 class QtTreePropertyBrowser;
+class QtVariantProperty;
 class QtProperty;
 class CProcessDocDlg;
 
@@ -83,6 +84,14 @@ class CWorkflowModuleWidget : public QWidget
 
     private:
 
+        enum IOPropType { DESCRIPTION, AUTO_SAVE, SAVE_FOLDER, SAVE_FORMAT, EXPOSE };
+
+        struct PropAttribute
+        {
+            IOPropType type;
+            QVariant data;
+        };
+
         void            initLayout();
         void            initLeftTab();
         void            initTopTab();
@@ -110,15 +119,9 @@ class CWorkflowModuleWidget : public QWidget
 
         void            adjustProcessDocDlgPos();
 
+        QtProperty*     findProperty(IOPropType type, const QVariant &data);
+
     private:
-
-        enum IOPropType { AUTO_SAVE, SAVE_FOLDER, SAVE_FORMAT };
-
-        struct PropAttribute
-        {
-            IOPropType type;
-            QVariant data;
-        };
 
         QString                     m_name;
         CWorkflowView*              m_pView = nullptr;
