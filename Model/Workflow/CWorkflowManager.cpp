@@ -2049,12 +2049,12 @@ void CWorkflowManager::exposeTaskParameters(const WorkflowVertex &taskId, const 
     {
         auto id = reinterpret_cast<WorkflowVertex>(it->second.getTaskId());
         if (id == taskId)
-            m_pWorkflow->removeParameter(it->first);
+            m_pWorkflow->removeExposedParameter(it->first);
     }
 
     // Add exposed parameters for the given task
     for (auto it=params.begin(); it!=params.end(); ++it)
-        m_pWorkflow->addParameter(it->second.getName(), it->second.getDescription(), taskId, it->second.getTaskParamName());
+        m_pWorkflow->addExposedParameter(it->second.getName(), it->second.getDescription(), taskId, it->second.getTaskParamName());
 }
 
 void CWorkflowManager::exposeCurrentTaskOutput(int outputIndex)
