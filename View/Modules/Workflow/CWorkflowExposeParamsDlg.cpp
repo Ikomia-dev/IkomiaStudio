@@ -133,11 +133,11 @@ void CWorkflowExposeParamsDlg::validate()
             QTableWidgetItem* pItem = m_pParamsTable->item(i, 1);
             std::string taskParamName = pItem->text().toStdString();
             // Workflow param name
-            QLineEdit* pNameEdit = static_cast<QLineEdit*>(m_pParamsTable->cellWidget(i, 2));
-            std::string wfParamName = pNameEdit->text().toStdString();
+            pItem = m_pParamsTable->item(i, 2);
+            std::string wfParamName = pItem->text().toStdString();
             // Description
-            QLineEdit* pDescriptionEdit = static_cast<QLineEdit*>(m_pParamsTable->cellWidget(i, 3));
-            std::string description = pDescriptionEdit->text().toStdString();
+            pItem = m_pParamsTable->item(i, 3);
+            std::string description = pItem->text().toStdString();
 
             auto ret = m_taskParams.insert(std::make_pair(wfParamName, CWorkflowParam(wfParamName, description, id, taskParamName)));
             if (ret.second == false)

@@ -822,7 +822,7 @@ void CWorkflowModuleWidget::fillIOProperties(const WorkflowTaskPtr &taskPtr)
         }
 
         // Expose at workflow level
-        QtVariantProperty* pExposeProp = m_pVariantManager->addProperty(QVariant::Bool, tr("Expose"));
+        QtVariantProperty* pExposeProp = m_pVariantManager->addProperty(QVariant::Bool, tr("Exposed"));
         pExposeProp->setValue(isOutputExposed);
         propAttr.type = IOPropType::EXPOSE;
         propAttr.data = (int)i;
