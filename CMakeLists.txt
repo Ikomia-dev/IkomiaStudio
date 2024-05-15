@@ -380,6 +380,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Modules/Workflow/CWorkflowView.h
     View/Modules/Workflow/CWorkflowPublishDlg.h
     View/Modules/Workflow/CWorkflowPublishDlg.cpp
+    View/Modules/Workflow/CWorkflowExposeParamsDlg.h
+    View/Modules/Workflow/CWorkflowExposeParamsDlg.cpp
     View/Notifications/CNotificationPane.cpp
     View/Notifications/CNotificationPane.h
     View/Notifications/CNotificationPopup.cpp

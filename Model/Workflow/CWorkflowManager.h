@@ -61,11 +61,13 @@ class CWorkflowManager : public QObject
         std::vector<WorkflowVertex> getAllChilds(const WorkflowVertex& id) const;
         QStringList                 getWorkflowNames() const;
         WorkflowTaskPtr             getActiveTask() const;
+        WorkflowVertex              getActiveTaskId() const;
         int                         getWorkflowDbId() const;
         CWorkflowInputViewManager*  getInputViewManager();
         int                         getCurrentFPS() const;
         QModelIndex                 getCurrentVideoInputModelIndex() const;
         std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
+        CWorkflow::ExposedParams    getWorflowExposedParams() const;
 
         //Setters
         void                        setManagers(QNetworkAccessManager *pNetMgr, CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
@@ -80,6 +82,7 @@ class CWorkflowManager : public QObject
         void                        setCurrentTaskSaveFolder(const std::string& path);
         void                        setCurrentTaskSaveFormat(size_t outputIndex, size_t formatIndex);
         void                        setCurrentTaskSaveFormat(size_t outputIndex, DataFileFormat format);
+        void                        setCurrentTaskExposedOutputDescription(int index, const std::string& description);
         void                        setWorkflowConfig(const std::string& key, const std::string& value);
 
         void                        notifyViewShow();
@@ -98,6 +101,7 @@ class CWorkflowManager : public QObject
         bool                        isWorkflowModified() const;
         bool                        isWorkflowRunning() const;
         bool                        isBatchInput(size_t index) const;
+        bool                        isCurrentTaskOutputExposed(size_t index) const;
 
         void                        createWorkflow(const std::string& name, const std::string& keywords="", const std::string& description="");
         WorkflowTaskWidgetPtr       createTaskWidget(const WorkflowTaskPtr &pTask);
@@ -126,6 +130,11 @@ class CWorkflowManager : public QObject
         void                        exportCurrentInputImage(size_t index, const QString& path, bool bWithGraphics);
 
         void                        playVideoInput(size_t index);
+
+        void                        exposeTaskParameters(const WorkflowVertex &taskId, const CWorkflow::ExposedParams& params);
+        void                        exposeCurrentTaskOutput(int outputIndex);
+
+        void                        removeCurrentTaskExposedOutput(int outputIndex);
 
     public slots:
 

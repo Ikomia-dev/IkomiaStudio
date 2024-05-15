@@ -28,6 +28,7 @@
 
 class QtVariantPropertyManager;
 class QtTreePropertyBrowser;
+class QtVariantProperty;
 class QtProperty;
 class CProcessDocDlg;
 
@@ -78,17 +79,28 @@ class CWorkflowModuleWidget : public QWidget
         void            onCloseWorkflow();
         void            onShowWorkflowInfo();
         void            onShowProcessInfo();
+        void            onShowExposedParameter();
         void            onIOPropertyValueChanged(QtProperty* pProperty, const QVariant& value);
 
     private:
+
+        enum IOPropType { DESCRIPTION, AUTO_SAVE, SAVE_FOLDER, SAVE_FORMAT, EXPOSE };
+
+        struct PropAttribute
+        {
+            IOPropType type;
+            QVariant data;
+        };
 
         void            initLayout();
         void            initLeftTab();
         void            initTopTab();
         void            initConnections();
 
-        QVBoxLayout*    createTab(QIcon icon, QString title, QWidget* pBtn);
+        QVBoxLayout*    createTab(QIcon icon, QString title);
+        QPushButton*    createTabButton(const QIcon &icon, const QString &tooltip);
 
+        void            addTabBarButton(int tabIndex, QWidget* pBtn);
         QToolButton*    addButtonToTop(const QSize& size, const QIcon& icon, const QString& tooltip, bool bCheckable = false);
 
         void            setTitle(const QString& title);
@@ -107,15 +119,9 @@ class CWorkflowModuleWidget : public QWidget
 
         void            adjustProcessDocDlgPos();
 
+        QtProperty*     findProperty(IOPropType type, const QVariant &data);
+
     private:
-
-        enum IOPropType { AUTO_SAVE, SAVE_FOLDER, SAVE_FORMAT };
-
-        struct PropAttribute
-        {
-            IOPropType type;
-            QVariant data;
-        };
 
         QString                     m_name;
         CWorkflowView*              m_pView = nullptr;

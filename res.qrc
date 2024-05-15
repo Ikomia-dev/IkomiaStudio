@@ -224,6 +224,7 @@
         <file>Images/app.ico</file>
         <file>Templates/Python/template_readme.md</file>
         <file>Images/install.png</file>
+        <file>Images/eye-color.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>
