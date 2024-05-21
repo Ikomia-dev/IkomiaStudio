@@ -88,7 +88,7 @@ void CWorkflowExposeParamsDlg::fillParamsTable(const WorkflowTaskPtr &taskPtr)
 
         // Task param name: read-only
         QTableWidgetItem* pTaskParamName = new QTableWidgetItem(paramName);
-        pTaskParamName->setFlags(pTaskParamName->flags() & !Qt::ItemIsEditable);
+        pTaskParamName->setFlags(pTaskParamName->flags() & (int)(!Qt::ItemIsEditable));
         m_pParamsTable->setItem(i, 1, pTaskParamName);
 
         // Workflow param name: editable
