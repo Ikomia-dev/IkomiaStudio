@@ -193,7 +193,7 @@ namespace Ikomia
                 QString pythonPath = Utils::IkomiaApp::getQIkomiaFolder() + "/Python";
                 QDir pythonDir(pythonPath);
                 if(pythonDir.exists())
-                    return "3.8";
+                    return "3.10";
                 else
                 {
                     QSettings ikomiaSettings;

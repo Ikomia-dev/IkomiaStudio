@@ -347,7 +347,7 @@ void CPluginManager::fillPythonPackages()
 
 // Not used anymore because it makes Ikomia App launch twice.
 // Hack with STARTUPINFO parameters for Windows does not work
-// with Python 3.8.
+// with Python 3.10.
 void CPluginManager::fillPythonPackagesFromScript()
 {
     try
