@@ -515,6 +515,8 @@ target_link_directories(IkomiaStudio PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
     # Quazip
     ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
+    # OpenCL
+    "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/lib/x64"
 )
 
 target_link_libraries(IkomiaStudio PRIVATE
