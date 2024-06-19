@@ -839,7 +839,9 @@ int CResultManager::getImageDisplayIndex(const WorkflowTaskPtr &taskPtr, int out
     for (size_t i=0; i<taskPtr->getOutputCount(); i++)
     {
         auto dataType = taskPtr->getOutputDataType(i);
-        if (dataType == IODataType::IMAGE || dataType == IODataType::IMAGE_LABEL || dataType == IODataType::IMAGE_BINARY)
+        auto imageBasedTypes = getImageBasedDataTypes();
+
+        if (imageBasedTypes.find(dataType) != imageBasedTypes.end())
             imageDisplayCount++;
 
         if (i == outputIndex)
