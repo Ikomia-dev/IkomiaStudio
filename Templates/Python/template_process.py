@@ -103,8 +103,8 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         self.info.license = ""
 
         # Ikomia API compatibility
-        # self.info.min_ikomia_version = "0.11.0"
-        # self.info.max_ikomia_version = "0.11.0"
+        # self.info.min_ikomia_version = "0.11.1"
+        # self.info.max_ikomia_version = "0.11.1"
 
         # Python compatibility
         # self.info.min_python_version = "3.10.0"
