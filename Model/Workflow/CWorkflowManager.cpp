@@ -1953,29 +1953,36 @@ void CWorkflowManager::reloadCurrentPlugins()
     if (m_pWorkflow == nullptr)
         return;
 
-    auto rangeIt = m_pWorkflow->getVertices();
-    for (auto it=rangeIt.first; it!=rangeIt.second; ++it)
+    try
     {
-        WorkflowVertex taskId = *it;
-        WorkflowTaskPtr taskPtr = m_pWorkflow->getTask(taskId);
-        auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
-
-        if (processInfo.isInternal() == false)
+        auto rangeIt = m_pWorkflow->getVertices();
+        for (auto it=rangeIt.first; it!=rangeIt.second; ++it)
         {
-            // Save parameters
-            UMapString paramValues = taskPtr->getParamValues();
-            // Reload plugin
-            m_pProcessMgr->onReloadPlugin(QString::fromStdString(taskPtr->getName()), processInfo.getLanguage());
-            // Get fresh task instance
-            taskPtr = m_pWorkflow->getTask(taskId);
-            if (paramValues != taskPtr->getParamValues())
+            WorkflowVertex taskId = *it;
+            WorkflowTaskPtr taskPtr = m_pWorkflow->getTask(taskId);
+            auto processInfo = m_pProcessMgr->getProcessInfo(taskPtr->getName());
+
+            if (processInfo.isInternal() == false)
             {
-                // Reset saved parameters
-                taskPtr->setParamValues(paramValues);
-                if (m_pWorkflow->getActiveTaskId() == taskId)
-                    emit doUpdateTaskInfo(taskPtr, m_pProcessMgr->getProcessInfo(taskPtr->getName()));
+                // Save parameters
+                UMapString paramValues = taskPtr->getParamValues();
+                // Reload plugin
+                m_pProcessMgr->onReloadPlugin(QString::fromStdString(taskPtr->getName()), processInfo.getLanguage());
+                // Get fresh task instance
+                taskPtr = m_pWorkflow->getTask(taskId);
+                if (paramValues != taskPtr->getParamValues())
+                {
+                    // Reset saved parameters
+                    taskPtr->setParamValues(paramValues);
+                    if (m_pWorkflow->getActiveTaskId() == taskId)
+                        emit doUpdateTaskInfo(taskPtr, m_pProcessMgr->getProcessInfo(taskPtr->getName()));
+                }
             }
         }
+    }
+    catch (std::exception& e)
+    {
+        Utils::print(e.what(), QtMsgType::QtCriticalMsg);
     }
 }
 
