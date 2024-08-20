@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QSplitter>
 #include <memory>
+#include <QJsonDocument>
 #include "CDataListView.h"
 #include "Image/CImageDisplay.h"
 #include "Result/CResultTableDisplay.h"
@@ -225,6 +226,12 @@ void CDoubleView::onDisplayVolume(CImageScene *pScene, QImage image, QString img
     m_pDataViewer->displayVolume(pScene, image, imgName, bStackHasChanged, pViewProperty);
 }
 
+void CDoubleView::onDisplayPosition(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty)
+{
+    m_pDataViewer->fillZoomProperties(pViewProperty);
+    m_pDataViewer->displayPosition(pScene, image, imgName, bStackHasChanged, pViewProperty);
+}
+
 void CDoubleView::onDisplayResultImage(int index, QImage image, const QString &imageName, CViewPropertyIO *pViewProperty)
 {
     // Add image display to result viewer
@@ -241,6 +248,32 @@ void CDoubleView::onAddResultWidget(int index, QWidget* pWidget, bool bDeleteOnC
     applyViewModeProperty(pViewProperty);
 }
 
+void CDoubleView::onAddGraphicsLayer(const CGraphicsLayerInfo &layerInfo)
+{
+    switch (layerInfo.m_displayTarget)
+    {
+        case CGraphicsLayerInfo::SOURCE:
+            m_pDataViewer->addGraphicsLayer(layerInfo);
+            break;
+        case CGraphicsLayerInfo::RESULT:
+            m_pResultsViewer->addGraphicsLayer(layerInfo);
+            break;
+    }
+}
+
+void CDoubleView::onRemoveGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete)
+{
+    switch (layerInfo.m_displayTarget)
+    {
+        case CGraphicsLayerInfo::SOURCE:
+            m_pDataViewer->removeGraphicsLayer(layerInfo, bDelete);
+            break;
+        case CGraphicsLayerInfo::RESULT:
+            m_pResultsViewer->removeGraphicsLayer(layerInfo, bDelete);
+            break;
+    }
+}
+
 void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int>& syncToIndices, CViewPropertyIO* pViewProperty)
 {
     // Add video display to result viewer
@@ -254,6 +287,12 @@ void CDoubleView::onDisplayResultVideo(int index, QImage image, const QString& i
 void CDoubleView::onDisplayResultText(int index, const QString &text, const QString &taskName, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayText(index, text, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
+}
+
+void CDoubleView::onDisplayResultJson(int index, const QJsonDocument &jsonDocument, const QString &taskName, CViewPropertyIO *pViewProperty)
+{
+    m_pResultsViewer->displayJson(index, jsonDocument, taskName, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 
@@ -278,6 +317,12 @@ void CDoubleView::onDisplayResultPlot(int index, const QString& taskName, CDataP
 void CDoubleView::onDisplayMultiImage(CMultiImageModel *pModel, const QString &taskName, CViewPropertyIO *pViewProperty)
 {
     m_pResultsViewer->displayMultiImage(pModel, taskName, pViewProperty);
+    applyViewModeProperty(pViewProperty);
+}
+
+void CDoubleView::onDisplayResultScene3d(const CScene3d& scene, int index, const QString &taskName, CViewPropertyIO *pViewProperty)
+{
+    m_pResultsViewer->displayScene3d(scene, index, taskName, pViewProperty);
     applyViewModeProperty(pViewProperty);
 }
 

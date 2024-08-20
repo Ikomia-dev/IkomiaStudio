@@ -103,6 +103,15 @@ CVolumeDisplay *CDataViewer::createVolumeDisplay()
     return pDisplay;
 }
 
+CPositionDisplay *CDataViewer::createPositionDisplay()
+{
+    auto pDisplay = new CPositionDisplay(this);
+    pDisplay->setSelectOnClick(true);
+    initDisplayConnections(pDisplay);
+    initPositionConnections(pDisplay);
+    return pDisplay;
+}
+
 void CDataViewer::initConnections()
 {
     connect(m_pDataListView, &CDataListView::doUpdateIndex, this, &CDataViewer::onUpdateIndex);
@@ -231,6 +240,11 @@ void CDataViewer::init3dDisplayConnections(C3dDisplay *pDisplay)
     connect(pDisplay->getGLWidget(), &CGLWidget::doSendErrorMessage, [&](const QString& msg){ emit doSendErrorMessage(msg); });
 }
 
+void CDataViewer::initPositionConnections(CPositionDisplay *pDisplay)
+{
+    initImageConnections(pDisplay->getImageDisplay());
+}
+
 void CDataViewer::setActiveWidget(int index)
 {
     m_pStacked->setCurrentIndex(index);
@@ -275,6 +289,8 @@ CImageDisplay *CDataViewer::getImageDisplay(CDataDisplay *pDisplay) const
         return (static_cast<CVideoDisplay*>(pDisplay))->getImageDisplay();
     else if(pDisplay->getTypeId() == DisplayType::VOLUME_DISPLAY)
         return (static_cast<CVolumeDisplay*>(pDisplay))->getImageDisplay();
+    else if(pDisplay->getTypeId() == DisplayType::POSITION_DISPLAY)
+            return (static_cast<CPositionDisplay*>(pDisplay))->getImageDisplay();
     else
         return nullptr;
 }
@@ -301,6 +317,8 @@ CImageView *CDataViewer::getImageView(CDataDisplay *pDisplay) const
         return (static_cast<CVideoDisplay*>(pDisplay))->getImageDisplay()->getView();
     else if(pDisplay->getTypeId() == DisplayType::VOLUME_DISPLAY)
         return (static_cast<CVolumeDisplay*>(pDisplay))->getImageDisplay()->getView();
+    else if(pDisplay->getTypeId() == DisplayType::POSITION_DISPLAY)
+        return (static_cast<CPositionDisplay*>(pDisplay))->getImageDisplay()->getView();
     else
         return nullptr;
 }
@@ -329,6 +347,19 @@ QList<CVolumeDisplay *> CDataViewer::getVolumeDisplays() const
             volumeDisplays.push_back(static_cast<CVolumeDisplay*>(views[i]));
     }
     return volumeDisplays;
+}
+
+QList<CPositionDisplay *> CDataViewer::getPositionDisplays() const
+{
+    QList<CPositionDisplay*> positionDisplays;
+    auto views = m_pDataDisplay->getDataViews();
+
+    for(int i=0; i<views.size(); ++i)
+    {
+        if(views[i]->getTypeId() == DisplayType::POSITION_DISPLAY)
+            positionDisplays.push_back(static_cast<CPositionDisplay*>(views[i]));
+    }
+    return positionDisplays;
 }
 
 int CDataViewer::getDisplayIndex(CDataDisplay *pDisplay) const
@@ -440,6 +471,20 @@ void CDataViewer::fillZoomProperties(CViewPropertyIO *pViewProp)
 void CDataViewer::addDataView(CDataDisplay* pData, int r, int c)
 {
     m_pDataDisplay->addDataView(pData, r, c);
+}
+
+void CDataViewer::addGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
+{
+    auto imageViews = getImageViews();
+    for(int i=0; i<imageViews.size(); ++i)
+        imageViews[i]->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
+}
+
+void CDataViewer::removeGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete)
+{
+    auto imageViews = getImageViews();
+    for(int i=0; i<imageViews.size(); ++i)
+        imageViews[i]->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
 }
 
 void CDataViewer::updateDataListViewIndex(const QModelIndex& index)
@@ -650,6 +695,29 @@ void CDataViewer::displayVolume(CImageScene *pScene, QImage image, QString name,
         pDisplay->changeVolume();
 }
 
+void CDataViewer::displayPosition(CImageScene *pScene, QImage image, QString name, bool bStackHasChanged, CViewPropertyIO* pViewProp)
+{
+    CPositionDisplay* pDisplay = nullptr;
+    auto displays = getPositionDisplays();
+
+    if(displays.size() > 0)
+        pDisplay = displays[0];
+    else
+    {
+        m_pDataDisplay->removeAll();
+        pDisplay = createPositionDisplay();
+        m_pDataDisplay->addDataView(pDisplay);
+    }
+
+    //Set main data display visible
+    setActiveWidget(1);
+    //Set image after making the display visible to have a good fit in view behaviour
+    pDisplay->setViewProperty(pViewProp);
+    pDisplay->setSelected(true);
+    pDisplay->show();
+    pDisplay->setImage(pScene, image, name);
+}
+
 void CDataViewer::switchView()
 {
     if(m_pStacked->currentIndex() == 0)
@@ -819,7 +887,7 @@ void CDataViewer::onUpdateNbImage(int nb)
 
 void CDataViewer::onUpdateCurrentImageIndex(int index)
 {
-    auto imageDisplays = getImageDisplays();
+    auto imageDisplays = getAllImageDisplays();
     for(int i=0; i<imageDisplays.size(); ++i)
         imageDisplays[i]->setCurrentImgIndex(index);
 }
@@ -858,25 +926,11 @@ void CDataViewer::onSetCurrentGraphicsLayer(CGraphicsLayer *pLayer)
         imageViews[i]->setCurrentGraphicsLayer(pLayer);
 }
 
-void CDataViewer::onRemoveGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete)
-{
-    auto imageViews = getImageViews();
-    for(int i=0; i<imageViews.size(); ++i)
-        imageViews[i]->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
-}
-
 void CDataViewer::onAddGraphicsItem(QGraphicsItem *pItem, bool bForceParent)
 {
     auto imageViews = getImageViews();
     for(int i=0; i<imageViews.size(); ++i)
         imageViews[i]->addGraphicsItem(pItem, bForceParent);
-}
-
-void CDataViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
-{
-    auto imageViews = getImageViews();
-    for(int i=0; i<imageViews.size(); ++i)
-        imageViews[i]->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
 }
 
 void CDataViewer::onSetVideoSliderLength(int index, size_t length)

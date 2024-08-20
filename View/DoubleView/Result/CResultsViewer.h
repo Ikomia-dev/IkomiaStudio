@@ -30,9 +30,13 @@
  */
 #include <QWidget>
 #include <QTabWidget>
+#include <QJsonDocument>
 #include "View/DoubleView/CDataDisplay.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
 #include "CDataVideoBuffer.h"
+
+#include "IO/CScene3dIO.h"
+
 
 class CResultTableDisplay;
 class CImageViewSync;
@@ -44,9 +48,11 @@ class CMeasuresTableModel;
 class CFeaturesTableModel;
 class CPlotDisplay;
 class CDataPlot;
+class CJsonDisplay;
 class CMultiImageDisplay;
 class CMultiImageModel;
 class CTextDisplay;
+class CScene3dDisplay;
 
 /**
  * @brief
@@ -68,14 +74,16 @@ class CResultsViewer : public QWidget
         CResultTableDisplay*    displayTable(int index, const QString name, CFeaturesTableModel *pModel, CViewPropertyIO* pViewProperty);
         CPlotDisplay*           displayPlot(int index, const QString& name, CDataPlot* pPlot, CViewPropertyIO *pViewProperty);
         CTextDisplay*           displayText(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
+        CJsonDisplay*           displayJson(int index, const QJsonDocument &jsonDocument, const QString& name, CViewPropertyIO *pViewProperty);
         CMultiImageDisplay*     displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty);
+        CScene3dDisplay*        displayScene3d(const CScene3d& scene, int index, const QString &name, CViewPropertyIO *pViewProperty);
 
         CWidgetDataDisplay*     addWidgetDisplay(int index, QWidget* pWidget, bool bDeleteOnClose, CViewPropertyIO* pViewProperty);
-
         int                     addTabToResults(DisplayType type);
         int                     addTabToResults(DisplayType type, const QString& name, const QIcon& icon);
         void                    addDataViewToTab(DisplayType type, CDataDisplay* pData);
         void                    addDataViewToTab(int indTab, CDataDisplay* pData, int r = 0, int c = 0);
+        void                    addGraphicsLayer(const CGraphicsLayerInfo &layerInfo);
 
         int                     getTabCount() const;
         int                     getTabIndex(DisplayType type) const;
@@ -88,6 +96,7 @@ class CResultsViewer : public QWidget
         bool                    hasTab(DisplayType type) const;
 
         void                    removeTab(DisplayType type);
+        void                    removeGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete);
 
         void                    clearAll();
 
@@ -151,6 +160,7 @@ class CResultsViewer : public QWidget
         CVideoDisplay*          createVideoDisplay();
         CResultTableDisplay*    createTableDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
         CPlotDisplay*           createPlotDisplay(int index, const QString &name, CViewPropertyIO *pViewProperty);
+        CJsonDisplay*           createJsonDisplay(int index, const QJsonDocument &jsonDocument, const QString& name, CViewPropertyIO *pViewProperty);
         CTextDisplay*           createTextDisplay(int index, const QString& text, const QString& name, CViewPropertyIO *pViewProperty);
 
         void                    addDefaultDisplay(int tabIndex);

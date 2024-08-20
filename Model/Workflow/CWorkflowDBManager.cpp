@@ -309,7 +309,6 @@ std::unique_ptr<CWorkflow> CWorkflowDBManager::load(QSqlDatabase& db, int protoc
         if(pTask)
         {
             pTask->setParamValues(paramMap);
-            pTask->parametersModified();
             auto vertexId = pWorkflow->addTask(pTask);
             mapDbIdToVertexId.insert(std::make_pair(taskId, vertexId));
         }

@@ -31,11 +31,13 @@
 #include <QLabel>
 #include <QMenu>
 #include <QFileDialog>
+#include <QJsonDocument>
 #include "Model/Data/CFeaturesTableModel.h"
 #include "Model/Data/CMeasuresTableModel.h"
 #include "Model/Data/CMultiImageModel.h"
 #include "View/DoubleView/Plot/CPlotDisplay.h"
 #include "View/DoubleView/CStaticDisplay.h"
+#include "View/DoubleView/3D/CScene3dDisplay.h"
 #include "View/DoubleView/Image/CImageDisplay.h"
 #include "View/DoubleView/Image/CImageViewSync.h"
 #include "View/DoubleView/Image/CMultiImageDisplay.h"
@@ -43,8 +45,10 @@
 #include "View/DoubleView/Result/CResultTableDisplay.h"
 #include "View/DoubleView/Video/CVideoDisplay.h"
 #include "View/DoubleView/CWidgetDataDisplay.h"
+#include "View/DoubleView/CJsonDisplay.h"
 #include "View/DoubleView/CTextDisplay.h"
 #include "Workflow/CViewPropertyIO.h"
+
 
 CResultsViewer::CResultsViewer(CImageViewSync* pViewSync, CVideoViewSync* pVideoViewSync, QWidget* parent) : QWidget(parent)
 {
@@ -196,6 +200,13 @@ CTextDisplay *CResultsViewer::displayText(int index, const QString &text, const 
     return pTextDisplay;
 }
 
+CJsonDisplay *CResultsViewer::displayJson(int index, const QJsonDocument &jsonDocument, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    CJsonDisplay* pJsonDisplay = createJsonDisplay(index, jsonDocument, name, pViewProperty);
+    pJsonDisplay->show();
+    return pJsonDisplay;
+}
+
 CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, const QString &name, CViewPropertyIO *pViewProperty)
 {
     if(hasTab(DisplayType::MULTI_IMAGE_DISPLAY) == false)
@@ -216,6 +227,37 @@ CMultiImageDisplay *CResultsViewer::displayMultiImage(CMultiImageModel *pModel, 
     pDisplay->setModel(pModel);
     pDisplay->setViewProperty(pViewProperty);
     pDisplay->show();
+    return pDisplay;
+}
+
+CScene3dDisplay *CResultsViewer::displayScene3d(const CScene3d& scene3d, int index, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::SCENE_3D_DISPLAY) == false)
+        addTabToResults(DisplayType::SCENE_3D_DISPLAY);
+
+    CScene3dDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::SCENE_3D_DISPLAY);
+
+    if(index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating image display : invalid index");
+            return nullptr;
+        }
+
+        pDisplay = new CScene3dDisplay(nullptr);
+        pDisplay->setSelectOnClick(true);
+
+        addDataViewToTab(DisplayType::SCENE_3D_DISPLAY, pDisplay);
+    }
+    else
+        pDisplay = static_cast<CScene3dDisplay*>(displays[index]);
+
+    //Set image after making the display visible to have a good fit in view behaviour
+    pDisplay->setScene3d(scene3d);
+    pDisplay->setName(name);
+    pDisplay->setViewProperty(pViewProperty);
     return pDisplay;
 }
 
@@ -314,10 +356,24 @@ int CResultsViewer::addTabToResults(DisplayType type)
             m_mapTypeIndex.insert(type, indTab);
             break;
 
+        case DisplayType::JSON_DISPLAY:
+            indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/json-viewer.png"), tr("JSON data"));
+            m_pTabWidget->setIconSize(QSize(16,16));
+            m_pTabWidget->setTabToolTip(indTab, tr("JSON data"));
+            m_mapTypeIndex.insert(type, indTab);
+            break;
+
         case DisplayType::TEXT_DISPLAY:
             indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/text-editor.png"), tr("Text Results"));
             m_pTabWidget->setIconSize(QSize(16,16));
             m_pTabWidget->setTabToolTip(indTab, tr("Text Results"));
+            m_mapTypeIndex.insert(type, indTab);
+            break;
+
+        case DisplayType::SCENE_3D_DISPLAY:
+            indTab = m_pTabWidget->addTab(new CDataDisplay(this), QIcon(":/Images/text-editor.png"), tr("3D Scene"));
+            m_pTabWidget->setIconSize(QSize(16,16));
+            m_pTabWidget->setTabToolTip(indTab, tr("3D Scene"));
             m_mapTypeIndex.insert(type, indTab);
             break;
 
@@ -358,6 +414,22 @@ void CResultsViewer::addDataViewToTab(int indTab, CDataDisplay* pData, int r, in
     assert(pView);
     pView->addDataView(pData, r, c);
     initConnections(pData);
+}
+
+void CResultsViewer::addGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
+{
+    if (layerInfo.m_refImageDisplayType == DisplayType::IMAGE_DISPLAY)
+    {
+            auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageDisplayIndex));
+            if (pImageView)
+                pImageView->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
+    }
+    else if (layerInfo.m_refImageDisplayType == DisplayType::VIDEO_DISPLAY)
+    {
+            auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageDisplayIndex));
+            if (pVideoView)
+                pVideoView->getImageDisplay()->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
+    }
 }
 
 int CResultsViewer::getTabCount() const
@@ -441,6 +513,22 @@ void CResultsViewer::removeTab(DisplayType type)
         pContainer->deleteLater();
         m_mapTypeIndex.erase(it);
         decrementTabIndex(indexRemoved);
+    }
+}
+
+void CResultsViewer::removeGraphicsLayer(const CGraphicsLayerInfo &layerInfo, bool bDelete)
+{
+    if (layerInfo.m_refImageDisplayType == DisplayType::IMAGE_DISPLAY)
+    {
+        auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageDisplayIndex));
+        if (pImageView)
+            pImageView->getView()->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
+    }
+    else if (layerInfo.m_refImageDisplayType == DisplayType::VIDEO_DISPLAY)
+    {
+        auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageDisplayIndex));
+        if (pVideoView)
+            pVideoView->getImageDisplay()->getView()->removeGraphicsLayer(layerInfo.m_pLayer, bDelete);
     }
 }
 
@@ -569,13 +657,13 @@ void CResultsViewer::onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo)
     if (layerInfo.m_refImageDisplayType == DisplayType::IMAGE_DISPLAY)
     {
         auto pImageView = static_cast<CImageDisplay*>(getDataView(DisplayType::IMAGE_DISPLAY, layerInfo.m_refImageDisplayIndex));
-        if(pImageView)
+        if (pImageView)
             pImageView->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
     }
     else if (layerInfo.m_refImageDisplayType == DisplayType::VIDEO_DISPLAY)
     {
         auto pVideoView = static_cast<CVideoDisplay*>(getDataView(DisplayType::VIDEO_DISPLAY, layerInfo.m_refImageDisplayIndex));
-        if(pVideoView)
+        if (pVideoView)
             pVideoView->getImageDisplay()->getView()->addGraphicsLayer(layerInfo.m_pLayer, layerInfo.m_bTopMost);
     }
 }
@@ -891,6 +979,36 @@ CPlotDisplay *CResultsViewer::createPlotDisplay(int index, const QString &name, 
         pDisplay = static_cast<CPlotDisplay*>(displays[index]);
 
     pDisplay->setName(name);
+    return pDisplay;
+}
+
+CJsonDisplay *CResultsViewer::createJsonDisplay(int index, const QJsonDocument &jsonDocument, const QString &name, CViewPropertyIO *pViewProperty)
+{
+    if(hasTab(DisplayType::JSON_DISPLAY) == false)
+        addTabToResults(DisplayType::JSON_DISPLAY);
+
+    CJsonDisplay* pDisplay = nullptr;
+    auto displays = getDataViews(DisplayType::JSON_DISPLAY);
+
+    if((int)index >= displays.size())
+    {
+        if((index - displays.size()) > 0)
+        {
+            qCritical().noquote() << tr("Error while creating json display : invalid index");
+            return nullptr;
+        }
+
+        //Create new one
+        pDisplay = new CJsonDisplay(name, jsonDocument);
+        pDisplay->setViewProperty(pViewProperty);
+        addDataViewToTab(DisplayType::JSON_DISPLAY, pDisplay);
+    }
+    else
+    {
+        pDisplay = static_cast<CJsonDisplay*>(displays[index]);
+        pDisplay->setName(name);
+        pDisplay->setJsonDocument(jsonDocument);
+    }
     return pDisplay;
 }
 

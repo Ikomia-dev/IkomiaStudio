@@ -84,6 +84,7 @@ class CProjectViewProxyModel;
 class CWorkflowView;
 class CModuleDockWidget;
 class CVolumeDisplay;
+class CPositionDisplay;
 class CRollupWidget;
 
 #endif // FORWARDS_HPP

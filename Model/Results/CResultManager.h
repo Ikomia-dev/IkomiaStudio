@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QJsonDocument>
 #include "Core/CWorkflow.h"
 #include "IO/CBlobMeasureIO.h"
 #include "CResultDbManager.h"
@@ -30,6 +31,9 @@
 #include "View/DoubleView/Result/CResultsViewer.h"
 #include "CDataPlot.h"
 #include "Model/Graphics/CGraphicsLayerInfo.hpp"
+
+#include "IO/CScene3dIO.h"
+
 
 class CProjectModel;
 class CProjectManager;
@@ -84,6 +88,8 @@ class CResultManager : public QObject
         void                doDisplayPlot(int index, const QString& taskName, CDataPlot* pPlot, CViewPropertyIO* pViewProperty);
         void                doDisplayDnnDataset(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void                doDisplayText(int index, const QString& text, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void                doDisplayJson(int index, const QJsonDocument &jsonDocument, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void                doDisplayScene3d(const CScene3d &scene3d, int index, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void                doNewResultNotification(const QString& message, Notification type, CProgressCircle* pItem=nullptr, int duration=Ikomia::_NotifDefaultDuration);
 
@@ -163,6 +169,8 @@ class CResultManager : public QObject
         void                manageVideoRecord(const WorkflowTaskPtr &taskPtr, size_t index, const CMat& image);
         void                manageDatasetOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, CViewPropertyIO* pViewProp);
         void                manageTextOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
+        void                manageJsonOutput(const WorkflowTaskIOPtr& pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp);
+        void                manageScene3dOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp);
 
         QModelIndex         findResultFromName(const QString& name, QModelIndex startIndex=QModelIndex()) const;
 

@@ -32,6 +32,8 @@
 #include "IO/CSemanticSegIO.h"
 #include "IO/CKeypointsIO.h"
 #include "IO/CTextIO.h"
+#include "IO/CJsonIO.h"
+#include "IO/CScene3dIO.h"
 #include "Model/Project/CProjectManager.h"
 #include "Model/Workflow/CWorkflowManager.h"
 #include "Model/Graphics/CGraphicsManager.h"
@@ -105,13 +107,15 @@ void CResultManager::setCurrentOutputImage(const QModelIndex& index)
     for(size_t i=0; i<pTask->getOutputCount(); ++i)
     {
         auto dataType = pTask->getOutputDataType(i);
-        if((dataType == IODataType::VOLUME || dataType == IODataType::VOLUME_BINARY) &&
+        if((dataType == IODataType::VOLUME || 
+            dataType == IODataType::VOLUME_BINARY ||
+            dataType == IODataType::POSITION) &&
             pTask->getOutput(i)->isDataAvailable())
         {
             auto pOut = std::dynamic_pointer_cast<CImageIO>(pTask->getOutput(i));
             if(pOut)
             {
-                pOut->setCurrentImage(currentImgIndex);
+                pOut->setCurrentImageIndex(currentImgIndex);
                 //Emit signal to display result
                 emit doDisplayImage(volumeIndex++, CDataConversion::CMatToQImage(pOut->getImage()), QString::fromStdString(pTask->getName()), pTask->getOutputViewProperty(i));
             }
@@ -166,8 +170,9 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                 switch(outputPtr->getDataType())
                 {
                     case IODataType::IMAGE:
-                    case IODataType::IMAGE_BINARY:                        
+                    case IODataType::IMAGE_BINARY:
                     case IODataType::IMAGE_LABEL:
+                    case IODataType::POSITION:
                         manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
 
@@ -271,6 +276,22 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
                         assert(outPtr);
                         manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
                         manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                        break;
+                    }
+
+                    case IODataType::JSON:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
+                        assert(outPtr);
+                        manageJsonOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                        break;
+                    }
+
+                    case IODataType::SCENE_3D:
+                    {
+                        auto outPtr = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
+                        assert(outPtr);
+                        manageScene3dOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
                         break;
                     }
 
@@ -775,6 +796,7 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::VOLUME: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VOLUME_BINARY: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VOLUME_LABEL: viewType = DisplayType::IMAGE_DISPLAY; break;
+        case IODataType::POSITION: viewType = DisplayType::IMAGE_DISPLAY; break;
         case IODataType::VIDEO: viewType = DisplayType::VIDEO_DISPLAY; break;
         case IODataType::VIDEO_BINARY: viewType = DisplayType::VIDEO_DISPLAY; break;
         case IODataType::VIDEO_LABEL: viewType = DisplayType::VIDEO_DISPLAY; break;
@@ -794,6 +816,8 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
         case IODataType::SEMANTIC_SEGMENTATION: viewType = DisplayType::EMPTY_DISPLAY; break;   //Composite
         case IODataType::KEYPOINTS: viewType = DisplayType::EMPTY_DISPLAY; break;               //Composite
         case IODataType::TEXT: viewType = DisplayType::EMPTY_DISPLAY; break;                    //Composite
+        case IODataType::JSON: viewType = DisplayType::JSON_DISPLAY; break;
+        case IODataType::SCENE_3D: viewType = DisplayType::SCENE_3D_DISPLAY; break;
     }
     return viewType;
 }
@@ -807,6 +831,7 @@ std::set<IODataType> CResultManager::getImageBasedDataTypes() const
         IODataType::VOLUME,
         IODataType::VOLUME_BINARY,
         IODataType::VOLUME_LABEL,
+        IODataType::POSITION,
         IODataType::VIDEO,
         IODataType::VIDEO_BINARY,
         IODataType::VIDEO_LABEL,
@@ -947,11 +972,20 @@ void CResultManager::manageImageOutput(const WorkflowTaskIOPtr &pOutput, const s
         return;
     }
 
+
     CMat image;
     if(pOut->getDataType() == IODataType::IMAGE_LABEL)
+    {
         CDataConversion::grayscaleToAlpha(pOut->getImage(), image);
+    }
+    else if(pOut->getDataType() == IODataType::POSITION)
+    {
+        image = pOut->getData().getPlane(index);
+    }
     else
+    {
         image = pOut->getImage();
+    }
 
     //Emit signal to display result
     emit doDisplayImage(index, CDataConversion::CMatToQImage(image), QString::fromStdString(taskName), pViewProp);
@@ -986,7 +1020,7 @@ void CResultManager::manageVolumeOutput(const WorkflowTaskIOPtr &outputPtr, cons
     {
         DimensionIndices indices = CProjectUtils::getIndicesInDataset(m_pProjectMgr->wrapIndex(m_currentInputIndex));
         auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
-        pOut->setCurrentImage(currentImgIndex);
+        pOut->setCurrentImageIndex(currentImgIndex);
 
         //Emit signal to display result
         emit doDisplayImage(index, CDataConversion::CMatToQImage(pOut->getImage()), QString::fromStdString(taskName), pViewProp);
@@ -1247,6 +1281,61 @@ void CResultManager::manageTextOutput(const WorkflowTaskIOPtr &pOutput, const st
     }
     std::vector<std::string> options =   {"json_format", "indented"};
     emit doDisplayText(index, QString::fromStdString(pOutput->toJson(options)), QString::fromStdString(taskName), pViewProp);
+}
+
+void CResultManager::manageJsonOutput(const WorkflowTaskIOPtr &pOutput, const std::string &taskName, int index, CViewPropertyIO *pViewProp)
+{
+    auto pOut = std::dynamic_pointer_cast<CJsonIO>(pOutput);
+
+    if(!pOut)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid JSON data");
+        return;
+    }
+
+    if(pOut->isDataAvailable() == false)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: no JSON data available");
+        return;
+    }
+
+    try
+    {
+        // WARNING: don't use 'toJson()' methods because they return 'std::string' instead of 'QJsonDocument'
+        emit doDisplayJson(index, pOut->getData(), QString::fromStdString(taskName), pViewProp);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logResults).noquote() << QString::fromStdString(e.what());
+    }
+}
+
+void CResultManager::manageScene3dOutput(const WorkflowTaskIOPtr &outputPtr, const std::string &taskName, int index, CViewPropertyIO* pViewProp)
+{
+    assert(m_pRenderMgr);
+    assert(outputPtr);
+
+    auto pOut = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
+    if(!pOut)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid scene");
+        return;
+    }
+
+    if(pOut->isDataAvailable() == false)
+    {
+        qCCritical(logResults).noquote() << tr("Process output management: invalid scene content");
+        return;
+    }
+
+    try
+    {
+        emit doDisplayScene3d(pOut->getScene3d(), index, QString::fromStdString(taskName), pViewProp);
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logResults).noquote() << QString::fromStdString(e.what());
+    }
 }
 
 QModelIndex CResultManager::findResultFromName(const QString &name, QModelIndex startIndex) const
@@ -1548,25 +1637,26 @@ void CResultManager::saveOutputGraphics()
     }
 
     //Set the structure of the graphics tree for protocol: WorkflowLayer -> TaskLayer
-    auto protocolName = QString::fromStdString(m_pWorkflowMgr->getWorkflowName());
-    auto protocolLayerIndex = m_pGraphicsMgr->findLayerFromName(protocolName);
+    auto wfName = QString::fromStdString(m_pWorkflowMgr->getWorkflowName());
+    auto wfLayerIndex = m_pGraphicsMgr->findLayerFromName(wfName);
     auto currentLayerIndex = m_pGraphicsMgr->getCurrentLayerIndex();
 
-    if(!protocolLayerIndex.isValid())
+    if(!wfLayerIndex.isValid())
     {
-        //Create protocol layer if it does not exist
-        auto pWorkflowLayer = new CGraphicsLayer(protocolName);
+        //Create workflow layer if it does not exist
+        auto pWorkflowLayer = new CGraphicsLayer(wfName);
         auto rootLayerIndex = m_pGraphicsMgr->getRootLayerIndex();
 
         if(rootLayerIndex.isValid())
             m_pGraphicsMgr->setCurrentLayer(m_pGraphicsMgr->getRootLayerIndex(), true);
 
-        protocolLayerIndex = m_pGraphicsMgr->addLayer(pWorkflowLayer);
+        wfLayerIndex = m_pGraphicsMgr->addLayer(pWorkflowLayer);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
-    else if(protocolLayerIndex != currentLayerIndex && !m_pGraphicsMgr->isChildLayer(currentLayerIndex, protocolLayerIndex))
+    else if(wfLayerIndex != currentLayerIndex && !m_pGraphicsMgr->isChildLayer(currentLayerIndex, wfLayerIndex))
     {
         //If current layer is not child of the protocol layer, protocol layer becomes the current
-        m_pGraphicsMgr->setCurrentLayer(protocolLayerIndex, true);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
 
     //Add to project and image scene
@@ -1575,8 +1665,8 @@ void CResultManager::saveOutputGraphics()
     {
         //We have to create new layer from output objects
         CGraphicsLayer* pSavedLayer = pOut->createLayer(m_pGraphicsMgr->getContext());
-        m_pGraphicsMgr->addLayer(pSavedLayer);
-        m_pGraphicsMgr->setCurrentLayer(protocolLayerIndex, true);
+        wfLayerIndex = m_pGraphicsMgr->addLayer(pSavedLayer);
+        m_pGraphicsMgr->setCurrentLayer(wfLayerIndex, true);
     }
 }
 

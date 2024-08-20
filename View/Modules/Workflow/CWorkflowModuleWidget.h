@@ -96,6 +96,7 @@ class CWorkflowModuleWidget : public QWidget
         void            initLeftTab();
         void            initTopTab();
         void            initConnections();
+        void            initWidgetConnections(const WorkflowTaskWidgetPtr &widgetPtr, const WorkflowTaskPtr &taskPtr);
 
         QVBoxLayout*    createTab(QIcon icon, QString title);
         QPushButton*    createTabButton(const QIcon &icon, const QString &tooltip);

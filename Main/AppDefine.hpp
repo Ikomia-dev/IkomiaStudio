@@ -91,6 +91,9 @@ namespace Ikomia
         PLOT_DISPLAY,
         WIDGET_DISPLAY,
         TEXT_DISPLAY,
+        JSON_DISPLAY,
+        POSITION_DISPLAY,
+        SCENE_3D_DISPLAY,
     };
 
     enum DisplayCategory

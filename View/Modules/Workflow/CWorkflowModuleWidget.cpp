@@ -107,22 +107,7 @@ void CWorkflowModuleWidget::onUpdateTaskInfo(const WorkflowTaskPtr &pTask, const
         // Add it to layout
         m_pParamLayout->addWidget(m_widgetPtr.get());
         // Make somme connections
-        connect(m_widgetPtr.get(), &CWorkflowTaskWidget::doApplyProcess, [&](const WorkflowTaskParamPtr& pParam)
-        {
-            emit doRunFromActiveTask(pParam);
-        });
-        connect(m_widgetPtr.get(), &CWorkflowTaskWidget::doSendProcessAction, [&, pTask](int flags)
-        {
-            emit doSendProcessAction(pTask, flags);
-        });
-        connect(m_widgetPtr.get(), &CWorkflowTaskWidget::doSetGraphicsTool, [&](GraphicsShape tool)
-        {
-            emit doSetGraphicsTool(tool);
-        });
-        connect(m_widgetPtr.get(), &CWorkflowTaskWidget::doSetGraphicsCategory, [&](const QString& category)
-        {
-            emit doSetGraphicsCategory(category);
-        });
+        initWidgetConnections(m_widgetPtr, pTask);
     }
     else
         m_pParamLayout->addWidget(new QWidget);
@@ -618,6 +603,31 @@ void CWorkflowModuleWidget::initConnections()
 
     //Scene -> main view
     connect(pScene, &CWorkflowScene::doShowProcessPopup, [&]{ emit doShowProcessPopup(); });
+}
+
+void CWorkflowModuleWidget::initWidgetConnections(const WorkflowTaskWidgetPtr& widgetPtr, const WorkflowTaskPtr &taskPtr)
+{
+    // Widget -> workflow
+    connect(widgetPtr.get(), &CWorkflowTaskWidget::doApplyProcess, [&](const WorkflowTaskParamPtr& pParam)
+    {
+        emit doRunFromActiveTask(pParam);
+    });
+    // Widget -> task
+    connect(widgetPtr.get(), &CWorkflowTaskWidget::doSendProcessAction, [&, taskPtr](int flags)
+    {
+        emit doSendProcessAction(taskPtr, flags);
+    });
+    // Widget -> graphics manager
+    connect(widgetPtr.get(), &CWorkflowTaskWidget::doSetGraphicsTool, [&](GraphicsShape tool)
+    {
+        emit doSetGraphicsTool(tool);
+    });
+    connect(widgetPtr.get(), &CWorkflowTaskWidget::doSetGraphicsCategory, [&](const QString& category)
+    {
+        emit doSetGraphicsCategory(category);
+    });
+    // Task -> widget connections
+    connect(taskPtr->getSignalRawPtr(), &CSignalHandler::doParametersChanged, widgetPtr.get(), &CWorkflowTaskWidget::onParametersChanged);
 }
 
 QVBoxLayout* CWorkflowModuleWidget::createTab(QIcon icon, QString title)

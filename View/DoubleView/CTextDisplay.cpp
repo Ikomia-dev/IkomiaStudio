@@ -34,7 +34,7 @@ void CTextDisplay::initLayout(const QString& text)
         m_pHbox->insertStretch(index++, 1);
     }
 
-    m_pTextEdit = new QTextEdit();
+    m_pTextEdit = new QPlainTextEdit();
     m_pTextEdit->setReadOnly(true);
     m_pTextEdit->setPlainText(text);
     m_pLayout->addWidget(m_pTextEdit);

@@ -30,6 +30,7 @@
  */
 #include <QWidget>
 #include <QTabWidget>
+#include <QJsonDocument>
 #include "Main/forwards.hpp"
 #include "CDataViewer.h"
 #include "Result/CResultsViewer.h"
@@ -37,6 +38,9 @@
 #include "Video/CVideoViewSync.h"
 #include "3D/CVolumeViewSync.h"
 #include "Model/Results/CResultManager.h"
+
+#include "IO/CScene3dIO.h"
+
 
 /**
  * @brief
@@ -79,6 +83,7 @@ class CDoubleView : public QWidget
         void            onDisplayImage(int index, CImageScene *pScene, QImage image, QString name, CViewPropertyIO *pViewProperty);
         void            onDisplayVideo(const QModelIndex &modelIndex, int displayIndex, CImageScene *pScene, QImage image, QString name, bool bVideoChanged, CViewPropertyIO *pViewProperty);
         void            onDisplayVolume(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty);
+        void            onDisplayPosition(CImageScene *pScene, QImage image, QString imgName, bool bStackHasChanged, CViewPropertyIO *pViewProperty);
 
         void            onDisplayResultImage(int index, QImage image, const QString& imageName, CViewPropertyIO *pViewProperty);
         void            onDisplayResultMeasuresTable(int index, const QString taskName, CMeasuresTableModel *pModel, CViewPropertyIO *pViewProperty);
@@ -87,8 +92,13 @@ class CDoubleView : public QWidget
         void            onDisplayMultiImage(CMultiImageModel* pModel, const QString& taskName, CViewPropertyIO* pViewProperty);
         void            onDisplayResultVideo(int index, QImage image, const QString& imageName, const std::vector<int> &syncToIndices, CViewPropertyIO *pViewProperty);
         void            onDisplayResultText(int index, const QString& text, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void            onDisplayResultJson(int index, const QJsonDocument &jsonDocument, const QString& taskName, CViewPropertyIO* pViewProperty);
+        void            onDisplayResultScene3d(const CScene3d& scene, int index, const QString& taskName, CViewPropertyIO* pViewProperty);
 
         void            onAddResultWidget(int index, QWidget *pWidget, bool bDeleteOnClose, CViewPropertyIO *pViewProperty);
+        void            onAddGraphicsLayer(const CGraphicsLayerInfo& layerInfo);
+
+        void            onRemoveGraphicsLayer(const CGraphicsLayerInfo& layerInfo, bool bDelete);
 
         void            onUpdateIndex(const QModelIndex& index);
 

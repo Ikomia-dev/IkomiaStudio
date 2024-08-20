@@ -307,28 +307,26 @@ void CMainCtrl::initGraphicsConnections()
     //Toolbar -> data viewer
     connect(m_pView->getGraphicsToolbar(), &CGraphicsToolbar::doActivateGraphics, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onChangeGraphicsActivationState);
 
-    //Project pane -> manager
+    //Project pane -> graphics manager
     connect(m_pView->getProjectPane(), &CProjectPane::doAddGraphicsLayer, m_pModel->getGraphicsManager(), &CGraphicsManager::onAddLayer);
     connect(m_pView->getProjectPane(), &CProjectPane::doSetCurrentGraphicsLayer, m_pModel->getGraphicsManager(), &CGraphicsManager::onSetCurrentLayer);
 
-    //Manager -> data viewer
+    //Graphics manager -> data viewer
     connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doSetCurrentLayer, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onSetCurrentGraphicsLayer);
     connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doAddGraphicsItem, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onAddGraphicsItem);
-    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doRemoveGraphicsLayerToSource, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onRemoveGraphicsLayer);
-    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doAddTemporaryLayerToSource, m_pView->getDoubleView()->getDataViewer(), &CDataViewer::onAddGraphicsLayer);
 
-    //Manager -> result viewer
-    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doAddTemporaryLayerToResult, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onAddGraphicsLayer);
-    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doRemoveGraphicsLayerToResult, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onRemoveGraphicsLayer);
+    //Graphics manager -> double view
+    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doAddTemporaryLayer, m_pView->getDoubleView(), &CDoubleView::onAddGraphicsLayer);
+    connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doRemoveGraphicsLayer, m_pView->getDoubleView(), &CDoubleView::onRemoveGraphicsLayer);
 
-    //Manager -> toolbar
+    //Graphics manager -> toolbar
     connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doSetGraphicsContext, m_pView, &CMainView::onSetGraphicsContext);
     connect(m_pModel->getGraphicsManager(), &CGraphicsManager::doGraphicsContextChanged, m_pView, &CMainView::onGraphicsContextChanged);
 
-    //Views -> toolbar
+    //Data viewer -> toolbar
     connect(m_pView->getDoubleView()->getDataViewer(), &CDataViewer::doChangeGraphicsActivationState, m_pView->getGraphicsToolbar(), &CGraphicsToolbar::onChangeActivationState);
 
-    //Views -> manager
+    //Data viewer -> graphics manager
     connect(m_pView->getDoubleView()->getDataViewer(), &CDataViewer::doAddGraphicsLayer, m_pModel->getGraphicsManager(), &CGraphicsManager::onAddLayerFromView);
     connect(m_pView->getDoubleView()->getDataViewer(), &CDataViewer::doGraphicsChanged, m_pModel->getGraphicsManager(), &CGraphicsManager::onGraphicsChanged);
     connect(m_pView->getDoubleView()->getDataViewer(), &CDataViewer::doGraphicsRemoved, m_pModel->getGraphicsManager(), &CGraphicsManager::onGraphicsRemoved);
@@ -348,6 +346,8 @@ void CMainCtrl::initResultsConnections()
     connect(m_pModel->getResultManager(), &CResultManager::doAddResultWidget, m_pView->getDoubleView(), &CDoubleView::onAddResultWidget);
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayDnnDataset, m_pView->getDoubleView(), &CDoubleView::onDisplayMultiImage);
     connect(m_pModel->getResultManager(), &CResultManager::doDisplayText, m_pView->getDoubleView(), &CDoubleView::onDisplayResultText);
+    connect(m_pModel->getResultManager(), &CResultManager::doDisplayJson, m_pView->getDoubleView(), &CDoubleView::onDisplayResultJson);
+    connect(m_pModel->getResultManager(), &CResultManager::doDisplayScene3d, m_pView->getDoubleView(), &CDoubleView::onDisplayResultScene3d);
 
     //Result manager -> result viewer
     connect(m_pModel->getResultManager(), &CResultManager::doApplyViewProperty, m_pView->getDoubleView()->getResultsViewer(), &CResultsViewer::onApplyViewProperty); 
@@ -544,11 +544,15 @@ void CMainCtrl::initDataConnections()
 
     //Image manager -> Double view
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayVolume, m_pView->getDoubleView(), &CDoubleView::onDisplayVolume);
+    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayPosition, m_pView->getDoubleView(), &CDoubleView::onDisplayPosition);
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doDisplayImage, m_pView->getDoubleView(), &CDoubleView::onDisplayImage);    
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doCurrentDataChanged, m_pView->getDoubleView(), &CDoubleView::onInputDataChanged);
 
     //Image manager -> Workflow manager
     connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doInputDataChanged, m_pModel->getWorkflowManager(), &CWorkflowManager::onInputDataChanged);
+
+    //Image manager -> Graphics manager
+    connect(m_pModel->getDataManager()->getImgMgr(), &CImgManager::doInputDataChanged, m_pModel->getGraphicsManager(), &CGraphicsManager::onInputDataChanged);
 
     //Double view -> Main data manager
     connect(m_pView->getDoubleView(), &CDoubleView::doSetSelectedDisplay, m_pModel->getDataManager(), &CMainDataManager::onSetSelectedDisplay);

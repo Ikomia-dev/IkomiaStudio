@@ -628,9 +628,13 @@ void CProjectPane::onTreeViewClicked(const QModelIndex& index)
 
         m_currentIndex = index;
 
-        // Manage closing camera if needed
+        // Update current selection
+        onUpdateSelectedIndex(index);
+        // Manage item change to clean previous resources
         emit doUpdateProjectModelIndex(index);
+        // Update current index in view
         emit doUpdateIndex(index);
+        // Display data
         emit doDisplayData(index);
     }
 }

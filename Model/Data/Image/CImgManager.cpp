@@ -74,8 +74,11 @@ CMat CImgManager::getImage(const QModelIndex& wrapIndex)
     size_t imageIndex = pDataset->getDataInfo().index(indices);
     auto bounds = pDataset->subsetBounds(imageIndex);
 
-    if(pDataset->hasDimension(DataDimension::VOLUME))
+    if(pDataset->hasDimension(DataDimension::VOLUME) ||
+    	pDataset->hasDimension(DataDimension::POSITION))
+    {
         Utils::Data::setSubsetBounds(bounds, DataDimension::IMAGE, 0, pDataset->size(DataDimension::IMAGE)-1);
+    }
 
     //Progress bar
     if(Utils::Data::getSubsetBoundsSize(bounds) > 1 && pDataset->subset().contains(bounds) == false)
@@ -106,8 +109,11 @@ CMat CImgManager::getImage(const QModelIndex &datasetWrapIndex, int imgIndex)
 
     auto bounds = pDataset->subsetBounds(imgIndex);
 
-    if(pDataset->hasDimension(DataDimension::VOLUME))
+    if(pDataset->hasDimension(DataDimension::VOLUME) ||
+    	pDataset->hasDimension(DataDimension::POSITION))
+    {
         Utils::Data::setSubsetBounds(bounds, DataDimension::IMAGE, 0, pDataset->size(DataDimension::IMAGE)-1);
+    }
 
     // Progress bar
     if(Utils::Data::getSubsetBoundsSize(bounds) > 1 && pDataset->subset().contains(bounds) == false)
@@ -181,7 +187,79 @@ void CImgManager::displayVolumeImage(CImageScene* pScene, const QModelIndex& ind
 
     // Check if we must load a new 3D volume
     if(bNewSequence)
-    {        
+    {
+        // Stack has changed, we must update the number of slices/planes
+        emit doUpdateNbImg(image.getNbStacks());
+        // Notify view that data changed
+        emit doCurrentDataChanged(index, bNewSequence);
+        // Notify 3D render to update volume
+        m_pRenderMgr->updateVolumeRenderInput(image);
+        // Load results
+        m_pResultMgr->loadImageResults(index);
+    }
+    else
+    {
+        bool bTypeHasChanged = false;
+        QModelIndex currentDataItemIndex = m_pProjectMgr->getCurrentDataItemIndex();
+
+        // Check if item type has changed
+        if(currentDataItemIndex.isValid())
+        {
+            auto wrapCurrentInd = m_pProjectMgr->wrapIndex(currentDataItemIndex);
+            auto wrapNewInd = wrapIndex;
+            auto pCurrentItem = static_cast<ProjectTreeItem*>(wrapCurrentInd.internalPointer());
+            auto pNewItem = static_cast<ProjectTreeItem*>(wrapNewInd.internalPointer());
+            bTypeHasChanged = pCurrentItem->getTypeId() != pNewItem->getTypeId();
+        }
+        // Notify view that data changed -> affichage d'éventuels résultats
+        if(bTypeHasChanged)
+            emit doCurrentDataChanged(index, bNewSequence);
+
+        // Notify view to display image result associated with current image
+        m_pResultMgr->setCurrentOutputImage(index);
+    }
+
+    //Load associated graphics and protocols
+    m_pGraphicsMgr->loadAllGraphics(index);
+    // Notify view that index changed
+    emit doUpdateCurrentImgIndex(currentImgIndex);
+    // Notify protocol that image changed
+    emit doInputDataChanged(index, 0, bNewSequence);
+
+    // Display image info
+    if(m_bInfoUpdate)
+        displayImageInfo(image, wrapIndex);
+}
+
+void CImgManager::displayPositionImage(CImageScene* pScene, const QModelIndex& index, const QModelIndex& wrapIndex, bool bNewSequence)
+{
+    assert(m_pProjectMgr);
+    assert(m_pResultMgr);
+
+    // Get image
+    auto image = getImage(wrapIndex);
+    if(!image.data)
+    {
+        //qCCritical(logProject).noquote() << tr("Display image failed : invalid image");
+        return;
+    }
+    // Get indices
+    DimensionIndices indices = CProjectUtils::getIndicesInDataset(wrapIndex);
+    if(indices.size() == 0)
+    {
+        //qCCritical(logProject).noquote() << tr("Invalid image index");
+        return;
+    }
+    // Image is a position image dataset, load the appropriate slice/plane
+    auto currentImgIndex = Utils::Data::getDimensionSize(indices, DataDimension::IMAGE);
+    CMat plane = image.getPlane(currentImgIndex);
+
+    // Notify view to display new slice/plane
+    emit doDisplayPosition(pScene, CDataConversion::CMatToQImage(plane), index.data(Qt::DisplayRole).toString(), bNewSequence, nullptr);
+
+    // Check if we must load a new position dataset image
+    if(bNewSequence)
+    {
         // Stack has changed, we must update the number of slices/planes
         emit doUpdateNbImg(image.getNbStacks());
         // Notify view that data changed

@@ -332,6 +332,7 @@ QPixmap CWorkflowIOArea::getThumbnailIcon(const std::shared_ptr<CWorkflowTaskIO>
         case IODataType::VIDEO:
         case IODataType::VIDEO_LABEL:
         case IODataType::VIDEO_BINARY:
+        case IODataType::POSITION:
             return getImageIcon(std::dynamic_pointer_cast<CImageIO>(inputPtr), isBatch);
 
         case IODataType::LIVE_STREAM:
@@ -355,6 +356,8 @@ QPixmap CWorkflowIOArea::getThumbnailIcon(const std::shared_ptr<CWorkflowTaskIO>
         case IODataType::DESCRIPTORS:
         case IODataType::DNN_DATASET:
         case IODataType::ARRAY:
+        case IODataType::JSON:
+        case IODataType::SCENE_3D:
             return QPixmap(":/Images/help.png").scaled(m_thumbnailSize);
     }
     return QPixmap();
