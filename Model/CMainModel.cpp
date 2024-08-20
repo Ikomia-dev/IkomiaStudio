@@ -408,8 +408,8 @@ void CMainModel::initPython()
 
 void CMainModel::initMatomo()
 {
-    PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getMatomoUrl()), MATOMO_APP_ID);
-    pPiwikTracker->sendVisit("main", "Application_Started");
+    PiwikTracker* pPiwikTracker = new PiwikTracker(qApp, QUrl(Utils::Network::getPiwikUrl()), _piwik_site_id);
+    pPiwikTracker->sendEvent("main", "general", "start", "application-started");
 }
 
 void CMainModel::writeLogMsg(int type, const QString& msg, const QString& categoryName)

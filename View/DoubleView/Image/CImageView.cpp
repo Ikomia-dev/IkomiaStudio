@@ -32,6 +32,7 @@
 #include "Graphics/CGraphicsLayer.h"
 #include <chrono>
 #include <cmath>
+#include "UtilsTools.hpp"
 
 CImageView::CImageView (QWidget* parent) : QGraphicsView(parent)
 {
@@ -364,7 +365,7 @@ void CImageView::initConnections()
 
 void CImageView::onScalingTime()
 {
-     qreal factor = 1.0+ qreal(m_numScheduledScalings) / 300.0;
+     qreal factor = 1.0 + qreal(m_numScheduledScalings) / 300.0;
      scale(factor, factor);
 
      // Keep zoom under mouse using projection in newly zoomed scene and calculation of translation
@@ -379,13 +380,15 @@ void CImageView::onAnimFinished()
 
 void CImageView::smoothZoom(QWheelEvent* event)
 {
-    int numDegrees = event->delta() / 8;
-    int numSteps = numDegrees / 15; // see QWheelEvent documentation
+    int numDegrees = event->angleDelta().y() / 8;
+    int wheelSensitivity = 10; // 15 in QWheelEvent documentation
+    int numSteps = numDegrees / wheelSensitivity;
     m_numScheduledScalings += numSteps;
     m_bZoomFit = false;
 
-    if (m_numScheduledScalings * numSteps < 0) // if user moved the wheel in another direction, we reset previously scheduled scalings
-       m_numScheduledScalings = numSteps;
+    // if user moved the wheel in another direction, we reset previously scheduled scalings
+    if ((numDegrees ^ m_numScheduledScalings) < 0)
+        m_numScheduledScalings = numSteps;
 
     if(m_pTimeLine->state() == QTimeLine::Running)
         return;

@@ -165,17 +165,20 @@ void CNotificationPane::initParams()
 
     m_categoryList = {
         "Default",
-        "Workflow",
-        "Project",
-        "Render",
         "Graphics",
-        "Results",
+        "Hub",
+        "Image",
         "Plugin",
+        "Process",
+        "Progress",
+        "Project",
+        "Python",
+        "Render",
+        "Results",
         "User",
         "Video",
-        "Progress",
-        "Process",
-        "Store"
+        "Wizard",
+        "Workflow"
     };
 
     int ind = 1;

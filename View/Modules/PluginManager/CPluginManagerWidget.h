@@ -50,6 +50,7 @@ class CPluginManagerWidget : public QWidget
         void    doShowLocation(const QString& pluginName, int language);
         void    doInstallPythonPkg(const QString& moduleName);
         void    doUpdatePythonPkg(const QString& moduleName);
+        void    doInstallRequirements(const QString& pluginName);
 
     private:
 

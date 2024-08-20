@@ -500,6 +500,18 @@ void CProcessManager::onUpdateProcessInfo(bool bFullEdit, const CTaskInfo &info)
     updateTableModelQuery();
 }
 
+void CProcessManager::onInstallPluginRequirements(const QString &name)
+{
+    try
+    {
+        Utils::Plugin::installRequirements(name.toStdString());
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logProcess).noquote() << QString::fromStdString(e.what());
+    }
+}
+
 void CProcessManager::fillModel(QSqlQuery query)
 {
     while (query.next())

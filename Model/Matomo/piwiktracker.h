@@ -35,7 +35,7 @@ class PiwikTracker : public QObject {
 public:
     explicit PiwikTracker(QCoreApplication * parent,
                           QUrl trackerUrl,
-                          int siteId,
+                          QString siteId,
                           QString clientId = "");
     void sendVisit(const QString& path, const QString& actionName = "");
     void sendPing();
@@ -52,11 +52,12 @@ private:
     mutable QNetworkAccessManager _networkAccessManager;
     QString _appName;
     QUrl _trackerUrl;
-    int _siteId;
+    QString _siteId;
     QString _clientId;
     QString _screenResolution;
     QString _userAgent;
     QString _userLanguage;
+    const QString _trackerPage = "ppms.php";
     QHash<int, QString> _customDimensions;
     QHash<QString, QString> _visitVariables;
     QUrlQuery prepareUrlQuery(const QString& path);

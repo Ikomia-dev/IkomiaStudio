@@ -228,6 +228,8 @@
         <file>Images/stretch.svg</file>
         <file>Images/treeview.svg</file>
         <file>Images/target.svg</file>
+        <file>Images/install.png</file>
+        <file>Images/eye-color.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>

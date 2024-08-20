@@ -146,6 +146,19 @@ void CPythonPluginManagerWidget::onUpdateDependency()
     }
 }
 
+void CPythonPluginManagerWidget::onInstallRequirements()
+{
+    auto pModel = static_cast<CPluginPythonModel*>(m_pPluginsView->model());
+    QItemSelectionModel* pSelectionModel = m_pPluginsView->selectionModel();
+    QModelIndexList indexes = pSelectionModel->selectedRows();
+
+    if(indexes.size() > 0)
+    {
+        QStandardItem* pItem = pModel->itemFromIndex(indexes.first());
+        emit doInstallRequirements(pItem->data(Qt::DisplayRole).toString());
+    }
+}
+
 void CPythonPluginManagerWidget::initLayout()
 {
     m_pPluginsView = new QTableView();
@@ -155,6 +168,7 @@ void CPythonPluginManagerWidget::initLayout()
     m_pNewBtn = createButton(QIcon(":/Images/new.png"), tr("Create new plugin..."));
     m_pReloadBtn = createButton(QIcon(":/Images/update.png"), tr("Reload selected plugin"));
     m_pReloadAllBtn = createButton(QIcon(":/Images/update-all.png"), tr("Reload all plugins"));
+    m_pInstallBtn = createButton(QIcon(":/Images/install.png"), tr("Install selected plugin requirements"));
     m_pEditBtn = createButton(QIcon(":/Images/edit.png"), tr("Edit plugin"));
     m_pShowLocationBtn = createButton(QIcon(":/Images/show-location.png"), tr("Show location"));
 
@@ -162,6 +176,7 @@ void CPythonPluginManagerWidget::initLayout()
     pPluginBtnLayout->addWidget(m_pNewBtn);
     pPluginBtnLayout->addWidget(m_pReloadBtn);
     pPluginBtnLayout->addWidget(m_pReloadAllBtn);
+    pPluginBtnLayout->addWidget(m_pInstallBtn);
     pPluginBtnLayout->addWidget(m_pEditBtn);
     pPluginBtnLayout->addWidget(m_pShowLocationBtn);
     pPluginBtnLayout->addStretch(1);
@@ -169,8 +184,8 @@ void CPythonPluginManagerWidget::initLayout()
     m_pDependenciesView = new QTableView;
     m_pDependenciesView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    m_pInstallPkgBtn = createButton(QIcon(":/Images/add.png"), tr("Install selected plugin"));
-    m_pUpdatePkgBtn = createButton(QIcon(":/Images/update.png"), tr("Update selected plugin"));
+    m_pInstallPkgBtn = createButton(QIcon(":/Images/install.png"), tr("Install selected package"));
+    m_pUpdatePkgBtn = createButton(QIcon(":/Images/update.png"), tr("Update selected package"));
 
     auto pDependencyBtnLayout = new QVBoxLayout;
     pDependencyBtnLayout->addWidget(m_pInstallPkgBtn);
@@ -192,6 +207,7 @@ void CPythonPluginManagerWidget::initConnections()
     connect(m_pNewBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onNewPlugin);
     connect(m_pReloadBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onReloadPlugin);
     connect(m_pReloadAllBtn, &QPushButton::clicked, [&]{ emit doReloadAll(); });
+    connect(m_pInstallBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onInstallRequirements);
     connect(m_pEditBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onEditPlugin);
     connect(m_pShowLocationBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onShowLocation);
     connect(m_pInstallPkgBtn, &QPushButton::clicked, this, &CPythonPluginManagerWidget::onInstallDependency);

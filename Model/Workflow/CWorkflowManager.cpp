@@ -210,6 +210,12 @@ void CWorkflowManager::setCurrentTaskSaveFormat(size_t outputIndex, DataFileForm
         outputPtr->setSaveFormat(format);
 }
 
+void CWorkflowManager::setCurrentTaskExposedOutputDescription(int index, const std::string &description)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->setExposedOutputDescription(taskId, index, description);
+}
+
 void CWorkflowManager::setWorkflowConfig(const std::string &key, const std::string &value)
 {
     if(m_pWorkflow)
@@ -248,6 +254,16 @@ std::vector<int> CWorkflowManager::getDisplayedInputIndices(const WorkflowTaskPt
         }
     }
     return inputIndices;
+}
+
+CWorkflow::ExposedParams CWorkflowManager::getWorflowExposedParams() const
+{
+    if (m_pWorkflow == nullptr)
+    {
+        qCCritical(logWorkflow()).noquote() << tr("No workflow instance found.");
+        return CWorkflow::ExposedParams();
+    }
+    return m_pWorkflow->getExposedParameters();
 }
 
 void CWorkflowManager::notifyViewShow()
@@ -386,6 +402,20 @@ bool CWorkflowManager::isBatchInput(size_t index) const
     }
     else
         return false;
+}
+
+bool CWorkflowManager::isCurrentTaskOutputExposed(size_t index) const
+{
+    auto activeTaskId = getActiveTaskId();
+    std::vector<CWorkflowOutput> outputs = m_pWorkflow->getExposedOutputs();
+
+    for (size_t i=0; i<outputs.size(); ++i)
+    {
+        auto taskId = reinterpret_cast<WorkflowVertex>(outputs[i].getTaskId());
+        if (taskId == activeTaskId && outputs[i].getTaskOutputIndex() == index)
+            return true;
+    }
+    return false;
 }
 
 void CWorkflowManager::createWorkflow(const std::string &name, const std::string &keywords, const std::string &description)
@@ -832,6 +862,14 @@ WorkflowTaskPtr CWorkflowManager::getActiveTask() const
         auto pCurrentTask = m_pWorkflow->getTask(id);
         return pCurrentTask;
     }
+}
+
+WorkflowVertex CWorkflowManager::getActiveTaskId() const
+{
+    if(m_pWorkflow)
+        return m_pWorkflow->getActiveTaskId();
+    else
+        return boost::graph_traits<WorkflowGraph>::null_vertex();
 }
 
 int CWorkflowManager::getWorkflowDbId() const
@@ -1999,6 +2037,36 @@ void CWorkflowManager::playVideoInput(size_t index)
 
     updateVideoInputIndex(index);
     m_pDataMgr->getVideoMgr()->play(m_inputs[m_currentVideoInputIndex].getModelIndex(0), index);
+}
+
+void CWorkflowManager::exposeTaskParameters(const WorkflowVertex &taskId, const CWorkflow::ExposedParams &params)
+{
+    assert(m_pWorkflow);
+
+    // Remove previous exposed parameters for this task
+    CWorkflow::ExposedParams exposedParams = m_pWorkflow->getExposedParameters();
+    for (auto it=exposedParams.begin(); it!=exposedParams.end(); ++it)
+    {
+        auto id = reinterpret_cast<WorkflowVertex>(it->second.getTaskId());
+        if (id == taskId)
+            m_pWorkflow->removeExposedParameter(it->first);
+    }
+
+    // Add exposed parameters for the given task
+    for (auto it=params.begin(); it!=params.end(); ++it)
+        m_pWorkflow->addExposedParameter(it->second.getName(), it->second.getDescription(), taskId, it->second.getTaskParamName());
+}
+
+void CWorkflowManager::exposeCurrentTaskOutput(int outputIndex)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->addOutput("", taskId, outputIndex);
+}
+
+void CWorkflowManager::removeCurrentTaskExposedOutput(int outputIndex)
+{
+    auto taskId = getActiveTaskId();
+    m_pWorkflow->removeOutput(taskId, outputIndex);
 }
 
 #include "moc_CWorkflowManager.cpp"

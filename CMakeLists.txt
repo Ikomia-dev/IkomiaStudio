@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-set(IKOMIA_VERSION 0.10.0)
-project(IkomiaStudio VERSION 0.10.0 LANGUAGES CXX)
+set(IKOMIA_VERSION 0.11.1)
+project(IkomiaStudio VERSION 0.11.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/Build)
@@ -56,14 +56,7 @@ else()
     find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
 endif()
 
-
-
-###################################################
-##                                               ##
-##          Looking for the VTK library          ##
-##                                               ##
-###################################################
-
+# VTK
 find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
     COMPONENTS
         vtkCommonCore
@@ -99,9 +92,8 @@ if(VTK_FOUND)
     include(${VTK_USE_FILE})
     message("-- Found VTK: " ${VTK_USE_FILE} " (found suitable exact version \"${VTK_VERSION}\")")
 else()
-	message ("-- VTK not found")
+    message ("-- VTK not found")
 endif(VTK_FOUND)
-
 
 
 add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
@@ -439,6 +431,8 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     View/Modules/Workflow/CWorkflowView.h
     View/Modules/Workflow/CWorkflowPublishDlg.h
     View/Modules/Workflow/CWorkflowPublishDlg.cpp
+    View/Modules/Workflow/CWorkflowExposeParamsDlg.h
+    View/Modules/Workflow/CWorkflowExposeParamsDlg.cpp
     View/Notifications/CNotificationPane.cpp
     View/Notifications/CNotificationPane.h
     View/Notifications/CNotificationPopup.cpp
@@ -572,6 +566,8 @@ target_link_directories(IkomiaStudio PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
     # Quazip
     ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
+    # OpenCL
+    "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/lib/x64"
 )
 
 target_link_libraries(IkomiaStudio PRIVATE

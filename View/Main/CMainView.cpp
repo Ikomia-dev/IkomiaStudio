@@ -370,6 +370,7 @@ void CMainView::initPluginMakerModule()
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doGetPythonQueryModel, [&]{ emit doGetPythonQueryModel(); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doReloadAll, [&]{ emit doReloadAllPlugins(); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doReload, [&](const QString& pluginName, int language){ emit doReloadPlugin(pluginName, language); });
+        connect(m_pPluginMgrModule, &CPluginManagerWidget::doInstallRequirements, [&](const QString& pluginName){ emit doInstallPluginRequirements(pluginName); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doEditPythonPlugin, [&](const QString& pluginName){ emit doEditPythonPlugin(pluginName); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doShowLocation, [&](const QString& pluginName, int language){ emit doShowPluginLocation(pluginName, language); });
         connect(m_pPluginMgrModule, &CPluginManagerWidget::doGetPythonDependencyModel, [&](const QString& pluginName){ emit doGetPythonDependencyModel(pluginName); });
@@ -418,7 +419,7 @@ void CMainView::initConnections()
     {
         QSettings IkomiaSettings;
         QStringList files = QFileDialog::getOpenFileNames(  this, tr("Choose image files"), IkomiaSettings.value(_DefaultDirImg).toString(),
-                                                            tr("All images (*.jpg * JPG *.jpeg *.JPEG *.tif *.TIF *.tiff *.TIFF *.png *.PNG *.bmp *.BMP *.jp2 *.JP2 *.pgm *.PGM *.exr *.EXR *.hdr *.HDR *.ppm *.PPM *.webp *.WEBP)"), nullptr,
+                                                            tr("All images (*.jpg *.JPG *.jpeg *.JPEG *.tif *.TIF *.tiff *.TIFF *.png *.PNG *.bmp *.BMP *.jp2 *.JP2 *.pgm *.PGM *.exr *.EXR *.hdr *.HDR *.ppm *.PPM *.webp *.WEBP)"), nullptr,
                                                             CSettingsManager::dialogOptions() );
         if(files.size() > 0)
         {

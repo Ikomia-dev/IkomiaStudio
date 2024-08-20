@@ -29,7 +29,10 @@ QString CWorkflowPublishDlg::getProjectName() const
     if (m_pRadioNewProject->isChecked())
         return m_pNewProjectName->text();
     else
-        return m_pComboProject->currentData().toString();
+    {
+        QJsonObject project = getProjectFromPath(m_pComboProject->currentData().toString());
+        return project["name"].toString();
+    }
 }
 
 QString CWorkflowPublishDlg::getProjectDescription() const
@@ -37,7 +40,10 @@ QString CWorkflowPublishDlg::getProjectDescription() const
     if (m_pRadioNewProject->isChecked())
         return m_pNewProjectDescription->toPlainText();
     else
-        return "";
+    {
+        QJsonObject project = getProjectFromPath(m_pComboProject->currentData().toString());
+        return project["description"].toString();
+    }
 }
 
 QString CWorkflowPublishDlg::getNamespacePath() const
@@ -45,7 +51,7 @@ QString CWorkflowPublishDlg::getNamespacePath() const
     if (m_pRadioNewProject->isChecked())
         return m_pComboNamespace->currentData().toString();
     else
-        return "";
+        return m_pComboProject->currentData().toString();
 }
 
 bool CWorkflowPublishDlg::isNewProject() const
@@ -83,7 +89,7 @@ void CWorkflowPublishDlg::initLayout(const CUser &user)
     {
         QJsonObject project = m_projects[i].toObject();
         auto displayName = getProjectDisplayName(project);
-        m_pComboProject->addItem(displayName, project["name"].toString());
+        m_pComboProject->addItem(displayName, project["path"].toString());
     }
 
     auto pExistingProjectLayout = new QGridLayout();
@@ -177,6 +183,17 @@ QString CWorkflowPublishDlg::getProjectDisplayName(const QJsonObject& project) c
         name += " )";
     }
     return name;
+}
+
+QJsonObject CWorkflowPublishDlg::getProjectFromPath(const QString &path) const
+{
+    for (int i=0; i<m_projects.size(); ++i)
+    {
+        QJsonObject project = m_projects[i].toObject();
+        if (project["path"].toString() == path)
+            return project;
+    }
+    return QJsonObject();
 }
 
 void CWorkflowPublishDlg::validate()

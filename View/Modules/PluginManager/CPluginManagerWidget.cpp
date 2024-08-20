@@ -81,6 +81,10 @@ void CPluginManagerWidget::initConnections()
     {
         emit doReload(pluginName, ApiLanguage::PYTHON);
     });
+    connect(m_pPythonWidget, &CPythonPluginManagerWidget::doInstallRequirements, [&](const QString& pluginName)
+    {
+        emit doInstallRequirements(pluginName);
+    });
     connect(m_pPythonWidget, &CPythonPluginManagerWidget::doEdit, [&](const QString& pluginName)
     {
         emit doEditPythonPlugin(pluginName);

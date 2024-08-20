@@ -503,6 +503,7 @@ void CMainCtrl::initPluginConnections()
     connect(m_pView, &CMainView::doGetPythonQueryModel, m_pModel->getPluginManager(), &CPluginManager::onRequestPythonModel);
     connect(m_pView, &CMainView::doReloadAllPlugins, m_pModel->getProcessManager(), &CProcessManager::onReloadAllPlugins);
     connect(m_pView, &CMainView::doReloadPlugin, m_pModel->getProcessManager(), &CProcessManager::onReloadPlugin);
+    connect(m_pView, &CMainView::doInstallPluginRequirements, m_pModel->getProcessManager(), &CProcessManager::onInstallPluginRequirements);
 
     //View -> plugin model
     connect(m_pView, &CMainView::doEditPythonPlugin, m_pModel->getPluginManager(), &CPluginManager::onEditPythonPlugin);

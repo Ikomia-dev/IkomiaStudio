@@ -81,7 +81,7 @@ void CWorkflowScaleManager::publishWorkflow(const QString &path, bool bNewProjec
         for (int i=0; i<m_projects.size(); ++i)
         {
             QJsonObject project = m_projects[i].toObject();
-            if (project["name"].toString() == projectName)
+            if (project["path"].toString() == namespacePath)
             {
                 projectUrl = project["url"].toString();
                 break;

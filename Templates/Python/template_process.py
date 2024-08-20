@@ -23,7 +23,7 @@ class _PluginClassName_Param(core.CWorkflowTaskParam):
         # Send parameters values to Ikomia Studio or API
         # Create the specific dict structure (string container)
         params = {}
-        # Example : paramMap["window_size"] = str(self.window_size)
+        # Example : params["window_size"] = str(self.window_size)
         return params
 
 
@@ -99,19 +99,35 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         self.info.authors = "algorithm author"
         self.info.article = "title of associated research article"
         self.info.journal = "publication journal"
-        self.info.year = 2021
-        self.info.license = "MIT License"
+        self.info.year = 2024
+        self.info.license = ""
+
+        # Ikomia API compatibility
+        # self.info.min_ikomia_version = "0.11.1"
+        # self.info.max_ikomia_version = "0.11.1"
+
+        # Python compatibility
+        # self.info.min_python_version = "3.10.0"
+        # self.info.max_python_version = "3.11.0"
+
         # URL of documentation
         self.info.documentation_link = ""
+
         # Code source repository
         self.info.repository = ""
         self.info.original_repository = ""
+
         # Keywords used for search
         self.info.keywords = "your,keywords,here"
-        # General type
-        self.info.algo_type = core.AlgoType.OTHER
-        # Algorithms tasks
-        self.info.algo_tasks = ""
+
+        # General type: INFER, TRAIN, DATASET or OTHER
+        # self.info.algo_type = core.AlgoType.OTHER
+
+        # Algorithms tasks: CLASSIFICATION, COLORIZATION, IMAGE_CAPTIONING, IMAGE_GENERATION,
+        # IMAGE_MATTING, INPAINTING, INSTANCE_SEGMENTATION, KEYPOINTS_DETECTION,
+        # OBJECT_DETECTION, OBJECT_TRACKING, OCR, OPTICAL_FLOW, OTHER, PANOPTIC_SEGMENTATION,
+        # SEMANTIC_SEGMENTATION or SUPER_RESOLUTION
+        # self.info.algo_tasks = "OTHER"
 
     def create(self, param=None):
         # Create algorithm object

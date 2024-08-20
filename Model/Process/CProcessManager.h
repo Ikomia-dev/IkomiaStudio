@@ -179,6 +179,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         void                    onQueryWidgetInstance(const std::string& processName);
         void                    onQueryProcessInfo(const std::string& processName);
         void                    onUpdateProcessInfo(bool bFullEdit, const CTaskInfo& info);
+        void                    onInstallPluginRequirements(const QString& name);
 
     protected:
 

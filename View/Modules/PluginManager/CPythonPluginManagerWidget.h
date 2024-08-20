@@ -47,6 +47,7 @@ class CPythonPluginManagerWidget : public QWidget
         void            doGetPluginDependencyModel(const QString& pluginName);
         void            doInstall(const QString& moduleName);
         void            doUpdate(const QString& moduleName);
+        void            doInstallRequirements(const QString& pluginName);
 
     private slots:
 
@@ -57,6 +58,7 @@ class CPythonPluginManagerWidget : public QWidget
         void            onPluginSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
         void            onInstallDependency();
         void            onUpdateDependency();
+        void            onInstallRequirements();
 
     private:
 
@@ -78,6 +80,7 @@ class CPythonPluginManagerWidget : public QWidget
         QPushButton*        m_pShowLocationBtn = nullptr;
         QPushButton*        m_pInstallPkgBtn = nullptr;
         QPushButton*        m_pUpdatePkgBtn = nullptr;
+        QPushButton*        m_pInstallBtn = nullptr;
 
 };
 
