@@ -266,6 +266,11 @@ CWorkflow::ExposedParams CWorkflowManager::getWorflowExposedParams() const
     return m_pWorkflow->getExposedParameters();
 }
 
+CWorkflowScaleManager *CWorkflowManager::getScaleManager()
+{
+    return &m_scaleMgr;
+}
+
 void CWorkflowManager::notifyViewShow()
 {
     loadWorkflows();

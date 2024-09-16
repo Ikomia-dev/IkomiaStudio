@@ -68,6 +68,7 @@ class CWorkflowManager : public QObject
         QModelIndex                 getCurrentVideoInputModelIndex() const;
         std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
         CWorkflow::ExposedParams    getWorflowExposedParams() const;
+        CWorkflowScaleManager*      getScaleManager();
 
         //Setters
         void                        setManagers(QNetworkAccessManager *pNetMgr, CProcessManager* pProcessMgr, CProjectManager* pProjectMgr, CGraphicsManager* pGraphicsMgr,
