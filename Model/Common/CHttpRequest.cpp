@@ -1,17 +1,36 @@
 #include "CHttpRequest.h"
+#include "UtilsTools.hpp"
 
 CHttpRequest::CHttpRequest(const QString &url): QNetworkRequest()
 {
     setValidUrl(url);
     setRawHeader("User-Agent", "Ikomia Studio");
-    setRawHeader("Content-Type", "application/json");
 }
 
-CHttpRequest::CHttpRequest(const QString &url, const CUser &user): QNetworkRequest()
+CHttpRequest::CHttpRequest(const QString &url, const QString& contentType): QNetworkRequest()
 {
     setValidUrl(url);
     setRawHeader("User-Agent", "Ikomia Studio");
-    setRawHeader("Content-Type", "application/json");
+
+    if (!contentType.isEmpty())
+        setRawHeader("Content-Type", contentType.toUtf8());
+}
+
+CHttpRequest::CHttpRequest(const QString &url, const CUser &user)
+{
+    setValidUrl(url);
+    setRawHeader("User-Agent", "Ikomia Studio");
+    setUserAuth(user);
+}
+
+CHttpRequest::CHttpRequest(const QString &url, const QString &contentType, const CUser &user)
+{
+    setValidUrl(url);
+    setRawHeader("User-Agent", "Ikomia Studio");
+
+    if (!contentType.isEmpty())
+        setRawHeader("Content-Type", contentType.toUtf8());
+
     setUserAuth(user);
 }
 

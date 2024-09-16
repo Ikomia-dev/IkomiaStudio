@@ -135,7 +135,7 @@ void CWorkflowScaleManager::requestProjects(const QString &strUrl)
     assert(m_pNetworkMgr);
     try
     {
-        CHttpRequest request(strUrl, m_user);
+        CHttpRequest request(strUrl, "application/json", m_user);
         auto pReply = m_pNetworkMgr->get(request);
         connect(pReply, &QNetworkReply::finished, [=](){
            this->onReplyReceived(pReply, RequestType::GET_PROJECTS);
@@ -178,7 +178,7 @@ void CWorkflowScaleManager::createProject(const QString &name, const QString &de
 
     try
     {
-        CHttpRequest request(strUrl, m_user);
+        CHttpRequest request(strUrl, "application/json", m_user);
         QJsonObject project;
         project["name"] = name;
         project["description"] = description;

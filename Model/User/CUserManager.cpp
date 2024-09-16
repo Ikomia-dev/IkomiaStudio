@@ -237,7 +237,7 @@ void CUserManager::createAuthToken(const QString &username, const QString &pwd)
 
     try
     {
-        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/tokens/");
+        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/tokens/", "application/json");
         request.setRawHeader("Authorization", headerAuthData.toLocal8Bit());
         auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
         connect(pReply, &QNetworkReply::finished, [=](){
@@ -325,7 +325,7 @@ void CUserManager::retrieveUserInfo()
     try
     {
         //Http request to retrieve logged user info
-        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/", m_currentUser);
+        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/", "application/json", m_currentUser);
         auto pReply = m_pNetworkMgr->get(request);
         connect(pReply, &QNetworkReply::finished, [=](){
             this->onReplyReceived(pReply, Request::GET_USER);
@@ -345,7 +345,7 @@ void CUserManager::retrieveUserNamespaces(const QString& strUrl)
     try
     {
         //Http request to retrieve logged user namespaces
-        CHttpRequest request(strUrl, m_currentUser);
+        CHttpRequest request(strUrl, "application/json", m_currentUser);
         auto pReply = m_pNetworkMgr->get(request);
         connect(pReply, &QNetworkReply::finished, [=](){
            this->onReplyReceived(pReply, Request::GET_NAMESPACES);

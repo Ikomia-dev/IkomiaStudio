@@ -10,7 +10,9 @@ class CHttpRequest : public QNetworkRequest
     public:
 
         CHttpRequest(const QString& url);
+        CHttpRequest(const QString& url, const QString& contentType);
         CHttpRequest(const QString& url, const CUser& user);
+        CHttpRequest(const QString& url, const QString& contentType, const CUser& user);
 
         void        setUserAuth(const CUser& user);
 

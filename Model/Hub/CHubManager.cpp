@@ -103,7 +103,7 @@ void CHubManager::onRequestNextPublishInfo(const QModelIndex &index)
 
     try
     {
-        CHttpRequest request(pluginInfo["url"].toString() + "publish/", m_currentUser);
+        CHttpRequest request(pluginInfo["url"].toString() + "publish/", "application/json", m_currentUser);
         auto pReply = m_pNetworkMgr->get(request);
         connect(pReply, &QNetworkReply::finished, [=]{
             this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::GET_NEXT_PUBLISH_INFO);
@@ -337,7 +337,7 @@ void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl
 
     try
     {
-        CHttpRequest request(strUrl);
+        CHttpRequest request(strUrl, "application/json");
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
@@ -360,7 +360,7 @@ void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
 
     try
     {
-        CHttpRequest request(strUrl);
+        CHttpRequest request(strUrl, "application/json");
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
@@ -390,7 +390,7 @@ void CHubManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& 
     try
     {
         //Http request to get plugin packages
-        CHttpRequest request(strUrl);
+        CHttpRequest request(strUrl, "application/json");
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
@@ -805,7 +805,7 @@ void CHubManager::updateWorkspacePlugin(const QString& name)
 
     try
     {
-        CHttpRequest request(plugin["url"].toString(), m_currentUser);
+        CHttpRequest request(plugin["url"].toString(), "application/json", m_currentUser);
         auto pReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", jsonPayload);
         connect(pReply, &QNetworkReply::finished, [=](){
            this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
@@ -1043,7 +1043,7 @@ void CHubManager::publishToHub(const QModelIndex& index, const QJsonObject& info
     try
     {
         m_bBusy = true;
-        CHttpRequest request(pluginInfo["url"].toString() + "publish/", m_currentUser);
+        CHttpRequest request(pluginInfo["url"].toString() + "publish/", "application/json", m_currentUser);
         QJsonDocument payload(info);
 
         auto pReply = m_pNetworkMgr->put(request, payload.toJson());
@@ -1103,7 +1103,7 @@ void CHubManager::publishPluginToWorkspace()
 
     try
     {
-        CHttpRequest request(ns.m_url + "algos/", m_currentUser);
+        CHttpRequest request(ns.m_url + "algos/", "application/json", m_currentUser);
         auto pReply = m_pNetworkMgr->post(request, jsonPayload);
         connect(pReply, &QNetworkReply::finished, [=](){
             this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
@@ -1298,7 +1298,7 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
     try
     {
         //Http request to get plugin packages
-        CHttpRequest request(packageUrl + "download/");
+        CHttpRequest request(packageUrl + "download/", "application/json");
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
