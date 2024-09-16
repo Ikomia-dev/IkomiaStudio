@@ -1,10 +1,10 @@
 #include "CWorkflowScaleManager.h"
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHttpPart>
 #include "UtilsTools.hpp"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "Model/Common/CHttpRequest.h"
 #include "Model/Workflow/CWorkflowPackage.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
 
@@ -98,6 +98,12 @@ void CWorkflowScaleManager::publishWorkflow(const QString &path, bool bNewProjec
     }
 }
 
+QString CWorkflowScaleManager::createPackage(const QString& workflowPath)
+{
+    CWorkflowPackage package(workflowPath);
+    return package.create();
+}
+
 void CWorkflowScaleManager::onUploadProgress(qint64 bytesSent, qint64 bytesTotal)
 {
     const float factor = 1024.0*1024.0;
@@ -127,27 +133,19 @@ QJsonObject CWorkflowScaleManager::getJsonObject(QNetworkReply *pReply, const QS
 void CWorkflowScaleManager::requestProjects(const QString &strUrl)
 {
     assert(m_pNetworkMgr);
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logWorkflow) << url.errorString();
+        CHttpRequest request(strUrl, m_user);
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+           this->onReplyReceived(pReply, RequestType::GET_PROJECTS);
+        });
+    }
+    catch (CException& e)
+    {
+        qCDebug(logWorkflow) << e.what();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_user.isConnected())
-        request.setRawHeader("Authorization", m_user.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, RequestType::GET_PROJECTS);
-    });
 }
 
 void CWorkflowScaleManager::fillProjects(QNetworkReply *pReply)
@@ -178,32 +176,24 @@ void CWorkflowScaleManager::createProject(const QString &name, const QString &de
     CUserNamespace ns = m_user.getNamespace(namespacePath);
     QString strUrl = ns.m_url + "projects/";
 
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logWorkflow) << url.errorString();
+        CHttpRequest request(strUrl, m_user);
+        QJsonObject project;
+        project["name"] = name;
+        project["description"] = description;
+        QJsonDocument payload(project);
+
+        auto pReply = m_pNetworkMgr->post(request, payload.toJson());
+        connect(pReply, &QNetworkReply::finished, [=](){
+           this->onReplyReceived(pReply, RequestType::CREATE_PROJECT);
+        });
+    }
+    catch (CException& e)
+    {
+        qCDebug(logWorkflow) << e.what();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_user.isConnected())
-        request.setRawHeader("Authorization", m_user.getAuthHeader());
-
-    QJsonObject project;
-    project["name"] = name;
-    project["description"] = description;
-    QJsonDocument payload(project);
-
-    auto pReply = m_pNetworkMgr->post(request, payload.toJson());
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, RequestType::CREATE_PROJECT);
-    });
 }
 
 void CWorkflowScaleManager::addProject(QNetworkReply *pReply)
@@ -218,52 +208,40 @@ void CWorkflowScaleManager::addProject(QNetworkReply *pReply)
 
 void CWorkflowScaleManager::publishWorkflowPackage(const QString &projectUrl)
 {
-    CWorkflowPackage package(m_wfPath);
     m_pProgressMgr->launchInfiniteProgress(tr("Package compression..."), false);
-    m_zipPath = package.create();
+    m_zipPath = createPackage(m_wfPath);
     m_pProgressMgr->endInfiniteProgress();
 
-    QUrlQuery urlQuery(projectUrl + "workflows/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(projectUrl + "workflows/", m_user);
+
+        // Build multi-part request
+        QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+        // Plugin package zip part
+        m_pPackageFile = new QFile(m_zipPath);
+        m_pPackageFile->open(QIODevice::ReadOnly);
+        QHttpPart filePart = request.createFilePart(m_pPackageFile, "archive", "application/zip");
+        pMultiPart->append(filePart);
+
+        // Progress bar
+        m_pProgressMgr->launchProgress(&m_progressSignal, m_pPackageFile->size() / 1024, tr("Uploading workflow package..."), false);
+
+        auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
+        pMultiPart->setParent(pNewReply);
+
+        connect(pNewReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pNewReply, RequestType::PUBLISH_WORKFLOW);
+        });
+        connect(pNewReply, &QNetworkReply::uploadProgress, this, &CWorkflowScaleManager::onUploadProgress);
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-
-    if (m_user.isConnected())
-        request.setRawHeader("Authorization", m_user.getAuthHeader());
-
-    // Build multi-part request
-    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-
-    // Plugin package zip part
-    m_pPackageFile = new QFile(m_zipPath);
-    m_pPackageFile->open(QIODevice::ReadOnly);
-    QHttpPart filePart;
-    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/zip"));
-    QString formData = QString("form-data; name=\"archive\"; filename=\"%1\"").arg(m_zipPath);
-    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-    filePart.setHeader(QNetworkRequest::ContentLengthHeader, m_pPackageFile->size());
-    filePart.setBodyDevice(m_pPackageFile);
-    pMultiPart->append(filePart);
-
-    // Progress bar
-    m_pProgressMgr->launchProgress(&m_progressSignal, m_pPackageFile->size() / 1024, tr("Uploading workflow package..."), false);
-
-    auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
-    pMultiPart->setParent(pNewReply);
-
-    connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, RequestType::PUBLISH_WORKFLOW);
-    });
-    connect(pNewReply, &QNetworkReply::uploadProgress, this, &CWorkflowScaleManager::onUploadProgress);
 }
 
 void CWorkflowScaleManager::clearContext()
