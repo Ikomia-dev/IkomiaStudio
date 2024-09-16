@@ -107,17 +107,19 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Main/forwards.hpp
     Main/main.cpp
     Main/pch.hpp
-    Model/CDbManager.cpp
-    Model/CDbManager.h
-    Model/CItem.hpp
+    Model/Common/CDbManager.cpp
+    Model/Common/CDbManager.h
+    Model/Common/CItem.hpp
     Model/CMainModel.cpp
     Model/CMainModel.h
-    Model/CMultiModel.cpp
-    Model/CMultiModel.h
-    Model/CTrainingMonitoring.cpp
-    Model/CTrainingMonitoring.h
-    Model/CTreeItem.hpp
-    Model/CTreeModel.hpp
+    Model/Common/CMultiModel.cpp
+    Model/Common/CMultiModel.h
+    Model/Common/CTrainingMonitoring.cpp
+    Model/Common/CTrainingMonitoring.h
+    Model/Common/CTreeItem.hpp
+    Model/Common/CTreeModel.hpp
+    Model/Common/CHttpRequest.h
+    Model/Common/CHttpRequest.cpp
     Model/Crash/QBreakpadHandler.cpp
     Model/Crash/QBreakpadHandler.h
     Model/Crash/QBreakpadHttpUploader.cpp

@@ -19,7 +19,7 @@
 #ifndef CPROJECTITEM_HPP
 #define CPROJECTITEM_HPP
 
-#include "Model/CItem.hpp"
+#include "Model/Common/CItem.hpp"
 
 class CProjectItem : public CItem
 {

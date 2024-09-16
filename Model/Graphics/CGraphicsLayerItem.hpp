@@ -19,7 +19,7 @@
 #ifndef CGRAPHICSLAYERITEM_HPP
 #define CGRAPHICSLAYERITEM_HPP
 
-#include "Model/CItem.hpp"
+#include "Model/Common/CItem.hpp"
 #include "Graphics/CGraphicsLayer.h"
 #include "Graphics/CGraphicsItem.hpp"
 
