@@ -644,7 +644,7 @@ QString CHubManager::createDemoWorkflow()
     std::string name = m_localPluginModel.getStringField("name");
     std::string workflowFile = Utils::CPluginTools::getTransferPath() + "/" + Utils::String::httpFormat(name) + ".json";
     boost::python::str strAlgoName(name.c_str());
-    boost::python::object algoModule = Utils::CPluginTools::loadPythonModule("ikomia.utils.algo", false);
+    boost::python::object algoModule = Utils::CPluginTools::loadPythonModule("ikomia.utils.algorithm", false);
     boost::python::object wf = algoModule.attr("create_demo_workflow")(strAlgoName);
     boost::python::str strWorkflowFile(workflowFile.c_str());
     wf.attr("save")(strWorkflowFile);
@@ -1244,6 +1244,7 @@ void CHubManager::uploadDemoWorkflow()
     try
     {
         QString workflowFile = createDemoWorkflow();
+        m_transferFiles.push_back(new QFile(workflowFile));
         m_pProgressMgr->launchInfiniteProgress(tr("Workflow package compression..."), false);
         QString zipPath = m_pWorkflowMgr->getScaleManager()->createPackage(workflowFile);
         m_pProgressMgr->endInfiniteProgress();
