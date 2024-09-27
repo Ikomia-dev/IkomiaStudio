@@ -19,7 +19,7 @@
 #ifndef CPROCESSMODEL_HPP
 #define CPROCESSMODEL_HPP
 
-#include "Model/CTreeModel.hpp"
+#include "Model/Common/CTreeModel.hpp"
 #include "Model/Project/CFolderItem.hpp"
 #include "CProcessItem.hpp"
 

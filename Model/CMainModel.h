@@ -36,7 +36,7 @@
 #include "Model/Data/CMainDataManager.h"
 #include "Model/Hub/CHubManager.h"
 #include "Settings/CSettingsManager.h"
-#include "Model/CDbManager.h"
+#include "Model/Common/CDbManager.h"
 
 /**
  * @brief

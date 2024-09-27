@@ -19,7 +19,7 @@
 #ifndef CFOLDERITEM_HPP
 #define CFOLDERITEM_HPP
 
-#include "Model/CItem.hpp"
+#include "Model/Common/CItem.hpp"
 
 /**
  * @brief

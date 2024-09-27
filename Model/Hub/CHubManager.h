@@ -31,6 +31,7 @@ class QNetworkAccessManager;
 class CProcessManager;
 class CPluginManager;
 class CProgressBarManager;
+class CWorkflowManager;
 class CProgressCircle;
 
 class CHubManager : public QObject
@@ -48,14 +49,16 @@ class CHubManager : public QObject
         UPDATE_PLUGIN,
         UPLOAD_PACKAGE,
         UPLOAD_ICON,
+        UPLOAD_WORKFLOW,
         DOWNLOAD_PACKAGE
     };
 
     public:
 
         CHubManager();
+        ~CHubManager();
 
-        void            setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager* pProcessMgr, CPluginManager* pPluginMgr, CProgressBarManager *pProgressMgr);
+        void            setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager* pProcessMgr, CPluginManager* pPluginMgr, CProgressBarManager *pProgressMgr, CWorkflowManager *pWorkflowMgr);
         void            setCurrentUser(const CUser& user);
 
     signals:
@@ -96,6 +99,7 @@ class CHubManager : public QObject
         void            createQueryModel(CPluginModel* pModel);
         QByteArray      createPluginPayload(CPluginModel *pModel);
         QJsonObject     createPluginPackagePayload(CPluginModel *pModel);
+        QString         createDemoWorkflow();
 
         QString         checkPythonPluginDirectory(const QString &directory);
         QString         checkCppPluginDirectory(const QString &directory, const QString& name);
@@ -128,6 +132,7 @@ class CHubManager : public QObject
         void            uploadPluginPackage();
         void            uploadPluginIcon(QNetworkReply *pReply);
         void            uploadPluginIcon(const QString& strUrl);
+        void            uploadDemoWorkflow();
 
         void            downloadPluginPackage(CPluginModel *pModel, QNetworkReply *pReply);
 
@@ -136,7 +141,7 @@ class CHubManager : public QObject
         void            installPythonPluginDependencies(CPluginModel *pModel, const QString& directory, const CTaskInfo &info, const CUser &user);
 
         void            deletePlugin();
-        void            deleteTranferFile();
+        void            deleteTransferFiles();
 
         void            clearContext(CPluginModel *pModel, bool bError);
 
@@ -154,12 +159,13 @@ class CHubManager : public QObject
         CProcessManager*        m_pProcessMgr = nullptr;
         CPluginManager*         m_pPluginMgr = nullptr;
         CProgressBarManager*    m_pProgressMgr = nullptr;
+        CWorkflowManager*       m_pWorkflowMgr = nullptr;
         CHubDbManager           m_dbMgr;
         CPluginModel            m_hubPluginModel;
         CPluginModel            m_workspacePluginModel;
         CPluginModel            m_localPluginModel;
         std::mutex              m_mutex;
-        QFile*                  m_pTranferFile = nullptr;
+        std::vector<QFile*>     m_transferFiles;
         CUser                   m_currentUser;
         bool                    m_bBusy = false;
 };

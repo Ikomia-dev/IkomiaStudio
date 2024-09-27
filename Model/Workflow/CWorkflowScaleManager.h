@@ -30,6 +30,8 @@ class CWorkflowScaleManager : public QObject
         void        publishWorkflow(const QString& path, bool bNewProject, const QString& projectName,
                                     const QString& projectDescription, const QString& namespacePath);
 
+        QString     createPackage(const QString &workflowPath);
+
     signals:
 
         void        doSetProjects(const QJsonArray& projects);

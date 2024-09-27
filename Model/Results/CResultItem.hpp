@@ -19,7 +19,7 @@
 #ifndef CRESULTITEM_HPP
 #define CRESULTITEM_HPP
 
-#include "Model/CItem.hpp"
+#include "Model/Common/CItem.hpp"
 #include "Process/Core/CBlobMeasure.h"
 
 class CResultItem : public CItem

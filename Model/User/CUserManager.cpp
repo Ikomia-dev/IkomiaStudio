@@ -19,11 +19,11 @@
 #include "CUserManager.h"
 #include <QCryptographicHash>
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
 #include "UtilsTools.hpp"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "Model/Common/CHttpRequest.h"
 #include "Model/Matomo/piwiktracker.h"
 #include "CUserSqlQueryModel.h"
 #include "qaesencryption.h"
@@ -235,25 +235,20 @@ void CUserManager::createAuthToken(const QString &username, const QString &pwd)
     jsonData["ttl"] = m_tokenTTL;
     QJsonDocument jsonDoc(jsonData);
 
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/users/me/tokens/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logUser) << url.errorString();
+        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/tokens/", "application/json");
+        request.setRawHeader("Authorization", headerAuthData.toLocal8Bit());
+        auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, Request::AUTH_TOKEN);
+        });
+    }
+    catch (CException& e)
+    {
+        qCDebug(logUser) << e.what();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-    request.setRawHeader("Authorization", headerAuthData.toLocal8Bit());
-
-    auto pReply = m_pNetworkMgr->post(request, jsonDoc.toJson());
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, Request::AUTH_TOKEN);
-    });
 }
 
 QByteArray CUserManager::getBytesFromImage(const QString &path) const
@@ -327,52 +322,40 @@ void CUserManager::retrieveUserInfo()
 {
     assert(m_pNetworkMgr);
 
-    //Http request to retrieve logged user info
-    QUrlQuery urlQuery(Utils::Network::getBaseUrl() + "/v1/users/me/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logUser) << url.errorString();
+        //Http request to retrieve logged user info
+        CHttpRequest request(Utils::Network::getBaseUrl() + "/v1/users/me/", "application/json", m_currentUser);
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, Request::GET_USER);
+        });
+    }
+    catch (CException& e)
+    {
+        qCDebug(logUser) << e.what();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, Request::GET_USER);
-    });
 }
 
 void CUserManager::retrieveUserNamespaces(const QString& strUrl)
 {
     assert(m_pNetworkMgr);
 
-    //Http request to retrieve logged user namespaces
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logUser) << url.errorString();
+        //Http request to retrieve logged user namespaces
+        CHttpRequest request(strUrl, "application/json", m_currentUser);
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+           this->onReplyReceived(pReply, Request::GET_NAMESPACES);
+        });
+    }
+    catch (CException& e)
+    {
+        qCDebug(logUser) << e.what();
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, Request::GET_NAMESPACES);
-    });
 }
 
 void CUserManager::manageGetUserInfoError()

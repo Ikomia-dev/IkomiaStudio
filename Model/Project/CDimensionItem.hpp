@@ -19,7 +19,7 @@
 #ifndef CDIMENSIONITEM_HPP
 #define CDIMENSIONITEM_HPP
 
-#include "../CItem.hpp"
+#include "Model/Common/CItem.hpp"
 
 class CDimensionItem : public CItem
 {

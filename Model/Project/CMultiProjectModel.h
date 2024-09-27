@@ -21,7 +21,7 @@
 #ifndef CMULTIPROJECTMODEL_H
 #define CMULTIPROJECTMODEL_H
 
-#include "../CMultiModel.h"
+#include "Model/Common/CMultiModel.h"
 #include "CProjectModel.h"
 
 class CMultiProjectModel : public CMultiModel

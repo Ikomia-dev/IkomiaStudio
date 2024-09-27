@@ -29,6 +29,8 @@
 #include "Model/Process/CProcessManager.h"
 #include "Model/Plugin/CPluginManager.h"
 #include "Model/ProgressBar/CProgressBarManager.h"
+#include "Model/Workflow/CWorkflowManager.h"
+#include "Model/Common/CHttpRequest.h"
 #include "JlCompress.h"
 #include "Core/CIkomiaRegistry.h"
 
@@ -50,12 +52,19 @@ CHubManager::CHubManager():
     }
 }
 
-void CHubManager::setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager *pProcessMgr, CPluginManager *pPluginMgr, CProgressBarManager *pProgressMgr)
+CHubManager::~CHubManager()
+{
+    deleteTransferFiles();
+}
+
+void CHubManager::setManagers(QNetworkAccessManager *pNetworkMgr, CProcessManager *pProcessMgr, CPluginManager *pPluginMgr,
+                              CProgressBarManager *pProgressMgr, CWorkflowManager* pWorkflowMgr)
 {
     m_pNetworkMgr = pNetworkMgr;
     m_pProcessMgr = pProcessMgr;
     m_pPluginMgr = pPluginMgr;
     m_pProgressMgr = pProgressMgr;
+    m_pWorkflowMgr = pWorkflowMgr;
     checkPendingUpdates();
 }
 
@@ -91,28 +100,21 @@ void CHubManager::onRequestNextPublishInfo(const QModelIndex &index)
     m_workspacePluginModel.setCurrentIndex(index);
     auto name = m_workspacePluginModel.getQStringField("name", index);
     QJsonObject pluginInfo = m_workspacePluginModel.getJsonPlugin(name);
-    QUrlQuery urlQuery(pluginInfo["url"].toString() + "publish/");
-    QUrl url(urlQuery.query());
 
-    if(url.isValid() == false)
+    try
     {
-        qCWarning(logHub) << url.errorString();
+        CHttpRequest request(pluginInfo["url"].toString() + "publish/", "application/json", m_currentUser);
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=]{
+            this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::GET_NEXT_PUBLISH_INFO);
+        });
+    }
+    catch(CException& e)
+    {
+        qCWarning(logHub) << e.what();
         emit doSetNextPublishInfo(index, QJsonObject());
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=]{
-       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::GET_NEXT_PUBLISH_INFO);
-    });
 }
 
 void CHubManager::onPublishHub(const QModelIndex &index, const QJsonObject& info)
@@ -257,6 +259,9 @@ void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, H
             uploadPluginPackage();
             break;
         case HubRequestType::UPLOAD_PACKAGE:
+            uploadDemoWorkflow();
+            break;
+        case HubRequestType::UPLOAD_WORKFLOW:
             finalizePublishWorkspace();
             break;
         case HubRequestType::DOWNLOAD_PACKAGE:
@@ -329,90 +334,78 @@ QString CHubManager::getQuery(CPluginModel::Type serverType, const QString& text
 void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl)
 {
     assert(m_pNetworkMgr);
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
 
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(strUrl, "application/json");
+        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
+            request.setUserAuth(m_currentUser);
+
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGINS);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(pModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGINS);
-    });
 }
 
 void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
 {
     assert(m_pNetworkMgr);
-    QUrlQuery urlQuery(strUrl);
 
-    QUrl url(urlQuery.query());
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(strUrl, "application/json");
+        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
+            request.setUserAuth(m_currentUser);
+
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGIN_DETAILS);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(pModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PLUGIN_DETAILS);
-    });
 }
 
 void CHubManager::queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl)
 {
     assert(m_pNetworkMgr);
+
     if (m_bBusy == true)
     {
         QMessageBox::information(nullptr, tr("Information"), tr("An algorithm is already being installed. Please wait until it is finished."), QMessageBox::Ok);
         return;
     }
 
-    //Http request to get plugin packages
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        //Http request to get plugin packages
+        CHttpRequest request(strUrl, "application/json");
+        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
+            request.setUserAuth(m_currentUser);
+
+        m_bBusy = true;
+        auto pReply = m_pNetworkMgr->get(request);
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, pModel, HubRequestType::GET_PACKAGE_URL);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(pModel, true);
         return;
     }
-
-    m_bBusy = true;
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->get(request);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, pModel, HubRequestType::GET_PACKAGE_URL);
-    });
 }
 
 void CHubManager::createHubPluginModel()
@@ -645,6 +638,19 @@ QJsonObject CHubManager::createPluginPackagePayload(CPluginModel *pModel)
     return package;
 }
 
+QString CHubManager::createDemoWorkflow()
+{
+    CPyEnsureGIL gil;
+    std::string name = m_localPluginModel.getStringField("name");
+    std::string workflowFile = Utils::CPluginTools::getTransferPath() + "/" + Utils::String::httpFormat(name) + ".json";
+    boost::python::str strAlgoName(name.c_str());
+    boost::python::object algoModule = Utils::CPluginTools::loadPythonModule("ikomia.utils.algorithm", false);
+    boost::python::object wf = algoModule.attr("create_demo_workflow")(strAlgoName);
+    boost::python::str strWorkflowFile(workflowFile.c_str());
+    wf.attr("save")(strWorkflowFile);
+    return QString::fromStdString(workflowFile);
+}
+
 QString CHubManager::checkPythonPluginDirectory(const QString &directory)
 {
     QDir pluginDir(directory);
@@ -796,28 +802,21 @@ void CHubManager::updateWorkspacePlugin(const QString& name)
     //Http request to update algorithm
     QByteArray jsonPayload = createPluginPayload(&m_localPluginModel);
     QJsonObject plugin = m_workspacePluginModel.getJsonPlugin(name);
-    QUrlQuery urlQuery(plugin["url"].toString());
-    QUrl url(urlQuery.query());
 
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(plugin["url"].toString(), "application/json", m_currentUser);
+        auto pReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", jsonPayload);
+        connect(pReply, &QNetworkReply::finished, [=](){
+           this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(&m_localPluginModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", jsonPayload);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
-    });
 }
 
 void CHubManager::updateLocalPlugin()
@@ -1040,30 +1039,23 @@ void CHubManager::publishToHub(const QModelIndex& index, const QJsonObject& info
     m_workspacePluginModel.setCurrentIndex(index);
     auto name = m_workspacePluginModel.getQStringField("name");
     QJsonObject pluginInfo = m_workspacePluginModel.getJsonPlugin(name);
-    QUrlQuery urlQuery(pluginInfo["url"].toString() + "publish/");
-    QUrl url(urlQuery.query());
 
-    if(url.isValid() == false)
+    try
     {
-        qCWarning(logHub) << url.errorString();
+        m_bBusy = true;
+        CHttpRequest request(pluginInfo["url"].toString() + "publish/", "application/json", m_currentUser);
+        QJsonDocument payload(info);
+
+        auto pReply = m_pNetworkMgr->put(request, payload.toJson());
+        connect(pReply, &QNetworkReply::finished, [=]{
+            this->onReplyReceived(pReply, &m_hubPluginModel, HubRequestType::PUBLISH_HUB);
+        });
+    }
+    catch(CException& e)
+    {
+        qCWarning(logHub) << e.what();
         return;
     }
-
-    m_bBusy = true;
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    QJsonDocument payload(info);
-    auto pReply = m_pNetworkMgr->put(request, payload.toJson());
-
-    connect(pReply, &QNetworkReply::finished, [=]{
-       this->onReplyReceived(pReply, &m_hubPluginModel, HubRequestType::PUBLISH_HUB);
-    });
 }
 
 void CHubManager::publishToWorkspace(const QModelIndex &index, const QString& workspace)
@@ -1108,28 +1100,21 @@ void CHubManager::publishPluginToWorkspace()
     //Http request to create new plugin
     QByteArray jsonPayload = createPluginPayload(&m_localPluginModel);
     CUserNamespace ns = m_currentUser.getNamespace(m_workspacePluginModel.getCurrentWorkspace());
-    QUrlQuery urlQuery(ns.m_url + "algos/");
-    QUrl url(urlQuery.query());
 
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(ns.m_url + "algos/", "application/json", m_currentUser);
+        auto pReply = m_pNetworkMgr->post(request, jsonPayload);
+        connect(pReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(&m_localPluginModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pReply = m_pNetworkMgr->post(request, jsonPayload);
-    connect(pReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pReply, &m_workspacePluginModel, HubRequestType::PUBLISH_WORKSPACE);
-    });
 }
 
 void CHubManager::uploadPluginPackage()
@@ -1138,69 +1123,59 @@ void CHubManager::uploadPluginPackage()
     assert(m_pProgressMgr);
 
     //Http request to send plugin file
-    QUrlQuery urlQuery(m_workspacePluginModel.getCurrentRequestUrl() + "packages/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        CHttpRequest request(m_workspacePluginModel.getCurrentRequestUrl() + "packages/", m_currentUser);
+
+        // Build multi-part request
+        QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+        // Package payload part
+        QJsonObject payload = createPluginPackagePayload(&m_localPluginModel);
+        foreach(const QString& key, payload.keys())
+        {
+            QHttpPart fieldPart;
+            QString formData = QString("form-data; name=\"%1\"").arg(key);
+            fieldPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
+
+            auto value = payload.value(key);
+            if (value.isArray())
+            {
+                QJsonDocument jsonDoc(value.toArray());
+                fieldPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+                fieldPart.setBody(jsonDoc.toJson());
+            }
+            else
+            {
+                fieldPart.setBody(value.toString().toUtf8());
+            }
+            pMultiPart->append(fieldPart);
+        }
+
+        // Plugin package zip part
+        QString packageFile = m_workspacePluginModel.getPackageFile();
+        auto pTranferFile = new QFile(packageFile);
+        m_transferFiles.push_back(pTranferFile);
+        pTranferFile->open(QIODevice::ReadOnly);
+        QHttpPart filePart = request.createFilePart(pTranferFile, "file", "application/zip");
+        pMultiPart->append(filePart);
+
+        auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
+        pMultiPart->setParent(pNewReply);
+
+        //Init progress
+        initTransferProgress(pNewReply, tr("Uploading algorithm package"), pTranferFile->size() / 1024);
+
+        connect(pNewReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_PACKAGE);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(&m_localPluginModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    // Build multi-part request
-    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-
-    // Package payload part
-    QJsonObject payload = createPluginPackagePayload(&m_localPluginModel);
-    foreach(const QString& key, payload.keys())
-    {
-        QHttpPart fieldPart;
-        QString formData = QString("form-data; name=\"%1\"").arg(key);
-        fieldPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-
-        auto value = payload.value(key);
-        if (value.isArray())
-        {
-            QJsonDocument jsonDoc(value.toArray());
-            fieldPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
-            fieldPart.setBody(jsonDoc.toJson());
-        }
-        else
-        {
-            fieldPart.setBody(value.toString().toUtf8());
-        }
-        pMultiPart->append(fieldPart);
-    }
-
-    // Plugin package zip part
-    QString packageFile = m_workspacePluginModel.getPackageFile();
-    m_pTranferFile = new QFile(packageFile);
-    m_pTranferFile->open(QIODevice::ReadOnly);
-    QHttpPart filePart;
-    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/zip"));
-    QString formData = QString("form-data; name=\"file\"; filename=\"%1\"").arg(packageFile);
-    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-    filePart.setHeader(QNetworkRequest::ContentLengthHeader, m_pTranferFile->size());
-    filePart.setBodyDevice(m_pTranferFile);
-    pMultiPart->append(filePart);
-
-    auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
-    pMultiPart->setParent(pNewReply);
-
-    //Init progress
-    initTransferProgress(pNewReply, tr("Uploading algorithm package"), m_pTranferFile->size() / 1024);
-
-    connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_PACKAGE);
-    });
 }
 
 void CHubManager::uploadPluginIcon(QNetworkReply* pReply)
@@ -1224,55 +1199,87 @@ void CHubManager::uploadPluginIcon(const QString &strUrl)
 
     m_workspacePluginModel.setCurrentRequestUrl(strUrl);
 
-    //Http request to send plugin file
-    QUrlQuery urlQuery(strUrl);
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        //Http request to send plugin file
+        CHttpRequest request(strUrl, m_currentUser);
+
+        //Get full path to icon file
+        QString iconPath = m_localPluginModel.getQStringField("iconPath");
+        if(iconPath.isEmpty())
+        {
+            iconPath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/" + "icon.png");
+            QPixmap pixmap = QPixmap(":/Images/default-process.png");
+            pixmap.save(iconPath, "PNG");
+        }
+
+        QFile* pIconFile = new QFile(iconPath);
+        pIconFile->open(QIODevice::ReadOnly);
+
+        QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QHttpPart filePart = request.createFilePart(pIconFile, "icon", "image/png");
+        pMultiPart->append(filePart);
+        pIconFile->setParent(pMultiPart);
+
+        auto pNewReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", pMultiPart);
+        pMultiPart->setParent(pNewReply);
+
+        //Init progress
+        initTransferProgress(pNewReply, tr("Uploading icon"), pIconFile->size() / 1024);
+
+        connect(pNewReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_ICON);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(&m_localPluginModel, true);
         return;
     }
+}
 
-    //Get full path to icon file
-    QString iconPath = m_localPluginModel.getQStringField("iconPath");
-    if(iconPath.isEmpty())
+void CHubManager::uploadDemoWorkflow()
+{
+    try
     {
-        iconPath = QString::fromStdString(Utils::CPluginTools::getTransferPath() + "/" + "icon.png");
-        QPixmap pixmap = QPixmap(":/Images/default-process.png");
-        pixmap.save(iconPath, "PNG");
+        QString workflowFile = createDemoWorkflow();
+        m_transferFiles.push_back(new QFile(workflowFile));
+        m_pProgressMgr->launchInfiniteProgress(tr("Workflow package compression..."), false);
+        QString zipPath = m_pWorkflowMgr->getScaleManager()->createPackage(workflowFile);
+        m_pProgressMgr->endInfiniteProgress();
+
+        CHttpRequest request(m_workspacePluginModel.getCurrentRequestUrl() + "demo-workflows/", m_currentUser);
+        // Build multi-part request
+        QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        // Plugin package zip part
+        auto pTransferFile = new QFile(zipPath);
+        m_transferFiles.push_back(pTransferFile);
+        pTransferFile->open(QIODevice::ReadOnly);
+        QHttpPart filePart = request.createFilePart(pTransferFile, "archive", "application/zip");
+        pMultiPart->append(filePart);
+        auto pNewReply = m_pNetworkMgr->post(request, pMultiPart);
+        pMultiPart->setParent(pNewReply);
+
+        //Init progress
+        initTransferProgress(pNewReply, tr("Uploading workflow package"), pTransferFile->size() / 1024);
+
+        connect(pNewReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_WORKFLOW);
+        });
     }
-
-    QFile* pIconFile = new QFile(iconPath);
-    pIconFile->open(QIODevice::ReadOnly);
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-
-    if (m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    QHttpMultiPart* pMultiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-    QHttpPart filePart;
-    filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
-    QString formData = QString("form-data; name=\"icon\"; filename=\"%1\"").arg(iconPath);
-    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(formData));
-    filePart.setHeader(QNetworkRequest::ContentLengthHeader, pIconFile->size());
-    filePart.setBodyDevice(pIconFile);
-    pMultiPart->append(filePart);
-    pIconFile->setParent(pMultiPart);
-
-    auto pNewReply = m_pNetworkMgr->sendCustomRequest(request, "PATCH", pMultiPart);
-    pMultiPart->setParent(pNewReply);
-
-    //Init progress
-    initTransferProgress(pNewReply, tr("Uploading icon"), pIconFile->size() / 1024);
-
-    connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, &m_workspacePluginModel, HubRequestType::UPLOAD_ICON);
-    });
+    catch (boost::python::error_already_set&)
+    {
+        qCCritical(logPlugin).noquote() << QString::fromStdString(Utils::Python::handlePythonException());
+        clearContext(&m_localPluginModel, true);
+        return;
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
+        clearContext(&m_localPluginModel, true);
+        return;
+    }
 }
 
 void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pReply)
@@ -1289,33 +1296,28 @@ void CHubManager::downloadPluginPackage(CPluginModel* pModel, QNetworkReply* pRe
     QJsonArray jsonPackages = jsonPlugin["packages"].toArray();
     QString packageUrl = findBestPackageUrl(jsonPackages);
 
-    //Http request to get plugin packages
-    QUrlQuery urlQuery(packageUrl + "download/");
-    QUrl url(urlQuery.query());
-
-    if(url.isValid() == false)
+    try
     {
-        qCDebug(logHub) << url.errorString();
+        //Http request to get plugin packages
+        CHttpRequest request(packageUrl + "download/", "application/json");
+        if (pModel->getType() == CPluginModel::Type::WORKSPACE)
+            request.setUserAuth(m_currentUser);
+
+        auto pNewReply = m_pNetworkMgr->get(request);
+
+        //Init progress
+        initTransferProgress(pNewReply, tr("Downloading algorithm package"), 0);
+
+        connect(pNewReply, &QNetworkReply::finished, [=](){
+            this->onReplyReceived(pNewReply, pModel, HubRequestType::DOWNLOAD_PACKAGE);
+        });
+    }
+    catch(CException& e)
+    {
+        qCDebug(logHub) << e.what();
         clearContext(pModel, true);
         return;
     }
-
-    QNetworkRequest request;
-    request.setUrl(url);
-    request.setRawHeader("User-Agent", "Ikomia Studio");
-    request.setRawHeader("Content-Type", "application/json");
-
-    if (pModel->getType() == CPluginModel::Type::WORKSPACE && m_currentUser.isConnected())
-        request.setRawHeader("Authorization", m_currentUser.getAuthHeader());
-
-    auto pNewReply = m_pNetworkMgr->get(request);
-
-    //Init progress
-    initTransferProgress(pNewReply, tr("Downloading algorithm package"), 0);
-
-    connect(pNewReply, &QNetworkReply::finished, [=](){
-       this->onReplyReceived(pNewReply, pModel, HubRequestType::DOWNLOAD_PACKAGE);
-    });
 }
 
 void CHubManager::savePluginFolder(CPluginModel* pModel, QNetworkReply* pReply)
@@ -1421,11 +1423,14 @@ void CHubManager::installPythonPluginDependencies(CPluginModel* pModel, const QS
     pWatcher->setFuture(future);
 }
 
-void CHubManager::deleteTranferFile()
+void CHubManager::deleteTransferFiles()
 {
-    m_pTranferFile->remove();
-    delete m_pTranferFile;
-    m_pTranferFile = nullptr;
+    for (size_t i=0; i<m_transferFiles.size(); ++i)
+    {
+        m_transferFiles[i]->remove();
+        delete m_transferFiles[i];
+    }
+    m_transferFiles.clear();
 }
 
 void CHubManager::clearContext(CPluginModel* pModel, bool bError)
@@ -1449,7 +1454,7 @@ void CHubManager::finalyzePublishHub()
 void CHubManager::finalizePublishWorkspace()
 {
     updateLocalPlugin();
-    deleteTranferFile();
+    deleteTransferFiles();
     auto name =  m_localPluginModel.getQStringField("name");
     qCInfo(logHub).noquote() << tr("Algorithm %1 was successfully published to your workspace").arg(name);
     clearContext(&m_localPluginModel, false);

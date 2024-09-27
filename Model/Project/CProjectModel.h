@@ -22,7 +22,7 @@
 #define CQTPROJECTMODEL_H
 
 #include "CProjectItem.hpp"
-#include "Model/CTreeModel.hpp"
+#include "Model/Common/CTreeModel.hpp"
 #include "Model/Project/CFolderItem.hpp"
 #include "CDatasetItem.hpp"
 #include "CDimensionItem.hpp"

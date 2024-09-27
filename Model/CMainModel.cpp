@@ -22,7 +22,7 @@
 #include "Main/LogCategory.h"
 #include "Model/Matomo/piwiktracker.h"
 #include "CLogManager.h"
-#include "CTrainingMonitoring.h"
+#include "Model/Common/CTrainingMonitoring.h"
 
 #define TYTI_PYLOGHOOK_USE_BOOST
 #include "Main/PyLogHook.hpp"
@@ -287,7 +287,7 @@ void CMainModel::initUserManager()
 
 void CMainModel::initHubManager()
 {
-    m_hubMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr);
+    m_hubMgr.setManagers(&m_networkMgr, &m_processMgr, &m_pluginMgr, &m_progressMgr, &m_workflowMgr);
 }
 
 void CMainModel::initSettingsManager()

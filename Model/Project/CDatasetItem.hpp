@@ -19,7 +19,7 @@
 #ifndef CDATASETITEM_HPP
 #define CDATASETITEM_HPP
 
-#include "../CItem.hpp"
+#include "Model/Common/CItem.hpp"
 #include "Data/CDataset.hpp"
 
 template <typename T>

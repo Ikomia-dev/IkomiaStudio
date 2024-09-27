@@ -19,7 +19,7 @@
 #ifndef CPROCESSITEM_HPP
 #define CPROCESSITEM_HPP
 
-#include "../CItem.hpp"
+#include "Model/Common/CItem.hpp"
 
 /**
  * @brief

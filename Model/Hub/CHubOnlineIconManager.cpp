@@ -18,11 +18,11 @@
 
 #include "CHubOnlineIconManager.h"
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QHttpPart>
 #include "CPluginModel.h"
 #include "Main/AppTools.hpp"
 #include "Main/LogCategory.h"
+#include "Model/Common/CHttpRequest.h"
 #include "Task/CTaskInfo.h"
 
 CHubOnlineIconManager::CHubOnlineIconManager(CPluginModel *pModel, QNetworkAccessManager *pNetworkMgr, const CUser &user)
@@ -62,25 +62,21 @@ void CHubOnlineIconManager::loadIcons()
         QJsonObject plugin = plugins[i].toObject();
         if(isIconExists(plugin["name"].toString()) == false)
         {
-            //Http request to get plugin icon url
-            QUrlQuery urlQuery(plugin["icon"].toString());
-            QUrl url(urlQuery.query());
-
-            if(url.isValid() == false)
+            try
             {
-                qCDebug(logHub) << "Algorithm " << plugin["name"].toString() << "does not have icon." << url.errorString();
+                //Http request to get plugin icon url
+                CHttpRequest request(plugin["icon"].toString());
+                auto pReply = m_pNetworkMgr->get(request);
+                connect(pReply, &QNetworkReply::finished, [=](){
+                    this->onReplyReceived(pReply, i);
+                });
+            }
+            catch (CException& e)
+            {
+                qCDebug(logHub) << "Algorithm " << plugin["name"].toString() << "does not have icon." << e.what();
                 incrementLoadedIcon();
                 continue;
             }
-
-            QNetworkRequest request;
-            request.setUrl(url);
-            request.setRawHeader("User-Agent", "Ikomia Studio");
-
-            auto pReply = m_pNetworkMgr->get(request);
-            connect(pReply, &QNetworkReply::finished, [=](){
-               this->onReplyReceived(pReply, i);
-            });
         }
     }
 }
