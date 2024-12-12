@@ -231,7 +231,7 @@ WorkflowTaskPtr CProcessManager::createObject(const std::string &processName, co
     return taskPtr;
 }
 
-WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const WorkflowTaskParamPtr &paramPtr)
+WorkflowTaskWidgetPtr CProcessManager::createWidget(const std::string &processName, const WorkflowTaskParamPtr& paramPtr)
 {
     WorkflowTaskWidgetPtr widgetPtr = nullptr;
     try
@@ -717,7 +717,7 @@ void CProcessManager::createModel()
         createCustomTreeFolders();
 
         // Fill database with processes and plugins
-        auto factory = m_registry.getTaskRegistrator()->getProcessFactory();
+        auto factory = m_registry.getTaskRegistrator()->getTaskFactory();
         m_processCount = static_cast<int>(factory.getList().size());
 
         for(auto&& it : factory.getList())

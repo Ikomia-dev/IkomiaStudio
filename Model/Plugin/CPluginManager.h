@@ -26,13 +26,14 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <Main/AppDefine.hpp>
+#include "Core/CTaskFactory.hpp"
 #include "CPluginPythonModel.h"
 #include "CPluginPythonDependencyModel.h"
 #include "Model/User/CUser.h"
-#include "Task/CTaskFactory.hpp"
 
 class CIkomiaRegistry;
 class CProgressCircle;
+
 
 class CPluginManager : public QObject
 {

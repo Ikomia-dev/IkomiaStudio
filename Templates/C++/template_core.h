@@ -26,8 +26,8 @@
 #include "_PluginName_Global.hpp"
 #include "CPluginProcessInterface.hpp"
 #include "Workflow/CWorkflowTaskParam.hpp"
-
 #include "Core/CWidgetFactory.hpp"
+#include "Core/CTaskParamFactory.hpp"
 #include "_ProcessBaseClassHeader_"
 #include "_WidgetBaseClassHeader_"
 
@@ -45,6 +45,21 @@ class C_PluginName_Param: public CWorkflowTaskParam
 
         //Send parameters values to Ikomia application
         UMapString  getParamMap() const override;
+};
+
+class C_PluginName_ParamFactory: public CTaskParamFactory
+{
+    public:
+
+        C_PluginName_ParamFactory()
+        {
+            m_name = "_PluginName_";
+        }
+
+        WorkflowTaskParamPtr create()
+        {
+            return std::make_shared<C_PluginName_Param>();
+        }
 };
 
 //------------------------------

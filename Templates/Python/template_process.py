@@ -28,6 +28,18 @@ class _PluginClassName_Param(core.CWorkflowTaskParam):
 
 
 # --------------------
+# - Factory class to create parameters object
+# --------------------
+class _PluginClassName_ParamFactory(dataprocess.CTaskParamFactory):
+    def __init__(self):
+        dataprocess.CTaskParamFactory.__init__(self)
+        self.name = "_PluginName_"
+
+    def create(self):
+        return _PluginClassName_Param()
+
+
+# --------------------
 # - Class which implements the algorithm
 # - Inherits PyCore.CWorkflowTask or derived from Ikomia API
 # --------------------

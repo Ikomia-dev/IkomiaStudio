@@ -22,8 +22,8 @@
 #define CHUBDBMANAGER_H
 
 #include <QSqlDatabase>
-#include "Task/CTaskFactory.hpp"
 #include "Model/User/CUser.h"
+#include "Task/CTaskInfo.h"
 #include "CPluginModel.h"
 
 class CHubDbManager
