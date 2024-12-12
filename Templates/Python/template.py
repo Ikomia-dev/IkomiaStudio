@@ -1,4 +1,6 @@
 from ikomia import dataprocess
+from _PluginName_._PluginName__process import _PluginClassName_Factory
+from _PluginName_._PluginName__process import _PluginClassName_ParamFactory
 
 
 # --------------------
@@ -12,10 +14,13 @@ class IkomiaPlugin(dataprocess.CPluginProcessInterface):
 
     def get_process_factory(self):
         # Instantiate algorithm object
-        from _PluginName_._PluginName__process import _PluginClassName_Factory
         return _PluginClassName_Factory()
 
     def get_widget_factory(self):
         # Instantiate associated widget object
         from _PluginName_._PluginName__widget import _PluginClassName_WidgetFactory
         return _PluginClassName_WidgetFactory()
+
+    def get_param_factory(self):
+        # To instantiate algorithm parameters object
+        return _PluginClassName_ParamFactory()

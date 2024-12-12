@@ -21,7 +21,6 @@
 #include <QTimer>
 #include "Main/CoreTools.hpp"
 #include "Model/Hub/CHubQueryModel.h"
-#include "Task/CTaskFactory.hpp"
 
 CHubPluginListViewDelegate::CHubPluginListViewDelegate(int pluginSource, QObject *parent)
     : CListViewDelegate(parent)

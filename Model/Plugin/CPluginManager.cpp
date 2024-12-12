@@ -78,7 +78,7 @@ void CPluginManager::setCurrentUser(const CUser &user)
 
 bool CPluginManager::isProcessExists(const QString &name) const
 {
-    return m_pRegistry->getTaskRegistrator()->getProcessFactory().isCreatorExists(name.toStdString());
+    return m_pRegistry->getTaskRegistrator()->getTaskFactory().isCreatorExists(name.toStdString());
 }
 
 void CPluginManager::notifyViewShow()
