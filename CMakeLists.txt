@@ -70,6 +70,7 @@ find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
         vtkFiltersCore
         vtkFiltersGeneral
         vtkFiltersImaging
+        vtkgl2ps
         vtkGUISupportQt
         vtkImagingColor
         vtkImagingCore
@@ -79,7 +80,9 @@ find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
         vtkInteractionImage
         vtkInteractionStyle
         vtkIOCore
+        vtkIOLegacy
         vtkIOImage
+        vtklibharu
         vtkRenderingContext2D
         vtkRenderingCore
         vtkRenderingImage
@@ -616,17 +619,6 @@ target_link_libraries(IkomiaStudio PRIVATE
     opencv_bgsegm
     opencv_bioinspired
     opencv_ccalib
-    opencv_cudaarithm
-    opencv_cudabgsegm
-    opencv_cudafeatures2d
-    opencv_cudafilters
-    opencv_cudaimgproc
-    opencv_cudalegacy
-    opencv_cudaobjdetect
-    opencv_cudaoptflow
-    opencv_cudastereo
-    opencv_cudawarping
-    opencv_cudev
     opencv_datasets
     opencv_dnn_objdetect
     opencv_dnn_superres
@@ -676,6 +668,22 @@ target_link_libraries(IkomiaStudio PRIVATE
     ikVolumeRender
 )
 
+if(OPENCV_GPU)
+    target_link_libraries(IkomiaStudio PRIVATE
+        opencv_cudaarithm
+        opencv_cudabgsegm
+        opencv_cudafeatures2d
+        opencv_cudafilters
+        opencv_cudaimgproc
+        opencv_cudalegacy
+        opencv_cudaobjdetect
+        opencv_cudaoptflow
+        opencv_cudastereo
+        opencv_cudawarping
+        opencv_cudev
+    )
+endif()
+
 if(UNIX)
     target_link_directories(IkomiaStudio PRIVATE
         # Breakpad
@@ -700,6 +708,7 @@ if(UNIX)
         gdcmcharls
         gdcmuuid
         gdcmexpat
+        gdcmzlib
 
         # Breakpad
         breakpad_client
