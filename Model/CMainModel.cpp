@@ -329,53 +329,47 @@ void CMainModel::initPython()
     qputenv("PATH", pathenv.toUtf8());
 
     // Embedded Python executable
-    CSemanticVersion newInitVersion("3.8");
-    CSemanticVersion currentVersion(Utils::Python::getPythonVersion());
+#ifdef PY37
+    // Python 3.7 C API
+    auto pythonExeSize = pythonExe.size();
+    Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &pythonExeSize));
 
-    if (currentVersion >= newInitVersion)
+    // Set Python path
+    auto modulePathSize = modulePath.size();
+    Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &modulePathSize));
+
+    //Initialize Python interpreter
+    Py_Initialize();
+#else
+    PyStatus status;
+    PyConfig config;
+    PyConfig_InitPythonConfig(&config);
+
+    status = PyConfig_SetBytesString(&config, &config.program_name, pythonExe.c_str());
+    if (PyStatus_Exception(status))
     {
-        PyStatus status;
-        PyConfig config;
-        PyConfig_InitPythonConfig(&config);
-
-        status = PyConfig_SetBytesString(&config, &config.program_name, pythonExe.c_str());
-        if (PyStatus_Exception(status))
-        {
-            qCritical() << "Failed to set Python program name";
-            PyConfig_Clear(&config);
-            return;
-        }
-
-        status = PyConfig_SetBytesString(&config, &config.pythonpath_env, modulePath.c_str());
-        if (PyStatus_Exception(status))
-        {
-            qCritical() << "Failed to set Python path";
-            PyConfig_Clear(&config);
-            return;
-        }
-
-        status = Py_InitializeFromConfig(&config);
-        if (PyStatus_Exception(status))
-        {
-            qCritical() << "Failed to initialize Python";
-            PyConfig_Clear(&config);
-            return;
-        }
+        qCritical() << "Failed to set Python program name";
         PyConfig_Clear(&config);
+        return;
     }
-    else
+
+    status = PyConfig_SetBytesString(&config, &config.pythonpath_env, modulePath.c_str());
+    if (PyStatus_Exception(status))
     {
-        // Python 3.7 C API
-        auto pythonExeSize = pythonExe.size();
-        Py_SetProgramName(Py_DecodeLocale(pythonExe.c_str(), &pythonExeSize));
-
-        // Set Python path
-        auto modulePathSize = modulePath.size();
-        Py_SetPath(Py_DecodeLocale(modulePath.c_str(), &modulePathSize));
-
-        //Initialize Python interpreter
-        Py_Initialize();
+        qCritical() << "Failed to set Python path";
+        PyConfig_Clear(&config);
+        return;
     }
+
+    status = Py_InitializeFromConfig(&config);
+    if (PyStatus_Exception(status))
+    {
+        qCritical() << "Failed to initialize Python";
+        PyConfig_Clear(&config);
+        return;
+    }
+    PyConfig_Clear(&config);
+#endif
 
     try
     {
@@ -391,10 +385,6 @@ void CMainModel::initPython()
     {
         qCritical() << QString::fromStdString(Utils::Python::handlePythonException());
     }
-
-    //Threading
-    if(PyEval_ThreadsInitialized() == 0)
-        PyEval_InitThreads();
 
     //Release GIL
     PyThreadState* st = PyEval_SaveThread();
