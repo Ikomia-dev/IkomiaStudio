@@ -4,7 +4,7 @@ add_compile_definitions(
 )
 
 set(OPENCV_GPU ON)
-set(CENTOS7 OFF)
+set(PRODUCTION OFF)
 set(PYTHON_VERSION_DOT 3.11)
 set(PYTHON_VERSION_DOT_M 3.11)
 set(PYTHON_VERSION_NO_DOT 311)

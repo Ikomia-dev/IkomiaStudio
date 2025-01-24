@@ -19,7 +19,7 @@ include(LocalSettings.cmake)
 find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
 
 # Python
-if(CENTOS7)
+if(PRODUCTION)
     set(Python3_DIR "/work/shared/local")
 endif()
 
@@ -47,7 +47,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-if(CENTOS7)
+if(PRODUCTION)
     set(BUILD_SHARED_LIBS ON)
     set(BOOST_PYTHON_TARGET Boost::python)
     find_package(Boost REQUIRED COMPONENTS system filesystem python)
@@ -514,7 +514,7 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
 # Resources
 set(RESOURCES "")
 qt5_add_resources(RESOURCES res.qrc)
-target_sources(IkomiaStudio PRIVATE ${RESOURCES})
+target_sources(IkomiaStudio PUBLIC ${RESOURCES})
 
 target_precompile_headers(IkomiaStudio PRIVATE
     Main/pch.hpp
@@ -715,7 +715,7 @@ if(UNIX)
     )
 endif()
 
-if(UNIX AND CENTOS7)
+if(UNIX AND PRODUCTION)
     target_include_directories(IkomiaStudio PRIVATE
         ../build/breakpad/src/breakpad/src
         /work/shared/local/include/QuaZip-Qt5-1.3/quazip
@@ -729,7 +729,7 @@ if(UNIX AND CENTOS7)
     )
 endif()
 
-if(UNIX AND NOT CENTOS7)
+if(UNIX AND NOT PRODUCTION)
     target_include_directories(IkomiaStudio PRIVATE
         # OpenCV
         /usr/local/include/opencv4
