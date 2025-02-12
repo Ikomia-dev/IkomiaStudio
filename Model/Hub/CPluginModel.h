@@ -24,7 +24,7 @@ class CPluginModel
         void                setCurrentWorkspace(const QString& workspace);
         void                setCurrentRequestUrl(const QString& url);
         void                setQuery(const QString& query, const QSqlDatabase& db);
-        void                setTotalPluginCount(int count);
+        void                setJsonPlugins(const QJsonObject& plugins);
         void                setPluginField(int index, const QString &key, const QString &value);
         void                setPackageFile(const QString& file);
 
@@ -44,12 +44,9 @@ class CPluginModel
         QString             getPackageFile() const;
         QString             getDescription() const;
 
-        bool                isComplete() const;
         bool                isPluginExists(const QString& name) const;
 
         void                init(const CUser &user, const QString& query, const QSqlDatabase& db);
-
-        void                addJsonPlugin(const QJsonObject& jsonPlugin);
 
         void                filterCompatiblePlugins();
 
@@ -76,7 +73,7 @@ class CPluginModel
         QString             m_currentWorkspace;
         QString             m_currentRequestUrl;
         QString             m_packageFile;
-        int                 m_totalPluginCount = 0;
+        std::string         m_currentPythonVersion;
 };
 
 #endif // CPLUGINMODEL_H

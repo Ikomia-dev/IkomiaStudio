@@ -241,7 +241,7 @@ void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, H
             fillServerPluginModel(pModel, pReply);
             break;
         case HubRequestType::GET_PLUGIN_DETAILS:
-            addPluginToModel(pModel, pReply);
+            addPluginsToModel(pModel, pReply);
             break;
         case HubRequestType::GET_NEXT_PUBLISH_INFO:
             sendNextPublishInfo(pModel, pReply);
@@ -337,7 +337,10 @@ void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl
 
     try
     {
-        CHttpRequest request(strUrl, "application/json");
+        // Get algorithms count
+        QString url = QString("%1?page_size=1").arg(strUrl);
+        CHttpRequest request(url, "application/json");
+
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
@@ -354,13 +357,15 @@ void CHubManager::queryServerPlugins(CPluginModel* pModel, const QString& strUrl
     }
 }
 
-void CHubManager::queryServerPluginDetails(CPluginModel* pModel, QString strUrl)
+void CHubManager::queryServerPluginDetails(CPluginModel* pModel, int pluginsCount)
 {
     assert(m_pNetworkMgr);
 
     try
     {
-        CHttpRequest request(strUrl, "application/json");
+        QString url = QString("%1?page_size=%2&fields=all").arg(pModel->getCurrentRequestUrl()).arg(pluginsCount);
+        CHttpRequest request(url, "application/json");
+
         if (pModel->getType() == CPluginModel::Type::WORKSPACE)
             request.setUserAuth(m_currentUser);
 
@@ -842,59 +847,35 @@ void CHubManager::fillServerPluginModel(CPluginModel* pModel, QNetworkReply* pRe
     }
 
     int count = jsonPage["count"].toInt();
-    pModel->setTotalPluginCount(count);
-
-    if (jsonPage["next"].isNull() == false)
-    {
-        QString url = pModel->getCurrentRequestUrl() + QString("?page_size=%1").arg(count);
-        queryServerPlugins(pModel, url);
-    }
-    else if (jsonPage["count"] == 0)
-    {
-        validateServerPluginModel(pModel);
-        return;
-    }
-    else
-    {
-        QJsonArray plugins = jsonPage["results"].toArray();
-        for (int i=0; i<plugins.size(); i++)
-        {
-            QJsonObject plugin = plugins[i].toObject();
-            queryServerPluginDetails(pModel, plugin["url"].toString());
-        }
-    }
+    queryServerPluginDetails(pModel, count);
 }
 
-void CHubManager::addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply)
+void CHubManager::addPluginsToModel(CPluginModel *pModel, QNetworkReply *pReply)
 {
-    QJsonObject jsonPlugin = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
-    if (jsonPlugin.isEmpty())
+    QJsonObject jsonPlugins = getJsonObject(pReply, tr("Error while retrieving algorihtm details"));
+    if (jsonPlugins.isEmpty())
     {
         clearContext(pModel, true);
         return;
     }
 
-    pModel->addJsonPlugin(jsonPlugin);
+    pModel->setJsonPlugins(jsonPlugins);
+    pModel->filterCompatiblePlugins();
 
-    if( pModel->isComplete())
+    auto pIconMgr = new CHubOnlineIconManager(pModel, m_pNetworkMgr, m_currentUser);
+    connect(pIconMgr, &CHubOnlineIconManager::doIconsLoaded, [this, pIconMgr, pModel]
     {
-        pModel->filterCompatiblePlugins();
+        pIconMgr->deleteLater();
+        validateServerPluginModel(pModel);
+    });
 
-        auto pIconMgr = new CHubOnlineIconManager(pModel, m_pNetworkMgr, m_currentUser);
-        connect(pIconMgr, &CHubOnlineIconManager::doIconsLoaded, [this, pIconMgr, pModel]
-        {
-            pIconMgr->deleteLater();
-            validateServerPluginModel(pModel);
-        });
-
-        try
-        {
-            pIconMgr->loadIcons();
-        }
-        catch(std::exception& e)
-        {
-            qCCritical(logHub).noquote() << QString::fromStdString(e.what());
-        }
+    try
+    {
+        pIconMgr->loadIcons();
+    }
+    catch(std::exception& e)
+    {
+        qCCritical(logHub).noquote() << QString::fromStdString(e.what());
     }
 }
 

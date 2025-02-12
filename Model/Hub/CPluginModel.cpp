@@ -47,9 +47,12 @@ void CPluginModel::setQuery(const QString &query, const QSqlDatabase& db)
     m_pModel->setQuery(query, db);
 }
 
-void CPluginModel::setTotalPluginCount(int count)
+void CPluginModel::setJsonPlugins(const QJsonObject &plugins)
 {
-    m_totalPluginCount = count;
+    m_jsonPlugins = plugins["results"].toArray();
+
+    for (int i=0; i<m_jsonPlugins.size(); ++i)
+        updatePluginPackagesInfo(i);
 }
 
 void CPluginModel::setPluginField(int index, const QString& key, const QString& value)
@@ -147,7 +150,7 @@ QJsonObject CPluginModel::getJsonPlugin(const QString &name) const
 
 int CPluginModel::getTotalPluginCount() const
 {
-    return m_totalPluginCount;
+    return m_jsonPlugins.size();
 }
 
 ApiLanguage CPluginModel::getLanguageFromString(const QString strLanguage) const
@@ -172,11 +175,6 @@ QString CPluginModel::getDescription() const
         return description;
 }
 
-bool CPluginModel::isComplete() const
-{
-    return m_totalPluginCount == m_jsonPlugins.size();
-}
-
 bool CPluginModel::isPluginExists(const QString &name) const
 {
     for (int i=0; i<m_jsonPlugins.size(); ++i)
@@ -193,12 +191,7 @@ void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatab
     m_pModel = new CHubQueryModel;
     m_pModel->setCurrentUser(user);
     m_pModel->setQuery(query, db);
-}
-
-void CPluginModel::addJsonPlugin(const QJsonObject &jsonPlugin)
-{
-    m_jsonPlugins.append(jsonPlugin);
-    updatePluginPackagesInfo(m_jsonPlugins.count() - 1);
+    m_currentPythonVersion = Utils::Python::getVersion();
 }
 
 void CPluginModel::updatePluginPackagesInfo(int index)
@@ -327,7 +320,7 @@ bool CPluginModel::checkIkomiaCompatibility(const QJsonObject &package, ApiLangu
 
 bool CPluginModel::checkPythonCompatibility(const QJsonObject &package) const
 {
-    CSemanticVersion version(Utils::Python::getVersion());
+    CSemanticVersion version(m_currentPythonVersion);
     std::string minPythonVersion = package["python_min_version"].toString().toStdString();
 
     if (minPythonVersion.empty() == false)
@@ -385,7 +378,6 @@ void CPluginModel::clear()
     // Clear all
     clearContext();
     m_jsonPlugins = QJsonArray();
-    m_totalPluginCount = 0;
 
     if (m_pModel != nullptr)
     {

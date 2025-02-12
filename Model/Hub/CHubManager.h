@@ -107,7 +107,7 @@ class CHubManager : public QObject
         void            checkInstalledModules(const QString &pluginDir);
 
         void            queryServerPlugins(CPluginModel* pModel, const QString& strUrl);
-        void            queryServerPluginDetails(CPluginModel *pModel, QString strUrl);
+        void            queryServerPluginDetails(CPluginModel *pModel, int pluginsCount);
         void            queryServerInstallPlugin(CPluginModel* pModel, const QString& strUrl);
 
         void            updateWorkspacePlugin(const QString &name);
@@ -115,7 +115,7 @@ class CHubManager : public QObject
 
         void            fillServerPluginModel(CPluginModel *pModel, QNetworkReply *pReply);
 
-        void            addPluginToModel(CPluginModel *pModel, QNetworkReply *pReply);
+        void            addPluginsToModel(CPluginModel *pModel, QNetworkReply *pReply);
 
         void            validateServerPluginModel(CPluginModel *pModel);
         void            validatePluginFolder(CPluginModel *pModel, const QStringList &files, const QString dstDir);
