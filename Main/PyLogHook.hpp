@@ -25,6 +25,7 @@
 
 #include <utility>
 #include <string>
+#include "PythonThread.hpp"
 
 #ifdef TYTI_PYLOGHOOK_USE_BOOST
 #include <boost/python.hpp>

@@ -386,14 +386,13 @@ void CMainModel::initPython()
         qCritical() << QString::fromStdString(Utils::Python::handlePythonException());
     }
 
+    //Set sys.stdout and sys.stderr redirection
+    tyti::pylog::redirect_stdout([&](const char* w){ qCInfo(logPython).noquote() << QString(w); });
+    tyti::pylog::redirect_stderr([&](const char* w){ qCCritical(logPython).noquote() << QString(w); });
+
     //Release GIL
     PyThreadState* st = PyEval_SaveThread();
     Q_UNUSED(st);
-
-    //Set sys.stdout and sys.stderr redirection
-    CPyEnsureGIL gil;
-    tyti::pylog::redirect_stdout([&](const char* w){ qCInfo(logPython).noquote() << QString(w); });
-    tyti::pylog::redirect_stderr([&](const char* w){ qCCritical(logPython).noquote() << QString(w); });
 }
 
 void CMainModel::initMatomo()

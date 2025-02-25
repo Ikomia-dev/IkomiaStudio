@@ -191,7 +191,16 @@ void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatab
     m_pModel = new CHubQueryModel;
     m_pModel->setCurrentUser(user);
     m_pModel->setQuery(query, db);
-    m_currentPythonVersion = Utils::Python::getVersion();
+
+    try
+    {
+        m_currentPythonVersion = Utils::Python::getVersion();
+    }
+    catch(boost::python::error_already_set&)
+    {
+        // TODO: check Python 3.13 compatibility
+        Utils::print("Unable to get Python version.");
+    }
 }
 
 void CPluginModel::updatePluginPackagesInfo(int index)
