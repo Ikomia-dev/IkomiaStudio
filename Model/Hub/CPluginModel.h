@@ -55,6 +55,8 @@ class CPluginModel
 
     private:
 
+        void                retrieveCurrentPythonVersion();
+
         void                updatePluginPackagesInfo(int index);
 
         bool                checkPackageCompatibility(const QJsonObject& package, ApiLanguage language) const;
