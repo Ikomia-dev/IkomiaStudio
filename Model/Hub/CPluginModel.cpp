@@ -407,7 +407,7 @@ void CPluginModel::retrieveCurrentPythonVersion()
         catch(boost::python::error_already_set&)
         {
             // TODO: check Python 3.13 compatibility
-            Utils::print("Unable to get Python version.");
+            Utils::print("Unable to get Python version.", QtMsgType::QtDebugMsg);
 #if defined(Q_OS_WIN64)
             m_currentPythonVersion = "3.10";
 #elif defined(Q_OS_LINUX)
