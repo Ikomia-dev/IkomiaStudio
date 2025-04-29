@@ -191,16 +191,6 @@ void CPluginModel::init(const CUser &user, const QString &query, const QSqlDatab
     m_pModel = new CHubQueryModel;
     m_pModel->setCurrentUser(user);
     m_pModel->setQuery(query, db);
-
-    try
-    {
-        m_currentPythonVersion = Utils::Python::getVersion();
-    }
-    catch(boost::python::error_already_set&)
-    {
-        // TODO: check Python 3.13 compatibility
-        Utils::print("Unable to get Python version.");
-    }
 }
 
 void CPluginModel::updatePluginPackagesInfo(int index)
@@ -253,6 +243,8 @@ void CPluginModel::updatePluginPackagesInfo(int index)
 void CPluginModel::filterCompatiblePlugins()
 {
     std::vector<int> toRemove;
+    retrieveCurrentPythonVersion();
+
     for (int i=0; i<m_jsonPlugins.size(); ++i)
     {
         bool bCompatible = false;
@@ -402,4 +394,25 @@ void CPluginModel::clearContext()
     m_currentWorkspace.clear();
     m_currentRequestUrl.clear();
     m_packageFile.clear();
+}
+
+void CPluginModel::retrieveCurrentPythonVersion()
+{
+    if (m_currentPythonVersion.empty())
+    {
+        try
+        {
+            m_currentPythonVersion = Utils::Python::getVersion();
+        }
+        catch(boost::python::error_already_set&)
+        {
+            // TODO: check Python 3.13 compatibility
+            Utils::print("Unable to get Python version.");
+#if defined(Q_OS_WIN64)
+            m_currentPythonVersion = "3.10";
+#elif defined(Q_OS_LINUX)
+            m_currentPythonVersion = "3.10";
+#endif
+        }
+    }
 }
