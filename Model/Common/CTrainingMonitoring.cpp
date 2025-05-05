@@ -58,8 +58,8 @@ void CTrainingMonitoring::checkMLflowServer()
 #ifdef Q_OS_WIN
     storeUri.remove(":");
     artifactUri.remove(":");
-    storeUri = "file://" + storeUri;
-    artifactUri = "file://" + artifactUri;
+    storeUri = "file:///" + storeUri;
+    artifactUri = "file:///" + artifactUri;
 #endif
 
     Utils::print("Starting MLflow server...", QtInfoMsg);
