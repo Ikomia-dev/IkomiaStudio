@@ -709,7 +709,6 @@ if(UNIX)
         gdcmcharls
         gdcmuuid
         gdcmexpat
-        gdcmzlib
 
         # Breakpad
         breakpad_client
