@@ -1,3 +1,6 @@
+"""
+Module that implements the UI widget of the algorithm.
+"""
 from ikomia import core, dataprocess
 from ikomia.utils import pyqtutils, qtconversion
 from _PluginName_._PluginName__process import _PluginClassName_Param
@@ -5,12 +8,11 @@ from _PluginName_._PluginName__process import _PluginClassName_Param
 _QtBindingBlock_
 
 
-# --------------------
-# - Class which implements widget associated with the algorithm
-# - Inherits PyCore.CWorkflowTaskWidget from Ikomia API
-# --------------------
 class _PluginClassName_Widget(_WidgetBaseClass_):
-
+    """
+    Class that implements UI widget to adjust algorithm parameters.
+    Inherits PyCore.CWorkflowTaskWidget from Ikomia API.
+    """
     def __init__(self, param, parent):
         _WidgetBaseClass_.__init__(self, parent)
 
@@ -24,8 +26,7 @@ class _PluginClassName_Widget(_WidgetBaseClass_):
         self.set_layout(layout_ptr)
 
     def on_apply(self):
-        # Apply button clicked slot
-
+        """QT slot called when users click the Apply button."""
         # Get parameters from widget
         # Example : self.parameters.window_size = self.spin_window_size.value()
 
@@ -33,17 +34,16 @@ class _PluginClassName_Widget(_WidgetBaseClass_):
         self.emit_apply(self.parameters)
 
 
-# --------------------
-# - Factory class to build algorithm widget object
-# - Inherits PyDataProcess.CWidgetFactory from Ikomia API
-# --------------------
 class _PluginClassName_WidgetFactory(dataprocess.CWidgetFactory):
-
+    """
+    Factory class to create algorithm widget object.
+    Inherits PyDataProcess.CWidgetFactory from Ikomia API.
+    """
     def __init__(self):
         dataprocess.CWidgetFactory.__init__(self)
         # Set the algorithm name attribute -> it must be the same as the one declared in the algorithm factory class
         self.name = "_PluginName_"
 
     def create(self, param):
-        # Create widget object
+        """Instantiate widget object."""
         return _PluginClassName_Widget(param, None)

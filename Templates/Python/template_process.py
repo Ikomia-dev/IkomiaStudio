@@ -1,50 +1,54 @@
+"""
+Module that implements the core logic of algorithm execution.
+"""
 import copy
 from ikomia import core, dataprocess
 
 
-# --------------------
-# - Class to handle the algorithm parameters
-# - Inherits PyCore.CWorkflowTaskParam from Ikomia API
-# --------------------
 class _PluginClassName_Param(core.CWorkflowTaskParam):
-
+    """
+    Class to handle the algorithm parameters.
+    Inherits PyCore.CWorkflowTaskParam from Ikomia API.
+    """
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
         # Place default value initialization here
         # Example : self.window_size = 25
 
     def set_values(self, params):
-        # Set parameters values from Ikomia Studio or API
-        # Parameters values are stored as string and accessible like a python dict
-        # Example : self.window_size = int(params["window_size"])
+        """
+        Set parameters values from Ikomia Studio or API.
+        Parameters values are stored as string and accessible like a python dict.
+        Example : self.window_size = int(params["window_size"])
+        """
         pass
 
     def get_values(self):
-        # Send parameters values to Ikomia Studio or API
-        # Create the specific dict structure (string container)
+        """
+        Send parameters values to Ikomia Studio or API.
+        Create the specific dict structure (key-value as string).
+        """
         params = {}
         # Example : params["window_size"] = str(self.window_size)
         return params
 
 
-# --------------------
-# - Factory class to create parameters object
-# --------------------
 class _PluginClassName_ParamFactory(dataprocess.CTaskParamFactory):
+    """Factory class to create parameters object."""
     def __init__(self):
         dataprocess.CTaskParamFactory.__init__(self)
         self.name = "_PluginName_"
 
     def create(self):
+        """Instantiate parameters object."""
         return _PluginClassName_Param()
 
 
-# --------------------
-# - Class which implements the algorithm
-# - Inherits PyCore.CWorkflowTask or derived from Ikomia API
-# --------------------
 class _PluginClassName_(_ProcessBaseClass_):
-
+    """
+    Class that implements the algorithm.
+    Inherits PyCore.CWorkflowTask or derived from Ikomia API.
+    """
     def __init__(self, name, param):
         _ProcessBaseClass_.__init__(self, name)
         # Add input/output of the algorithm here
@@ -58,23 +62,26 @@ class _PluginClassName_(_ProcessBaseClass_):
             self.set_param_object(copy.deepcopy(param))
 
     def get_progress_steps(self):
-        # Function returning the number of progress steps for this algorithm
-        # This is handled by the main progress bar of Ikomia Studio
+        """
+        Ikomia Studio only.
+        Function returning the number of progress steps for this algorithm.
+        This is handled by the main progress bar of Ikomia Studio.
+        """
         return 1
 
     def run(self):
-        # Main function of your algorithm
+        """Main function and entry point for algorithm execution."""
         # Call begin_task_run() for initialization
         self.begin_task_run()
 
-        # Examples :
-        # Get input :
+        # Examples
+        # Get input:
         # task_input = self.get_input(index_of_input)
 
-        # Get output :
+        # Get output:
         # task_output = self.get_output(index_of_output)
 
-        # Get parameters :
+        # Get parameters:
         # param = self.get_param_object()
 
         # Get image from input/output (numpy array):
@@ -93,12 +100,11 @@ class _PluginClassName_(_ProcessBaseClass_):
         self.end_task_run()
 
 
-# --------------------
-# - Factory class to build process object
-# - Inherits PyDataProcess.CTaskFactory from Ikomia API
-# --------------------
 class _PluginClassName_Factory(dataprocess.CTaskFactory):
-
+    """
+    Factory class to create process object.
+    Inherits PyDataProcess.CTaskFactory from Ikomia API.
+    """
     def __init__(self):
         dataprocess.CTaskFactory.__init__(self)
         # Set algorithm information/metadata here
@@ -142,5 +148,5 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         # self.info.algo_tasks = "OTHER"
 
     def create(self, param=None):
-        # Create algorithm object
+        """Instantiate algorithm object."""
         return _PluginClassName_(self.info.name, param)
