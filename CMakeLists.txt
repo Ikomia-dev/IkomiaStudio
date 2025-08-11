@@ -60,40 +60,55 @@ endif()
 # VTK
 find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
     COMPONENTS
-        vtkCommonCore
-        vtkCommonColor
-        vtkCommonDataModel
-        vtkCommonExecutionModel
-        vtkCommonMath
-        vtkCommonSystem
-        vtkCommonTransforms
-        vtkDICOM
-        vtkFiltersCore
-        vtkFiltersGeneral
-        vtkFiltersImaging
-        vtkgl2ps
-        vtkGUISupportQt
-        vtkImagingColor
-        vtkImagingCore
-        vtkImagingGeneral
-        vtkImagingMath
-        vtkImagingSources
-        vtkInteractionImage
-        vtkInteractionStyle
-        vtkIOCore
-        vtkIOLegacy
-        vtkIOImage
-        vtklibharu
-        vtkRenderingContext2D
-        vtkRenderingCore
-        vtkRenderingImage
-        vtkRenderingOpenGL2
+        CommonCore
+        CommonColor
+        CommonComputationalGeometry
+        CommonDataModel
+        CommonExecutionModel
+        CommonMath
+        CommonSystem
+        CommonTransforms
+        DICOM
+        DICOMParser
+        expat
+        FiltersCore
+        FiltersGeneral
+        FiltersGeometry
+        FiltersHybrid
+        FiltersImaging
+        FiltersModeling
+        freetype
+        gl2ps
+        GUISupportQt
+        ImagingColor
+        ImagingCore
+        ImagingFourier
+        ImagingGeneral
+        ImagingHybrid
+        ImagingMath
+        ImagingSources
+        InteractionImage
+        InteractionStyle
+        IOCore
+        IOLegacy
+        IOImage
+        IOSQL
+        IOXML
+        libharu
+        lz4
+        metaio
+        RenderingAnnotation
+        RenderingContext2D
+        RenderingCore
+        RenderingFreeType
+        RenderingImage
+        RenderingOpenGL2
+        RenderingVolume
         vtksys
-        vtkViewsCore
+        ViewsCore
 )
 
 if(VTK_FOUND)
-    include(${VTK_USE_FILE})
     message("-- Found VTK: " ${VTK_USE_FILE} " (found suitable exact version \"${VTK_VERSION}\")")
 else()
     message ("-- VTK not found")

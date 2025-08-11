@@ -28,7 +28,7 @@
 
 
 CVTKWidget::CVTKWidget(QWidget* parent) :
-    QVTKOpenGLWidget(parent),
+    QVTKOpenGLStereoWidget(parent),
     m_renderer(vtkNew<vtkRenderer>()),
     m_renderWindow(vtkNew<vtkGenericOpenGLRenderWindow>()),
     m_axesActor(vtkNew<vtkAxesActor>()),
@@ -39,7 +39,7 @@ CVTKWidget::CVTKWidget(QWidget* parent) :
 {
     // Display result inside the widget
     m_renderWindow->AddRenderer(m_renderer);
-    this->SetRenderWindow(m_renderWindow);
+    this->setRenderWindow(m_renderWindow);
     this->clear();
 
     // Initialization of the axes (not shown by default)
@@ -153,13 +153,13 @@ void CVTKWidget::setViewMode(CVTKWidgetViewMode viewMode)
     {
         case CVTKWidgetViewMode::VIEW_2D:
         {
-            this->GetInteractor()->SetInteractorStyle(m_customInteractorStyle2d);
+            this->interactor()->SetInteractorStyle(m_customInteractorStyle2d);
             break;
         }
 
         case CVTKWidgetViewMode::VIEW_3D:
         {
-            this->GetInteractor()->SetInteractorStyle(m_interactorStyleTrackballCamera);
+            this->interactor()->SetInteractorStyle(m_interactorStyleTrackballCamera);
             break;
         }
 

@@ -23,7 +23,7 @@
 
 
 #include <cstdint>
-#include <QVTKOpenGLWidget.h>
+#include <QVTKOpenGLStereoWidget.h>
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkGenericOpenGLRenderWindow.h>
@@ -49,7 +49,7 @@ enum class CVTKWidgetViewMode : std::uint8_t
  * @brief The CVTKWidget class initializes an OpenGL widget for
  * displaying 3D view using the VTK library.
  */
-class CVTKWidget : public QVTKOpenGLWidget
+class CVTKWidget : public QVTKOpenGLStereoWidget
 {
     Q_OBJECT
 
