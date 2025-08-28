@@ -56,8 +56,8 @@ void CTrainingMonitoring::checkMLflowServer()
     QString artifactUri = QString::fromStdString(m_mlflowConfig.at("artifact_uri"));
 
 #ifdef Q_OS_WIN
-    storeUri.remove(":");
-    artifactUri.remove(":");
+    storeUri.remove("C:/");
+    artifactUri.remove("C:/");
     storeUri = "file:///" + storeUri;
     artifactUri = "file:///" + artifactUri;
 #endif
