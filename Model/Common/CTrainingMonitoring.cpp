@@ -54,13 +54,13 @@ void CTrainingMonitoring::checkMLflowServer()
     QString host = QString::fromStdString(m_mlflowConfig.at("host"));
     QString storeUri = QString::fromStdString(m_mlflowConfig.at("store_uri"));
     QString artifactUri = QString::fromStdString(m_mlflowConfig.at("artifact_uri"));
-
+    // Follow file uri scheme: https://en.wikipedia.org/wiki/File_URI_scheme
 #ifdef Q_OS_WIN
-    storeUri.remove("C:/");
-    artifactUri.remove("C:/");
+        storeUri = storeUri.replace("\\", "/");
+        artifactUri = artifactUri.replace("\\", "/");
+#endif
     storeUri = "file:///" + storeUri;
     artifactUri = "file:///" + artifactUri;
-#endif
 
     Utils::print("Starting MLflow server...", QtInfoMsg);
 
