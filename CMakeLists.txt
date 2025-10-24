@@ -17,7 +17,7 @@ include(Versions.cmake)
 include(LocalSettings.cmake)
 
 # Qt
-find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
 
 # Python
 if(PRODUCTION)
@@ -529,7 +529,7 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
 
 # Resources
 set(RESOURCES "")
-qt5_add_resources(RESOURCES res.qrc)
+qt6_add_resources(RESOURCES res.qrc)
 target_sources(IkomiaStudio PUBLIC ${RESOURCES})
 
 target_precompile_headers(IkomiaStudio PRIVATE
@@ -571,11 +571,11 @@ target_include_directories(IkomiaStudio PRIVATE
     # OpenCV
     ${OpenCV_INCLUDE_DIRS}
     # Breakpad
-    ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src
     # Quazip
     ${CMAKE_CURRENT_LIST_DIR}/../quazip/quazip
     # Qwt
-    ${CMAKE_CURRENT_LIST_DIR}/../qwt/src
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/qwt/src
 )
 
 target_link_directories(IkomiaStudio PRIVATE
@@ -703,7 +703,7 @@ endif()
 if(UNIX)
     target_link_directories(IkomiaStudio PRIVATE
         # Breakpad
-        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/linux
+        ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src/client/linux
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
