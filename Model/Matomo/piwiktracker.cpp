@@ -292,13 +292,8 @@ void PiwikTracker::sendEvent(
     url.setQuery(q);
 
     QNetworkReply *reply = _networkAccessManager.get(QNetworkRequest(url));
-
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-            this, SLOT(replyError(QNetworkReply::NetworkError)));
-
-    // ignoring SSL errors
-    connect(reply, SIGNAL(sslErrors(QList<QSslError>)), reply,
-            SLOT(ignoreSslErrors()));
+    reply->ignoreSslErrors();
+    connect(reply, &QNetworkReply::errorOccurred, this, &PiwikTracker::replyError);
 
 #if PIWIK_TRACKER_DEBUG
     qDebug() << __func__ << " - 'url': " << url;
