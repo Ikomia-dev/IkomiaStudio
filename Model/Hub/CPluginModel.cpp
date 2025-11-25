@@ -402,7 +402,7 @@ void CPluginModel::retrieveCurrentPythonVersion()
     {
         try
         {
-            m_currentPythonVersion = Utils::Python::getVersion();
+            m_currentPythonVersion = Utils::Python::getVersion("major.minor");
         }
         catch(boost::python::error_already_set&)
         {
