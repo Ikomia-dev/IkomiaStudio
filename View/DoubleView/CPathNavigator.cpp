@@ -24,7 +24,7 @@
 CPathNavigator::CPathNavigator()
 {
     m_pLayout = new QHBoxLayout;
-    m_pLayout->setMargin(0);
+    m_pLayout->setContentsMargins(0, 0, 0, 0);
     m_pLayout->setSpacing(5);
 
     QPushButton* pHomeBtn = new QPushButton;

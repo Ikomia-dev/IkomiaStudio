@@ -181,9 +181,6 @@ QPushButton *CGraphicsToolbar::createToolButton(const QString& title, const QIco
     auto highLightColor = pal.highlight().color();
     QColor checkedColor(highLightColor.red(), highLightColor.green(), highLightColor.blue(), 128);
 
-    int marginL, marginT, marginR, marginB;
-    getContentsMargins(&marginL, &marginT, &marginR, &marginB);
-
     auto pBtn = new QPushButton(icon, "");
     pBtn->setStyleSheet(QString("QPushButton { background: transparent; border: none; } QPushButton:hover {border: 1px solid %1;} QPushButton:checked { background-color: rgba(%2,%3,%4,%5); }")
                         .arg(hoverBorderColor.name())

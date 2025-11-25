@@ -119,11 +119,11 @@ void CResultDbManager::setMeasures(const ObjectsMeasures &measures, int resultDb
             if(measures[i][j].m_values.size() == 1)
             {
                 values << measures[i][j].m_values[0];
-                valuesList << QVariant(QVariant::String);
+                valuesList << QVariant(QMetaType(QMetaType::QString));
             }
             else
             {
-                values << QVariant(QVariant::Double);
+                values << QVariant(QMetaType(QMetaType::Double));
                 valuesList << encodeValues(measures[i][j].m_values);
             }
             blobIds << static_cast<int>(measures[i][j].m_graphicsId);

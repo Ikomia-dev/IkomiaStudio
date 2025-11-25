@@ -198,7 +198,7 @@ class CBubbleTip : public QWidget
       QRect         relativePopupRect();
       QRect         relativeTextRect();
 
-      void          enterEvent( QEvent* ev );
+      void          enterEvent(QEnterEvent *ev );
       void          leaveEvent( QEvent* ev );
       void          createAnimation();
       void          defineArrowPosition();

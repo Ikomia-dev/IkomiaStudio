@@ -227,7 +227,6 @@ QBoxLayout *CToolbarBorderLayout::createLayout(CBorderLayout::Position pos)
         pLayout = new QVBoxLayout;
 
     pLayout->setContentsMargins(0,0,0,0);
-    pLayout->setMargin(0);
     pLayout->setSpacing(0);
     return pLayout;
 }

@@ -47,7 +47,7 @@ inline static void qCallOnce(Function func, QBasicAtomicInt& flag)
 #if QT_VERSION < 0x050000
     int protectFlag = flag.fetchAndStoreAcquire(flag);
 #elif QT_VERSION >= 0x050000
-    int protectFlag = flag.fetchAndStoreAcquire(flag.load());
+    int protectFlag = flag.fetchAndStoreAcquire(flag.loadAcquire());
 #endif
 
     if (protectFlag == CO_Finished)

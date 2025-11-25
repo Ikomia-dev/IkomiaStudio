@@ -101,7 +101,7 @@ class CProjectDbManager : public CTreeDbManager<CProjectModel, std::shared_ptr<C
     private:
 
         template<typename T>
-        void    addProjectItem(QSqlQuery q, ProjectItemDbMgrPtr itemPtr)
+        void    addProjectItem(const QSqlQuery& q, ProjectItemDbMgrPtr itemPtr)
         {
             assert(q.isValid());
             int nodeLevel = q.record().value("level").toInt();
@@ -180,7 +180,7 @@ class CProjectDbManager : public CTreeDbManager<CProjectModel, std::shared_ptr<C
         }
 
         // Reimplemented methods
-        void    fillModel(QSqlQuery query) override
+        void    fillModel(QSqlQuery& query) override
         {
             while (query.next())
             {

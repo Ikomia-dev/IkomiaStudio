@@ -42,7 +42,6 @@
 #else
 #ifdef QT_GUI_LIB
 #include <QApplication>
-#include <QDesktopWidget>
 #endif
 #endif
 
@@ -75,7 +74,7 @@ PiwikTracker::PiwikTracker(QCoreApplication * parent,
         // create a client id if none was in the settings
         if (!settings.contains("PiwikClientId")) {
             QByteArray ba;
-            ba.append(QUuid::createUuid().toString());
+            ba.append(QUuid::createUuid().toString().toUtf8());
 
             // generate a random md5 hash
             QString md5Hash = QString(
@@ -101,11 +100,9 @@ PiwikTracker::PiwikTracker(QCoreApplication * parent,
         + "x" + QString::number(screen->geometry().height());
 #else
 #ifdef QT_GUI_LIB
+    QScreen* pScreen = QGuiApplication::primaryScreen();
     _screenResolution =
-            QString::number(
-                    QApplication::desktop()->screenGeometry().width()) + "x"
-                    + QString::number(
-                    QApplication::desktop()->screenGeometry().height());
+            QString::number(pScreen->size().width()) + "x" + QString::number(pScreen->size().height());
 #endif
 #endif
 
@@ -229,10 +226,6 @@ void PiwikTracker::sendVisit(const QString& path, const QString& actionName) {
 
     url.setQuery(q);
 
-    // try to ensure the network is accessible
-    _networkAccessManager.setNetworkAccessible(
-            QNetworkAccessManager::Accessible);
-
     QNetworkReply *reply = _networkAccessManager.get(QNetworkRequest(url));
 
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
@@ -255,10 +248,6 @@ void PiwikTracker::sendPing() {
     QUrlQuery q = prepareUrlQuery("");
     q.addQueryItem("ping", "1");
     url.setQuery(q);
-
-    // try to ensure the network is accessible
-    _networkAccessManager.setNetworkAccessible(
-            QNetworkAccessManager::Accessible);
 
     QNetworkReply *reply = _networkAccessManager.get(QNetworkRequest(url));
 
@@ -301,10 +290,6 @@ void PiwikTracker::sendEvent(
     q.addQueryItem("e_v", QString::number(eventValue));
 
     url.setQuery(q);
-
-    // try to ensure the network is accessible
-    _networkAccessManager.setNetworkAccessible(
-            QNetworkAccessManager::Accessible);
 
     QNetworkReply *reply = _networkAccessManager.get(QNetworkRequest(url));
 

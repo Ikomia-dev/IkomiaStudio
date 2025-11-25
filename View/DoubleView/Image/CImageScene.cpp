@@ -626,7 +626,7 @@ void CImageScene::validateSelection()
         QPointF topLeft = pView->mapToScene(p1);
         QPointF bottomRight = pView->mapToScene(p2);
         selectionPath.addRect(QRectF(topLeft, bottomRight));
-        setSelectionArea(selectionPath, Qt::ContainsItemShape);
+        setSelectionArea(selectionPath, Qt::ReplaceSelection, Qt::ContainsItemShape);
     }
     m_pSelectionBox->hide();
 }

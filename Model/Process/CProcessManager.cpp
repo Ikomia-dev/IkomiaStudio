@@ -512,7 +512,7 @@ void CProcessManager::onInstallPluginRequirements(const QString &name)
     }
 }
 
-void CProcessManager::fillModel(QSqlQuery query)
+void CProcessManager::fillModel(QSqlQuery &query)
 {
     while (query.next())
     {

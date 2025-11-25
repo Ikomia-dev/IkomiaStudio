@@ -17,7 +17,7 @@ include(Versions.cmake)
 include(LocalSettings.cmake)
 
 # Qt
-find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql SvgWidgets LinguistTools)
 
 # Python
 if(PRODUCTION)
@@ -114,6 +114,9 @@ else()
     message ("-- VTK not found")
 endif(VTK_FOUND)
 
+if(LINUX)
+    find_package(CURL REQUIRED)
+endif()
 
 add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Controller/CMainCtrl.cpp
@@ -573,7 +576,7 @@ target_include_directories(IkomiaStudio PRIVATE
     # Breakpad
     ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src
     # Quazip
-    ${CMAKE_CURRENT_LIST_DIR}/../quazip/quazip
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/quazip/quazip
     # Qwt
     ${CMAKE_CURRENT_LIST_DIR}/../deps/qwt/src
 )
@@ -584,11 +587,7 @@ target_link_directories(IkomiaStudio PRIVATE
     # GMIC
     ${CMAKE_CURRENT_LIST_DIR}/../gmic/build
     # Qwt
-    ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
-    # Quazip
-    ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
-    # OpenCL
-    "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/lib/x64"
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/qwt/build/lib
 )
 
 target_link_libraries(IkomiaStudio PRIVATE
@@ -600,7 +599,7 @@ target_link_libraries(IkomiaStudio PRIVATE
     Qt::Network
     Qt::OpenGL
     Qt::Sql
-    Qt::Svg
+    Qt::SvgWidgets
     # Python
     Python3::Python
     # Boost
@@ -617,7 +616,7 @@ target_link_libraries(IkomiaStudio PRIVATE
     opencv_core
     opencv_imgcodecs
     opencv_imgproc
-    opencv_alphamat
+    # opencv_alphamat
     opencv_videoio
     opencv_highgui
     opencv_video
@@ -671,7 +670,7 @@ target_link_libraries(IkomiaStudio PRIVATE
     # Qwt
     qwt
     # Quazip
-    quazip1-qt5
+    quazip1-qt6
     # OpenCL
     OpenCL
     # Ikomia
@@ -704,12 +703,13 @@ if(UNIX)
     target_link_directories(IkomiaStudio PRIVATE
         # Breakpad
         ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src/client/linux
+        /usr/lib/x86_64-linux-gnu
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
-        curl
+        CURL::libcurl
         # Linux only OpenCV libs
-        opencv_freetype
+        # opencv_freetype
 
         # GDCM
         gdcmMSFF
@@ -750,9 +750,9 @@ if(UNIX AND NOT PRODUCTION)
         /usr/local/include/opencv4
     )
 
-    target_link_libraries(IkomiaStudio PRIVATE
-        opencv_hdf
-    )
+    # target_link_libraries(IkomiaStudio PRIVATE
+    #     opencv_hdf
+    # )
 endif()
 
 if(WIN32)

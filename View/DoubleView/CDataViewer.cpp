@@ -57,7 +57,7 @@ CDataViewer::CDataViewer(QWidget* parent) : QWidget(parent)
     setActiveWidget(1);
 
     m_pLayout = new QVBoxLayout;
-    m_pLayout->setMargin(10);
+    m_pLayout->setContentsMargins(10, 10, 10, 10);
     m_pLayout->setSpacing(2);
     m_pLayout->addWidget(m_pPathNavigator);
     m_pLayout->addWidget(m_pStacked);

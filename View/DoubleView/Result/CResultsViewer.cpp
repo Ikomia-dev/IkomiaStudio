@@ -55,7 +55,7 @@ CResultsViewer::CResultsViewer(CImageViewSync* pViewSync, CVideoViewSync* pVideo
     m_pImageViewSync = pViewSync;
     m_pVideoViewSync = pVideoViewSync;
     m_pLayout = new QVBoxLayout;
-    m_pLayout->setMargin(10);
+    m_pLayout->setContentsMargins(10, 10, 10, 10);
     m_pTabWidget = new QTabWidget(this);
     m_pTabWidget->setProperty("class", "ResultTabWidget");
     m_pTabWidget->tabBar()->setProperty("class", "ResultTabWidget");

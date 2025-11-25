@@ -17,10 +17,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CBubbleTip.h"
-
 #include <QFontMetrics>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDebug>
 #include <QPushButton>
 #include <QTimer>
@@ -209,7 +207,7 @@ void CBubbleTip::defineArrowPosition()
         desktopSize = m_pApp->size();
     }
     else
-        desktopSize = QApplication::desktop()->size();
+        desktopSize = QApplication::primaryScreen()->size();
 
     if ( m_currentPos.x() < desktopSize.width() / 2 )
     {
@@ -390,7 +388,7 @@ void CBubbleTip::moveButtons()
 
 }
 
-void CBubbleTip::enterEvent( QEvent* ev )
+void CBubbleTip::enterEvent( QEnterEvent* ev )
 {
     setWindowOpacity( 0.9 );
     m_pAnimation->stop();

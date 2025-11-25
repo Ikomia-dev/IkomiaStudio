@@ -137,7 +137,7 @@ class CGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
         GLuint                  m_pbo_depth = 0;
         GLuint                  m_texture = 0;
         GLuint                  m_texture_depth = 0;
-        QTime                   m_time;
+        QElapsedTimer           m_time;
         //Animation
         C3dAnimation            m_animation;
         C3dAnimationSequence    m_animationSequence;

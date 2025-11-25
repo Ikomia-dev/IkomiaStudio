@@ -25,7 +25,7 @@
 
 namespace Ikomia
 {
-    enum TreeItemType : size_t
+    enum TreeItemType : int
     {
         NONE,
         PROJECT,
@@ -40,7 +40,7 @@ namespace Ikomia
         LIVE_STREAM
     };
 
-    enum class Relationship : size_t
+    enum class Relationship : int
     {
         ONE_TO_ONE,
         ONE_TO_MANY,
@@ -64,7 +64,7 @@ namespace Ikomia
         CURRENT
     };
 
-    enum WorkflowInputMode : size_t
+    enum WorkflowInputMode : int
     {
         CURRENT_DATA,
         FIXED_DATA

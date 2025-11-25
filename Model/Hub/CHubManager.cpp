@@ -162,6 +162,9 @@ void CHubManager::onInstallPlugin(CPluginModel::Type type, const QModelIndex &in
     CPluginModel* pModel = nullptr;
     switch(type)
     {
+        case CPluginModel::Type::LOCAL:
+            pModel = &m_localPluginModel;
+            break;
         case CPluginModel::Type::HUB:
             pModel = &m_hubPluginModel;
             break;
@@ -266,6 +269,8 @@ void CHubManager::onReplyReceived(QNetworkReply *pReply, CPluginModel* pModel, H
             break;
         case HubRequestType::DOWNLOAD_PACKAGE:
             savePluginFolder(pModel, pReply);
+            break;
+        case HubRequestType::UPDATE_PLUGIN:
             break;
     }
     pReply->deleteLater();

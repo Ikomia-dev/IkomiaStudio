@@ -313,7 +313,7 @@ void CProcessPopupDlg::adjustParamsWidget(const QModelIndex& index)
     QRect rcItem = m_pProcessView->getListView()->visualRect(index);
     QPoint itemPosition(rcItem.right(), (rcItem.top()+rcItem.bottom()) / 2);
 
-    QRect screen = QApplication::desktop()->availableGeometry(this);
+    QRect screen = QApplication::primaryScreen()->availableGeometry();
     auto size = m_pParamsWidget->sizeHint();
     auto right = itemPosition.x() - m_pParamsWidget->getBorderSize();
     auto top = itemPosition.y() - size.height()/2;

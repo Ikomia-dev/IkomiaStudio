@@ -85,7 +85,7 @@ void CSettingsManager::initWorkflowOption()
 void CSettingsManager::setSettings(const QString &category, const QJsonObject& jsonData)
 {
     QJsonDocument jsonDoc(jsonData);
-    auto blob = jsonDoc.toBinaryData();
+    auto blob = jsonDoc.toJson(QJsonDocument::JsonFormat::Compact);
 
     QSqlQuery q(m_mainDb);
     q.prepare("REPLACE INTO settings (name, value) VALUES (:name, :blob);");
@@ -168,7 +168,7 @@ QJsonObject CSettingsManager::getSettings(const QString &category) const
             throw CException(CoreExCode::NULL_POINTER, QObject::tr("Empty settings data").toStdString(), __func__, __FILE__, __LINE__);
 
         //Retrieve JSON document and object
-        QJsonDocument doc = QJsonDocument::fromBinaryData(data);
+        QJsonDocument doc = QJsonDocument::fromJson(data);
         json = doc.object();
 
         if(json.isEmpty())

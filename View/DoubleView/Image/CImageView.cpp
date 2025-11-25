@@ -449,7 +449,7 @@ void CImageView::zoomFit()
 
 void CImageView::zoomOriginal()
 {
-    resetMatrix();
+    resetTransform();
     m_numScheduledScalings = 0;
     m_bZoomFit = false;
 }

@@ -53,7 +53,7 @@ using ProjectTreeItem = CTreeItem<  std::shared_ptr<CProjectItem>,
                                     std::shared_ptr<CVideoItem>,
                                     std::shared_ptr<CLiveStreamItem>>;
 
-inline uint qHash(const ProjectTreeItem* key, uint seed = 0) Q_DECL_NOTHROW
+inline uint itemHash(const ProjectTreeItem* key, uint seed = 0) Q_DECL_NOTHROW
 {
     assert(key);
 
@@ -63,7 +63,7 @@ inline uint qHash(const ProjectTreeItem* key, uint seed = 0) Q_DECL_NOTHROW
     {
         auto node = key->getChild(i).get();
         assert(node);
-        childrenHashes.insert(qHash(node, seed));
+        childrenHashes.insert(itemHash(node, seed));
     }
     return qHash(QPair<uint, uint>(key->hash(), qHash(childrenHashes, seed)), seed);
 }

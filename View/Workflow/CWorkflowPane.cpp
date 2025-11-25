@@ -19,7 +19,6 @@
 #include "CWorkflowPane.h"
 #include <QListView>
 #include "CWorkflowInfoDlg.h"
-#include "View/Modules/Workflow/CWorkflowNewDlg.h"
 
 CWorkflowPane::CWorkflowPane(QWidget *parent) : QWidget(parent)
 {
@@ -225,7 +224,7 @@ void CWorkflowPane::deleteCurrentWorkflow()
 
 void CWorkflowPane::updateWorkflowInfoPosition(QPoint itemPosition)
 {
-    QRect screen = QApplication::desktop()->availableGeometry(this);
+    QRect screen = QApplication::primaryScreen()->availableGeometry();
     auto size = m_pInfoDlg->size();
     auto right = m_pListView->frameGeometry().right();
     auto top = itemPosition.y() - size.height()/2;

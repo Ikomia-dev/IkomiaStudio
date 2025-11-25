@@ -147,7 +147,7 @@ QString CCppNewPluginWidget::getSelectedFolder()
 {
     QString filePath("");
     QFileDialog fileDlg(this);
-    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
+    fileDlg.setFileMode(QFileDialog::Directory);
     fileDlg.setViewMode(QFileDialog::Detail);
 
     if(fileDlg.exec())

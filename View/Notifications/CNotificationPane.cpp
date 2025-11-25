@@ -29,14 +29,12 @@
 #include <QLineEdit>
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QWindow>
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QToolBox>
 #include "View/Common/CHtmlDelegate.h"
-#include <iostream>
 
 CNotificationPane::CNotificationPane(QWidget* pParent) : QWidget(pParent)
 {
@@ -384,8 +382,8 @@ void CNotificationPane::filterText(const QString& text)
         return;
     }
 
-    QRegExp rx("[, ]");// match a comma or a space
-    QStringList list = text.split(rx, QString::SkipEmptyParts);
+    QRegularExpression rx("[, ]");// match a comma or a space
+    QStringList list = text.split(rx, Qt::SkipEmptyParts);
     QString str = "^.*(";
     for(auto&& it : list)
     {
@@ -393,8 +391,8 @@ void CNotificationPane::filterText(const QString& text)
     }
     str.chop(1);
     str += ").*$";
-    QRegExp regExp(str, Qt::CaseInsensitive, QRegExp::RegExp);
-    m_pProxy->setFilterRegExp(regExp);
+    QRegularExpression regExp(str, QRegularExpression::CaseInsensitiveOption);
+    m_pProxy->setFilterRegularExpression(regExp);
 }
 
 void CNotificationPane::setText(const QString& text, const QString& category)

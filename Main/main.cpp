@@ -48,7 +48,6 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 #endif
 
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
     QApplication app(argc, argv);
 
     // Set thread pool stack size to 8Mb for OpenBlas compatibility (Python module)

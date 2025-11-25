@@ -453,9 +453,9 @@ void CWidgetData::handleMousePressEvent( QMouseEvent* event )
             frameRect = m_pWidget->frameGeometry();
 
         // Calculate intersection between widget geometry and mouse pos
-        m_pressedMousePos.recalculate( event->globalPos(), frameRect );
+        m_pressedMousePos.recalculate( event->globalPosition().toPoint(), frameRect );
         // Set new drag position relative to current widget
-        m_dragPos = event->globalPos() - m_pWidget->frameGeometry().topLeft();
+        m_dragPos = event->globalPosition().toPoint() - m_pWidget->frameGeometry().topLeft();
 
         if ( m_pressedMousePos.m_bOnEdges  )
         {
@@ -493,12 +493,12 @@ void CWidgetData::handleMouseMoveEvent( QMouseEvent* event )
     if ( m_bLeftButtonPressed )
     {
         if ( m_pHelperImpl->m_bWidgetResizable && m_pressedMousePos.m_bOnEdges )
-            resizeWidget( event->globalPos() );
+            resizeWidget( event->globalPosition().toPoint() );
         else if ( m_pHelperImpl->m_bWidgetMovable && m_pressedMousePos.m_bOnBorders )
-            moveWidget( event->globalPos() );
+            moveWidget( event->globalPosition().toPoint() );
     }
     else if ( m_pHelperImpl->m_bWidgetResizable )
-        updateCursorShape( event->globalPos() );
+        updateCursorShape( event->globalPosition().toPoint() );
 }
 
 void CWidgetData::handleLeaveEvent( QEvent* /*event*/ )
@@ -510,7 +510,7 @@ void CWidgetData::handleLeaveEvent( QEvent* /*event*/ )
 void CWidgetData::handleHoverMoveEvent( QHoverEvent* event )
 {
     if ( m_pHelperImpl->m_bWidgetResizable )
-        updateCursorShape( m_pWidget->mapToGlobal( event->pos() ) );
+        updateCursorShape( m_pWidget->mapToGlobal( event->position().toPoint() ) );
 }
 
 

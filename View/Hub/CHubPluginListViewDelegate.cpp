@@ -52,7 +52,7 @@ bool CHubPluginListViewDelegate::editorEvent(QEvent* event, QAbstractItemModel* 
         auto ev = static_cast<QMouseEvent*>(event);
 
         if(getRibbonRect(option).containsPoint(ev->pos(), Qt::OddEvenFill))
-            showTooltip(index, ev->globalPos(), 2);
+            showTooltip(index, ev->globalPosition().toPoint(), 2);
     }
 
     return CListViewDelegate::editorEvent(event, model, option, index);

@@ -55,7 +55,7 @@ bool CListViewDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
             if(getBtnRect(i, option).contains(ev->pos()))
             {
                 m_mapBtnHover[index] = getBtnAction(i);
-                showTooltip(index, ev->globalPos(), i);
+                showTooltip(index, ev->globalPosition().toPoint(), i);
                 break;
             }
         }
