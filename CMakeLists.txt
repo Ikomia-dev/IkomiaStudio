@@ -114,7 +114,7 @@ else()
     message ("-- VTK not found")
 endif(VTK_FOUND)
 
-if(LINUX)
+if(UNIX)
     find_package(CURL REQUIRED)
 endif()
 
