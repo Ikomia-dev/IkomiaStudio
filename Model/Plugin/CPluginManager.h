@@ -94,7 +94,7 @@ class CPluginManager : public QObject
         QString                                 m_cppPath;
         QString                                 m_pythonPath;
         QString                                 m_currentPluginName;
-        const QSet<QString>                     m_systemModules = {"numpy","PyQt5"};
+        const QSet<QString>                     m_systemModules = {"numpy","PyQt6"};
 };
 
 #endif // CPLUGINMANAGER_H
