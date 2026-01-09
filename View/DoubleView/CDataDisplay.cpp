@@ -45,13 +45,13 @@ void CDataDisplay::initLayout(const QString& name)
     m_pLayout->setSpacing(5);
 
     m_pVbox = new QVBoxLayout;
-    m_pVbox->setMargin(3);
+    m_pVbox->setContentsMargins(3, 3, 3, 3);
     m_pVbox->setSpacing(0);
 
     if(m_flags)
     {
         m_pHbox = new QHBoxLayout;
-        m_pHbox->setMargin(0);
+        m_pHbox->setContentsMargins(0, 0, 0, 0);
         m_pHbox->setSpacing(2);
     }
 

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
-set(IKOMIA_VERSION 0.15.1)
-project(IkomiaStudio VERSION 0.15.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.22)
+set(IKOMIA_VERSION 0.16.0)
+project(IkomiaStudio VERSION ${IKOMIA_VERSION} LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_LIST_DIR}/Build)
@@ -17,7 +17,7 @@ include(Versions.cmake)
 include(LocalSettings.cmake)
 
 # Qt
-find_package(Qt5 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql Svg LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Concurrent Gui Widgets Network OpenGL Sql SvgWidgets LinguistTools)
 
 # Python
 if(PRODUCTION)
@@ -35,9 +35,9 @@ find_package(OpenGL REQUIRED)
 # OpenCV
 if(WIN32)
     if(${OPENCV_GPU})
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cuda/x64/vc${MSVC_VERSION}/lib")
+        set(OpenCV_DIR "$ENV{ProgramW6432}/OpenCV/cuda/x64/vc${MSVC_VERSION}/lib")
     else()
-        set(OpenCV_DIR "C:/Program Files/OpenCV/cpu/x64/vc${MSVC_VERSION}/lib")
+        set(OpenCV_DIR "$ENV{ProgramW6432}/OpenCV/cpu/x64/vc${MSVC_VERSION}/lib")
     endif()
 endif()
 
@@ -46,16 +46,19 @@ find_package(OpenCV ${OPENCV_VERSION} REQUIRED)
 # Boost
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
+set(BUILD_SHARED_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 if(PRODUCTION)
-    set(BUILD_SHARED_LIBS ON)
     set(BOOST_PYTHON_TARGET Boost::python)
     find_package(Boost REQUIRED COMPONENTS system filesystem python)
 else()
     set(BOOST_PYTHON_TARGET Boost::python${PYTHON_VERSION_NO_DOT})
-    find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
+    find_package(Boost REQUIRED COMPONENTS filesystem python${PYTHON_VERSION_NO_DOT})
 endif()
+
+# GDCM
+find_package(GDCM ${GDCM_VERSION} REQUIRED)
 
 # VTK
 find_package(VTK ${VTK_MAJOR_MINOR_VERSION} REQUIRED
@@ -114,6 +117,10 @@ else()
     message ("-- VTK not found")
 endif(VTK_FOUND)
 
+# CURL
+if(UNIX)
+    find_package(CURL REQUIRED)
+endif()
 
 add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
     Controller/CMainCtrl.cpp
@@ -529,7 +536,7 @@ add_executable(IkomiaStudio WIN32 MACOSX_BUNDLE
 
 # Resources
 set(RESOURCES "")
-qt5_add_resources(RESOURCES res.qrc)
+qt6_add_resources(RESOURCES res.qrc)
 target_sources(IkomiaStudio PUBLIC ${RESOURCES})
 
 target_precompile_headers(IkomiaStudio PRIVATE
@@ -563,7 +570,7 @@ target_include_directories(IkomiaStudio PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../IkomiaCore/Utils
     ${CMAKE_CURRENT_LIST_DIR}/../IkomiaCore/VolumeRender
     # gmic
-    ${CMAKE_CURRENT_LIST_DIR}/../gmic/src
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/gmic/src
     # Python
     ${Python3_INCLUDE_DIRS}
     # Numpy
@@ -571,24 +578,22 @@ target_include_directories(IkomiaStudio PRIVATE
     # OpenCV
     ${OpenCV_INCLUDE_DIRS}
     # Breakpad
-    ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src
     # Quazip
-    ${CMAKE_CURRENT_LIST_DIR}/../quazip/quazip
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/quazip/quazip
     # Qwt
-    ${CMAKE_CURRENT_LIST_DIR}/../qwt/src
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/qwt/src
 )
 
 target_link_directories(IkomiaStudio PRIVATE
+    # GDCM
+    ${GDCM_LIBRARY_DIRS}
     # Ikomia libs
     ${CMAKE_CURRENT_LIST_DIR}/../IkomiaCore/Build/lib
     # GMIC
-    ${CMAKE_CURRENT_LIST_DIR}/../gmic/build
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/gmic/build
     # Qwt
-    ${CMAKE_CURRENT_LIST_DIR}/../qwt/build/lib
-    # Quazip
-    ${CMAKE_CURRENT_LIST_DIR}/../quazip/build/lib
-    # OpenCL
-    "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/lib/x64"
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/qwt/build/lib
 )
 
 target_link_libraries(IkomiaStudio PRIVATE
@@ -600,24 +605,35 @@ target_link_libraries(IkomiaStudio PRIVATE
     Qt::Network
     Qt::OpenGL
     Qt::Sql
-    Qt::Svg
+    Qt::SvgWidgets
     # Python
     Python3::Python
     # Boost
-    Boost::system
+    Boost::headers
     Boost::filesystem
     ${BOOST_PYTHON_TARGET}
     # OpenMP
     OpenMP::OpenMP_CXX
     # OpenGL
     OpenGL::GL
+    # GDCM
+    gdcmMSFF
+    gdcmDICT
+    gdcmIOD
+    gdcmDSED
+    gdcmCommon
+    gdcmjpeg8
+    gdcmjpeg12
+    gdcmjpeg16
+    gdcmcharls
+    gdcmexpat
     # VTK
     ${VTK_LIBRARIES}
     # OpenCV
     opencv_core
     opencv_imgcodecs
     opencv_imgproc
-    opencv_alphamat
+    # opencv_alphamat
     opencv_videoio
     opencv_highgui
     opencv_video
@@ -671,7 +687,7 @@ target_link_libraries(IkomiaStudio PRIVATE
     # Qwt
     qwt
     # Quazip
-    quazip1-qt5
+    quazip1-qt6
     # OpenCL
     OpenCL
     # Ikomia
@@ -703,28 +719,14 @@ endif()
 if(UNIX)
     target_link_directories(IkomiaStudio PRIVATE
         # Breakpad
-        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/linux
+        ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src/client/linux
+        /usr/lib/x86_64-linux-gnu
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
-        curl
+        CURL::libcurl
         # Linux only OpenCV libs
-        opencv_freetype
-
-        # GDCM
-        gdcmMSFF
-        gdcmDICT
-        gdcmIOD
-        gdcmDSED
-        gdcmCommon
-        gdcmjpeg8
-        gdcmjpeg12
-        gdcmjpeg16
-        gdcmopenjp2
-        gdcmcharls
-        gdcmuuid
-        gdcmexpat
-
+        # opencv_freetype
         # Breakpad
         breakpad_client
     )
@@ -733,7 +735,7 @@ endif()
 if(UNIX AND PRODUCTION)
     target_include_directories(IkomiaStudio PRIVATE
         ../build/breakpad/src/breakpad/src
-        /work/shared/local/include/QuaZip-Qt5-1.5/quazip
+        /work/shared/local/include/QuaZip-Qt6-1.5/quazip
         # OpenCV
         /work/shared/local/include/opencv4
     )
@@ -749,10 +751,6 @@ if(UNIX AND NOT PRODUCTION)
         # OpenCV
         /usr/local/include/opencv4
     )
-
-    target_link_libraries(IkomiaStudio PRIVATE
-        opencv_hdf
-    )
 endif()
 
 if(WIN32)
@@ -760,17 +758,25 @@ if(WIN32)
         # Boost
         ${Boost_INCLUDE_DIRS}/Boost/include/boost-${BOOST_VERSION}
         # OpenCL
-        "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/include"
+        "$ENV{ProgramW6432}/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/include"
         # Zlib
-        "C:/Program Files/zlib/include"
+        $ENV{ProgramW6432}/zlib/include
     )
 
     target_link_directories(IkomiaStudio PRIVATE
+        # Quazip
+        $ENV{ProgramW6432}/QuaZip/lib
+        $ENV{ProgramW6432}/QuaZip/bin
         # GMIC
         $ENV{ProgramW6432}/gmic/bin
         $ENV{ProgramW6432}/gmic/lib
         # Breakpad
-        ${CMAKE_CURRENT_LIST_DIR}/../breakpad/src/client/windows/Release/lib
+        ${CMAKE_CURRENT_LIST_DIR}/../deps/breakpad/src/client/windows/Release/lib
+        # OpenCL
+        "$ENV{ProgramW6432}/NVIDIA GPU Computing Toolkit/CUDA/v${CUDA_VERSION}/lib/x64"
+        # Zlib
+        $ENV{ProgramW6432}/zlib/lib
+        $ENV{ProgramW6432}/zlib/bin
     )
 
     target_link_libraries(IkomiaStudio PRIVATE
@@ -789,13 +795,12 @@ install(TARGETS IkomiaStudio
 #------------------------------------------------------------------------
 #- Run on WINDOWS
 #- To run with QtCreator directly, following paths must be added to PATH:
+# Python: C:/Program Files/Python3xx
 # OpenGL: C:/Program Files(x86)/Windows Kits/10/Lib/10.0.19041.0/um/x64"
 # GDCM: C:/Program Files/GDCM/bin
-# Tesseract: C:/Program Files/tesseract/bin
 # ZLib: C:/Program Files/zlib/bin
-# Quazip: C:/Developpement/quazip/build/lib
+# Quazip:  C:/Program Files/QuaZip/bin
 # Qwt: C:/Developpement/qwt/build/lib
-# gmic: C:/Program Files/gmic/bin/
+# Gmic: C:/Program Files/gmic/bin/
 # OpenSSL: C:/Program Files/OpenSSL-Win64/bin
-# IkomiaCore: C:/Developpement/IkomiaCore/Build/lib
 #------------------------------------------------------------------------

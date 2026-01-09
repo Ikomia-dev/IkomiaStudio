@@ -61,7 +61,7 @@ void CProcessListPopup::resizeListView()
     m_pFrame->updateGeometry();
     updateGeometry();
 
-    QRect rec = QApplication::desktop()->availableGeometry(this);
+    QRect rec = QApplication::primaryScreen()->availableGeometry();
     QSize size = sizeHint();
 
     if(size.height() < rec.height())

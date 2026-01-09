@@ -93,7 +93,7 @@ void CVideoDisplay::initLayout()
                                       CImageDisplay::EXPORT_BUTTON);
     m_pImgDisplay->setSelectOnClick(false);
 
-    auto str = QDateTime::fromTime_t(0).toUTC().toString("mm:ss");
+    auto str = QDateTime::fromSecsSinceEpoch(0).toUTC().toString("mm:ss");
     m_pTotalTime = new QLabel(str);
     m_pCurrentTime = new QLabel(str);
 

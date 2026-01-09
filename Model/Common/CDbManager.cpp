@@ -155,7 +155,6 @@ void CDbManager::executeSqlFile(const QString &path, QSqlDatabase &db)
         QStringList qList = queryStr.split(';', Qt::SkipEmptyParts);
 
         //Initialize regular expression for detecting special queries (`begin transaction` and `commit`).
-        //NOTE: I used new regular expression for Qt5 as recommended by Qt documentation.
         QRegularExpression re_transaction("\\bbegin.transaction.*", QRegularExpression::CaseInsensitiveOption);
         QRegularExpression re_commit("\\bcommit.*", QRegularExpression::CaseInsensitiveOption);
 

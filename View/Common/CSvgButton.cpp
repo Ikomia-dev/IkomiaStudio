@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CSvgButton.h"
-#include <QtSvg>
+#include <QSvgWidget>
 
 CSvgButton::CSvgButton(const QString& filePath, bool isCircular, QWidget* parent) : QToolButton(parent)
 {

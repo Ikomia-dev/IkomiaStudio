@@ -23,7 +23,6 @@
 #include <QPushButton>
 #include "View/Common/CRollupBtn.h"
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QWindow>
 #include <QTimer>
 
@@ -167,7 +166,7 @@ void CNotificationPopup::setDescription(const QString& text)
 void CNotificationPopup::updatePos()
 {
     //Not functionnal and not tested...
-    QRect screen = QApplication::desktop()->availableGeometry(this);
+    QRect screen = QApplication::primaryScreen()->availableGeometry();
     auto size = this->size();
     auto right = this->x();
     auto top = this->y() - size.height();

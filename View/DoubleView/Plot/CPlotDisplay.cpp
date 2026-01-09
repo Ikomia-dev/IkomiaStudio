@@ -49,7 +49,7 @@ void CPlotDisplay::initLayout()
     pCombo->addItem("Pie");
     pCombo->setCurrentIndex(0);
     pCombo->view()->setTextElideMode(Qt::ElideNone);
-    pCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    pCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
     int index = 0;
     if(m_flags & CHECKBOX)

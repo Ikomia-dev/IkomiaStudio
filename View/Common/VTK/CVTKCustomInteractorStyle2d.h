@@ -33,26 +33,25 @@
  * The right button is used to move inside the image
  * (like the middle button in the parent's style)
  */
-class CVTKCustomInteractorStyle2d : public QObject, public vtkInteractorStyleImage
+class CVTKCustomInteractorStyle2d : public vtkInteractorStyleImage
 {
-    Q_OBJECT
+    public:
 
-public:
-	static CVTKCustomInteractorStyle2d* New();
-	vtkTypeMacro(CVTKCustomInteractorStyle2d, vtkInteractorStyleImage);
+        static CVTKCustomInteractorStyle2d* New();
+        vtkTypeMacro(CVTKCustomInteractorStyle2d, vtkInteractorStyleImage)
 
 
-	// The left button has the same behavior as the parent's middle button behavior
-	virtual void OnLeftButtonDown();
-	virtual void OnLeftButtonUp();
+        // The left button has the same behavior as the parent's middle button behavior
+        void OnLeftButtonDown() override;
+        void OnLeftButtonUp() override;
 
-	// These methods are overloaded to disable the default behavior
-	virtual void OnMiddleButtonDown();
-	virtual void OnMiddleButtonUp();
+        // These methods are overloaded to disable the default behavior
+        void OnMiddleButtonDown() override;
+        void OnMiddleButtonUp() override;
 
-    // These methods are overloaded to disable the default behavior
-	virtual void OnRightButtonDown();
-	virtual void OnRightButtonUp();
+        // These methods are overloaded to disable the default behavior
+        void OnRightButtonDown() override;
+        void OnRightButtonUp() override;
 };
 
 #endif // CVTKCUSTOMINTERACTORSTYLE2D_H

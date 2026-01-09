@@ -162,7 +162,7 @@ QToolButton* CMainView::getBtn(int id)
         case BTN_OPEN_VIDEO:
         case BTN_OPEN_STREAM:
         case BTN_OPEN_HUB:
-            pBtn = static_cast<QToolButton*>(getMainToolBarBtn(id)->associatedWidgets().back());
+            pBtn = static_cast<QToolButton*>(getMainToolBarBtn(id)->associatedObjects().back());
             break;
         case BTN_OPEN_LOGIN:
             pBtn = m_pUserLoginBtn;
@@ -818,7 +818,7 @@ void CMainView::readSettings()
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty())
     {
-        const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
+        const QRect availableGeometry = QApplication::primaryScreen()->availableGeometry();
         resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
         move((availableGeometry.width() - width()) / 2,
              (availableGeometry.height() - height()) / 2);

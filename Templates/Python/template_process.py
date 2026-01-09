@@ -117,16 +117,16 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         self.info.authors = "algorithm author"
         self.info.article = "title of associated research article"
         self.info.journal = "publication journal"
-        self.info.year = 2024
+        self.info.year = 2026
         self.info.license = ""
 
         # Ikomia API compatibility
-        # self.info.min_ikomia_version = "0.15.0"
-        # self.info.max_ikomia_version = "0.15.0"
+        # self.info.min_ikomia_version = "0.16.0"
+        # self.info.max_ikomia_version = "0.16.0"
 
         # Python compatibility
-        # self.info.min_python_version = "3.9.0"
-        # self.info.max_python_version = "3.12.0"
+        # self.info.min_python_version = "3.10.0"
+        # self.info.max_python_version = "3.13.0"
 
         # URL of documentation
         self.info.documentation_link = ""
@@ -146,6 +146,12 @@ class _PluginClassName_Factory(dataprocess.CTaskFactory):
         # OBJECT_DETECTION, OBJECT_TRACKING, OCR, OPTICAL_FLOW, OTHER, PANOPTIC_SEGMENTATION,
         # SEMANTIC_SEGMENTATION or SUPER_RESOLUTION
         # self.info.algo_tasks = "OTHER"
+
+        # Min hardware config
+        self.info.hardware_config.min_cpu = 4
+        self.info.hardware_config.min_ram = 16
+        self.info.hardware_config.gpu_required = False
+        self.info.hardware_config.min_vram = 4
 
     def create(self, param=None):
         """Instantiate algorithm object."""

@@ -37,7 +37,7 @@ CRollupBtn::CRollupBtn(const QIcon& icon, const QString& title, bool bExpandable
     connect(m_pLabelBtn, &CLabelBtn::clicked, this, &CRollupBtn::onFold);
 
     m_pHBoxLayout = new QHBoxLayout();
-    m_pHBoxLayout->setMargin(2);
+    m_pHBoxLayout->setContentsMargins(2, 2, 2, 2);
     m_pHBoxLayout->addWidget(m_pLabelBtn);
 
     QFrame* pWidget = new QFrame;
@@ -142,7 +142,7 @@ void CRollupBtn::keyPressEvent(QKeyEvent* event)
     {
         case Qt::Key_Down:
         {
-            QKeyEvent ke(QEvent::KeyPress, Qt::Key_Tab, 0);
+            QKeyEvent ke(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
             QApplication::sendEvent(this, &ke);
             return;
         }
@@ -166,7 +166,7 @@ void CRollupBtn::keyReleaseEvent(QKeyEvent* event)
     {
         case Qt::Key_Down:
         {
-            QKeyEvent ke(QEvent::KeyRelease, Qt::Key_Tab, 0);
+            QKeyEvent ke(QEvent::KeyRelease, Qt::Key_Tab, Qt::NoModifier);
             QApplication::sendEvent(this, &ke);
             return;
         }

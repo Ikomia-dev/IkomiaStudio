@@ -391,7 +391,7 @@ void CProcessPane::expandProcess(QSortFilterProxyModel* pModel, int depth)
 
 void CProcessPane::updateWidgetPosition(QWidget* pWidget, QPoint itemPosition, int borderSize)
 {
-    QRect screen = QApplication::desktop()->availableGeometry(this);
+    QRect screen = QApplication::primaryScreen()->availableGeometry();
     auto size = pWidget->size();
     auto right = m_pCurrentView->frameGeometry().right() - borderSize;
     auto top = itemPosition.y() - size.height()/2;

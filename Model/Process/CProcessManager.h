@@ -130,7 +130,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
     public:
 
-        enum class ID : size_t
+        enum class ID : int
         {
             PROCESS_TREE,
             PROCESS_POPUP
@@ -183,7 +183,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
     protected:
 
-        void                    fillModel(QSqlQuery query) override;
+        void                    fillModel(QSqlQuery& query) override;
 
         void                    updateModelFromSearch(const QString& text);
 
@@ -199,9 +199,9 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         {
             public:
 
-                void                            setModel(CProcessModel* pModel){ m_pModel = pModel; }
-                void                            setIndex(QModelIndex index) { m_index = index; }
-                void                            setDbManager(CTreeDbManager* pParent) { m_pMgr = static_cast<CProcessManager*>(pParent); }
+                void                setModel(CProcessModel* pModel){ m_pModel = pModel; }
+                void                setIndex(QModelIndex index) { m_index = index; }
+                void                setDbManager(CTreeDbManager* pParent) { m_pMgr = static_cast<CProcessManager*>(pParent); }
 
             protected:
 
@@ -214,7 +214,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         {
             public:
 
-                std::shared_ptr<CFolderItem>    load(QSqlQuery q)
+                std::shared_ptr<CFolderItem>    load(QSqlQuery& q)
                 {
                     auto id = q.record().value("id").toInt();
                     auto name = q.record().value("name").toString().toStdString();
@@ -249,7 +249,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
         {
             public:
 
-                std::shared_ptr<CProcessItem>   load(QSqlQuery q)
+                std::shared_ptr<CProcessItem>   load(QSqlQuery& q)
                 {
                     auto id = q.record().value("id").toInt();
                     auto name = q.record().value("name").toString().toStdString();
@@ -279,7 +279,7 @@ class CProcessManager: public QObject, public CTreeDbManager<CProcessModel, std:
 
         // Template functions
         template<typename T, typename Loader>
-        auto                    addCustomTreeItem(QSqlQuery q)
+        auto                    addCustomTreeItem(QSqlQuery& q)
         {
             assert(q.isValid());
 

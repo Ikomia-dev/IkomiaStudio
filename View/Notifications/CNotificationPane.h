@@ -147,7 +147,7 @@ class CNotificationProxyModel : public QSortFilterProxyModel
             auto categoryName = currIndex.data(CNotificationModel::categoryRole).toString();
 
             // Select row if contains some words from search box
-            bool bRet = text.contains(filterRegExp());
+            bool bRet = text.contains(filterRegularExpression());
             if(!m_categoryList.empty())
             {
                 bRet = bRet && m_categoryList.contains(categoryName);

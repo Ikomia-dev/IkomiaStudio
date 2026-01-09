@@ -901,7 +901,7 @@ void CWorkflowModuleWidget::applyPropertyListStyle(QtTreePropertyBrowser *pPropL
 
 void CWorkflowModuleWidget::adjustProcessDocDlgPos()
 {
-    const QRect screen = QApplication::desktop()->availableGeometry(this);
+    const QRect screen = QApplication::primaryScreen()->availableGeometry();
     const QRect rect = m_pProcessDocDlg->geometry();
     int x = screen.right() - rect.width() + m_pProcessDocDlg->getBorderSize();
     int y = screen.bottom() - rect.height();

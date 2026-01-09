@@ -85,7 +85,7 @@ void CProcessParameters::fitToContent()
     adjustSize();
 
     QSize size = sizeHint();
-    QRect rec = QApplication::desktop()->availableGeometry(this);
+    QRect rec = QApplication::primaryScreen()->availableGeometry();
 
     if(size.height() < rec.height())
         resize(size.width(), size.height());
@@ -188,7 +188,7 @@ QFrame *CProcessParameters::createLine()
 
 void CProcessParameters::updateWidgetPosition(QWidget* pWidget, int borderSize)
 {
-    QRect screen = QApplication::desktop()->availableGeometry(this);
+    QRect screen = QApplication::primaryScreen()->availableGeometry();
     QRect rc = frameGeometry();
     auto size = pWidget->size();
     int yCenter = (rc.top() + rc.bottom()) / 2;

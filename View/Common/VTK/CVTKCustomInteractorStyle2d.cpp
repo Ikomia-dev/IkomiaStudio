@@ -5,7 +5,7 @@
 
 
 // Initialization of the new component
-vtkStandardNewMacro(CVTKCustomInteractorStyle2d);
+vtkStandardNewMacro(CVTKCustomInteractorStyle2d)
 
 // The left button has the same behavior as the parent's middle button behavior
 void CVTKCustomInteractorStyle2d::OnLeftButtonDown()

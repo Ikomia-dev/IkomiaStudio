@@ -6,6 +6,7 @@
 # IkomiaCore / IkomiaStudio
 IkomiaStudio.pro.user
 Build/
+build
 LocalSettings.pri
 LocalSettings.cmake
 Doc/Internal/html

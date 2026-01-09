@@ -61,9 +61,18 @@ void CSettingsManager::initNativeDialogOption()
 
 void CSettingsManager::initTutorialHelperOption()
 {
-    QJsonObject json = getSettings("showTuto");
-    if(!json.empty())
-        m_bShowTuto = json["bShowTuto"].toBool();
+    try
+    {
+        QJsonObject json = getSettings("showTuto");
+        if(!json.empty())
+            m_bShowTuto = json["bShowTuto"].toBool();
+    }
+    catch (const CException& e)
+    {
+        // Possible root cause: porting from Qt5 to Qt6 leads to unpossible binary serialization of JSON
+        // There is no way to solve this -> fallback to default value
+        m_bShowTuto = false;
+    }
 
     // Tell preference dlg if tuto is enabled or not
     emit doEnableTutorialHelper(m_bShowTuto);
@@ -85,7 +94,7 @@ void CSettingsManager::initWorkflowOption()
 void CSettingsManager::setSettings(const QString &category, const QJsonObject& jsonData)
 {
     QJsonDocument jsonDoc(jsonData);
-    auto blob = jsonDoc.toBinaryData();
+    auto blob = jsonDoc.toJson(QJsonDocument::JsonFormat::Compact);
 
     QSqlQuery q(m_mainDb);
     q.prepare("REPLACE INTO settings (name, value) VALUES (:name, :blob);");
@@ -168,7 +177,7 @@ QJsonObject CSettingsManager::getSettings(const QString &category) const
             throw CException(CoreExCode::NULL_POINTER, QObject::tr("Empty settings data").toStdString(), __func__, __FILE__, __LINE__);
 
         //Retrieve JSON document and object
-        QJsonDocument doc = QJsonDocument::fromBinaryData(data);
+        QJsonDocument doc = QJsonDocument::fromJson(data);
         json = doc.object();
 
         if(json.isEmpty())

@@ -464,7 +464,7 @@ void CGLWidget::paintGL()
 
 void CGLWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_mousePressPos = event->localPos();
+    m_mousePressPos = event->position().toPoint();
     if(event->buttons() == Qt::MiddleButton)
     {
         m_modelMat.setToIdentity();
@@ -481,8 +481,8 @@ void CGLWidget::mouseMoveEvent(QMouseEvent *event)
     {
         if(event->buttons() == Qt::LeftButton)
         {
-            float rx = 0.5f * (event->localPos().y() - m_mousePressPos.y());
-            float ry = 0.5f * (event->localPos().x() - m_mousePressPos.x());
+            float rx = 0.5f * (event->position().y() - m_mousePressPos.y());
+            float ry = 0.5f * (event->position().x() - m_mousePressPos.x());
             m_eulerAngle.setX(rx);
             m_eulerAngle.setY(ry);
 
@@ -491,22 +491,22 @@ void CGLWidget::mouseMoveEvent(QMouseEvent *event)
         }
         else if(event->buttons() == Qt::RightButton)
         {
-            float dx =  0.01 * (event->localPos().x() - m_mousePressPos.x());
-            float dy =  0.01 * (event->localPos().y() - m_mousePressPos.y());
+            float dx =  0.01 * (event->position().x() - m_mousePressPos.x());
+            float dy =  0.01 * (event->position().y() - m_mousePressPos.y());
             m_modelTranslate.setX(m_modelTranslate.x() + dx);
             m_modelTranslate.setY(m_modelTranslate.y() - dy);
 
             if(m_bAnimationRecording == true)
                 m_animationSequence.addTranslation(dx, -dy, 0.0);
         }
-        m_mousePressPos = event->localPos();
+        m_mousePressPos = event->position();
         update();
     }
 }
 
 void CGLWidget::wheelEvent(QWheelEvent *event)
 {
-    float dz = 0.1 * event->delta() / 120.0;
+    float dz = 0.1 * event->angleDelta().y() / 120.0;
     m_modelTranslate.setZ(m_modelTranslate.z() + dz);
     update();
 

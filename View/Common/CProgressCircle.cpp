@@ -364,7 +364,7 @@ QRectF squared(QRectF rect)
 void CProgressCircle::paintEvent(QPaintEvent *)
 {
     QPixmap pixmap;
-    if (!QPixmapCache::find(key(), pixmap))
+    if (!QPixmapCache::find(key(), &pixmap))
     {
         pixmap = generatePixmap();
         QPixmapCache::insert(key(), pixmap);

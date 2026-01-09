@@ -58,7 +58,7 @@ void CCrashReporDlg::onUpdateProgress(qint64 sentBytes, qint64 totalBytes)
 
 void CCrashReporDlg::onError(const QString& err)
 {
-    QMessageBox msgBox(QMessageBox::Warning, tr("Warning"), err, 0, this);
+    QMessageBox msgBox(QMessageBox::Warning, tr("Warning"), err, QMessageBox::StandardButton::NoButton, this);
     msgBox.addButton(tr("Retry &Again"), QMessageBox::AcceptRole);
     msgBox.addButton(tr("&Send later"), QMessageBox::RejectRole);
 
