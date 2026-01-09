@@ -54,7 +54,7 @@ if(PRODUCTION)
     find_package(Boost REQUIRED COMPONENTS system filesystem python)
 else()
     set(BOOST_PYTHON_TARGET Boost::python${PYTHON_VERSION_NO_DOT})
-    find_package(Boost REQUIRED COMPONENTS system filesystem python${PYTHON_VERSION_NO_DOT})
+    find_package(Boost REQUIRED COMPONENTS filesystem python${PYTHON_VERSION_NO_DOT})
 endif()
 
 # GDCM
@@ -610,7 +610,6 @@ target_link_libraries(IkomiaStudio PRIVATE
     Python3::Python
     # Boost
     Boost::headers
-    Boost::system
     Boost::filesystem
     ${BOOST_PYTHON_TARGET}
     # OpenMP
