@@ -154,7 +154,7 @@ void CPluginManager::onInstallPythonPkg(const QString &moduleName)
     QString cmd;
     QStringList args;
     Utils::Python::prepareQCommand(cmd, args);
-    args << "-m" << "pip" << "install" << pkgName;
+    args << "-m" << "pip" << "install" << pkgName << "--no-build-isolation";
     QProcess* pProcess = new QProcess(this);
     connect(pProcess, &QProcess::readyReadStandardOutput, [pProcess]
     {
@@ -207,7 +207,7 @@ void CPluginManager::onUpdatePythonPkg(const QString &moduleName)
     QString cmd;
     QStringList args;
     Utils::Python::prepareQCommand(cmd, args);
-    args << "-m" << "pip" << "install" << "--upgrade" << pkgName;
+    args << "-m" << "pip" << "install" << "--upgrade" << pkgName << "--no-build-isolation";
     QProcess* pProcess = new QProcess(this);
     connect(pProcess, &QProcess::readyReadStandardOutput, [pProcess]
     {

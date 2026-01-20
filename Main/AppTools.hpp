@@ -381,14 +381,14 @@ namespace Ikomia
             inline void         installRequirements(const QString& txtFile)
             {
                 QStringList args = {"-m", "pip", "install", "-r"};
-                args << txtFile;
+                args << txtFile << "--no-build-isolation";
                 runQCommand(args);
             }
             inline void         installPackage(const QString& package, const QString& version)
             {
                 QStringList args = {"-m", "pip", "install"};
                 QString packageWithVersion = package + "==" + version;
-                args << packageWithVersion;
+                args << packageWithVersion << "--no-build-isolation";
                 runQCommand(args);
             }
             inline void         uninstallPackage(const QString& package)
