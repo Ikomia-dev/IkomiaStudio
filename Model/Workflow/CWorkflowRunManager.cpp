@@ -623,10 +623,10 @@ void CWorkflowRunManager::setBatchInput(int index)
     }
 }
 
-std::set<IODataType> CWorkflowRunManager::getTargetDataTypes(size_t inputIndex) const
+std::set<IODataTypeEx> CWorkflowRunManager::getTargetDataTypes(size_t inputIndex) const
 {
     assert(m_workflowPtr);
-    std::set<IODataType> types;
+    std::set<IODataTypeEx> types;
     WorkflowVertex root = m_workflowPtr->getRootId();
     auto outEdges = m_workflowPtr->getOutEdges(root);
 
@@ -637,7 +637,7 @@ std::set<IODataType> CWorkflowRunManager::getTargetDataTypes(size_t inputIndex) 
         {
             WorkflowVertex target = m_workflowPtr->getEdgeTarget(*it);
             WorkflowTaskPtr targetTask = m_workflowPtr->getTask(target);
-            IODataType type = targetTask->getInputDataType(edge->getTargetIndex());
+            IODataTypeEx type = targetTask->getInputDataType(edge->getTargetIndex());
             types.insert(type);
         }
     }
@@ -694,10 +694,10 @@ size_t CWorkflowRunManager::getBatchCount() const
     return count;
 }
 
-std::set<IODataType> CWorkflowRunManager::getOriginTargetDataTypes(size_t inputIndex) const
+std::set<IODataTypeEx> CWorkflowRunManager::getOriginTargetDataTypes(size_t inputIndex) const
 {
     assert(m_workflowPtr);
-    std::set<IODataType> types;
+    std::set<IODataTypeEx> types;
     WorkflowVertex root = m_workflowPtr->getRootId();
     auto outEdges = m_workflowPtr->getOutEdges(root);
 
@@ -708,7 +708,7 @@ std::set<IODataType> CWorkflowRunManager::getOriginTargetDataTypes(size_t inputI
         {
             WorkflowVertex target = m_workflowPtr->getEdgeTarget(*it);
             WorkflowTaskPtr targetTask = m_workflowPtr->getTask(target);
-            IODataType type = targetTask->getOriginalInputDataType(edge->getTargetIndex());
+            IODataTypeEx type = targetTask->getOriginalInputDataType(edge->getTargetIndex());
             types.insert(type);
         }
     }

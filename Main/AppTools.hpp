@@ -34,127 +34,107 @@ namespace Ikomia
     {
         namespace Workflow
         {
-            inline QColor       getPortColor(IODataType dataType)
+            inline QColor       getPortColor(IODataTypeEx dataType)
             {
-                QColor color = Qt::black;
+                if (!dataType.isBaseValue())
+                    return QColor(0, 0, 0);
 
-                switch(dataType)
+                switch(dataType.asBaseEnum())
                 {
                     case IODataType::NONE:
-                        color = QColor(0, 0, 0);
-                        break;
+                        return QColor(0, 0, 0);
 
                     case IODataType::IMAGE:
                     case IODataType::IMAGE_BINARY:
                     case IODataType::IMAGE_LABEL:
-                        color = QColor(200, 25, 25);
-                        break;
+                        return QColor(200, 25, 25);
 
                     case IODataType::DESCRIPTORS:
-                        color = QColor(200, 150, 120);
-                        break;
+                        return QColor(200, 150, 120);
 
                     case IODataType::VOLUME:
                     case IODataType::VOLUME_BINARY:
                     case IODataType::VOLUME_LABEL:
-                        color = QColor(240, 240, 0);
-                        break;
+                        return QColor(240, 240, 0);
 
                     case IODataType::POSITION:
-                        color = QColor(25, 200, 25);
-                        break;
+                        return QColor(25, 200, 25);
 
                     case IODataType::INPUT_GRAPHICS:
                     case IODataType::OUTPUT_GRAPHICS:
-                        color = QColor(65, 80, 200);
-                        break;
+                        return QColor(65, 80, 200);
 
                     case IODataType::BLOB_VALUES:
-                        color = QColor(160, 50, 160);
-                        break;
+                        return QColor(160, 50, 160);
 
                     case IODataType::NUMERIC_VALUES:
-                        color = QColor(50, 150, 100);
-                        break;
+                        return QColor(50, 150, 100);
 
                     case IODataType::VIDEO:
                     case IODataType::VIDEO_BINARY:
                     case IODataType::VIDEO_LABEL:
-                        color = QColor(0, 190, 165);
-                        break;
+                        return QColor(0, 190, 165);
 
                     case IODataType::LIVE_STREAM:
                     case IODataType::LIVE_STREAM_BINARY:
                     case IODataType::LIVE_STREAM_LABEL:
-                        color = QColor(225, 75, 45);
-                        break;
+                        return QColor(225, 75, 45);
 
                     case IODataType::WIDGET:
-                        color = QColor(105, 255, 85);
-                        break;
+                        return QColor(105, 255, 85);
 
                     case IODataType::PROJECT_FOLDER:
-                        color = QColor(255,0,170);
-                        break;
+                        return QColor(255,0,170);
 
                     case IODataType::FOLDER_PATH:
-                        color = QColor(255,0,170);
-                        break;
+                        return QColor(255,0,170);
 
                     case IODataType::FILE_PATH:
-                        color = QColor(180,180,180);
-                        break;
+                        return QColor(180,180,180);
 
                     case IODataType::DNN_DATASET:
-                        color = QColor(255,255,255);
-                        break;
+                        return QColor(255,255,255);
 
                     case IODataType::DATA_DICT:
-                        color = QColor(128,128,128);
-                        break;
+                        return QColor(128,128,128);
 
                     case IODataType::ARRAY:
-                        color = QColor(45,180,255);
-                        break;
+                        return QColor(45,180,255);
 
                     case IODataType::OBJECT_DETECTION:
-                        color = QColor(40, 5, 110);
-                        break;
+                        return QColor(40, 5, 110);
 
                     case IODataType::INSTANCE_SEGMENTATION:
-                        color = QColor(60, 25, 130);
-                        break;
+                        return QColor(60, 25, 130);
 
                     case IODataType::SEMANTIC_SEGMENTATION:
-                        color = QColor(80, 45, 150);
-                        break;
+                        return QColor(80, 45, 150);
 
                     case IODataType::KEYPOINTS:
-                        color = QColor(80, 10, 220);
-                        break;
+                        return QColor(80, 10, 220);
 
                     case IODataType::TEXT:
-                        color = QColor(30,130,255);
-                        break;
+                    case IODataType::TEXT_STREAM:
+                        return QColor(30,130,255);
 
                     case IODataType::JSON:
-                        color = QColor(180,45,255);
-                        break;
+                        return QColor(180,45,255);
 
                     case IODataType::SCENE_3D:
-                        color = QColor(45,45,255);
-                        break;
+                        return QColor(45,45,255);
+
+                    default:
+                        return QColor(0, 0, 0);
+
                 }
-                return color;
             }
 
-            inline bool         isPortClickable(IODataType dataType, bool bInput)
+            inline bool         isPortClickable(IODataTypeEx dataType, bool bInput)
             {
-                if(bInput == false)
+                if(bInput == false || !dataType.isBaseValue())
                     return false;
 
-                bool bClickable = false;
-                switch(dataType)
+                switch(dataType.asBaseEnum())
                 {
                     case IODataType::NONE:
                     case IODataType::IMAGE:
@@ -184,18 +164,19 @@ namespace Ikomia
                     case IODataType::SEMANTIC_SEGMENTATION:
                     case IODataType::KEYPOINTS:
                     case IODataType::TEXT:
+                    case IODataType::TEXT_STREAM:
                     case IODataType::JSON:
                     case IODataType::SCENE_3D:
-                        bClickable = false;
-                        break;
+                        return false;
 
                     case IODataType::INPUT_GRAPHICS:
                     case IODataType::FOLDER_PATH:
                     case IODataType::FILE_PATH:
-                        bClickable = true;
-                        break;
+                        return true;
+
+                    default:
+                        return false;
                 }
-                return bClickable;
             }
         }
 

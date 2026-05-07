@@ -167,135 +167,143 @@ void CResultManager::manageOutputs(const WorkflowTaskPtr &taskPtr, const Workflo
 
             if(outputPtr->isDataAvailable() && outputPtr->isDisplayable())
             {
-                switch(outputPtr->getDataType())
+                IODataTypeEx dataType = outputPtr->getDataType();
+                if (!dataType.isBaseValue())
+                    manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                else
                 {
-                    case IODataType::IMAGE:
-                    case IODataType::IMAGE_BINARY:
-                    case IODataType::IMAGE_LABEL:
-                    case IODataType::POSITION:
-                        manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        break;
-
-                    case IODataType::VIDEO:
-                    case IODataType::VIDEO_BINARY:
-                    case IODataType::VIDEO_LABEL:
-                    case IODataType::LIVE_STREAM:
-                    case IODataType::LIVE_STREAM_BINARY:
-                    case IODataType::LIVE_STREAM_LABEL:
+                    switch(dataType.asBaseEnum())
                     {
-                        //Get video inputs index to synchronize views
-                        std::set<IODataType> types = {IODataType::VIDEO, IODataType::VIDEO_BINARY, IODataType::VIDEO_LABEL,
-                                                      IODataType::LIVE_STREAM, IODataType::LIVE_STREAM_BINARY, IODataType::LIVE_STREAM_LABEL};
-                        std::vector<int> videoInputIndices = m_pWorkflowMgr->getDisplayedInputIndices(taskPtr, types);
-                        manageVideoOutput(taskPtr, outputPtr, videoIndex++, videoInputIndices, pOutputViewProp);
-                        break;
+                        case IODataType::IMAGE:
+                        case IODataType::IMAGE_BINARY:
+                        case IODataType::IMAGE_LABEL:
+                        case IODataType::POSITION:
+                            manageImageOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
+                            break;
+
+                        case IODataType::VIDEO:
+                        case IODataType::VIDEO_BINARY:
+                        case IODataType::VIDEO_LABEL:
+                        case IODataType::LIVE_STREAM:
+                        case IODataType::LIVE_STREAM_BINARY:
+                        case IODataType::LIVE_STREAM_LABEL:
+                        {
+                            //Get video inputs index to synchronize views
+                            std::set<IODataTypeEx> types = {IODataType::VIDEO, IODataType::VIDEO_BINARY, IODataType::VIDEO_LABEL,
+                                                            IODataType::LIVE_STREAM, IODataType::LIVE_STREAM_BINARY, IODataType::LIVE_STREAM_LABEL};
+                            std::vector<int> videoInputIndices = m_pWorkflowMgr->getDisplayedInputIndices(taskPtr, types);
+                            manageVideoOutput(taskPtr, outputPtr, videoIndex++, videoInputIndices, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::VOLUME:
+                        case IODataType::VOLUME_BINARY:
+                        case IODataType::VOLUME_LABEL:
+                            manageVolumeOutput(outputPtr, taskPtr->getName(), volumeIndex++, pOutputViewProp);
+                            break;
+
+                        case IODataType::BLOB_VALUES:
+                            manageBlobOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            break;
+
+                        case IODataType::NUMERIC_VALUES:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CNumericIOBase>(outputPtr);
+                            assert(outPtr);
+                            auto outType = outPtr->getOutputType();
+
+                            if(outType == NumericOutputType::TABLE)
+                                manageTableOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            else if (outType == NumericOutputType::PLOT)
+                                managePlotOutput(outputPtr, taskPtr->getName(), plotIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::OUTPUT_GRAPHICS:
+                            if(m_pWorkflowMgr->isRoot(taskId) == false)
+                                manageGraphicsOutput(taskPtr, outputPtr);
+                            break;
+
+                        case IODataType::WIDGET:
+                            manageWidgetOutput(outputPtr, taskPtr->getName(), widgetIndex++, pOutputViewProp);
+                            break;
+
+                        case IODataType::DNN_DATASET:
+                            manageDatasetOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
+                            break;
+
+                        case IODataType::DATA_DICT:
+                            manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                            break;
+
+                        case IODataType::OBJECT_DETECTION:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CObjectDetectionIO>(outputPtr);
+                            assert(outPtr);
+                            manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                            manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::INSTANCE_SEGMENTATION:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CInstanceSegIO>(outputPtr);
+                            assert(outPtr);
+                            manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                            manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                            manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::SEMANTIC_SEGMENTATION:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CSemanticSegIO>(outputPtr);
+                            assert(outPtr);
+                            manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                            manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
+                            manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                            break;
+                        }
+
+                        case IODataType::KEYPOINTS:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CKeypointsIO>(outputPtr);
+                            assert(outPtr);
+                            manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                            manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::TEXT:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CTextIO>(outputPtr);
+                            assert(outPtr);
+                            manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
+                            manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::JSON:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
+                            assert(outPtr);
+                            manageJsonOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        case IODataType::SCENE_3D:
+                        {
+                            auto outPtr = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
+                            assert(outPtr);
+                            manageScene3dOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
+                            break;
+                        }
+
+                        default:
+                            manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
+                            break;
                     }
-
-                    case IODataType::VOLUME:
-                    case IODataType::VOLUME_BINARY:
-                    case IODataType::VOLUME_LABEL:
-                        manageVolumeOutput(outputPtr, taskPtr->getName(), volumeIndex++, pOutputViewProp);
-                        break;
-
-                    case IODataType::BLOB_VALUES:
-                        manageBlobOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        break;
-
-                    case IODataType::NUMERIC_VALUES:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CNumericIOBase>(outputPtr);
-                        assert(outPtr);
-                        auto outType = outPtr->getOutputType();
-
-                        if(outType == NumericOutputType::TABLE)
-                            manageTableOutput(outputPtr, taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        else if (outType == NumericOutputType::PLOT)
-                            managePlotOutput(outputPtr, taskPtr->getName(), plotIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::OUTPUT_GRAPHICS:
-                        if(m_pWorkflowMgr->isRoot(taskId) == false)
-                            manageGraphicsOutput(taskPtr, outputPtr);
-                        break;
-
-                    case IODataType::WIDGET:
-                        manageWidgetOutput(outputPtr, taskPtr->getName(), widgetIndex++, pOutputViewProp);
-                        break;
-
-                    case IODataType::DNN_DATASET:
-                        manageDatasetOutput(outputPtr, taskPtr->getName(), pOutputViewProp);
-                        break;
-
-                    case IODataType::DATA_DICT:
-                        manageTextOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
-                        break;
-
-                    case IODataType::OBJECT_DETECTION:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CObjectDetectionIO>(outputPtr);
-                        assert(outPtr);
-                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
-                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::INSTANCE_SEGMENTATION:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CInstanceSegIO>(outputPtr);
-                        assert(outPtr);
-                        manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
-                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::SEMANTIC_SEGMENTATION:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CSemanticSegIO>(outputPtr);
-                        assert(outPtr);
-                        manageImageOutput(outPtr->getMaskImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        manageImageOutput(outPtr->getLegendImageIO(), taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
-                        break;
-                    }
-
-                    case IODataType::KEYPOINTS:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CKeypointsIO>(outputPtr);
-                        assert(outPtr);
-                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
-                        manageBlobOutput(outPtr->getBlobMeasureIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::TEXT:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CTextIO>(outputPtr);
-                        assert(outPtr);
-                        manageGraphicsOutput(taskPtr, outPtr->getGraphicsIO());
-                        manageTableOutput(outPtr->getDataStringIO(), taskPtr->getName(), tableIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::JSON:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CJsonIO>(outputPtr);
-                        assert(outPtr);
-                        manageJsonOutput(outputPtr, taskPtr->getName(), textIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    case IODataType::SCENE_3D:
-                    {
-                        auto outPtr = std::dynamic_pointer_cast<CScene3dIO>(outputPtr);
-                        assert(outPtr);
-                        manageScene3dOutput(outputPtr, taskPtr->getName(), imageIndex++, pOutputViewProp);
-                        break;
-                    }
-
-                    default: break;
                 }
             }
         }
@@ -409,16 +417,14 @@ void CResultManager::notifyDisplaySelected(int index)
     if(index == m_selectedIndex)
         return;
 
-    switch(outputPtr->getDataType())
+    const auto dataType = outputPtr->getDataType();
+    if (dataType == IODataType::VOLUME ||
+        dataType == IODataType::VOLUME_BINARY ||
+        dataType == IODataType::VOLUME_LABEL)
     {
-        case IODataType::VOLUME:
-        case IODataType::VOLUME_BINARY:
-        case IODataType::VOLUME_LABEL:
-            updateVolumeRender(outputPtr);
-            break;
-
-        default: break;
+        updateVolumeRender(outputPtr);
     }
+
     m_selectedIndex = index;
 }
 
@@ -779,11 +785,13 @@ OutputDisplays CResultManager::getOutputDisplays(const WorkflowTaskPtr &pTask) c
     return outDisplays;
 }
 
-DisplayType CResultManager::getResultViewType(IODataType type) const
+DisplayType CResultManager::getResultViewType(IODataTypeEx type) const
 {
     DisplayType viewType = DisplayType::EMPTY_DISPLAY;
+    if (!type.isBaseValue())
+        return DisplayType::EMPTY_DISPLAY;
 
-    switch(type)
+    switch(type.asBaseEnum())
     {
         case IODataType::INPUT_GRAPHICS:
         case IODataType::OUTPUT_GRAPHICS: viewType = DisplayType::EMPTY_DISPLAY; break;
@@ -822,9 +830,9 @@ DisplayType CResultManager::getResultViewType(IODataType type) const
     return viewType;
 }
 
-std::set<IODataType> CResultManager::getImageBasedDataTypes() const
+std::set<IODataTypeEx> CResultManager::getImageBasedDataTypes() const
 {
-    std::set<IODataType> dataTypes = {
+    std::set<IODataTypeEx> dataTypes = {
         IODataType::IMAGE,
         IODataType::IMAGE_BINARY,
         IODataType::IMAGE_LABEL,

@@ -22,7 +22,7 @@
 #include "CWorkflowScene.h"
 #include "Main/AppTools.hpp"
 
-CWorkflowPortItem::CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataType dataType, QGraphicsItem *parent)
+CWorkflowPortItem::CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataTypeEx dataType, QGraphicsItem *parent)
     : QGraphicsPathItem(parent)
 {
     m_index = index;
@@ -35,7 +35,7 @@ CWorkflowPortItem::CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex t
     m_highlightColor = pal.highlight().color();
 }
 
-CWorkflowPortItem::CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataType dataType, QColor color, QGraphicsItem *parent)
+CWorkflowPortItem::CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataTypeEx dataType, QColor color, QGraphicsItem *parent)
     : QGraphicsPathItem(parent)
 {
     m_index = index;
@@ -89,7 +89,7 @@ QColor CWorkflowPortItem::getColor() const
     return m_color;
 }
 
-IODataType CWorkflowPortItem::getDataType() const
+IODataTypeEx CWorkflowPortItem::getDataType() const
 {
     return m_dataType;
 }
@@ -139,7 +139,7 @@ void CWorkflowPortItem::setRadius(float radius)
 
 void CWorkflowPortItem::setInfo(const CDataInfoPtr &info)
 {
-    QString strDataType = QString("<b>Data: </b>%1").arg(Utils::Workflow::getIODataName(m_dataType));
+    QString strDataType = QString("<b>Data: </b>%1").arg(QString::fromStdString(m_dataType.displayName()));
     QString text = strDataType;
 
     if(info)
@@ -159,7 +159,7 @@ void CWorkflowPortItem::setInfo(const CDataInfoPtr &info)
     setToolTip(text);
 }
 
-void CWorkflowPortItem::setDataType(IODataType type)
+void CWorkflowPortItem::setDataType(IODataTypeEx type)
 {
     m_dataType = type;
 }

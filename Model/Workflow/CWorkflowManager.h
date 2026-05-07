@@ -56,7 +56,7 @@ class CWorkflowManager : public QObject
         std::string                 getWorkflowKeywords() const;
         WorkflowVertex              getRootId() const;
         WorkflowTaskIOPtr           getInput(size_t index) const;
-        IODataType                  getInputDataType(size_t index) const;
+        IODataTypeEx                getInputDataType(size_t index) const;
         WorkflowInputViewMode       getInputViewMode() const;
         std::vector<WorkflowVertex> getAllChilds(const WorkflowVertex& id) const;
         QStringList                 getWorkflowNames() const;
@@ -66,7 +66,7 @@ class CWorkflowManager : public QObject
         CWorkflowInputViewManager*  getInputViewManager();
         int                         getCurrentFPS() const;
         QModelIndex                 getCurrentVideoInputModelIndex() const;
-        std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataType> &types) const;
+        std::vector<int>            getDisplayedInputIndices(const WorkflowTaskPtr& taskPtr, const std::set<IODataTypeEx> &types) const;
         CWorkflow::ExposedParams    getWorflowExposedParams() const;
         CWorkflowScaleManager*      getScaleManager();
 

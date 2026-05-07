@@ -60,7 +60,7 @@ class CWorkflowInputViewManager : public QObject
 
         std::map<DisplayType,int> getInputTypes(const WorkflowTaskPtr &pTask) const;
         std::map<DisplayType,int> getInputType(const WorkflowTaskPtr &pTask, int index) const;
-        DisplayType               getDataViewerType(const IODataType &dataType) const;
+        DisplayType               getDataViewerType(const IODataTypeEx &dataType) const;
         QModelIndex               getSrcModelIndex(size_t index) const;
 
         void    manageImageInput(int index, const WorkflowTaskIOPtr& inputPtr, const std::string& taskName, CViewPropertyIO *pViewProp);

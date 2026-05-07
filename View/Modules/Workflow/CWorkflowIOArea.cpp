@@ -105,7 +105,7 @@ void CWorkflowIOArea::addPort(const WorkflowTaskIOPtr& inputPtr, bool isBatch)
         xPort = rect.left();
 
     QColor portColor = Qt::white;
-    IODataType type = IODataType::NONE;
+    IODataTypeEx type = IODataType::NONE;
 
     if(inputPtr != nullptr)
     {
@@ -139,9 +139,9 @@ void CWorkflowIOArea::updatePort(int index, const WorkflowTaskIOPtr &inputPtr, b
 
     //Update port
     QColor portColor = Qt::white;
-    IODataType type = IODataType::NONE;
+    IODataTypeEx type = IODataType::NONE;
 
-    if(inputPtr != nullptr)
+    if (inputPtr != nullptr)
     {
         type = inputPtr->getDataType();
         portColor = Utils::Workflow::getPortColor(type);
@@ -318,10 +318,11 @@ QPointF CWorkflowIOArea::getNextPortCenter() const
 
 QPixmap CWorkflowIOArea::getThumbnailIcon(const std::shared_ptr<CWorkflowTaskIO> &inputPtr, bool isBatch)
 {
-    if(inputPtr == nullptr)
+    IODataTypeEx dataType = inputPtr->getDataType();
+    if(inputPtr == nullptr || !dataType.isBaseValue())
         return QPixmap(":/Images/help.png").scaled(m_thumbnailSize);
 
-    switch(inputPtr->getDataType())
+    switch(dataType.asBaseEnum())
     {
         case IODataType::IMAGE:
         case IODataType::IMAGE_LABEL:

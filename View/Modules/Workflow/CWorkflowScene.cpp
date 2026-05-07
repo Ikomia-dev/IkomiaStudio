@@ -880,7 +880,7 @@ void CWorkflowScene::onPortClicked(CWorkflowPortItem *pPort, const QPointF &pos)
     if (!pPort)
         return;
 
-    IODataType type = pPort->getDataType();
+    IODataTypeEx type = pPort->getDataType();
     if(type == IODataType::INPUT_GRAPHICS)
         openGraphicsLayerChoiceDlg(pPort, pos);
     else if(type == IODataType::FOLDER_PATH)

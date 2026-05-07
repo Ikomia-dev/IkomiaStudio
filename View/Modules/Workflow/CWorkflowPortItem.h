@@ -34,8 +34,8 @@ class CWorkflowPortItem : public QGraphicsPathItem
 
         enum { Type = UserType + WorkflowGraphicsItem::PORT };
 
-        CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataType dataType, QGraphicsItem* parent = Q_NULLPTR);
-        CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataType dataType, QColor color, QGraphicsItem* parent = Q_NULLPTR);
+        CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataTypeEx dataType, QGraphicsItem* parent = Q_NULLPTR);
+        CWorkflowPortItem(size_t index, bool bInput, WorkflowVertex taskId, IODataTypeEx dataType, QColor color, QGraphicsItem* parent = Q_NULLPTR);
         virtual ~CWorkflowPortItem();
 
         //Getters
@@ -46,7 +46,7 @@ class CWorkflowPortItem : public QGraphicsPathItem
         int                             getConnectionCount() const;
         QVector<CWorkflowConnection*>   getConnections() const;
         QColor                          getColor() const;
-        IODataType                      getDataType() const;
+        IODataTypeEx                    getDataType() const;
 
         bool                            isInput() const;
         bool                            isConnectedTo(const WorkflowVertex& id) const;
@@ -58,7 +58,7 @@ class CWorkflowPortItem : public QGraphicsPathItem
         void                            setAssigned(bool bAssign);
         void                            setRadius(float radius);
         void                            setInfo(const CDataInfoPtr& info);
-        void                            setDataType(IODataType type);
+        void                            setDataType(IODataTypeEx type);
 
         bool                            connectionExists(CWorkflowPortItem* pPort) const;
 
@@ -93,7 +93,7 @@ class CWorkflowPortItem : public QGraphicsPathItem
         bool                            m_bAssigned = false;
         WorkflowVertex                  m_taskId;
         QVector<CWorkflowConnection*>   m_connections;
-        IODataType                      m_dataType = IODataType::NONE;
+        IODataTypeEx                    m_dataType = IODataType::NONE;
         float                           m_baseRadius = 4.0;
         float                           m_radius = 4.0;
         QColor                          m_color = Qt::white;

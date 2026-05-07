@@ -550,7 +550,7 @@ if(MSVC)
     )
 endif()
 
-target_compile_features(IkomiaStudio PRIVATE cxx_std_14)
+target_compile_features(IkomiaStudio PRIVATE cxx_std_17)
 
 target_compile_definitions(IkomiaStudio PRIVATE
     BOOST_ALL_NO_LIB

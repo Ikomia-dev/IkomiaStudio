@@ -95,8 +95,8 @@ class CWorkflowItem : public QObject, public QGraphicsPathItem
 
         void                            paintStatus(QPainter* painter, QRect rect);
 
-        void                            addInputPort(IODataType type, const QColor &color);
-        void                            addOutputPort(IODataType type, const QColor& color);
+        void                            addInputPort(IODataTypeEx type, const QColor &color);
+        void                            addOutputPort(IODataTypeEx type, const QColor& color);
         QPushButton *                   addActionButton(CWorkflowTask::ActionFlag flag, const QString &iconUncheckedPath, const QString &iconCheckedPath, const QString &text);
 
         void                            updateInputPorts(const WorkflowTaskPtr &pTask);

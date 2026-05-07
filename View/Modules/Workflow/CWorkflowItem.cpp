@@ -212,7 +212,7 @@ bool CWorkflowItem::isConnectedTo(const WorkflowVertex &id) const
     return false;
 }
 
-void CWorkflowItem::addInputPort(IODataType type, const QColor& color)
+void CWorkflowItem::addInputPort(IODataTypeEx type, const QColor& color)
 {
     auto pPort = new CWorkflowPortItem(m_inputPorts.size(), true, m_id, type, color, this);
     pPort->setRadius(m_portRadius);
@@ -233,7 +233,7 @@ void CWorkflowItem::addInputPort(IODataType type, const QColor& color)
     }
 }
 
-void CWorkflowItem::addOutputPort(IODataType type, const QColor& color)
+void CWorkflowItem::addOutputPort(IODataTypeEx type, const QColor& color)
 {
     auto pPort = new CWorkflowPortItem(m_outputPorts.size(), false, m_id, type, color, this);
     pPort->setRadius(m_portRadius);
@@ -420,7 +420,7 @@ void CWorkflowItem::updateInputPorts(const WorkflowTaskPtr &pTask)
 
     for(int i=0; i<std::min(itemPortNb, taskPortNb); ++i)
     {
-        IODataType type = pTask->getInputDataType(i);
+        IODataTypeEx type = pTask->getInputDataType(i);
         m_inputPorts[i]->setDataType(type);
         m_inputPorts[i]->setColor(Utils::Workflow::getPortColor(type));
     }
@@ -429,7 +429,7 @@ void CWorkflowItem::updateInputPorts(const WorkflowTaskPtr &pTask)
     {
         for(int i=itemPortNb; i<taskPortNb; ++i)
         {
-            IODataType type = pTask->getInputDataType(i);
+            IODataTypeEx type = pTask->getInputDataType(i);
             auto color = Utils::Workflow::getPortColor(type);
             addInputPort(type, color);
         }
@@ -475,7 +475,7 @@ void CWorkflowItem::updateOutputPorts(const WorkflowTaskPtr &pTask)
     {
         for(int i=itemPortNb; i<taskPortNb; ++i)
         {
-            IODataType type = pTask->getOutputDataType(i);
+            IODataTypeEx type = pTask->getOutputDataType(i);
             auto color = Utils::Workflow::getPortColor(type);
             addOutputPort(type, color);
         }

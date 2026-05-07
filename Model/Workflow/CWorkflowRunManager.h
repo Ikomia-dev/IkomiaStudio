@@ -41,8 +41,8 @@ class CWorkflowRunManager : public QObject
         void                    setWorkflow(WorkflowPtr WorkflowPtr);
 
         double                  getTotalElapsedTime() const;
-        std::set<IODataType>    getTargetDataTypes(size_t inputIndex) const;
-        std::set<IODataType>    getOriginTargetDataTypes(size_t inputIndex) const;
+        std::set<IODataTypeEx>  getTargetDataTypes(size_t inputIndex) const;
+        std::set<IODataTypeEx>  getOriginTargetDataTypes(size_t inputIndex) const;
 
         bool                    isRunning() const;
 

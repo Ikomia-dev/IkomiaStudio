@@ -82,7 +82,7 @@ WorkflowTaskIOPtr CWorkflowManager::getInput(size_t index) const
         return nullptr;
 }
 
-IODataType CWorkflowManager::getInputDataType(size_t index) const
+IODataTypeEx CWorkflowManager::getInputDataType(size_t index) const
 {
     if(m_pWorkflow)
         return m_pWorkflow->getInputDataType(index);
@@ -235,7 +235,7 @@ QModelIndex CWorkflowManager::getCurrentVideoInputModelIndex() const
         return QModelIndex();
 }
 
-std::vector<int> CWorkflowManager::getDisplayedInputIndices(const WorkflowTaskPtr &taskPtr, const std::set<IODataType>& types) const
+std::vector<int> CWorkflowManager::getDisplayedInputIndices(const WorkflowTaskPtr &taskPtr, const std::set<IODataTypeEx>& types) const
 {
     std::vector<int> inputIndices;
 
@@ -1904,7 +1904,7 @@ void CWorkflowManager::updateDataInfo()
     assert(m_pDataMgr);
     WorkflowTaskPtr taskPtr;
     WorkflowTaskIOPtr ioPtr;
-    IODataType dataType;
+    IODataTypeEx dataType;
 
     if(m_pDataMgr->getSelectedDisplayCategory() == DisplayCategory::INPUT)
     {

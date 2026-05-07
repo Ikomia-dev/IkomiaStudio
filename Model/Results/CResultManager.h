@@ -143,12 +143,12 @@ class CResultManager : public QObject
         void                setResultHighlighted(const QModelIndex &index, bool bHighlighted);
         void                setRecordVideoState(size_t id, bool bRecord);
 
-        ResultItemPtr       getResultItem(const QModelIndex& index) const;
-        OutputDisplays      getOutputDisplays(const WorkflowTaskPtr& pTask) const;
-        DisplayType         getResultViewType(IODataType type) const;
-        std::set<IODataType>        getImageBasedDataTypes() const;
+        ResultItemPtr               getResultItem(const QModelIndex& index) const;
+        OutputDisplays              getOutputDisplays(const WorkflowTaskPtr& pTask) const;
+        DisplayType                 getResultViewType(IODataTypeEx type) const;
+        std::set<IODataTypeEx>      getImageBasedDataTypes() const;
         CViewPropertyIO::ViewMode   getViewMode(const WorkflowTaskPtr& taskPtr);
-        int                 getImageDisplayIndex(const WorkflowTaskPtr &taskPtr, int outputIndex) const;
+        int                         getImageDisplayIndex(const WorkflowTaskPtr &taskPtr, int outputIndex) const;
 
         bool                isResultFromCurrentImage(const QModelIndex &index) const;
         bool                isParentIndex(const QModelIndex& index, const QModelIndex& parent) const;

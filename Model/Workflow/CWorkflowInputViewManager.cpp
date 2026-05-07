@@ -90,9 +90,11 @@ void CWorkflowInputViewManager::manageInputs(const WorkflowTaskPtr &pTask)
     for(size_t i=0; i<inputCount; ++i)
     {
         auto inputPtr = pTask->getInput(i);
-        if(inputPtr && inputPtr->isDataAvailable())
+        IODataTypeEx dataType = inputPtr->getDataType();
+
+        if(inputPtr && inputPtr->isDataAvailable() && dataType.isBaseValue())
         {
-            switch(inputPtr->getDataType())
+            switch(dataType.asBaseEnum())
             {
                 case IODataType::IMAGE:
                 case IODataType::IMAGE_BINARY:
@@ -122,6 +124,7 @@ void CWorkflowInputViewManager::manageInputs(const WorkflowTaskPtr &pTask)
             }
         }
     }
+
     //Apply the view properties for all inputs (maximized status, zoom...)
     emit doApplyViewProperty();
 }
@@ -165,10 +168,13 @@ std::map<DisplayType, int> CWorkflowInputViewManager::getInputType(const Workflo
     return mapTypeCount;
 }
 
-DisplayType CWorkflowInputViewManager::getDataViewerType(const IODataType& dataType) const
+DisplayType CWorkflowInputViewManager::getDataViewerType(const IODataTypeEx& dataType) const
 {
     DisplayType type;
-    switch(dataType)
+    if (!dataType.isBaseValue())
+        return DisplayType::EMPTY_DISPLAY;
+
+    switch(dataType.asBaseEnum())
     {
         case IODataType::IMAGE:
         case IODataType::IMAGE_BINARY:

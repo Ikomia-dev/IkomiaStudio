@@ -762,7 +762,7 @@ void CWorkflowModuleWidget::fillIOProperties(const WorkflowTaskPtr &taskPtr)
         if(!inputPtr)
             continue;
 
-        auto inputName = QString("#%1 - ").arg(i+1) + Utils::Workflow::getIODataName(inputPtr->getDataType());
+        auto inputName = QString("#%1 - %2").arg(i+1).arg(QString::fromStdString(inputPtr->getDataType().displayName()));
         QtVariantProperty* pInputProp = m_pVariantManager->addProperty(QVariant::String, inputName);
         pInputProp->setValue(QString::fromStdString(inputPtr->getDescription()));
         pInputProp->setEnabled(false);
@@ -782,7 +782,7 @@ void CWorkflowModuleWidget::fillIOProperties(const WorkflowTaskPtr &taskPtr)
 
         bool isOutputExposed = m_pModel->isCurrentTaskOutputExposed(i);
 
-        auto outputName = QString("#%1 - ").arg(i+1) + Utils::Workflow::getIODataName(outputPtr->getDataType());
+        auto outputName = QString("#%1 - %2").arg(i+1).arg(QString::fromStdString(outputPtr->getDataType().displayName()));
         QtProperty* pOutputGroup = m_pVariantManager->addProperty(QtVariantPropertyManager::groupTypeId(), outputName);
         pOutputsGroup->addSubProperty(pOutputGroup);
 
